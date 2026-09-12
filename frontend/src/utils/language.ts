@@ -9467,6 +9467,22 @@ const myLanguages = {
     hi: "कुल सत्र",
     nl: "Totale sessies",
   },
+  colorTheme: {
+    en: "Color",
+    fr: "Couleur",
+    de: "Farbe",
+    es: "Color",
+    hi: "रंग",
+    nl: "Kleur",
+  },
+  useThemeSelector: {
+    en: "Use the theme selector above to change colors.",
+    fr: "Utilisez le sélecteur de thème ci-dessus pour changer les couleurs.",
+    de: "Verwenden Sie den obigen Theme-Selektor, um Farben zu ändern.",
+    es: "Use el selector de tema de arriba para cambiar los colores.",
+    hi: "रंग बदलने के लिए ऊपर थीम चयनकर्ता का उपयोग करें।",
+    nl: "Gebruik de themaSelector hierboven om kleuren te wijzigen.",
+  },
 };
 
 export type AllLabels = keyof typeof myLanguages;
