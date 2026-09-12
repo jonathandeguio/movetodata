@@ -24,25 +24,24 @@ RemainAfterExit=yes
 User=movetodata
 Group=movetodata
 
-# Répertoire de travail sur CentOS (/opt/movetodata/repo)
-WorkingDirectory=/opt/movetodata/repo/scripts
+WorkingDirectory=/opt/movetodata/scripts
 
 # Chargement des variables d'environnement
-EnvironmentFile=/opt/movetodata/repo/scripts/.env.movetodata
+EnvironmentFile=/opt/movetodata/scripts/.env.movetodata
 
 # Démarrage avec SELinux preflight
-ExecStart=/bin/bash /opt/movetodata/repo/scripts/03-start-centos.sh --stack core
+ExecStart=/bin/bash /opt/movetodata/scripts/03-start-centos.sh --stack core
 
 # Arrêt via docker compose down
 ExecStop=/usr/bin/docker compose \
-  -f /opt/movetodata/repo/scripts/docker-compose.core.yml \
-  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
+  -f /opt/movetodata/scripts/docker-compose.core.yml \
+  --env-file /opt/movetodata/scripts/.env.movetodata \
   down
 
 # Rechargement = restart des containers
 ExecReload=/usr/bin/docker compose \
-  -f /opt/movetodata/repo/scripts/docker-compose.core.yml \
-  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
+  -f /opt/movetodata/scripts/docker-compose.core.yml \
+  --env-file /opt/movetodata/scripts/.env.movetodata \
   restart
 
 TimeoutStartSec=300

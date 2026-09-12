@@ -19,25 +19,25 @@ RemainAfterExit=yes
 User=movetodata
 Group=movetodata
 
-WorkingDirectory=/home/movetodata/movetodata_repo/scripts
+WorkingDirectory=/opt/movetodata/scripts
 
 # Chargement des variables d'environnement
-EnvironmentFile=/home/movetodata/movetodata_repo/scripts/.env.movetodata
+EnvironmentFile=/opt/movetodata/scripts/.env.movetodata
 
 # Démarrage
 ExecStart=/usr/bin/docker compose \
-  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
-  --env-file /home/movetodata/movetodata_repo/scripts/.env.movetodata \
+  -f /opt/movetodata/scripts/docker-compose.core.yml \
+  --env-file /opt/movetodata/scripts/.env.movetodata \
   up -d --remove-orphans
 
 # Arrêt
 ExecStop=/usr/bin/docker compose \
-  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
+  -f /opt/movetodata/scripts/docker-compose.core.yml \
   down
 
 # Rechargement (restart des containers)
 ExecReload=/usr/bin/docker compose \
-  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
+  -f /opt/movetodata/scripts/docker-compose.core.yml \
   restart
 
 TimeoutStartSec=300

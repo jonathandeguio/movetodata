@@ -18,17 +18,17 @@ RemainAfterExit=yes
 User=movetodata
 Group=movetodata
 
-WorkingDirectory=/home/movetodata/movetodata_repo/scripts
+WorkingDirectory=/opt/movetodata/scripts
 
-EnvironmentFile=/home/movetodata/movetodata_repo/scripts/.env.movetodata
+EnvironmentFile=/opt/movetodata/scripts/.env.movetodata
 
 ExecStart=/usr/bin/docker compose \
-  -f /home/movetodata/movetodata_repo/scripts/docker-compose.snap.yml \
-  --env-file /home/movetodata/movetodata_repo/scripts/.env.movetodata \
+  -f /opt/movetodata/scripts/docker-compose.snap.yml \
+  --env-file /opt/movetodata/scripts/.env.movetodata \
   up -d --remove-orphans
 
 ExecStop=/usr/bin/docker compose \
-  -f /home/movetodata/movetodata_repo/scripts/docker-compose.snap.yml \
+  -f /opt/movetodata/scripts/docker-compose.snap.yml \
   down
 
 TimeoutStartSec=180

@@ -25,18 +25,18 @@ RemainAfterExit=yes
 User=movetodata
 Group=movetodata
 
-WorkingDirectory=/opt/movetodata/repo/scripts
+WorkingDirectory=/opt/movetodata/scripts
 
-EnvironmentFile=/opt/movetodata/repo/scripts/.env.movetodata
+EnvironmentFile=/opt/movetodata/scripts/.env.movetodata
 
 # Démarrage avec SELinux preflight + vérification FUSE
 ExecStartPre=/bin/bash -c "modprobe fuse 2>/dev/null || true"
 ExecStartPre=/bin/bash -c "test -c /dev/fuse || (echo 'ERROR: /dev/fuse manquant' && exit 1)"
-ExecStart=/bin/bash /opt/movetodata/repo/scripts/03-start-centos.sh --stack snap
+ExecStart=/bin/bash /opt/movetodata/scripts/03-start-centos.sh --stack snap
 
 ExecStop=/usr/bin/docker compose \
-  -f /opt/movetodata/repo/scripts/docker-compose.snap.yml \
-  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
+  -f /opt/movetodata/scripts/docker-compose.snap.yml \
+  --env-file /opt/movetodata/scripts/.env.movetodata \
   down
 
 TimeoutStartSec=180
