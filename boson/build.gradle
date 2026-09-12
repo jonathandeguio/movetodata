@@ -94,12 +94,10 @@ dependencies {
     implementation 'io.trino:trino-jdbc:434'
     // Vertica JDBC driver
     // Driver class : com.vertica.jdbc.Driver
-    // NOTE: Vertica does NOT publish its JDBC driver to Maven Central.
-    // The artifact below requires a custom Maven repository or a manual flatDir installation.
-    // To use a local jar, add to repositories: flatDir { dirs 'libs' }
-    // and replace this line with: implementation files('libs/vertica-jdbc-24.1.0-0.jar')
+    // Vertica does NOT publish its JDBC driver to Maven Central.
     // Download from: https://www.vertica.com/download/vertica/client-drivers/
-    implementation 'com.vertica.jdbc:vertica-jdbc:24.1.0-0'
+    // Place the jar at boson/libs/vertica-jdbc-24.1.0-0.jar then uncomment:
+    // implementation files('libs/vertica-jdbc-24.1.0-0.jar')
     // SQLite JDBC driver — file-based database, no server required
     // Driver class : org.sqlite.JDBC
     // URL pattern  : jdbc:sqlite:<path>
