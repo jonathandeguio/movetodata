@@ -3,6 +3,8 @@
 # Usage : docker compose -f docker-compose.core.yml --env-file .env.movetodata up -d
 # =============================================================================
 
+name: movetodata
+
 services:
 
   boson-db:
