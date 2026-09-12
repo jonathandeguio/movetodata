@@ -51,7 +51,7 @@ public class SingleSignOnController {
     private Map<String, Object> registration;
 
 
-    @Value("${platform-default-login}")
+    @Value("${platform-default-login:password}")
     String platformDefaultLogin;
 
     public void setRegistration(Map<String, Object> registration) {
