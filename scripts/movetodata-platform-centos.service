@@ -1,19 +1,19 @@
 # =============================================================================
-# Orphea Platform — Service systemd (CentOS / RHEL)
+# MoveToData Platform — Service systemd (CentOS / RHEL)
 #
 # Installation :
-#   sudo cp orphea-platform-centos.service /etc/systemd/system/orphea-platform.service
+#   sudo cp movetodata-platform-centos.service /etc/systemd/system/movetodata-platform.service
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable orphea-platform
-#   sudo systemctl start orphea-platform
+#   sudo systemctl enable movetodata-platform
+#   sudo systemctl start movetodata-platform
 #
 # Vérification :
-#   sudo systemctl status orphea-platform
-#   sudo journalctl -u orphea-platform -f
+#   sudo systemctl status movetodata-platform
+#   sudo journalctl -u movetodata-platform -f
 # =============================================================================
 [Unit]
-Description=Orphea Data Platform (Core Stack — CentOS/RHEL)
-Documentation=https://orphea.io/docs
+Description=MoveToData Platform (Core Stack — CentOS/RHEL)
+Documentation=https://movetodata.io/docs
 Requires=docker.service
 After=docker.service network-online.target
 Wants=network-online.target
@@ -21,28 +21,28 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-User=orphea
-Group=orphea
+User=movetodata
+Group=movetodata
 
-# Répertoire de travail sur CentOS (/opt/orphea/repo)
-WorkingDirectory=/opt/orphea/repo/scripts
+# Répertoire de travail sur CentOS (/opt/movetodata/repo)
+WorkingDirectory=/opt/movetodata/repo/scripts
 
 # Chargement des variables d'environnement
-EnvironmentFile=/opt/orphea/repo/scripts/.env.orphea
+EnvironmentFile=/opt/movetodata/repo/scripts/.env.movetodata
 
 # Démarrage avec SELinux preflight
-ExecStart=/bin/bash /opt/orphea/repo/scripts/03-start-centos.sh --stack core
+ExecStart=/bin/bash /opt/movetodata/repo/scripts/03-start-centos.sh --stack core
 
 # Arrêt via docker compose down
 ExecStop=/usr/bin/docker compose \
-  -f /opt/orphea/repo/scripts/docker-compose.core.yml \
-  --env-file /opt/orphea/repo/scripts/.env.orphea \
+  -f /opt/movetodata/repo/scripts/docker-compose.core.yml \
+  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
   down
 
 # Rechargement = restart des containers
 ExecReload=/usr/bin/docker compose \
-  -f /opt/orphea/repo/scripts/docker-compose.core.yml \
-  --env-file /opt/orphea/repo/scripts/.env.orphea \
+  -f /opt/movetodata/repo/scripts/docker-compose.core.yml \
+  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
   restart
 
 TimeoutStartSec=300

@@ -1,6 +1,6 @@
 [Unit]
-Description=Orphea Platform (Docker Compose)
-Documentation=https://github.com/orphea
+Description=MoveToData Platform (Docker Compose)
+Documentation=https://github.com/jonathandeguio/movetodata
 After=network-online.target docker.service
 Wants=network-online.target
 Requires=docker.service
@@ -10,21 +10,21 @@ Type=oneshot
 RemainAfterExit=yes
 User=orion
 Group=orion
-WorkingDirectory=/opt/orphea/scripts
+WorkingDirectory=/opt/movetodata/scripts
 
 # Démarrage : lance la stack core (boson + frontend + postgres + redis)
-ExecStart=/bin/bash /opt/orphea/scripts/03-start.sh core
+ExecStart=/bin/bash /opt/movetodata/scripts/03-start.sh core
 
 # Arrêt propre
-ExecStop=/bin/bash /opt/orphea/scripts/04-stop.sh core
+ExecStop=/bin/bash /opt/movetodata/scripts/04-stop.sh core
 
 # Si le démarrage échoue, ne pas boucler indéfiniment
 Restart=no
 
-# Logs disponibles via : journalctl -u orphea
+# Logs disponibles via : journalctl -u movetodata
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=orphea
+SyslogIdentifier=movetodata
 
 [Install]
 WantedBy=multi-user.target

@@ -1,14 +1,14 @@
 # =============================================================================
-# Orphea Platform — Service systemd
+# MoveToData Platform — Service systemd
 # Installation :
-#   sudo cp orphea-platform.service /etc/systemd/system/
+#   sudo cp movetodata-platform.service /etc/systemd/system/
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable orphea-platform
-#   sudo systemctl start orphea-platform
+#   sudo systemctl enable movetodata-platform
+#   sudo systemctl start movetodata-platform
 # =============================================================================
 [Unit]
-Description=Orphea Data Platform (Core Stack)
-Documentation=https://orphea.io/docs
+Description=MoveToData Platform (Core Stack)
+Documentation=https://movetodata.io/docs
 Requires=docker.service
 After=docker.service network-online.target
 Wants=network-online.target
@@ -16,28 +16,28 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-User=orphea
-Group=orphea
+User=movetodata
+Group=movetodata
 
-WorkingDirectory=/home/orphea/Orphea_repo/scripts
+WorkingDirectory=/home/movetodata/movetodata_repo/scripts
 
 # Chargement des variables d'environnement
-EnvironmentFile=/home/orphea/Orphea_repo/scripts/.env.orphea
+EnvironmentFile=/home/movetodata/movetodata_repo/scripts/.env.movetodata
 
 # Démarrage
 ExecStart=/usr/bin/docker compose \
-  -f /home/orphea/Orphea_repo/scripts/docker-compose.core.yml \
-  --env-file /home/orphea/Orphea_repo/scripts/.env.orphea \
+  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
+  --env-file /home/movetodata/movetodata_repo/scripts/.env.movetodata \
   up -d --remove-orphans
 
 # Arrêt
 ExecStop=/usr/bin/docker compose \
-  -f /home/orphea/Orphea_repo/scripts/docker-compose.core.yml \
+  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
   down
 
 # Rechargement (restart des containers)
 ExecReload=/usr/bin/docker compose \
-  -f /home/orphea/Orphea_repo/scripts/docker-compose.core.yml \
+  -f /home/movetodata/movetodata_repo/scripts/docker-compose.core.yml \
   restart
 
 TimeoutStartSec=300

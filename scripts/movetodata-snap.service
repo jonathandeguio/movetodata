@@ -1,34 +1,34 @@
 # =============================================================================
-# Orphea Snap — Service systemd
+# MoveToData Snap — Service systemd
 # Installation :
-#   sudo cp orphea-snap.service /etc/systemd/system/
+#   sudo cp movetodata-snap.service /etc/systemd/system/
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable orphea-snap
-#   sudo systemctl start orphea-snap
+#   sudo systemctl enable movetodata-snap
+#   sudo systemctl start movetodata-snap
 # =============================================================================
 [Unit]
-Description=Orphea Snap Artifact Service
-Documentation=https://orphea.io/docs
-Requires=docker.service orphea-platform.service
-After=docker.service orphea-platform.service
+Description=MoveToData Snap Artifact Service
+Documentation=https://movetodata.io/docs
+Requires=docker.service movetodata-platform.service
+After=docker.service movetodata-platform.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-User=orphea
-Group=orphea
+User=movetodata
+Group=movetodata
 
-WorkingDirectory=/home/orphea/Orphea_repo/scripts
+WorkingDirectory=/home/movetodata/movetodata_repo/scripts
 
-EnvironmentFile=/home/orphea/Orphea_repo/scripts/.env.orphea
+EnvironmentFile=/home/movetodata/movetodata_repo/scripts/.env.movetodata
 
 ExecStart=/usr/bin/docker compose \
-  -f /home/orphea/Orphea_repo/scripts/docker-compose.snap.yml \
-  --env-file /home/orphea/Orphea_repo/scripts/.env.orphea \
+  -f /home/movetodata/movetodata_repo/scripts/docker-compose.snap.yml \
+  --env-file /home/movetodata/movetodata_repo/scripts/.env.movetodata \
   up -d --remove-orphans
 
 ExecStop=/usr/bin/docker compose \
-  -f /home/orphea/Orphea_repo/scripts/docker-compose.snap.yml \
+  -f /home/movetodata/movetodata_repo/scripts/docker-compose.snap.yml \
   down
 
 TimeoutStartSec=180

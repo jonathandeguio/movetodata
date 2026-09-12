@@ -1,42 +1,42 @@
 # =============================================================================
-# Orphea Snap — Service systemd (CentOS / RHEL)
+# MoveToData Snap — Service systemd (CentOS / RHEL)
 #
-# Prérequis : orphea-platform.service doit être démarré en premier.
+# Prérequis : movetodata-platform.service doit être démarré en premier.
 #
 # Installation :
-#   sudo cp orphea-snap-centos.service /etc/systemd/system/orphea-snap.service
+#   sudo cp movetodata-snap-centos.service /etc/systemd/system/movetodata-snap.service
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable orphea-snap
-#   sudo systemctl start orphea-snap
+#   sudo systemctl enable movetodata-snap
+#   sudo systemctl start movetodata-snap
 #
 # Vérification :
-#   sudo systemctl status orphea-snap
-#   sudo journalctl -u orphea-snap -f
+#   sudo systemctl status movetodata-snap
+#   sudo journalctl -u movetodata-snap -f
 # =============================================================================
 [Unit]
-Description=Orphea Snap Artifact Service (CentOS/RHEL)
-Documentation=https://orphea.io/docs
-Requires=docker.service orphea-platform.service
-After=docker.service orphea-platform.service
+Description=MoveToData Snap Artifact Service (CentOS/RHEL)
+Documentation=https://movetodata.io/docs
+Requires=docker.service movetodata-platform.service
+After=docker.service movetodata-platform.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-User=orphea
-Group=orphea
+User=movetodata
+Group=movetodata
 
-WorkingDirectory=/opt/orphea/repo/scripts
+WorkingDirectory=/opt/movetodata/repo/scripts
 
-EnvironmentFile=/opt/orphea/repo/scripts/.env.orphea
+EnvironmentFile=/opt/movetodata/repo/scripts/.env.movetodata
 
 # Démarrage avec SELinux preflight + vérification FUSE
 ExecStartPre=/bin/bash -c "modprobe fuse 2>/dev/null || true"
 ExecStartPre=/bin/bash -c "test -c /dev/fuse || (echo 'ERROR: /dev/fuse manquant' && exit 1)"
-ExecStart=/bin/bash /opt/orphea/repo/scripts/03-start-centos.sh --stack snap
+ExecStart=/bin/bash /opt/movetodata/repo/scripts/03-start-centos.sh --stack snap
 
 ExecStop=/usr/bin/docker compose \
-  -f /opt/orphea/repo/scripts/docker-compose.snap.yml \
-  --env-file /opt/orphea/repo/scripts/.env.orphea \
+  -f /opt/movetodata/repo/scripts/docker-compose.snap.yml \
+  --env-file /opt/movetodata/repo/scripts/.env.movetodata \
   down
 
 TimeoutStartSec=180
