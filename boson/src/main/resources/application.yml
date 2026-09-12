@@ -2,7 +2,7 @@ spring:
   application:
     name: "boson"
   config:
-    import: ${SAML2_SSO_CONFIG}
+    import: "optional:${SAML2_SSO_CONFIG}"
 
   main:
     allow-circular-references: true # This needs removing it is a temporary fix
