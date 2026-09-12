@@ -77,9 +77,10 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.oracle.database.jdbc:ojdbc8:21.9.0.0'
     implementation 'net.snowflake:snowflake-jdbc:3.18.0'
-    // JDBC-ODBC bridge — necessite unixODBC installe dans l'image Docker
-    // Driver class : com.hynnet.odbc.Driver
-    implementation 'com.hynnet:odbc-bridge:1.0.3'
+    // JDBC-ODBC bridge — non disponible sur Maven Central
+    // com.hynnet:odbc-bridge:1.0.3 n'est pas publié sur Maven Central.
+    // Pour activer le connecteur ODBC, télécharger le jar manuellement et placer dans boson/libs/
+    // puis décommenter : implementation files('libs/odbc-bridge-1.0.3.jar')
     // ClickHouse JDBC driver — all-in-one fat jar (includes shaded HTTP client)
     // Driver class : com.clickhouse.jdbc.ClickHouseDriver
     implementation 'com.clickhouse:clickhouse-jdbc:0.6.0:all'
