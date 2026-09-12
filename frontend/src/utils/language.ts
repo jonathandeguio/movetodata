@@ -9739,38 +9739,6 @@ const myLanguages = {
     hi: "मान कॉलम",
     nl: "Waardekolom",
   },
-  "areYouSureYouWantToDeleteThis?": {
-    en: "Are you sure you want to delete this?",
-    fr: "Êtes-vous sûr de vouloir supprimer ceci ?",
-    de: "Sind Sie sicher, dass Sie das löschen möchten?",
-    es: "¿Está seguro de que desea eliminar esto?",
-    hi: "क्या आप वाकई इसे हटाना चाहते हैं?",
-    nl: "Weet u zeker dat u dit wilt verwijderen?",
-  },
-  "loading...": {
-    en: "Loading...",
-    fr: "Chargement...",
-    de: "Wird geladen...",
-    es: "Cargando...",
-    hi: "लोड हो रहा है...",
-    nl: "Laden...",
-  },
-  "oops!": {
-    en: "Oops!",
-    fr: "Oups !",
-    de: "Hoppla!",
-    es: "¡Ups!",
-    hi: "अरे!",
-    nl: "Oeps!",
-  },
-  "re-Upload": {
-    en: "Re-Upload",
-    fr: "Ré-uploader",
-    de: "Erneut hochladen",
-    es: "Re-subir",
-    hi: "पुनः अपलोड",
-    nl: "Opnieuw uploaden",
-  },
 };
 
 export type AllLabels = keyof typeof myLanguages;
