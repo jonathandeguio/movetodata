@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -152,6 +153,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDTO errorResponse = new ErrorDTO(HttpStatus.FORBIDDEN.value(), "Forbidden!", ex.getMessage());
         Log.error("handleForbiddenException", ex);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    protected ResponseEntity<ErrorDTO> handleBadCredentialsException(Exception ex) {
+        ErrorDTO errorResponse = new ErrorDTO(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", ex.getMessage());
+        Log.error("handleBadCredentialsException", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(value = RuntimeException.class)
