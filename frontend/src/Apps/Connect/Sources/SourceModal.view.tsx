@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Select, Switch, Tag, Typography } from "antd";
+import { Card, Col, Divider, Input, Row, Select, Switch, Tag, Tooltip, Typography } from "antd";
 import axios from "axios";
 import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
 import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
@@ -17,6 +17,7 @@ import {
   notEmpty,
   openNotification,
 } from "utils/utilities";
+// isDefined still used below for newSourceDetails.password check
 import { SearchIcon } from "../../../assets/icons/boslerActionIcons";
 import { DatabaseIcon } from "../../../assets/icons/boslerDataIcons";
 import { KeyIcon } from "../../../assets/icons/boslerInterfaceIcons";
@@ -37,6 +38,7 @@ import { handleConnectUpdateAPI } from "../Connect.api";
 import { SourceAuthTypeEnum } from "../Enums/SourceAuthTypeEnum";
 import { SourceTypeEnum } from "../Enums/SourceTypeEnum";
 import { connectors, initialSourceDetails } from "./Source.constants";
+import { groupByStatus, isConnectorClickable, STATUS_COLORS, STATUS_LABELS } from "./catalogue-connecteurs";
 import { isSourceConfigValid } from "./Source.utils";
 import { TestConnectionButton } from "./TestConnection.view";
 
@@ -336,35 +338,57 @@ const SourceModal = ({
         }
       >
         {!selectedConnector.type ? (
-          <Row style={{ height: "60vh" }} gutter={[16, 16]}>
-            {filteredConnectors.map((connector) => {
-              return (
-                <Col span={12}>
-                  <Card
-                    className="Selectable-Cards"
-                    style={
-                      isDefined(connector.disabled)
-                        ? {
-                            cursor: "not-allowed",
-                            border: "1px dotted red",
-                          }
-                        : { cursor: "pointer" }
-                    }
-                    onClick={() => {
-                      if (!isDefined(connector.disabled))
-                        selectConnector(
-                          connector.icon,
-                          connector.type,
-                          connector.subType
+          <div style={{ height: "60vh", overflowY: "auto" }}>
+            {(["disponible", "beta", "roadmap"] as const)
+              .map((status) => {
+                const group = groupByStatus(filteredConnectors)[status];
+                if (group.length === 0) return null;
+                return (
+                  <div key={status}>
+                    <Divider orientation="left" style={{ fontSize: "12px", color: "var(--text-secondary, #888)", marginTop: status === "disponible" ? 0 : 16 }}>
+                      <Tag color={STATUS_COLORS[status]}>{STATUS_LABELS[status]}</Tag>
+                    </Divider>
+                    <Row gutter={[16, 16]}>
+                      {group.map((connector) => {
+                        const clickable = isConnectorClickable(connector.status);
+                        return (
+                          <Col span={12} key={connector.id}>
+                            <Tooltip
+                              title={!clickable ? "Ce connecteur sera disponible prochainement" : undefined}
+                            >
+                              <Card
+                                className="Selectable-Cards"
+                                style={
+                                  !clickable
+                                    ? { cursor: "not-allowed", opacity: 0.5 }
+                                    : { cursor: "pointer" }
+                                }
+                                onClick={() => {
+                                  if (clickable)
+                                    selectConnector(connector.icon, connector.type, connector.subType);
+                                }}
+                              >
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                                  <div style={{ flex: 1 }}>{connector.label}</div>
+                                  {connector.status !== "disponible" && (
+                                    <Tag
+                                      color={STATUS_COLORS[connector.status]}
+                                      style={{ marginLeft: 8, alignSelf: "center", fontSize: "11px" }}
+                                    >
+                                      {STATUS_LABELS[connector.status]}
+                                    </Tag>
+                                  )}
+                                </div>
+                              </Card>
+                            </Tooltip>
+                          </Col>
                         );
-                    }}
-                  >
-                    {connector.label}
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
+                      })}
+                    </Row>
+                  </div>
+                );
+              })}
+          </div>
         ) : (
           <div
             style={{

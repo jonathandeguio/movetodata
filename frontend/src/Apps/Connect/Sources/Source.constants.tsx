@@ -12,6 +12,7 @@ import React from "react";
 import { SourceAuthTypeEnum } from "../Enums/SourceAuthTypeEnum";
 import { SourceTypeEnum } from "../Enums/SourceTypeEnum";
 import { ISourceConfig } from "./Source";
+import { ConnectorStatus } from "./catalogue-connecteurs";
 
 export const initialSourceDetails: ISourceConfig = {
   agentId: [] as any[],
@@ -43,12 +44,22 @@ export const initialSourceDetails: ISourceConfig = {
   build: true,
 };
 
-export const connectors = [
+export interface IConnector {
+  id: string;
+  icon: React.ReactNode;
+  type: string;
+  subType: string;
+  status: ConnectorStatus;
+  label: React.ReactNode;
+}
+
+export const connectors: IConnector[] = [
   {
     id: "Folder",
     icon: <UploadIcon />,
     type: "FOLDER",
     subType: "File Upload",
+    status: "disponible",
     label: (
       <>
         <br />
@@ -65,6 +76,7 @@ export const connectors = [
     icon: <PostgresIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.POSTGRES,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
@@ -165,6 +177,7 @@ export const connectors = [
     icon: <MySQLIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.MYSQL,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
@@ -201,6 +214,7 @@ export const connectors = [
     icon: <MariaDBIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.MARIADB,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
@@ -225,6 +239,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.SNOWFLAKE,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
@@ -256,6 +271,7 @@ export const connectors = [
     id: "oracle",
     icon: <OracleIcon />,
     type: "jdbc",
+    status: "disponible",
     subType: SourceTypeEnum.ORACLE21,
     label: (
       <>
@@ -273,6 +289,7 @@ export const connectors = [
     icon: <MSSQLIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.MSSQLSERVER,
+    status: "disponible",
 
     label: (
       <>
@@ -345,7 +362,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.ODBC,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -361,7 +378,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.CLICKHOUSE,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -377,7 +394,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.DATABRICKS,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -393,7 +410,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.MONGODB,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -409,7 +426,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.DB2,
-    disabled: false,
+    status: "beta",
     label: (
       <>
         <br />
@@ -425,7 +442,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.SAPHANA,
-    disabled: false,
+    status: "beta",
     label: (
       <>
         <br />
@@ -441,7 +458,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.SQLITE,
-    disabled: false,
+    status: "beta",
     label: (
       <>
         <br />
@@ -457,7 +474,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.DUCKDB,
-    disabled: false,
+    status: "beta",
     label: (
       <>
         <br />
@@ -473,7 +490,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.ATHENA,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -490,7 +507,7 @@ export const connectors = [
     icon: <APIIcon />,
     type: "rest",
     subType: "REST API",
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -506,7 +523,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.VERTICA,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -522,7 +539,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.TRINO,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -538,7 +555,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.STARBURST,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -554,7 +571,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.SPARKSQL_EXTERNAL,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <br />
@@ -570,7 +587,7 @@ export const connectors = [
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.REDSHIFT,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
@@ -616,12 +633,58 @@ export const connectors = [
       </>
     ),
   },
+  // ── Roadmap ──────────────────────────────────────────────────────────────────
+  {
+    id: "SparkSQL-internal",
+    icon: <DatabaseIcon />,
+    type: "jdbc",
+    subType: SourceTypeEnum.SPARKSQL,
+    status: "roadmap",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <DatabaseIcon /> SparkSQL (natif)
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "Filesystem",
+    icon: <UploadIcon />,
+    type: "FILESYSTEM",
+    subType: SourceTypeEnum.FILESYSTEM,
+    status: "roadmap",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <UploadIcon /> Système de fichiers
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "SharePoint",
+    icon: <DatabaseIcon />,
+    type: "SHAREPOINT",
+    subType: SourceTypeEnum.SHAREPOINT,
+    status: "roadmap",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <DatabaseIcon /> SharePoint
+        </div>
+      </>
+    ),
+  },
   {
     id: "alloyDB",
     icon: <DatabaseIcon />,
     type: "jdbc",
     subType: SourceTypeEnum.ALLOYDB,
-    disabled: false,
+    status: "disponible",
     label: (
       <>
         <AddIcon />
