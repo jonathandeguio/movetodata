@@ -13,7 +13,7 @@ export const ping = (path: string): Promise<AxiosResponse<any, any>> => {
  * Get Connect Admin
  */
 export const getIsConnectAdmin = (): Promise<AxiosResponse<any, any>> => {
-  return axios.get(`/passport/users/isConnectAdministrator`);
+  return axios.get(`/api/passport/users/isConnectAdministrator`);
 };
 
 /**
@@ -22,7 +22,7 @@ export const getIsConnectAdmin = (): Promise<AxiosResponse<any, any>> => {
 export const getResourcePermissionAPI = (
   resourceId: string
 ): Promise<AxiosResponse<any, any>> => {
-  return axios.get(`/passport/authz/resourcePermission/${resourceId}`);
+  return axios.get(`/api/passport/authz/resourcePermission/${resourceId}`);
 };
 
 /**
