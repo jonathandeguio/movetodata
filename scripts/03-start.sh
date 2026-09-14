@@ -122,8 +122,8 @@ stop_existing() {
 start_core() {
   section "Stack Core (Boson + Frontend + PostgreSQL + Redis)"
 
-  # --- Arrêt des conteneurs existants ---
-  stop_existing movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend
+  # --- Arrêt des conteneurs existants (y compris movetodata-docs) ---
+  stop_existing movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend movetodata-docs
 
   # --- Créer les répertoires nécessaires ---
   info "Préparation des répertoires de données..."
@@ -301,6 +301,14 @@ NGINX_EOF
     info "Build frontend déjà présent — pas de rebuild"
     info "  (Pour forcer : rm -rf ${FRONTEND_MOUNT}/build && relancer ce script)"
   fi
+
+  # --- Suppression forcée de tout conteneur en conflit (quel que soit son projet d'origine) ---
+  for _c in movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend movetodata-docs; do
+    if docker ps -a -q -f "name=^${_c}$" | grep -q .; then
+      warn "Suppression forcée du conteneur conflictuel : ${_c}"
+      docker rm -f "${_c}" 2>/dev/null || true
+    fi
+  done
 
   # --- Démarrage des containers ---
   info "Démarrage des containers Core..."
