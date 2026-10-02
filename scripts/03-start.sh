@@ -42,9 +42,18 @@ COMPOSE_CORE="${SCRIPT_DIR}/docker-compose.core.yml"
 COMPOSE_SNAP="${SCRIPT_DIR}/docker-compose.snap.yml"
 COMPOSE_TYCHO="${SCRIPT_DIR}/docker-compose.tycho.yml"
 
-compose_core()  { docker compose --project-name movetodata -f "${COMPOSE_CORE}"  --env-file "${ENV_FILE}" "$@"; }
-compose_snap()  { docker compose --project-name movetodata -f "${COMPOSE_SNAP}"  --env-file "${ENV_FILE}" "$@"; }
-compose_tycho() { docker compose --project-name movetodata -f "${COMPOSE_TYCHO}" --env-file "${ENV_FILE}" "$@"; }
+# Compatibilité Docker Compose v1 (docker-compose) et v2 (docker compose)
+if docker compose version &>/dev/null 2>&1; then
+  _compose() { docker compose "$@"; }
+elif command -v docker-compose &>/dev/null; then
+  _compose() { docker-compose "$@"; }
+else
+  error "Docker Compose introuvable.\n  Installez-le : sudo apt-get install -y docker-compose-plugin"
+fi
+
+compose_core()  { _compose --project-name movetodata -f "${COMPOSE_CORE}"  --env-file "${ENV_FILE}" "$@"; }
+compose_snap()  { _compose --project-name movetodata -f "${COMPOSE_SNAP}"  --env-file "${ENV_FILE}" "$@"; }
+compose_tycho() { _compose --project-name movetodata -f "${COMPOSE_TYCHO}" --env-file "${ENV_FILE}" "$@"; }
 
 # =============================================================================
 # Vérification port UFW (informatif seulement)

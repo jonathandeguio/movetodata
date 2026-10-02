@@ -35,15 +35,24 @@ ${REMOVE_VOLUMES} && {
   COMPOSE_FLAGS="-v"
 }
 
+# Compatibilité Docker Compose v1 (docker-compose) et v2 (docker compose)
+if docker compose version &>/dev/null 2>&1; then
+  _compose() { docker compose "$@"; }
+elif command -v docker-compose &>/dev/null; then
+  _compose() { docker-compose "$@"; }
+else
+  error "Docker Compose introuvable."
+fi
+
 compose_down() {
   local file="$1"
   local name="$2"
   if [[ -f "${file}" ]]; then
     info "Arrêt stack ${name}..."
     if [[ -f "${ENV_FILE}" ]]; then
-      docker compose --project-name movetodata -f "${file}" --env-file "${ENV_FILE}" down ${COMPOSE_FLAGS} 2>/dev/null || true
+      _compose --project-name movetodata -f "${file}" --env-file "${ENV_FILE}" down ${COMPOSE_FLAGS} 2>/dev/null || true
     else
-      docker compose --project-name movetodata -f "${file}" down ${COMPOSE_FLAGS} 2>/dev/null || true
+      _compose --project-name movetodata -f "${file}" down ${COMPOSE_FLAGS} 2>/dev/null || true
     fi
     success "Stack ${name} arrêtée"
   fi

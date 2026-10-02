@@ -32,6 +32,15 @@ COMPOSE_CORE="${SCRIPT_DIR}/docker-compose.core.yml"
 COMPOSE_SNAP="${SCRIPT_DIR}/docker-compose.snap.yml"
 COMPOSE_TYCHO="${SCRIPT_DIR}/docker-compose.tycho.yml"
 
+# Compatibilité Docker Compose v1 (docker-compose) et v2 (docker compose)
+if docker compose version &>/dev/null 2>&1; then
+  _compose() { docker compose "$@"; }
+elif command -v docker-compose &>/dev/null; then
+  _compose() { docker-compose "$@"; }
+else
+  error "Docker Compose introuvable."
+fi
+
 restart_container() {
   local container="$1"
   info "Redémarrage de ${container}..."
@@ -47,7 +56,7 @@ rebuild_and_restart() {
     info "Build en cours..."
     bash "${SCRIPT_DIR}/02-build.sh" --service "${service}"
   }
-  docker compose -f "${compose_file}" --env-file "${ENV_FILE}" up -d --no-deps --force-recreate "${service}"
+  _compose -f "${compose_file}" --env-file "${ENV_FILE}" up -d --no-deps --force-recreate "${service}"
   success "Service ${service} redémarré"
 }
 
