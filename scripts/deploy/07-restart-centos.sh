@@ -32,9 +32,9 @@ done
 
 [[ -f "${ENV_FILE}" ]] && { set -a; source "${ENV_FILE}"; set +a; }
 
-COMPOSE_CORE="${SCRIPT_DIR}/docker-compose.core.yml"
-COMPOSE_SNAP="${SCRIPT_DIR}/docker-compose.snap.yml"
-COMPOSE_TYCHO="${SCRIPT_DIR}/docker-compose.tycho.yml"
+COMPOSE_CORE="${SCRIPT_DIR}/../compose/docker-compose.core.yml"
+COMPOSE_SNAP="${SCRIPT_DIR}/../compose/docker-compose.snap.yml"
+COMPOSE_TYCHO="${SCRIPT_DIR}/../compose/docker-compose.tycho.yml"
 
 # =============================================================================
 # SELinux : ré-application du contexte (persistant via semanage ou chcon)

@@ -60,19 +60,19 @@ compose_down() {
 
 case "${STACK}" in
   core)
-    compose_down "${SCRIPT_DIR}/docker-compose.core.yml" "Core"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.core.yml" "Core"
     ;;
   snap)
-    compose_down "${SCRIPT_DIR}/docker-compose.snap.yml" "Snap"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.snap.yml" "Snap"
     ;;
   tycho)
-    compose_down "${SCRIPT_DIR}/docker-compose.tycho.yml" "Tycho"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.tycho.yml" "Tycho"
     ;;
   all)
     # Arrêt dans l'ordre inverse du démarrage
-    compose_down "${SCRIPT_DIR}/docker-compose.tycho.yml" "Tycho"
-    compose_down "${SCRIPT_DIR}/docker-compose.snap.yml" "Snap"
-    compose_down "${SCRIPT_DIR}/docker-compose.core.yml" "Core"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.tycho.yml" "Tycho"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.snap.yml" "Snap"
+    compose_down "${SCRIPT_DIR}/../compose/docker-compose.core.yml" "Core"
     ;;
   *)
     error "Stack inconnue : ${STACK}"

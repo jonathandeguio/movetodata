@@ -142,7 +142,7 @@ success "Fichier d'environnement généré : ${ENV_FILE}"
 warn "Ce fichier est confidentiel — vérifiez que .env.movetodata est dans .gitignore"
 
 # Vérifier .gitignore
-GITIGNORE="${SCRIPT_DIR}/../.gitignore"
+GITIGNORE="${SCRIPT_DIR}/../../.gitignore"
 if [[ -f "${GITIGNORE}" ]]; then
   if ! grep -q "\.env\.movetodata" "${GITIGNORE}"; then
     echo "scripts/.env.movetodata" >> "${GITIGNORE}"

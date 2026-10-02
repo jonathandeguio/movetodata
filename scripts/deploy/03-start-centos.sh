@@ -41,9 +41,9 @@ STACK="all"
 [[ $# -ge 1 && "$1" != "--stack" ]] && STACK="$1"
 [[ $# -ge 2 && "$1" == "--stack" ]]  && STACK="$2"
 
-COMPOSE_CORE="${SCRIPT_DIR}/docker-compose.core.yml"
-COMPOSE_SNAP="${SCRIPT_DIR}/docker-compose.snap.yml"
-COMPOSE_TYCHO="${SCRIPT_DIR}/docker-compose.tycho.yml"
+COMPOSE_CORE="${SCRIPT_DIR}/../compose/docker-compose.core.yml"
+COMPOSE_SNAP="${SCRIPT_DIR}/../compose/docker-compose.snap.yml"
+COMPOSE_TYCHO="${SCRIPT_DIR}/../compose/docker-compose.tycho.yml"
 
 compose_core()  { docker compose --project-name movetodata -f "${COMPOSE_CORE}"  --env-file "${ENV_FILE}" "$@"; }
 compose_snap()  { docker compose --project-name movetodata -f "${COMPOSE_SNAP}"  --env-file "${ENV_FILE}" "$@"; }
@@ -209,7 +209,7 @@ start_core() {
   # Les volumes docker-compose montent ces fichiers/répertoires : ils doivent
   # exister sur l'hôte AVANT le démarrage du conteneur, sinon Docker les crée
   # comme répertoires et le montage de fichier échoue.
-  local FRONTEND_SRC="${SCRIPT_DIR}/../frontend"
+  local FRONTEND_SRC="${SCRIPT_DIR}/../../frontend"
   local FRONTEND_MOUNT="${MOVETODATA_MOUNT_PATH}/frontend"
 
   info "Préparation des volumes frontend..."
@@ -370,12 +370,12 @@ start_snap() {
 
   # --- Copie des sources Snap dans le répertoire attendu ---
   local SNAP_REPOS_DIR
-  SNAP_REPOS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)/Unify/snap/repos"
+  SNAP_REPOS_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)/Unify/snap/repos"
   mkdir -p "${SNAP_REPOS_DIR}"
 
   if [[ ! -d "${SNAP_REPOS_DIR}/snap" ]]; then
     local SNAP_SRC
-    SNAP_SRC="$(cd "${SCRIPT_DIR}/.." && pwd)/snap"
+    SNAP_SRC="$(cd "${SCRIPT_DIR}/../.." && pwd)/snap"
     if [[ -d "${SNAP_SRC}" ]]; then
       cp -r "${SNAP_SRC}" "${SNAP_REPOS_DIR}/snap"
       info "Sources snap copiées → Unify/snap/repos/snap"
@@ -386,7 +386,7 @@ start_snap() {
 
   if [[ ! -d "${SNAP_REPOS_DIR}/snap-ui" ]]; then
     local SNAP_UI_SRC
-    SNAP_UI_SRC="$(cd "${SCRIPT_DIR}/.." && pwd)/snap-ui"
+    SNAP_UI_SRC="$(cd "${SCRIPT_DIR}/../.." && pwd)/snap-ui"
     if [[ -d "${SNAP_UI_SRC}" ]]; then
       cp -r "${SNAP_UI_SRC}" "${SNAP_REPOS_DIR}/snap-ui"
       info "Sources snap-ui copiées → Unify/snap/repos/snap-ui"

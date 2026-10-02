@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Générateur de clé de licence Orphea Platform
+    Générateur de clé de licence MoveTodata Platform
 
 .DESCRIPTION
     Lit license-config.json, génère et affiche la clé de licence chiffrée.

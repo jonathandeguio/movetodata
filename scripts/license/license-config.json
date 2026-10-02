@@ -14,11 +14,7 @@
 
   "_urls_detail": "Mettez toutes les URLs depuis lesquelles la plateforme sera accessible (window.location.origin). Port 80 est omis par le navigateur (http://host sans :80). Séparez par des point-virgules.",
   "baseUrls": [
-    "http://192.168.1.41",
-    "http://88.168.190.140:21000",
-    "http://localhost",
-    "http://localhost:3000",
-"http://movetodata.io:21000"
+    "http://192.168.1.78:8081/"
   ],
 
   "_expiration_format": "YYYY-MM-DD",

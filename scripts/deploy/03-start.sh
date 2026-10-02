@@ -38,9 +38,9 @@ STACK="all"
 [[ $# -ge 1 && "$1" != "--stack" ]] && STACK="$1"
 [[ $# -ge 2 && "$1" == "--stack" ]]  && STACK="$2"
 
-COMPOSE_CORE="${SCRIPT_DIR}/docker-compose.core.yml"
-COMPOSE_SNAP="${SCRIPT_DIR}/docker-compose.snap.yml"
-COMPOSE_TYCHO="${SCRIPT_DIR}/docker-compose.tycho.yml"
+COMPOSE_CORE="${SCRIPT_DIR}/../compose/docker-compose.core.yml"
+COMPOSE_SNAP="${SCRIPT_DIR}/../compose/docker-compose.snap.yml"
+COMPOSE_TYCHO="${SCRIPT_DIR}/../compose/docker-compose.tycho.yml"
 
 # Compatibilité Docker Compose v1 (docker-compose) et v2 (docker compose)
 if docker compose version &>/dev/null 2>&1; then
@@ -210,7 +210,7 @@ SAML_EOF
   # Les volumes Docker montent ces fichiers depuis l'hôte — ils doivent
   # exister AVANT le démarrage du conteneur, sinon Docker les crée en
   # tant que répertoires et le montage de fichier échoue.
-  local FRONTEND_SRC="${SCRIPT_DIR}/../frontend"
+  local FRONTEND_SRC="${SCRIPT_DIR}/../../frontend"
   local FRONTEND_MOUNT="${MOVETODATA_MOUNT_PATH}/frontend"
 
   info "Écriture du nginx.conf (proxy API + cookies SameSite=Lax)..."
