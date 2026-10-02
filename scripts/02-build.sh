@@ -34,7 +34,6 @@ build_boson() {
     --platform linux/amd64 \
     --tag movetodata/boson:latest \
     --tag movetodata/boson:"$(date +%Y%m%d)" \
-    --progress=plain \
     "${REPO_ROOT}/boson"
   success "Image movetodata/boson:latest construite"
 }
@@ -46,7 +45,6 @@ build_frontend() {
     --tag movetodata/frontend:latest \
     --tag movetodata/frontend:"$(date +%Y%m%d)" \
     --build-arg REACT_APP_API_URL="${BASE_URL:-http://localhost:8080}/api" \
-    --progress=plain \
     "${REPO_ROOT}/frontend"
   success "Image movetodata/frontend:latest construite"
 }
@@ -57,7 +55,6 @@ build_snap() {
     --platform linux/amd64 \
     --tag movetodata/snap:latest \
     --tag movetodata/snap:"$(date +%Y%m%d)" \
-    --progress=plain \
     "${REPO_ROOT}/snap"
   success "Image movetodata/snap:latest construite"
 }
@@ -68,7 +65,6 @@ build_snap_ui() {
     --platform linux/amd64 \
     --tag movetodata/snap-ui:latest \
     --tag movetodata/snap-ui:"$(date +%Y%m%d)" \
-    --progress=plain \
     "${REPO_ROOT}/snap-ui"
   success "Image movetodata/snap-ui:latest construite"
 }
@@ -80,7 +76,6 @@ build_tycho() {
     --platform linux/amd64 \
     --tag movetodata/tycho:latest \
     --tag movetodata/tycho:"$(date +%Y%m%d)" \
-    --progress=plain \
     "${REPO_ROOT}/tycho"
   success "Image movetodata/tycho:latest construite"
 }
