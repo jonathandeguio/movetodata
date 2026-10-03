@@ -59,7 +59,7 @@ services:
     image: movetodata/boson:latest
     container_name: movetodata-boson
     build:
-      context: ../boson
+      context: ../../boson
       dockerfile: Dockerfile
     command:
       - /bin/sh
@@ -124,7 +124,7 @@ services:
     image: movetodata/frontend:latest
     container_name: movetodata-frontend
     build:
-      context: ../frontend
+      context: ../../frontend
       dockerfile: Dockerfile
       args:
         REACT_APP_API_URL: ${BASE_URL:-http://localhost:8080}/api
@@ -155,7 +155,7 @@ services:
     image: movetodata/docs:latest
     container_name: movetodata-docs
     build:
-      context: ../movetodata-docs
+      context: ../../movetodata-docs
       dockerfile: Dockerfile
     restart: unless-stopped
     networks:

@@ -12,7 +12,7 @@ x-tycho-depends: &tycho-depends
   - movetodata-redis
 
 x-tycho-volumes: &tycho-volumes
-  - ../tycho/docker:/app/docker:ro
+  - ../../tycho/docker:/app/docker:ro
   - ${MOVETODATA_MOUNT_PATH:-/movetodata}/tycho/superset_home:/app/superset_home
 
 services:
@@ -75,7 +75,7 @@ services:
     image: *tycho-image
     container_name: movetodata-tycho
     build:
-      context: ../tycho
+      context: ../../tycho
       dockerfile: Dockerfile
     command: ["/app/docker/docker-bootstrap.sh", "app"]
     user: *tycho-user
@@ -222,7 +222,7 @@ services:
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_SSL: "false"
     volumes:
-      - ../tycho/superset-websocket:/app/superset-websocket
+      - ../../tycho/superset-websocket:/app/superset-websocket
     ports:
       - "127.0.0.1:8090:8090"
     restart: unless-stopped

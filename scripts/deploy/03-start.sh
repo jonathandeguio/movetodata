@@ -134,72 +134,22 @@ start_core() {
   # --- Arrêt des conteneurs existants (y compris movetodata-docs) ---
   stop_existing movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend movetodata-docs
 
-  # --- Créer les répertoires nécessaires ---
-  info "Préparation des répertoires de données..."
+  # --- Vérification répertoires de stockage (créés par 00-setup-storage.sh) ---
+  if [[ ! -d "${MOVETODATA_MOUNT_PATH}/frontend" ]]; then
+    warn "Répertoires de stockage absents — exécution de 00-setup-storage.sh..."
+    bash "${SCRIPT_DIR}/00-setup-storage.sh" || error "Échec de l'initialisation du stockage"
+  fi
+
+  # Garde-fou : s'assurer que les répertoires critiques existent
   mkdir -p \
     "${MOVETODATA_MOUNT_PATH}/postgres/boson" \
     "${MOVETODATA_MOUNT_PATH}/redis" \
-    "${MOVETODATA_MOUNT_PATH}/boson/logs/accessLogs" \
-    "${MOVETODATA_MOUNT_PATH}/boson/data" \
-    "${MOVETODATA_MOUNT_PATH}/dataset" \
-    "${MOVETODATA_MOUNT_PATH}/file" \
-    "${MOVETODATA_MOUNT_PATH}/repositories" \
-    "${MOVETODATA_MOUNT_PATH}/spark-streaming" \
     "${MOVETODATA_MOUNT_PATH}/frontend/build"
 
-  # Vérifier que /etc/movetodata/saml.yml est présent et contient une registration SAML2
-  # (le bean RelyingPartyRegistrationRepository doit exister même en mode password)
-  _saml_needs_fix=0
-  if [[ ! -f /etc/movetodata/saml.yml ]]; then
-    _saml_needs_fix=1
-    warn "/etc/movetodata/saml.yml absent — création..."
-  elif ! grep -q "relyingparty" /etc/movetodata/saml.yml 2>/dev/null; then
-    _saml_needs_fix=1
-    warn "/etc/movetodata/saml.yml incomplet (pas de registration SAML2) — recréation..."
-  fi
-
-  if [[ ${_saml_needs_fix} -eq 1 ]]; then
-    if [[ ! -w /etc/movetodata ]] && [[ ! -w /etc/movetodata/saml.yml ]]; then
-      warn "Permission refusée pour écrire /etc/movetodata/saml.yml"
-      warn "Exécutez manuellement (avec sudo) :"
-      warn "  sudo bash -c 'cat > /etc/movetodata/saml.yml << EOF"
-      warn "platform-default-login: password"
-      warn "spring:"
-      warn "  security:"
-      warn "    saml2:"
-      warn "      relyingparty:"
-      warn "        registration:"
-      warn "          MoveToData-SSO:"
-      warn "            assertingparty:"
-      warn "              singlesignon:"
-      warn "                sign-request: false"
-      warn "                url: https://login.microsoftonline.com/CHANGEME/saml2"
-      warn "              entity-id: http://movetodata.io"
-      warn "            entity-id: http://movetodata.io"
-      warn "            acs:"
-      warn "              location: \${BASE_URL}/api/sso/callback"
-      warn "EOF'"
-    else
-      mkdir -p /etc/movetodata
-      cat > /etc/movetodata/saml.yml << 'SAML_EOF'
-platform-default-login: password
-spring:
-  security:
-    saml2:
-      relyingparty:
-        registration:
-          MoveToData-SSO:
-            assertingparty:
-              singlesignon:
-                sign-request: false
-                url: https://login.microsoftonline.com/CHANGEME_TENANT_ID/saml2
-              entity-id: http://movetodata.io
-            entity-id: http://movetodata.io
-            acs:
-              location: ${BASE_URL}/api/sso/callback
-SAML_EOF
-      success "/etc/movetodata/saml.yml créé"
-    fi
+  # Vérification /etc/movetodata/saml.yml
+  if [[ ! -f /etc/movetodata/saml.yml ]] || ! grep -q "relyingparty" /etc/movetodata/saml.yml 2>/dev/null; then
+    warn "/etc/movetodata/saml.yml absent ou incomplet"
+    warn "  Exécutez : sudo bash ${SCRIPT_DIR}/00-setup-storage.sh"
   fi
 
   # --- Vérification UFW ---
