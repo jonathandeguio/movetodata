@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
 	id 'java'
 	id 'java-library'
 	id 'org.springframework.boot' version '2.7.2'
