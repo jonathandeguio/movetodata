@@ -8,10 +8,5 @@ import lombok.Setter;
 public class CheckUpdatesModel {
     String frontend;
     String boson;
-    String parler;
-    String julia;
-    String callisto;
-    String capture;
-    String movetodataDocs;
-    String sparkHistoryServer;
+    String moveToDataDocs;
 }
