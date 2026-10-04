@@ -27,7 +27,7 @@ RUN mkdir -p $SPARK_HOME/  && \
 FROM --platform=linux/amd64 gradle:7.6.1-jdk11
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN ./gradlew build --no-daemon -x test
+RUN chmod +x gradlew && ./gradlew build --no-daemon -x test
 
 RUN mkdir -p /app/
 RUN mv /home/gradle/src/build/libs/*.jar /app/
