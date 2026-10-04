@@ -1,3 +1,0 @@
-# This can be used to install python dependencies
-pyspark
-venv-pack

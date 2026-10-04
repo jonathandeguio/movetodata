@@ -1,6 +1,0 @@
-ubectl apply -f configurations/hello-world-deployment-1.yaml
-kubectl apply -f configurations/hello-world-service-1.yaml
-kubectl apply -f configurations/hello-world-deployment-2.yaml
-kubectl apply -f configurations/hello-world-service-2.yaml
-kubectl apply -f configurations/hello-world-managed-cert.yaml
-kubectl apply -f configurations/hello-world-ingress.yaml

@@ -1,3 +1,0 @@
-{
-  "hooks": { "before:release": "npm run reset-nm; npm run build" }
-}

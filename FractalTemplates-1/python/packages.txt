@@ -1,2 +1,0 @@
-# This can be used to install os packages, please use debian based packages
-# fonts-mathjax

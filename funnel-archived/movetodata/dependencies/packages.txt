@@ -1,9 +1,0 @@
-tzdata
-curl
-vim
-git
-python3.9
-python3-pip
-jq
-openssl
-tini
