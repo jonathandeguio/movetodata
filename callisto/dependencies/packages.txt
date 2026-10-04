@@ -1,5 +1,0 @@
-nodejs
-texlive-latex-extra
-texlive-xetex
-git
-cron

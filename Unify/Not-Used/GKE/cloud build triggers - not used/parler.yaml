@@ -1,9 +1,0 @@
-autodetect: true
-createTime: '2022-07-19T16:40:44.897133377Z'
-github:
-  name: parler
-  owner: MoveToData-io
-  push:
-    branch: ^main$
-id: 3fcfb9ba-3784-4afb-b92b-ae1837b5d5c2
-name: parler

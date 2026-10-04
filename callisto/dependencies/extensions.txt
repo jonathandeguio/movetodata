@@ -1,2 +1,0 @@
-@jupyterlab/completer
-@jupyterlab/completer-extension
