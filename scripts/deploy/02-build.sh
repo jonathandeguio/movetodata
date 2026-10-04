@@ -2,6 +2,7 @@
 # =============================================================================
 # MoveToData Platform — Script 02 : Build de toutes les images Docker
 # Usage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|docs|movetodata-ai|all]
+#                          [--no-cache]
 # Durée estimée : 15–40 min selon la bande passante (Spark ~400Mo)
 # =============================================================================
 set -euo pipefail
@@ -21,17 +22,46 @@ error()   { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 # Chargement de l'environnement
 set -a; source "${ENV_FILE}"; set +a
 
-SERVICE="${1:-all}"
-[[ "$#" -ge 2 && "$1" == "--service" ]] && SERVICE="$2"
+# ---------------------------------------------------------------------------
+# Parsing des arguments
+# ---------------------------------------------------------------------------
+SERVICE="all"
+NO_CACHE="--no-cache"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --service)
+      [[ $# -lt 2 ]] && error "--service requiert un argument"
+      SERVICE="$2"
+      shift 2
+      ;;
+    --cache)
+      NO_CACHE=""
+      shift
+      ;;
+    --no-cache)
+      NO_CACHE="--no-cache"
+      shift
+      ;;
+    *)
+      error "Argument inconnu : $1\nUsage : bash 02-build.sh [--service <nom>] [--cache|--no-cache]"
+      ;;
+  esac
+done
+
+[[ -n "${NO_CACHE}" ]] && warn "Build avec --no-cache (forcer la recopie des sources)"
+[[ -z "${NO_CACHE}" ]] && info "Build avec cache Docker activé (--cache)"
 
 BUILD_START=$(date +%s)
+REACT_API_URL="${BASE_URL:-http://192.168.1.78:8081}/api"
 
 # =============================================================================
 build_boson() {
   info "=== Build Boson (Java 11 + Spring Boot + Spark 3.4.3) ==="
   info "    Durée estimée : 10–20 min (téléchargement Spark ~400Mo)"
+  # shellcheck disable=SC2086
   docker build \
-    --no-cache \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/boson:latest \
     --tag movetodata/boson:"$(date +%Y%m%d)" \
@@ -41,19 +71,23 @@ build_boson() {
 
 build_frontend() {
   info "=== Build Frontend (React 18 + Nginx) ==="
+  info "    REACT_APP_API_URL=${REACT_API_URL}"
+  # shellcheck disable=SC2086
   docker build \
-    --no-cache \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/frontend:latest \
     --tag movetodata/frontend:"$(date +%Y%m%d)" \
-    --build-arg REACT_APP_API_URL="${BASE_URL:-http://localhost:8080}/api" \
+    --build-arg REACT_APP_API_URL="${REACT_API_URL}" \
     "${REPO_ROOT}/frontend"
   success "Image movetodata/frontend:latest construite"
 }
 
 build_snap() {
   info "=== Build Snap (Java Spring Boot - artifact manager) ==="
+  # shellcheck disable=SC2086
   docker build \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/snap:latest \
     --tag movetodata/snap:"$(date +%Y%m%d)" \
@@ -63,7 +97,9 @@ build_snap() {
 
 build_snap_ui() {
   info "=== Build Snap-UI (React + Nginx) ==="
+  # shellcheck disable=SC2086
   docker build \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/snap-ui:latest \
     --tag movetodata/snap-ui:"$(date +%Y%m%d)" \
@@ -74,7 +110,9 @@ build_snap_ui() {
 build_tycho() {
   info "=== Build Tycho (Apache Superset fork - Python 3.8) ==="
   info "    Durée estimée : 10–20 min (compilation Python + Node)"
+  # shellcheck disable=SC2086
   docker build \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/tycho:latest \
     --tag movetodata/tycho:"$(date +%Y%m%d)" \
@@ -84,7 +122,9 @@ build_tycho() {
 
 build_docs() {
   info "=== Build Docs (Docusaurus — documentation FR/EN) ==="
+  # shellcheck disable=SC2086
   docker build \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/docs:latest \
     --tag movetodata/docs:"$(date +%Y%m%d)" \
@@ -94,7 +134,9 @@ build_docs() {
 
 build_ai() {
   info "=== Build movetodata-ai (FastAPI — service LLM) ==="
+  # shellcheck disable=SC2086
   docker build \
+    ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/movetodata-ai:latest \
     --tag movetodata/movetodata-ai:"$(date +%Y%m%d)" \
@@ -122,7 +164,7 @@ case "${SERVICE}" in
     build_ai
     ;;
   *)
-    error "Service inconnu : ${SERVICE}\nUsage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|docs|movetodata-ai|all]"
+    error "Service inconnu : ${SERVICE}\nUsage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|docs|movetodata-ai|all] [--cache|--no-cache]"
     ;;
 esac
 
