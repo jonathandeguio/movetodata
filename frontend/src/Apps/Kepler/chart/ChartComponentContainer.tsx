@@ -1,4 +1,5 @@
 import { Drawer, message, Switch, Tabs, Tooltip, Typography } from "antd";
+import { ExperimentOutlined } from "@ant-design/icons";
 import {
   HistoricalRunsIcon,
   RefreshIcon,
@@ -17,6 +18,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, isDefined, TimeCounter } from "utils/utilities";
+import { AnomalyBadge, AugmentedAnalyticsDrawer } from "../components/AugmentedAnalyticsDrawer";
 import { addFiltersFromDataset } from "../../../redux/actions/filtersAction";
 import { RootState } from "../../../redux/types/store";
 import { getDatasetColumns } from "../dashboard/Dashboard.api";
@@ -39,6 +41,8 @@ const ChartComponentContainer = () => {
 
   const [chartTableData, setChartTableData] = useState<any>([]);
   const [showDatasetDetailsPanel, setShowDatasetDetailsPanel] = useState(false);
+  const [showAiDrawer, setShowAiDrawer] = useState(false);
+  const [anomalyCount, setAnomalyCount] = useState(0);
   const [filterColumns, setFilterColumns] = useState<any>([]);
   const [filterColumnsLoading, setFilterColumnsLoading] =
     useState<boolean>(false);
@@ -185,6 +189,27 @@ const ChartComponentContainer = () => {
                 />
               )}
               <div className="kepler-container-plane-right-head">
+                <div style={{ marginRight: "0.5rem" }} className="text-and-icon-center">
+                  <Tooltip title="Analytics IA (anomalies, prévision, segments, résumé)" placement="bottom">
+                    <div style={{ position: "relative", display: "inline-flex" }}>
+                      <BoslerButton
+                        icon={<ExperimentOutlined />}
+                        minimal
+                        icononly
+                        trimicononlypadding
+                        onClick={() => setShowAiDrawer(true)}
+                      />
+                      {anomalyCount > 0 && (
+                        <span style={{ position: "absolute", top: -4, right: -4 }}>
+                          <AnomalyBadge
+                            count={anomalyCount}
+                            onClick={() => setShowAiDrawer(true)}
+                          />
+                        </span>
+                      )}
+                    </div>
+                  </Tooltip>
+                </div>
                 <div
                   style={{ marginRight: "1rem", gap: "0.5rem" }}
                   className="text-and-icon-center"
@@ -370,6 +395,24 @@ const ChartComponentContainer = () => {
       >
         <ChartDatasetDetails datasetId={chart?.datasetId} />
       </Drawer>
+
+      {/* F2 — Augmented Analytics Drawer */}
+      {chart?.datasetId && (
+        <AugmentedAnalyticsDrawer
+          datasetId={chart.datasetId}
+          branch={query?.branch ?? "master"}
+          availableColumns={[
+            ...(query?.xaxis ? [query.xaxis] : []),
+            ...(query?.series?.map((s: any) => s.columnName).filter(Boolean) ?? []),
+            ...(query?.dimensions ?? []),
+          ].filter((v, i, a) => v && a.indexOf(v) === i)}
+          defaultColumnX={query?.xaxis}
+          defaultColumnY={query?.series?.[0]?.columnName}
+          open={showAiDrawer}
+          onClose={() => setShowAiDrawer(false)}
+          onAnomaliesDetected={(count) => setAnomalyCount(count)}
+        />
+      )}
     </div>
   );
 };

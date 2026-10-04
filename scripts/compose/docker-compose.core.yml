@@ -89,6 +89,8 @@ services:
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
       SWAGGER_UI: ${SWAGGER_UI:-false}
+      # F5 — AI service URL (internal Docker network)
+      MOVETODATA_AI_URL: ${MOVETODATA_AI_URL:-http://movetodata-ai:8090}
       # Mode de stockage : localfs | s3 | gs | hdfs
       BACKING_FS: ${BACKING_FS:-localfs}
       # Répertoire racine pour le stockage local (utilisé si BACKING_FS=localfs)
@@ -165,6 +167,47 @@ services:
       options:
         max-size: "20m"
         max-file: "3"
+
+  # ---------------------------------------------------------------------------
+  # F5 — AI Service (Python / FastAPI)
+  # Sovereign LLM inference via Ollama (qwen2.5:14b, self-hosted).
+  # Boson proxies /api/ai/** to this service on the internal network.
+  # The service reads files directly from the shared mount path — no file
+  # bytes are retransmitted over HTTP.
+  # ---------------------------------------------------------------------------
+  movetodata-ai:
+    image: movetodata/movetodata-ai:latest
+    container_name: movetodata-ai
+    build:
+      context: ../../movetodata-ai
+      dockerfile: Dockerfile
+    environment:
+      # Ollama must be reachable from within the Docker network.
+      # On a bare-metal install with Ollama on the host:
+      #   OLLAMA_URL=http://host.docker.internal:11434
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      CHAT_MODEL: ${CHAT_MODEL:-qwen2.5:14b}
+      OLLAMA_TIMEOUT: ${OLLAMA_TIMEOUT:-120}
+    volumes:
+      # Shared volume so the service can read uploaded files directly from disk.
+      - ${MOVETODATA_MOUNT_PATH:-/movetodata}:${MOVETODATA_MOUNT_PATH:-/movetodata}:ro
+    ports:
+      # Exposed on loopback only — Boson reaches it via the internal network.
+      - "127.0.0.1:8090:8090"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8090/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - movetodata-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
 
 networks:
   movetodata-net:

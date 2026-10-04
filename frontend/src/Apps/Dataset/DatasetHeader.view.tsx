@@ -1,4 +1,5 @@
-import { Popover, Typography } from "antd";
+import { RobotOutlined } from "@ant-design/icons";
+import { Popover, Tooltip, Typography } from "antd";
 import { HistoryIcon } from "assets/icons/boslerActionIcons";
 
 import { GraphIcon, GroupedColumnIcon } from "assets/icons/boslerChartIcons";
@@ -12,6 +13,7 @@ import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
 import SourcesTargets from "helpers/SourcesTargets";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import AiTextToSqlPanel from "./components/AiTextToSqlPanel/AiTextToSqlPanel";
 
 import { KEPLER_USE_CASES } from "Apps/Kepler/chart/charts.utils";
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
@@ -51,6 +53,12 @@ const DatasetHeader = ({
 }: TProps) => {
   const dispatch = useDispatch<ThunkAppDispatch>();
   const [isCreateChartModalOpen, setIsCreateChartModalOpen] = useState(false);
+  const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+
+  // The AI Text-to-SQL panel is only useful for JDBC datasets (datasets backed
+  // by a relational database source). File and folder datasets don't have a
+  // queryable SQL schema.
+  const isJdbcDataset = datasetDetails.subType === ResourceSubTypeEnum.JDBC;
 
   const resourcePermission = useSelector(
     (state) => (state as $TSFixMe).resourcePermission[id]
@@ -170,7 +178,33 @@ const DatasetHeader = ({
             page="DATASET"
           />
         )}
+
+        {/* AI Text-to-SQL toggle button — visible only for JDBC datasets */}
+        {isJdbcDataset && (
+          <Tooltip
+            placement="bottom"
+            title={
+              isAiPanelOpen
+                ? "Fermer l'assistant SQL"
+                : "Générer du SQL avec l'IA"
+            }
+          >
+            <BoslerButton
+              icon={<RobotOutlined />}
+              intent={isAiPanelOpen ? "action" : undefined}
+              minimal
+              onClick={() => setIsAiPanelOpen((open) => !open)}
+            >
+              IA
+            </BoslerButton>
+          </Tooltip>
+        )}
       </div>
+
+      {/* AI Text-to-SQL collapsible panel */}
+      {isJdbcDataset && isAiPanelOpen && (
+        <AiTextToSqlPanel datasetId={id} branch={branch} />
+      )}
 
       {isCreateChartModalOpen && (
         <>

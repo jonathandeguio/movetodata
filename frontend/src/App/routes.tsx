@@ -86,6 +86,7 @@ import ManageGroups from "../pages/Settings/ManageGroups";
 import ProfileUser from "../pages/Settings/ProfileUser";
 
 import AgentDetails from "../Apps/Connect/Agents/Agent.view";
+import SmartConnectorAnalysisPage from "../Apps/Connect/SmartConnector/SmartConnectorAnalysisPage";
 import DatasetDetail from "../Apps/Dataset/DatasetDetail";
 
 import { AccessManager } from "Apps/AccessManager";
@@ -202,6 +203,10 @@ const useRouter = () => {
                   <Route
                     path="/portal/connect/source/:id"
                     element={<SourceDetails />}
+                  />
+                  <Route
+                    path="/portal/connect/source/:id/analyze"
+                    element={<SmartConnectorAnalysisPage />}
                   />
                   <Route
                     path="/portal/connect/link/:id"

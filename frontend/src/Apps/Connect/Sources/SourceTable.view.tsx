@@ -2,7 +2,7 @@ import { Col, Dropdown, Row, Table, Tooltip, Typography } from "antd";
 import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
 import DeleteModal from "components/Modals/DeleteModal";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -25,6 +25,11 @@ import {
 import { ThunkAppDispatch } from "../../../redux/types/store";
 
 import { getConnectLink } from "../Connect.utils";
+import QualityBadge from "../SmartConnector/QualityBadge";
+import {
+  getSourceQualitiesBatchAPI,
+  type AiSourceQuality,
+} from "../../../services/aiService";
 
 const { Title } = Typography;
 
@@ -41,6 +46,31 @@ const SourceTable2 = ({ tableList, loading }: any) => {
     disabled: true,
   });
   const [FilteredData, setFilteredData] = useState();
+
+  // Quality badges — batch loaded once when the source list is populated
+  const [qualityMap, setQualityMap] = useState<Record<string, AiSourceQuality>>({});
+  const lastSourceIdsRef = useRef<string>("");
+
+  useEffect(() => {
+    if (!tableList || tableList.length === 0) return;
+
+    const ids: string[] = tableList.map((s: any) => String(s.id));
+    const key = ids.join(",");
+    if (key === lastSourceIdsRef.current) return; // avoid re-fetching on re-renders
+    lastSourceIdsRef.current = key;
+
+    getSourceQualitiesBatchAPI(ids)
+      .then(({ data }) => {
+        const map: Record<string, AiSourceQuality> = {};
+        data.forEach((q) => {
+          map[String(q.sourceId)] = q;
+        });
+        setQualityMap(map);
+      })
+      .catch(() => {
+        // Silently ignore — quality badges are non-critical
+      });
+  }, [tableList]);
 
   const deleteSourceHandler = (resourceId: string) => {
     dispatch(deleteSource(resourceId)).then(() => {
@@ -69,6 +99,7 @@ const SourceTable2 = ({ tableList, loading }: any) => {
           <div className="text-and-icon-center">
             {getSourceIcon(record.type, record.dbmsType)}
             {"  "} {text}
+            <QualityBadge quality={qualityMap[String(record.id)]} />
           </div>
         </Title>
       ),

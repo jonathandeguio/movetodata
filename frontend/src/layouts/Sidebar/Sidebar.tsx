@@ -13,6 +13,7 @@ import {
 } from "assets/icons/boslerInterfaceIcons";
 import { LibraryIcon, StarIcon } from "assets/icons/boslerMiscellaneousIcons";
 import { getIsConnectAdmin } from "common/common.api";
+import { AiAssistantButton } from "components/AiAssistant";
 import BoslerCommandPalette from "components/CommandPalette/CommandPalette.view";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -371,6 +372,11 @@ const Sidebar = () => {
         </div>
 
         <div className={styles.bottom}>
+          {/* F3 — AI assistant toggle button */}
+          <AiAssistantButton
+            iconSize={sidebarAttributes.iconSize}
+            showText={sidebarAttributes.showText}
+          />
           <NotificationBell
             iconSize={sidebarAttributes.iconSize}
             showText={sidebarAttributes.showText}

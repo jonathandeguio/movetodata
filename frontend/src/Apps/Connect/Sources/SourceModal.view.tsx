@@ -4,6 +4,7 @@ import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButt
 import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { FolderIcon } from "assets/icons/boslerFileIcons";
 import { Buffer } from "buffer";
@@ -52,6 +53,7 @@ const SourceModal = ({
   defaultParent,
 }: any) => {
   const dispatch = useDispatch<ThunkAppDispatch>();
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
 
   const initialConnector = {
@@ -159,6 +161,10 @@ const SourceModal = ({
         fetchResource(data.id);
         dispatch(listSources());
         resetState();
+        // F4 — Smart Connector: redirect to analysis page after source creation
+        if (data.id) {
+          navigate(`/portal/connect/source/${data.id}/analyze`);
+        }
       });
   };
 

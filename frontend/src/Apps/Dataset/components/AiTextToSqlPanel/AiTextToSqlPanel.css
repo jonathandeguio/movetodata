@@ -1,0 +1,74 @@
+/* AiTextToSqlPanel.css — F1 Text-to-SQL panel styles */
+
+.ai-text-to-sql-panel {
+  border-top: 1px solid var(--movetodata-border-color, #303030);
+  background: var(--movetodata-bg-secondary, #1a1a1a);
+  padding: 10px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-text-to-sql-panel__input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.ai-text-to-sql-panel__textarea {
+  flex: 1;
+  resize: none;
+}
+
+.ai-text-to-sql-panel__generate-btn {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.ai-text-to-sql-panel__result {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-text-to-sql-panel__sql-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-text-to-sql-panel__sql-block {
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  font-size: 12px;
+  background: var(--movetodata-bg-code, #111);
+  border: 1px solid var(--movetodata-border-color, #303030);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 180px;
+  overflow-y: auto;
+  color: var(--movetodata-font-color, #e0e0e0);
+}
+
+.ai-text-to-sql-panel__sql-editable {
+  width: 100%;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 12px;
+}
+
+.ai-text-to-sql-panel__actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ai-text-to-sql-panel__preview-table {
+  margin-top: 4px;
+  max-height: 200px;
+  overflow: auto;
+  border: 1px solid var(--movetodata-border-color, #303030);
+  border-radius: 4px;
+}
