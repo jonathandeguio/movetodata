@@ -27,7 +27,7 @@ public class ConfigurationComponentsModel {
     String julia;
     String callisto;
     String capture;
-    String movetodataDocs;
+    String moveToDataDocs;
     String sparkHistoryServer;
     String globalVersion;
     String branch;

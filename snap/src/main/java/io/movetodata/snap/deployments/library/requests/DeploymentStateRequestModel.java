@@ -12,7 +12,7 @@ public class DeploymentStateRequestModel {
     String julia;
     String callisto;
     String capture;
-    String movetodataDocs;
+    String moveToDataDocs;
     String sparkHistoryServer;
     String branch;
 }

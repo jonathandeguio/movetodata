@@ -43,7 +43,7 @@ public class DeploymentService {
                 .julia(requestModel.getJulia())
                 .callisto(requestModel.getCallisto())
                 .capture(requestModel.getCapture())
-                .movetodataDocs(requestModel.getMoveToDataDocs())
+                .moveToDataDocs(requestModel.getMoveToDataDocs())
                 .sparkHistoryServer(requestModel.getSparkHistoryServer())
                 .state(configurationState)
                 .deployedAt(new Date())
