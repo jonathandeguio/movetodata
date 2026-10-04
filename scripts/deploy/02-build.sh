@@ -42,6 +42,7 @@ build_boson() {
 build_frontend() {
   info "=== Build Frontend (React 18 + Nginx) ==="
   docker build \
+    --no-cache \
     --platform linux/amd64 \
     --tag movetodata/frontend:latest \
     --tag movetodata/frontend:"$(date +%Y%m%d)" \
