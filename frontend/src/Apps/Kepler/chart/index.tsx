@@ -153,7 +153,6 @@ const ChartsWrapper = () => {
 
     setIsLoading(false);
   }, [datasetMapping, chartState]);
-  console.log("DATASET DETAILS : ", datasetDetails);
   // BOTTOM BAR
   useEffect(() => {
     dispatch(

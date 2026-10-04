@@ -26,6 +26,7 @@ import ChartComponent from "./ChartComponent/ParentChartComponent";
 import { chartConfig } from "./charts.config";
 import { fetchChartData } from "./charts.utils";
 import ChartDatasetDetails from "./components/ChartDatasetDetails";
+import EmptyChart from "./EmptyChart";
 import KeplerChartDataTable from "./components/KeplerChartDataTable";
 
 const { Text } = Typography;
@@ -37,7 +38,7 @@ const ChartComponentContainer = () => {
     (state: RootState) => state.datasetMapping
   );
 
-  const queryMemo = useMemo(() => query, [data]);
+  const queryMemo = useMemo(() => query, [query]);
 
   const [chartTableData, setChartTableData] = useState<any>([]);
   const [showDatasetDetailsPanel, setShowDatasetDetailsPanel] = useState(false);
@@ -170,7 +171,9 @@ const ChartComponentContainer = () => {
     () => isDefined(query)
   );
 
-  if (!isDefined(data) && !isDefined(queryMemo?.chartType))
+  if (!isDefined(queryMemo?.chartType))
+    return <EmptyChart data={getLanguageLabel("selectChartType")} />;
+  if (!isDefined(data))
     return <BoslerLoader />;
 
   return (
