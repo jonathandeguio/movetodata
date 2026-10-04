@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =============================================================================
 # MoveToData Platform — Script 02 : Build de toutes les images Docker
-# Usage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|all]
+# Usage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|docs|movetodata-ai|all]
 # Durée estimée : 15–40 min selon la bande passante (Spark ~400Mo)
 # =============================================================================
 set -euo pipefail
@@ -81,23 +81,47 @@ build_tycho() {
   success "Image movetodata/tycho:latest construite"
 }
 
+build_docs() {
+  info "=== Build Docs (Docusaurus — documentation FR/EN) ==="
+  docker build \
+    --platform linux/amd64 \
+    --tag movetodata/docs:latest \
+    --tag movetodata/docs:"$(date +%Y%m%d)" \
+    "${REPO_ROOT}/movetodata-docs"
+  success "Image movetodata/docs:latest construite"
+}
+
+build_ai() {
+  info "=== Build movetodata-ai (FastAPI — service LLM) ==="
+  docker build \
+    --platform linux/amd64 \
+    --tag movetodata/movetodata-ai:latest \
+    --tag movetodata/movetodata-ai:"$(date +%Y%m%d)" \
+    "${REPO_ROOT}/movetodata-ai"
+  success "Image movetodata/movetodata-ai:latest construite"
+}
+
 # =============================================================================
 
 case "${SERVICE}" in
-  boson)     build_boson ;;
-  frontend)  build_frontend ;;
-  snap)      build_snap ;;
-  snap-ui)   build_snap_ui ;;
-  tycho)     build_tycho ;;
+  boson)          build_boson ;;
+  frontend)       build_frontend ;;
+  snap)           build_snap ;;
+  snap-ui)        build_snap_ui ;;
+  tycho)          build_tycho ;;
+  docs)           build_docs ;;
+  movetodata-ai)  build_ai ;;
   all)
     build_boson
     build_frontend
     build_snap
     build_snap_ui
     build_tycho
+    build_docs
+    build_ai
     ;;
   *)
-    error "Service inconnu : ${SERVICE}\nUsage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|all]"
+    error "Service inconnu : ${SERVICE}\nUsage : bash 02-build.sh [--service boson|frontend|snap|snap-ui|tycho|docs|movetodata-ai|all]"
     ;;
 esac
 
