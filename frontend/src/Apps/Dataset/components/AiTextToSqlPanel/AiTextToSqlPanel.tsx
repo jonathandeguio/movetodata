@@ -220,7 +220,6 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
           disabled={panelState === "loading"}
         />
         <BoslerButton
-          className="ai-text-to-sql-panel__generate-btn"
           intent="action"
           onClick={handleGenerate}
           disabled={!question.trim() || panelState === "loading"}
