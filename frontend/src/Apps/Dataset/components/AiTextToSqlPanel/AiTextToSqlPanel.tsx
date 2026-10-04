@@ -137,7 +137,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
       // The preview API returns { results: [{ columns: [...], data: [[...], ...] }] }
       const firstResult = data?.results?.[0];
       if (!firstResult) {
-        setPreviewError(getLanguageLabel("noResults") || "No results returned.");
+        setPreviewError("No results returned.");
         return;
       }
 
