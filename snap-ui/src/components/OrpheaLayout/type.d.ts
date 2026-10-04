@@ -1,4 +1,4 @@
-import { ITabPane, TabState } from "../MoveToDataComponents/MoveToDataTabs/types";
+import { ITabPane, TabState } from "../OrpheaTabs/types";
 
 export interface IMoveToDataBottomBarItem {
   id: string;

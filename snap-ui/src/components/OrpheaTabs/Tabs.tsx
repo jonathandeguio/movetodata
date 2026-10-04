@@ -6,7 +6,7 @@ import {
   TabContextProvider,
   initTabState,
   updateActiveKey,
-} from "./MoveToDataTabsContext";
+} from "./OrpheaTabsContext";
 import { ITab, ITabPane, TabsComponent } from "./types";
 
 const TabPaneHeaderItem: React.FC<ITabPane> = ({

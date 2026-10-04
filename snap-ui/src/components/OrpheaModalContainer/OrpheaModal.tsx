@@ -1,6 +1,6 @@
 import { Modal, ModalProps } from "antd";
 import React from "react";
-import MoveToDataModalContainer from "./MoveToDataModalContainer";
+import MoveToDataModalContainer from "./OrpheaModalContainer";
 interface TMoveToDataModalProps extends ModalProps {
   heading?: any;
   headingIcon?: any;

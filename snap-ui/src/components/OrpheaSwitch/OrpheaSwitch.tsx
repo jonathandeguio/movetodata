@@ -1,7 +1,7 @@
 import { Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { isDefined } from "utils/utilities";
-import styles from "./MoveToDataSwitch.module.scss";
+import styles from "./OrpheaSwitch.module.scss";
 
 type TOption = {
   label: any;

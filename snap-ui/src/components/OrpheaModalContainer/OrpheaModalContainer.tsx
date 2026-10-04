@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./MoveToDataModalContainer.module.scss";
+import styles from "./OrpheaModalContainer.module.scss";
 
 interface TProps {
   heading: any;

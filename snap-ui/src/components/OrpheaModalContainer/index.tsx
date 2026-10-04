@@ -1,2 +1,2 @@
-import MoveToDataModal from "./MoveToDataModal";
+import MoveToDataModal from "./OrpheaModal";
 export default MoveToDataModal;
