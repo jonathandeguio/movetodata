@@ -1,0 +1,24 @@
+{
+  "name": "movetodata-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "dotenv -e .env.test -- playwright test",
+    "test:auth": "dotenv -e .env.test -- playwright test specs/F-AUTH/",
+    "test:portal": "dotenv -e .env.test -- playwright test specs/F-PORTAL/",
+    "test:connect": "dotenv -e .env.test -- playwright test specs/F-CONNECT/",
+    "test:dataset": "dotenv -e .env.test -- playwright test specs/F-DATASET/",
+    "test:kepler": "dotenv -e .env.test -- playwright test specs/F-KEPLER/",
+    "test:settings": "dotenv -e .env.test -- playwright test specs/F-SETTINGS/",
+    "test:ai": "dotenv -e .env.test -- playwright test specs/F-AI/",
+    "test:docs": "dotenv -e .env.test -- playwright test specs/F-DOCS/",
+    "test:ui": "dotenv -e .env.test -- playwright test --ui",
+    "report": "playwright show-report playwright-report"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "dotenv-cli": "^7.4.2",
+    "typescript": "^5.4.5"
+  }
+}
