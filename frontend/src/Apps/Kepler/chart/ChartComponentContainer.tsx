@@ -172,7 +172,7 @@ const ChartComponentContainer = () => {
   );
 
   if (!isDefined(queryMemo?.chartType))
-    return <EmptyChart data={getLanguageLabel("selectChartType")} />;
+    return <EmptyChart data="Sélectionnez un type de graphique" />;
   if (!isDefined(data))
     return <BoslerLoader />;
 
