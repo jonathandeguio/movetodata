@@ -25,6 +25,7 @@ import {
   openNotification,
 } from "utils/utilities";
 import * as XLSX from "xlsx";
+import AiImportPanel from "./components/AiImportPanel/AiImportPanel";
 import { importDataset } from "../../redux/actions/datasetActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 const { Title, Text } = Typography;
@@ -43,6 +44,10 @@ const DatasetUpload = ({ id, branch }: TProps) => {
   const [uploadClicked, setUploadClicked] = useState(false);
   const [sheetNames, setSheetNames] = useState([]);
   const [selectedSheet, setSelectedSheet] = useState("");
+  const [fileData, setFileData] = useState<{
+    columns: string[];
+    sampleRows: string[][];
+  } | null>(null);
 
   const isFileReadyToUpload = isSelected && !readingFile;
 
@@ -81,9 +86,9 @@ const DatasetUpload = ({ id, branch }: TProps) => {
     reader.onload = (e) => {
       // Do whatever you want with the file contents
       const data = e.target?.result;
-      if (blobFileType(file.name, ResourceSubTypeEnum.XLS)) {
-        const workbook = XLSX.read(data, { type: "binary" });
+      const workbook = XLSX.read(data, { type: "array" });
 
+      if (blobFileType(file.name, ResourceSubTypeEnum.XLS)) {
         const sheetNames = workbook.SheetNames;
         setSheetNames(sheetNames as any);
         setSelectedSheet(sheetNames[0] as string);
@@ -91,10 +96,44 @@ const DatasetUpload = ({ id, branch }: TProps) => {
         setSheetNames([]);
         setSelectedSheet("");
       }
+
+      // Extract columns and up to 200 sample rows for AI analysis
+      try {
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        if (firstSheet) {
+          const rows: string[][] = XLSX.utils.sheet_to_json(firstSheet, {
+            header: 1,
+            defval: "",
+            raw: false,
+          }) as string[][];
+
+          if (rows.length > 0) {
+            const columns = (rows[0] as string[]).map((c) =>
+              c != null ? String(c) : ""
+            );
+            const sampleRows = rows
+              .slice(1, 201)
+              .map((row) =>
+                columns.map((_, i) =>
+                  row[i] != null ? String(row[i]) : ""
+                )
+              );
+            setFileData({ columns, sampleRows });
+          } else {
+            setFileData(null);
+          }
+        } else {
+          setFileData(null);
+        }
+      } catch {
+        setFileData(null);
+      }
+
       setReadingFile(false);
     };
     setIsSelected(true);
     setSelectedFile(file);
+    setFileData(null);
 
     reader.readAsArrayBuffer(file);
   }, []);
@@ -369,6 +408,14 @@ const DatasetUpload = ({ id, branch }: TProps) => {
             </div>
           </div>
         )}
+        {isFileReadyToUpload && fileData && fileData.columns.length > 0 && (
+          <AiImportPanel
+            file={selectedFile as unknown as File}
+            columns={fileData.columns}
+            sampleRows={fileData.sampleRows}
+          />
+        )}
+
         <div>
           {isFileReadyToUpload && (
             <>
@@ -378,6 +425,7 @@ const DatasetUpload = ({ id, branch }: TProps) => {
                 size={"large"}
                 onClick={() => {
                   setIsSelected(false);
+                  setFileData(null);
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center" }}>

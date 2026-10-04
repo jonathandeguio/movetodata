@@ -225,6 +225,42 @@ export interface AiSourceQuality {
   analyzedAt: string;
 }
 
+// ---------------------------------------------------------------------------
+// F6 — AI Import Panel types
+// ---------------------------------------------------------------------------
+
+export interface DescribeDatasetRequest {
+  /** Original file name (used to suggest a dataset name). */
+  fileName: string;
+  /** Column headers extracted from the file. */
+  columns: string[];
+  /** First rows of data (up to 200) as arrays of strings. */
+  sampleRows: string[][];
+}
+
+export interface DescribeDatasetResponse {
+  /** Suggested human-readable dataset name. */
+  name: string;
+  /** Auto-generated French description of the dataset. */
+  description: string;
+  /** Suggested tags (e.g. "financier", "géo", "RH"). */
+  tags: string[];
+}
+
+/**
+ * POST /api/ai/describe-dataset
+ * Generates a name, description and tags from column headers and a data sample.
+ * The request body is processed by the movetodata-ai Python service (self-hosted).
+ * No external AI provider is called — all processing happens within the infrastructure.
+ */
+export const describeDatasetAPI = (
+  request: DescribeDatasetRequest
+): Promise<import("axios").AxiosResponse<DescribeDatasetResponse>> => {
+  return axios.post("/api/ai/describe-dataset", request);
+};
+
+// ---------------------------------------------------------------------------
+
 /**
  * POST /api/ai/smart-connector/analyze
  * Triggers analysis of a source: quality score + type detection + chart suggestions.
