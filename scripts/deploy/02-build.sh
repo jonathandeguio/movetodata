@@ -31,6 +31,7 @@ build_boson() {
   info "=== Build Boson (Java 11 + Spring Boot + Spark 3.4.3) ==="
   info "    Durée estimée : 10–20 min (téléchargement Spark ~400Mo)"
   docker build \
+    --no-cache \
     --platform linux/amd64 \
     --tag movetodata/boson:latest \
     --tag movetodata/boson:"$(date +%Y%m%d)" \
