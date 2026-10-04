@@ -10,10 +10,27 @@ services:
   boson-db:
     image: postgres:14-alpine
     container_name: movetodata-boson-db
+    # ---------------------------------------------------------------------------
+    # Couche Data — Audit PostgreSQL
+    # log_connections/log_disconnections : tracer toutes les sessions.
+    # log_statement=ddl : journaliser CREATE/ALTER/DROP (pas les SELECT courants).
+    # log_line_prefix : horodatage ISO + PID + utilisateur + base pour SIEM.
+    # ---------------------------------------------------------------------------
+    command: >
+      postgres
+      -c log_connections=on
+      -c log_disconnections=on
+      -c log_statement=ddl
+      -c log_duration=off
+      -c log_line_prefix='%t [%p] %u@%d '
+      -c log_timezone=UTC
     environment:
       POSTGRES_DB: ${BOSON_DB_NAME:-boson}
       POSTGRES_USER: ${BOSON_DB_USERNAME:-movetodata}
       POSTGRES_PASSWORD: ${BOSON_DB_PASSWORD}
+      # Couche Data — RLS : indicateur applicatif lu par Boson au démarrage
+      # pour activer les politiques Row Level Security sur les tables sensibles.
+      POSTGRES_RLS_ENABLED: ${POSTGRES_RLS_ENABLED:-true}
     volumes:
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}/postgres/boson:/var/lib/postgresql/data
     ports:
@@ -105,7 +122,8 @@ services:
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}:${MOVETODATA_MOUNT_PATH:-/movetodata}
       - /etc/movetodata:/etc/movetodata:ro
     ports:
-      - "8080:8080"
+      # Restreint à l'interface loopback — le trafic externe passe par nginx (8081).
+      - "127.0.0.1:8080:8080"
     restart: on-failure
     healthcheck:
       # Accepte toute réponse HTTP (200 ou 401) — le serveur est vivant s'il répond
