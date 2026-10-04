@@ -26,9 +26,9 @@ const AnomalyBadge: React.FC<AnomalyBadgeProps> = ({ count, onClick }) => {
           backgroundColor: "var(--movetodata-intent-danger, #ff4d4f)",
           cursor: onClick ? "pointer" : "default",
         }}
-        onClick={onClick}
       >
         <span
+          onClick={onClick}
           style={{
             display: "inline-flex",
             alignItems: "center",
