@@ -30,9 +30,11 @@ BUILD_START=$(date +%s)
 build_boson() {
   info "=== Build Boson (Java 11 + Spring Boot + Spark 3.4.3) ==="
   info "    Durée estimée : 10–20 min (téléchargement Spark ~400Mo)"
-  # --pull : force le re-pull de gradle:7.6.1-jdk11 pour éviter le cache stale (Gradle 7.2 vs 7.6.1)
+  # BuildKit ignore --pull quand FROM a --platform explicite → forcer rmi + pull manuel
+  info "    Forçage du re-pull de gradle:7.6.1-jdk11 (contournement cache stale amd64)..."
+  docker rmi -f gradle:7.6.1-jdk11 2>/dev/null || true
+  docker pull --platform linux/amd64 gradle:7.6.1-jdk11
   docker build \
-    --pull \
     --platform linux/amd64 \
     --tag movetodata/boson:latest \
     --tag movetodata/boson:"$(date +%Y%m%d)" \
