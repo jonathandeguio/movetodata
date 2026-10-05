@@ -57,7 +57,8 @@ services:
     environment:
       ALLOWED_ORIGINS: >-
         http://localhost:3000,http://localhost:8080,http://localhost:8082,
-        http://localhost:8090,http://snap.movetodata.io:8082,https://snap.movetodata.io:8082
+        http://localhost:8090,http://snap.movetodata.io:8082,https://snap.movetodata.io:8082,
+        https://movetodata.io,https://www.movetodata.io
       ARTIFACT_STORE: ${ARTIFACT_STORE:-/movetodata/snap/artifactory}
       BASE_URL: ${BASE_URL:-http://localhost:8080}
       DB_HOST: snap-db
