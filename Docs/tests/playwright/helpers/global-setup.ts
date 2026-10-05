@@ -9,6 +9,7 @@
  */
 
 import { test as setup, expect } from '@playwright/test';
+import fs from 'fs';
 import path from 'path';
 
 const STORAGE_STATE = path.join(__dirname, '../.auth/user.json');
@@ -24,6 +25,9 @@ setup('authenticate', async ({ page, request }) => {
         'Copy .env.test.example to .env.test and set the value.'
     );
   }
+
+  // Ensure .auth/ directory exists before writing storageState.
+  fs.mkdirSync(path.dirname(STORAGE_STATE), { recursive: true });
 
   // --- 1. POST /passport/login to obtain the bAT cookie ---
   const loginResponse = await request.post(`${baseURL}/passport/login`, {
@@ -47,7 +51,6 @@ setup('authenticate', async ({ page, request }) => {
   const hasAuthCookie = cookies.some((c) => c.name === 'bAT');
 
   if (!hasAuthCookie) {
-    // Fill the login form as a fallback.
     await page.goto(`${baseURL}/auth/login`);
     await page.getByPlaceholder(/username|user name/i).fill(username);
     await page.getByPlaceholder(/password/i).fill(password);
