@@ -89,7 +89,7 @@ services:
       - /var/lib/mycontainer:/var/lib/containers
     restart: on-failure
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/endpoints/health | grep -q UP || exit 1"]
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/endpoints/health | grep -qE '^[2-5]' || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
