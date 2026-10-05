@@ -147,7 +147,7 @@ services:
       context: ../../frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_URL: ${BASE_URL:-http://localhost:8080}/api
+        REACT_APP_API_URL: ${BASE_URL:-http://localhost:8080}
     depends_on:
       boson:
         condition: service_healthy
