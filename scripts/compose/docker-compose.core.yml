@@ -53,7 +53,7 @@ services:
   movetodata-redis:
     image: redis:7-alpine
     container_name: movetodata-redis
-    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru --appendonly yes --appendfsync everysec
     volumes:
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}/redis:/data
     ports:
