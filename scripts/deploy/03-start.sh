@@ -163,75 +163,15 @@ start_core() {
   local FRONTEND_SRC="${SCRIPT_DIR}/../../frontend"
   local FRONTEND_MOUNT="${MOVETODATA_MOUNT_PATH}/frontend"
 
-  info "Écriture du nginx.conf (proxy API + cookies SameSite=Lax)..."
-  cat > "${FRONTEND_MOUNT}/nginx.conf" << 'NGINX_EOF'
-user  nginx;
-worker_processes  1;
-error_log  /var/log/nginx/error.log warn;
-pid        /var/run/nginx.pid;
-
-events {
-    worker_connections  1024;
-}
-
-http {
-    include            /etc/nginx/mime.types;
-    default_type       application/octet-stream;
-    log_format  main   '$remote_addr - $remote_user [$time_local] "$request" '
-                       '$status $body_bytes_sent "$http_referer" '
-                       '"$http_user_agent" "$http_x_forwarded_for"';
-    access_log         /var/log/nginx/access.log  main;
-    sendfile           on;
-    keepalive_timeout  65;
-    client_max_body_size 500m;
-
-    server {
-        listen       80;
-        server_name  localhost;
-        root   /app;
-
-        # WebSocket (SockJS / STOMP) — doit être AVANT le bloc /api/
-        location /api/ws/ {
-            proxy_pass http://boson:8080/api/ws/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_read_timeout 3600s;
-            proxy_buffering off;
-        }
-
-        location /api/ {
-            proxy_pass http://boson:8080/api/;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_read_timeout 120s;
-            proxy_cookie_flags bAT nosecure samesite=lax;
-            proxy_cookie_flags bRT nosecure samesite=lax;
-        }
-
-        location /saml2/ {
-            proxy_pass http://boson:8080/saml2/;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        location / {
-            index  index.html;
-            try_files $uri $uri/ /index.html;
-        }
-
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   /usr/share/nginx/html;
-        }
-    }
-}
-NGINX_EOF
-  success "nginx.conf écrit dans ${FRONTEND_MOUNT}/nginx.conf"
+  info "Copie du nginx.conf depuis les sources..."
+  local NGINX_SRC="${REPO_ROOT}/frontend/nginx.conf"
+  if [[ -f "${NGINX_SRC}" ]]; then
+    cp "${NGINX_SRC}" "${FRONTEND_MOUNT}/nginx.conf"
+    success "nginx.conf copié : ${NGINX_SRC} → ${FRONTEND_MOUNT}/nginx.conf"
+  else
+    warn "nginx.conf source introuvable : ${NGINX_SRC}"
+    warn "  Le container frontend utilisera son nginx.conf embarqué"
+  fi
 
   # Build du frontend React si nécessaire
   if [[ ! -f "${FRONTEND_MOUNT}/build/index.html" ]]; then
@@ -343,6 +283,14 @@ start_snap() {
 
   # --- Vérification UFW ---
   check_firewall_port "8082/tcp" "Snap"
+
+  # --- Suppression forcée des containers Snap en conflit ---
+  for _c in movetodata-snap-db movetodata-snap movetodata-snap-ui movetodata-snap-proxy; do
+    if docker ps -a -q -f "name=^${_c}$" | grep -q .; then
+      warn "Suppression forcée du conteneur conflictuel : ${_c}"
+      docker rm -f "${_c}" 2>/dev/null || true
+    fi
+  done
 
   info "Démarrage des containers Snap..."
   compose_snap up -d --remove-orphans
