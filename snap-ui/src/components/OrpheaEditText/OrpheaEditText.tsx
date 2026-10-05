@@ -1,5 +1,5 @@
 import React from "react";
-import "./MoveToDataEditText.scss";
+import "./OrpheaEditText.scss";
 
 const MoveToDataEditText = (props: { children: any }) => {
   return (

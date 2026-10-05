@@ -2,7 +2,7 @@ import {
   SingleChevronRightIcon,
 } from "assets/icons/movetodataNavigationIcon";
 import React, { useEffect, useMemo, useState } from "react";
-import "./MoveToDataCollapse.scss";
+import "./OrpheaCollapse.scss";
 
 interface ICollapse {
   collapsible: "HEADER" | "ICON" | "DISABLED";

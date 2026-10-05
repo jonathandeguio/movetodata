@@ -1,7 +1,7 @@
 import { Input, InputProps } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { isDefined } from "utils/utilities";
-import "./MoveToDataInput.scss";
+import "./OrpheaInput.scss";
 import { useDebounceState } from "hooks/useDebounce";
 
 interface MyCustomInputProps extends InputProps {
