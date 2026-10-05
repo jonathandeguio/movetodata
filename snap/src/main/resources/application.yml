@@ -113,7 +113,7 @@ springdoc:
 
 goHarbor:
   auth:
-    username: ${GO_HARBOR_USERNAME}
-    password: ${GO_HARBOR_PASSWORD}
-  url: ${GO_HARBOR_URL}
-  project: ${GO_HARBOR_PROJECT}
+    username: ${GO_HARBOR_USERNAME:}
+    password: ${GO_HARBOR_PASSWORD:}
+  url: ${GO_HARBOR_URL:}
+  project: ${GO_HARBOR_PROJECT:}

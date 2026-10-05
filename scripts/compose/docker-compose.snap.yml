@@ -69,6 +69,10 @@ services:
       SWAGGER_UI: ${SWAGGER_UI:-false}
       LOG_FILE_PATH: ${SNAP_LOG_FILE_PATH:-/movetodata/snap/logs}
       GITHUB_PAT: ${GITHUB_PAT:-}
+      GO_HARBOR_USERNAME: ${GO_HARBOR_USERNAME:-}
+      GO_HARBOR_PASSWORD: ${GO_HARBOR_PASSWORD:-}
+      GO_HARBOR_URL: ${GO_HARBOR_URL:-}
+      GO_HARBOR_PROJECT: ${GO_HARBOR_PROJECT:-}
       JAVA_OPTS: >-
         -Xms256m
         -Xmx1g
