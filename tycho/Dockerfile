@@ -21,7 +21,9 @@
 ARG PY_VER=3.8.12
 FROM --platform=linux/amd64 python:${PY_VER} AS superset-py
 
-RUN mkdir /app \
+RUN sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list \
+        && sed -i 's|http://deb.debian.org/debian bullseye-updates|http://archive.debian.org/debian bullseye-updates|g' /etc/apt/sources.list \
+        && mkdir /app \
         && apt-get update -y \
         && apt-get install -y --no-install-recommends \
             build-essential \
@@ -89,7 +91,9 @@ ENV LANG=C.UTF-8 \
     SUPERSET_HOME="/app/superset_home" \
     SUPERSET_PORT=8088
 
-RUN mkdir -p ${PYTHONPATH} \
+RUN sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list \
+        && sed -i 's|http://deb.debian.org/debian bullseye-updates|http://archive.debian.org/debian bullseye-updates|g' /etc/apt/sources.list \
+        && mkdir -p ${PYTHONPATH} \
         && useradd --user-group -d ${SUPERSET_HOME} -m --no-log-init --shell /bin/bash superset \
         && apt-get update -y \
         && apt-get install -y --no-install-recommends \
