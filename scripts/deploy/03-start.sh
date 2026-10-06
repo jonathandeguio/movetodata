@@ -185,6 +185,19 @@ start_core() {
   fi
   success "Image movetodata/frontend:latest présente"
 
+  # --- Vérification Ollama / Qwen (non bloquante) ---
+  local OLLAMA_HOST="${OLLAMA_URL:-http://localhost:11434}"
+  local CHAT_MODEL_NAME="${CHAT_MODEL:-qwen2.5:14b}"
+  if curl -sf "${OLLAMA_HOST}/api/tags" 2>/dev/null | grep -q "${CHAT_MODEL_NAME}"; then
+    success "Ollama opérationnel — modèle ${CHAT_MODEL_NAME} disponible"
+  elif curl -sf "${OLLAMA_HOST}/api/tags" &>/dev/null; then
+    warn "Ollama répond mais le modèle ${CHAT_MODEL_NAME} n'est pas chargé"
+    warn "  Chargez-le : ollama pull ${CHAT_MODEL_NAME}"
+  else
+    warn "Ollama inaccessible sur ${OLLAMA_HOST} — les features IA retourneront des erreurs"
+    warn "  Démarrez Ollama : systemctl start ollama  (ou : ollama serve)"
+  fi
+
   # --- Suppression forcée de tout conteneur en conflit (quel que soit son projet d'origine) ---
   for _c in movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend movetodata-docs; do
     if docker ps -a -q -f "name=^${_c}$" | grep -q .; then
