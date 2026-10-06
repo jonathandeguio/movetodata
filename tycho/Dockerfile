@@ -50,16 +50,15 @@ RUN cd /app \
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-# BLO-07 : node:16 (EOL) → node:18-alpine
-FROM --platform=linux/amd64 node:18-alpine AS superset-node
+# node:16-alpine intentionnel : stage BUILD uniquement (pas runtime).
+# webpack 4 est incompatible avec OpenSSL 3 (node 18+) — node 16 utilise OpenSSL 1.x.
+FROM --platform=linux/amd64 node:16-alpine AS superset-node
 
 ARG NPM_VER=7
 RUN npm install -g npm@${NPM_VER}
 
 ARG NPM_BUILD_CMD="build"
 ENV BUILD_CMD=${NPM_BUILD_CMD}
-# Node 18 / OpenSSL 3 : webpack 4 utilise MD4 (supprimé) — nécessite le mode legacy
-ENV NODE_OPTIONS=--openssl-legacy-provider
 
 # NPM ci first, as to NOT invalidate previous steps except for when package.json changes
 RUN mkdir -p /app/superset-frontend
