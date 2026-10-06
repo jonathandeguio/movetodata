@@ -64,7 +64,8 @@ ENV BUILD_CMD=${NPM_BUILD_CMD}
 RUN mkdir -p /app/superset-frontend
 RUN mkdir -p /app/superset/assets
 COPY ./docker/frontend-mem-nag.sh /
-RUN chmod +x /frontend-mem-nag.sh
+RUN sed -i 's/\r$//' /frontend-mem-nag.sh \
+    && chmod +x /frontend-mem-nag.sh
 COPY ./superset-frontend/package* /app/superset-frontend/
 RUN /frontend-mem-nag.sh \
         && cd /app/superset-frontend \
@@ -123,7 +124,8 @@ RUN cd /app \
         && pip install -e .
 
 COPY ./docker/docker-entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/bin/docker-entrypoint.sh \
+    && chmod +x /usr/bin/docker-entrypoint.sh
 
 WORKDIR /app
 
