@@ -135,9 +135,13 @@ services:
   snap-proxy:
     image: nginx:1.25-alpine
     container_name: movetodata-snap-proxy
+    # DEG-01 : format étendu — snap et snap-ui n'ont pas de healthcheck réseau,
+    # service_started suffit pour garantir que les containers sont lancés.
     depends_on:
-      - snap
-      - snap-ui
+      snap:
+        condition: service_started
+      snap-ui:
+        condition: service_started
     volumes:
       - ../../Unify/snap/reverse_proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}/ssl/certs:/etc/nginx/ssl:ro

@@ -1,15 +1,18 @@
 # =============================================================================
 # MoveToData Platform — Stack Tycho (Apache Superset BI)
 # Usage : docker compose -f docker-compose.tycho.yml --env-file .env.movetodata up -d
+# Prérequis : stack core démarrée (movetodata-redis fourni par docker-compose.core.yml)
 # =============================================================================
 version: "3.8"
 
 x-tycho-image: &tycho-image movetodata/tycho:latest
 x-tycho-user:  &tycho-user  root
 
+# BLO-01 : movetodata-redis supprimé — il est géré par docker-compose.core.yml.
+# DEG-01 : format étendu avec condition: service_healthy.
 x-tycho-depends: &tycho-depends
-  - tycho-db
-  - movetodata-redis
+  tycho-db:
+    condition: service_healthy
 
 x-tycho-volumes: &tycho-volumes
   - ../../tycho/docker:/app/docker:ro
@@ -45,28 +48,6 @@ services:
       options:
         max-size: "50m"
         max-file: "5"
-
-  # ---------------------------------------------------------------------------
-  # Redis — partagé entre Tycho (Celery) et le réseau MoveToData
-  # (Si vous utilisez déjà movetodata-redis dans core, décommentez external)
-  # ---------------------------------------------------------------------------
-  movetodata-redis:
-    image: redis:7-alpine
-    container_name: movetodata-redis
-    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
-    volumes:
-      - ${MOVETODATA_MOUNT_PATH:-/movetodata}/redis:/data
-    ports:
-      - "127.0.0.1:6379:6379"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - movetodata-tycho-net
-      - movetodata-network
 
   # ---------------------------------------------------------------------------
   # Tycho App — Superset application principale
@@ -142,10 +123,11 @@ services:
       SUPERSET_ENV: ${SUPERSET_ENV:-production}
       SUPERSET_LOAD_EXAMPLES: ${SUPERSET_LOAD_EXAMPLES:-no}
       SECRET_KEY: ${SUPERSET_SECRET_KEY}
-      ADMIN_PASSWORD: ${TYCHO_ADMIN_PASSWORD:-admin}
+      ADMIN_PASSWORD: ${TYCHO_ADMIN_PASSWORD}
     volumes: *tycho-volumes
     networks:
       - movetodata-tycho-net
+      - movetodata-network
 
   # ---------------------------------------------------------------------------
   # Tycho Worker — Celery worker (tâches asynchrones)
@@ -171,6 +153,7 @@ services:
     restart: unless-stopped
     networks:
       - movetodata-tycho-net
+      - movetodata-network
     logging:
       driver: "json-file"
       options:
@@ -200,6 +183,7 @@ services:
     restart: unless-stopped
     networks:
       - movetodata-tycho-net
+      - movetodata-network
     logging:
       driver: "json-file"
       options:
@@ -208,14 +192,13 @@ services:
 
   # ---------------------------------------------------------------------------
   # Tycho WebSocket — Temps réel
+  # BLO-06 : port hôte changé de 8090 à 8091 (conflit avec movetodata-ai:8090).
   # ---------------------------------------------------------------------------
   tycho-websocket:
     image: node:18-alpine
     container_name: movetodata-tycho-ws
     command: ["/app/docker/docker-frontend.sh"]
     working_dir: /app/superset-websocket
-    depends_on:
-      - movetodata-redis
     environment:
       PORT: 8090
       REDIS_HOST: movetodata-redis
@@ -224,10 +207,11 @@ services:
     volumes:
       - ../../tycho/superset-websocket:/app/superset-websocket
     ports:
-      - "127.0.0.1:8090:8090"
+      - "127.0.0.1:8091:8090"
     restart: unless-stopped
     networks:
       - movetodata-tycho-net
+      - movetodata-network
     logging:
       driver: "json-file"
       options:

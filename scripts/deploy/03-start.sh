@@ -112,8 +112,10 @@ stop_existing() {
 
   if [[ ${found} -eq 1 ]]; then
     info "Conteneurs existants détectés — arrêt en cours..."
-    compose_core down --remove-orphans 2>/dev/null || true
+    compose_core  down --remove-orphans 2>/dev/null || true
     compose_snap  down --remove-orphans 2>/dev/null || true
+    # DEG-05 : arrêt de la stack Tycho (était omis, causait des conteneurs orphelins)
+    compose_tycho down --remove-orphans 2>/dev/null || true
     for c in "${containers[@]}"; do
       if docker ps -q -f "name=^${c}$" | grep -q .; then
         docker stop "${c}" 2>/dev/null || true
@@ -174,33 +176,14 @@ start_core() {
     warn "  Le container frontend utilisera son nginx.conf embarqué"
   fi
 
-  # Build du frontend React si nécessaire
-  if [[ ! -f "${FRONTEND_MOUNT}/build/index.html" ]]; then
-    if [[ -f "${FRONTEND_SRC}/package.json" ]]; then
-      info "Build du frontend React (peut prendre 2-4 minutes)..."
-      local build_ok=0
-      docker run --rm \
-        -v "${FRONTEND_SRC}:/app" \
-        -w /app \
-        node:18.12 \
-        sh -c "set -e; corepack enable; corepack prepare yarn@3.5.0 --activate; yarn install 2>&1; yarn build 2>&1" \
-        && build_ok=1
-
-      if [[ ${build_ok} -eq 1 ]] && [[ -f "${FRONTEND_SRC}/build/index.html" ]]; then
-        cp -r "${FRONTEND_SRC}/build/." "${FRONTEND_MOUNT}/build/"
-        success "Frontend buildé → ${FRONTEND_MOUNT}/build/"
-      else
-        warn "Build frontend échoué — vérifiez les logs ci-dessus"
-        warn "  Relancez manuellement :"
-        warn "  docker run --rm -v ${FRONTEND_SRC}:/app -w /app node:18.12 sh -c 'yarn install && yarn build'"
-      fi
-    else
-      warn "Sources frontend introuvables dans ${FRONTEND_SRC} — build ignoré"
-    fi
-  else
-    info "Build frontend déjà présent — pas de rebuild"
-    info "  (Pour forcer : rm -rf ${FRONTEND_MOUNT}/build && relancer ce script)"
+  # BLO-02 : le build React inline a été supprimé — il ne passait aucune variable
+  # REACT_APP_* et produisait un bundle cassé. L'image doit être construite via :
+  #   bash 02-build.sh --service frontend
+  # avant d'exécuter ce script.
+  if ! docker image inspect movetodata/frontend:latest &>/dev/null; then
+    error "Image movetodata/frontend:latest introuvable.\n  Construisez-la d'abord : bash ${SCRIPT_DIR}/02-build.sh --service frontend"
   fi
+  success "Image movetodata/frontend:latest présente"
 
   # --- Suppression forcée de tout conteneur en conflit (quel que soit son projet d'origine) ---
   for _c in movetodata-boson-db movetodata-redis movetodata-boson movetodata-frontend movetodata-docs; do
@@ -269,16 +252,25 @@ start_snap() {
     mkdir -p /var/lib/mycontainer
   fi
 
+  # BLO-04 : création du réseau partagé avant compose up (snap déclare external: true)
+  if ! docker network ls --format '{{.Name}}' | grep -q "^movetodata-network$"; then
+    info "Création du réseau movetodata-network..."
+    docker network create movetodata-network 2>/dev/null && \
+      success "Réseau movetodata-network créé" || \
+      warn "Réseau déjà existant"
+  fi
+
   # --- Copie des sources Snap ---
-  local SNAP_REPOS_DIR="${SCRIPT_DIR}/../Unify/snap/repos"
+  # BLO-05 : chemin corrigé — Unify/ est à la racine du dépôt (REPO_ROOT), pas sous scripts/
+  local SNAP_REPOS_DIR="${REPO_ROOT}/Unify/snap/repos"
   mkdir -p "${SNAP_REPOS_DIR}"
 
-  if [[ ! -d "${SNAP_REPOS_DIR}/snap" ]] && [[ -d "${SCRIPT_DIR}/../snap" ]]; then
-    cp -r "${SCRIPT_DIR}/../snap" "${SNAP_REPOS_DIR}/snap"
+  if [[ ! -d "${SNAP_REPOS_DIR}/snap" ]] && [[ -d "${REPO_ROOT}/snap" ]]; then
+    cp -r "${REPO_ROOT}/snap" "${SNAP_REPOS_DIR}/snap"
     info "Sources snap copiées → Unify/snap/repos/snap"
   fi
-  if [[ ! -d "${SNAP_REPOS_DIR}/snap-ui" ]] && [[ -d "${SCRIPT_DIR}/../snap-ui" ]]; then
-    cp -r "${SCRIPT_DIR}/../snap-ui" "${SNAP_REPOS_DIR}/snap-ui"
+  if [[ ! -d "${SNAP_REPOS_DIR}/snap-ui" ]] && [[ -d "${REPO_ROOT}/snap-ui" ]]; then
+    cp -r "${REPO_ROOT}/snap-ui" "${SNAP_REPOS_DIR}/snap-ui"
     info "Sources snap-ui copiées → Unify/snap/repos/snap-ui"
   fi
 

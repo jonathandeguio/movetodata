@@ -53,7 +53,13 @@ done
 [[ -z "${NO_CACHE}" ]] && info "Build avec cache Docker activé (--cache)"
 
 BUILD_START=$(date +%s)
-REACT_API_URL="${BASE_URL:-http://192.168.1.78:8081}/api"
+
+# BLO-03 : pas de fallback IP hardcodée — BASE_URL doit être défini explicitement.
+# Un fallback silencieux produirait une image frontend cassée pointant vers une IP inconnue.
+if [[ -z "${BASE_URL:-}" ]]; then
+  error "BASE_URL n'est pas défini dans ${ENV_FILE}.\n  Exécutez d'abord : bash 01-setup-env.sh"
+fi
+REACT_API_URL="${BASE_URL}/api"
 
 # =============================================================================
 build_boson() {

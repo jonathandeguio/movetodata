@@ -52,6 +52,11 @@ ask "Mot de passe PostgreSQL pour Tycho/Superset [défaut: généré aléatoirem
 read -r -s TYCHO_DB_PASSWORD
 [[ -z "${TYCHO_DB_PASSWORD}" ]] && TYCHO_DB_PASSWORD=$(openssl rand -base64 24)
 
+# DEG-06 : TYCHO_ADMIN_PASSWORD était absent — il est lu par tycho-init pour créer l'admin Superset.
+ask "Mot de passe admin Superset (TYCHO_ADMIN_PASSWORD) [défaut: généré aléatoirement] :"
+read -r -s TYCHO_ADMIN_PASSWORD
+[[ -z "${TYCHO_ADMIN_PASSWORD}" ]] && TYCHO_ADMIN_PASSWORD=$(openssl rand -base64 24)
+
 ask "GitHub Personal Access Token (PAT) pour Snap [optionnel, appuyer Entrée pour ignorer] :"
 read -r -s GITHUB_PAT
 [[ -z "${GITHUB_PAT}" ]] && GITHUB_PAT="CHANGEME_github_pat"
@@ -111,6 +116,7 @@ REDIS_PORT=6379
 
 # --- Tycho / Superset ---
 SUPERSET_SECRET_KEY=${SUPERSET_SECRET_KEY}
+TYCHO_ADMIN_PASSWORD=${TYCHO_ADMIN_PASSWORD}
 SUPERSET_PORT=8088
 FLASK_ENV=production
 SUPERSET_ENV=production

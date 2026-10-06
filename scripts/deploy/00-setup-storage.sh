@@ -26,7 +26,14 @@ section() { echo -e "\n${BLUE}─── $* ───${NC}"; }
 set -a; source "${ENV_FILE}"; set +a
 
 MOUNT="${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}"
-BASE_URL="${BASE_URL:-http://localhost:8080}"
+
+# DEG-07 : BASE_URL est interpolé dans saml.yml à l'exécution de ce script.
+# Sa valeur est gravée en dur dans /etc/movetodata/saml.yml.
+# Si BASE_URL change ultérieurement, relancer ce script pour mettre à jour saml.yml.
+if [[ -z "${BASE_URL:-}" ]]; then
+  error "BASE_URL n'est pas défini dans ${ENV_FILE}.\n  Exécutez d'abord : bash 01-setup-env.sh"
+fi
+BASE_URL="${BASE_URL}"
 
 echo ""
 echo -e "${BLUE}╔══════════════════════════════════════════════╗${NC}"
