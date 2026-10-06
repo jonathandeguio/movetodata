@@ -58,6 +58,8 @@ RUN npm install -g npm@${NPM_VER}
 
 ARG NPM_BUILD_CMD="build"
 ENV BUILD_CMD=${NPM_BUILD_CMD}
+# Node 18 / OpenSSL 3 : webpack 4 utilise MD4 (supprimé) — nécessite le mode legacy
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
 # NPM ci first, as to NOT invalidate previous steps except for when package.json changes
 RUN mkdir -p /app/superset-frontend
