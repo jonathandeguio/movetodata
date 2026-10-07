@@ -166,6 +166,16 @@ start_core() {
   fi
   success "Image movetodata/frontend:latest présente"
 
+  # --- Synchronisation des fichiers React depuis l'image vers le volume ---
+  # Le volume bind-mount (frontend/build:/app) masque les fichiers baked dans l'image.
+  # On extrait explicitement les fichiers de la nouvelle image pour mettre à jour le volume.
+  info "Synchronisation des fichiers React depuis l'image vers ${FRONTEND_MOUNT}/build/ ..."
+  local EXTRACT_CTR="mtd-frontend-extract-$$"
+  docker create --name "${EXTRACT_CTR}" movetodata/frontend:latest sh >/dev/null 2>&1
+  docker cp "${EXTRACT_CTR}:/app/." "${FRONTEND_MOUNT}/build/"
+  docker rm "${EXTRACT_CTR}" >/dev/null 2>&1
+  success "Fichiers React synchronisés"
+
   # --- Vérification Ollama / Qwen (non bloquante) ---
   # Utilise localhost car ce check s'exécute sur l'hôte (host.docker.internal ne résout pas ici)
   local OLLAMA_HOST="http://localhost:11434"

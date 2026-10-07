@@ -78,10 +78,14 @@ ss -tlnp 2>/dev/null | grep -E ":(80|443|8080|8081|8082|8088)\s" \
 
 echo ""
 for port in 5432 6379 8080; do
-  if ss -tlnp 2>/dev/null | grep ":${port}" | grep -q "0\.0\.0\.0\|\*:"; then
-    fail "Port ${port} exposé sur 0.0.0.0 — devrait être loopback uniquement"
+  # Vérifier uniquement la colonne Local Address (pas Peer Address qui contient toujours 0.0.0.0:*)
+  local_addr=$(ss -tlnp 2>/dev/null | awk 'NR>1 {print $4}' | grep ":${port}$" || true)
+  if echo "${local_addr}" | grep -qE "^0\.0\.0\.0:|^\*:|^\[::\]:"; then
+    fail "Port ${port} exposé publiquement (${local_addr}) — devrait être 127.0.0.1 uniquement"
+  elif [[ -n "${local_addr}" ]]; then
+    ok "Port ${port} restreint à loopback (${local_addr})"
   else
-    ok "Port ${port} restreint à loopback"
+    ok "Port ${port} non exposé sur l'hôte"
   fi
 done
 
@@ -92,7 +96,9 @@ section "3. Nginx système (HTTPS :443)"
 
 if systemctl is-active --quiet nginx 2>/dev/null; then
   ok "nginx système : actif"
-  nginx -t 2>&1 | grep -v "^$" | sed 's/^/    /'
+  # sudo requis pour lire les certificats SSL lors du test de config
+  sudo nginx -t 2>&1 | grep -v "^$" | sed 's/^/    /' || \
+    nginx -t 2>&1 | grep -v "^$" | sed 's/^/    /'
 else
   fail "nginx système : INACTIF ou absent"
 fi
