@@ -29,3 +29,15 @@ COPY --from=build-stage /app/build /app
 
 # Copy the NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Build metadata — injected by 02-build.sh, accessible via /debug/info
+# Stored in /usr/local/ to avoid being shadowed by the /app volume mount.
+ARG BUILD_DATE=unknown
+ARG BUILD_VERSION=unknown
+ARG REACT_APP_BASE_URL_API=
+LABEL org.movetodata.buildDate="${BUILD_DATE}" \
+      org.movetodata.version="${BUILD_VERSION}" \
+      org.movetodata.reactAppBaseUrlApi="${REACT_APP_BASE_URL_API}"
+RUN printf '{"version":"%s","buildDate":"%s","reactAppBaseUrlApi":"%s"}\n' \
+      "${BUILD_VERSION}" "${BUILD_DATE}" "${REACT_APP_BASE_URL_API}" \
+    > /usr/local/build-info.json

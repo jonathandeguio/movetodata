@@ -76,15 +76,22 @@ build_boson() {
 }
 
 build_frontend() {
+  local _build_date
+  _build_date="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  local _build_version
+  _build_version="$(date +%Y%m%d)-$(git -C "${REPO_ROOT}" rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+
   info "=== Build Frontend (React 18 + Nginx) ==="
-  info "    REACT_APP_API_URL=${REACT_API_URL}"
+  info "    BUILD_VERSION=${_build_version}"
   # shellcheck disable=SC2086
   docker build \
     ${NO_CACHE} \
     --platform linux/amd64 \
     --tag movetodata/frontend:latest \
     --tag movetodata/frontend:"$(date +%Y%m%d)" \
-    --build-arg REACT_APP_API_URL="${REACT_API_URL}" \
+    --build-arg BUILD_DATE="${_build_date}" \
+    --build-arg BUILD_VERSION="${_build_version}" \
+    --build-arg REACT_APP_BASE_URL_API="" \
     "${REPO_ROOT}/frontend"
   success "Image movetodata/frontend:latest construite"
 }

@@ -108,6 +108,12 @@ services:
       SWAGGER_UI: ${SWAGGER_UI:-false}
       # F5 — AI service URL (internal Docker network)
       MOVETODATA_AI_URL: ${MOVETODATA_AI_URL:-http://movetodata-ai:8090}
+      # --- DEBUG MODE — Spring Boot logging (lire depuis .env.movetodata) ---
+      # Activer : LOGGING_LEVEL_ROOT=DEBUG dans .env.movetodata + docker compose up -d --no-deps boson
+      LOGGING_LEVEL_ROOT: ${LOGGING_LEVEL_ROOT:-INFO}
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB:-INFO}
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_MESSAGING: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_MESSAGING:-INFO}
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_SOCKET: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_SOCKET:-INFO}
       # Mode de stockage : localfs | s3 | gs | hdfs
       BACKING_FS: ${BACKING_FS:-localfs}
       # Répertoire racine pour le stockage local (utilisé si BACKING_FS=localfs)
