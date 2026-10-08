@@ -70,7 +70,8 @@ export const useNavigateHelper = () => {
       finalUrl = await getFileIndex(id).then((file) => {
         let url = "";
 
-        switch (file.type.toLowerCase()) {
+        const fileType = file.type?.toLowerCase() ?? "";
+        switch (fileType) {
           case "folder":
             url = `/portal/kitab/folder/${file.project}`;
             searchParams["activeId"] = file.id;
@@ -88,18 +89,18 @@ export const useNavigateHelper = () => {
           case "agent":
           case "source":
           case "link":
-            url = `/portal/connect/${file.type.toLowerCase()}/${file.id}`;
+            url = `/portal/connect/${fileType}/${file.id}`;
             break;
           case "chart":
           case "dashboard":
-            url = `/portal/kepler/${file.type}/${file.id}`;
+            url = `/portal/kepler/${fileType}/${file.id}`;
             break;
           case "file":
             url = `/portal/blob/${file.id}`;
             break;
           default:
             openNotification(
-              "Unknown Format! " + file.type.toLowerCase(),
+              "Unknown Format! " + (file.type ?? "undefined"),
               "This format is not supported",
               "warning",
               2

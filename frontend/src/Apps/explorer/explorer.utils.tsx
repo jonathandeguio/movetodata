@@ -391,6 +391,7 @@ export const getNodeFavIcon = (type: string, subType: string) => {
 };
 
 const getPostgresDataTypeIcon = (dataType: string) => {
+  if (!dataType) return null;
   switch (dataType.toLowerCase()) {
     case "boolean":
       return <BooleanIcon />;
@@ -490,6 +491,7 @@ const getPostgresDataTypeIcon = (dataType: string) => {
 };
 
 const getOracleDBDataTypeIcon = (dataType: string) => {
+  if (!dataType) return null;
   switch (dataType.toLowerCase()) {
     case "number":
     case "binary_float":
@@ -532,6 +534,7 @@ const getOracleDBDataTypeIcon = (dataType: string) => {
 };
 
 const getSQLServerDataTypeIcon = (dataType: string) => {
+  if (!dataType) return null;
   switch (dataType.toLowerCase()) {
     case "bit":
       return <BooleanIcon />;
@@ -574,6 +577,7 @@ const getSQLServerDataTypeIcon = (dataType: string) => {
 };
 
 const getMariaDBMySQLDataTypeIcon = (dataType: string) => {
+  if (!dataType) return null;
   switch (dataType.toLowerCase()) {
     case "tinyint":
     case "smallint":

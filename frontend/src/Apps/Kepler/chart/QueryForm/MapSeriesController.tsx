@@ -25,7 +25,7 @@ const MapSeriesItem = (props: {
   const numericColumns: Array<{ label: string; value: string }> = [];
 
   props.columns.map((column: any) => {
-    if (KeplerConfig.nonStringDatatypes.includes(column.type.toLowerCase())) {
+    if (column.type && KeplerConfig.nonStringDatatypes.includes(column.type.toLowerCase())) {
       numericColumns.push({
         label: column.headerName,
         value: column.headerName,

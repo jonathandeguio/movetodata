@@ -26,6 +26,7 @@ export const isColumnFilter = (filtersData: any, column: string) => {
 };
 
 export const getColumnTypeIcon = (type: string): React.ReactNode => {
+  if (!type) return <></>;
   const numberTypes = [
     "int",
     "integer",
