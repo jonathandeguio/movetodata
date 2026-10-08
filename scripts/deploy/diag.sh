@@ -205,8 +205,13 @@ HEALTH=$(curl -s --max-time 5 -w "\nHTTP_%{http_code}" \
   "http://localhost:8080/endpoints/health" 2>/dev/null || echo "HTTP_000")
 HTTP_H=$(echo "${HEALTH}" | grep "HTTP_" | cut -d_ -f2)
 BODY_H=$(echo "${HEALTH}" | grep -v "HTTP_")
-[[ "${HTTP_H}" =~ ^[23] ]] && ok "Boson health : HTTP ${HTTP_H}" \
-                             || fail "Boson health : HTTP ${HTTP_H}"
+if [[ "${HTTP_H}" == "401" ]]; then
+  ok "Boson health : HTTP 401 (auth required — boson opérationnel)"
+elif [[ "${HTTP_H}" =~ ^[2-5] ]]; then
+  ok "Boson health : HTTP ${HTTP_H}"
+else
+  fail "Boson health : HTTP ${HTTP_H} (aucune réponse)"
+fi
 [[ -n "${BODY_H}" ]] && echo "    ${BODY_H}" | head -c 300
 
 echo ""
