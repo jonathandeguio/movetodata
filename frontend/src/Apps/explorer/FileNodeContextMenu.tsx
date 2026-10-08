@@ -199,7 +199,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
     if (notEmpty(contextMenuId)) {
       getFileIndex(contextMenuId).then((data) => {
         setResource(data);
-      });
+      }).catch(() => {});
     }
   }, [contextMenuId, fileIndexes]);
 

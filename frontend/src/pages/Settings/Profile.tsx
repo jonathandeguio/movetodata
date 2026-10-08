@@ -140,9 +140,10 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
   }, []);
 
   const getLoginActivity = async () => {
+    if (!user?.id) return;
     try {
-      const data = axios
-        .get(`/passport/users/${user?.id}/last10Login`)
+      await axios
+        .get(`/passport/users/${user.id}/last10Login`)
         .then((data) => {
           setLast10Login(data.data);
         });

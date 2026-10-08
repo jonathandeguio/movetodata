@@ -108,7 +108,8 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
 
   useEffect(() => {
     if (dataTransactions) {
-      user_data(dataTransactions[historykey].createdBy, "createTrans");
+      if (dataTransactions[historykey].createdBy)
+        user_data(dataTransactions[historykey].createdBy, "createTrans");
 
       if (dataTransactions[historykey].updatedBy) {
         user_data(dataTransactions[historykey].updatedBy, "updateTrans");

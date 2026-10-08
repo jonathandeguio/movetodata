@@ -68,9 +68,10 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
 
   useEffect(() => {
     if (dataBuildHistory && dataBuildHistory.length) {
-      fetchUserDetailsAPI(dataBuildHistory[0].startedBy).then(({ data }) =>
-        setcreateuserBuild(data.name)
-      );
+      if (dataBuildHistory[0].startedBy)
+        fetchUserDetailsAPI(dataBuildHistory[0].startedBy)
+          .then(({ data }) => setcreateuserBuild(data.name))
+          .catch(console.error);
     }
   }, [dataBuildHistory]);
   return (

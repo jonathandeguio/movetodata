@@ -82,7 +82,7 @@ export const Breadcrumb: React.FC<Props> = ({ id, onClick }) => {
         setFirstResource(completePath.shift());
         setPath(completePath);
         setShiftedPath([]);
-      });
+      }).catch(() => {});
     }
   }, [id, fileIndexes, getPath]);
 

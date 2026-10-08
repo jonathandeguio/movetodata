@@ -181,7 +181,7 @@ const FileExplorer = () => {
           } else {
             setChildren([]);
           }
-        });
+        }).catch(() => {});
       }
     }
   }, [
@@ -218,9 +218,9 @@ const FileExplorer = () => {
                   setHidden(_value.split("\n").map((v) => v.trim()))
                 );
             }
-          });
+          }).catch(console.error);
         }
-      });
+      }).catch(console.error);
     }
   }, [id, fileIndexes]);
 

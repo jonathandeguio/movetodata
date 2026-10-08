@@ -63,7 +63,7 @@ export const ExplorerTree: React.FC<Props> = ({
 
     const traverse = (node: any, value: string) => {
       getFileIndex(node.id).then((data) => {
-        data.children.map((item: any) => {
+        data.children?.map((item: any) => {
           traverse(item, value);
 
           if (item.name.toLowerCase().indexOf(value) > -1) {
@@ -82,7 +82,7 @@ export const ExplorerTree: React.FC<Props> = ({
             }
           }
         });
-      });
+      }).catch(() => {});
     };
 
     const nodeData = JSON.parse(JSON.stringify(treeData));

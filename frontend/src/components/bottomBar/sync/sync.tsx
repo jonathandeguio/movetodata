@@ -226,7 +226,7 @@ export default function Sync({ id, branch, view }: TSync) {
         user_data(datasetSync.syncedBy, "sync");
       }
 
-      if (datasetSync.updatedAt !== null)
+      if (datasetSync.updatedAt !== null && datasetSync.updatedBy)
         user_data(datasetSync.updatedBy, "update");
     } else {
       setTableName(datasetName);

@@ -130,7 +130,7 @@ export const TreeNode: React.FC<Props> = ({
               )
           : []
       );
-    });
+    }).catch(() => {});
   }, [activeId, fileIndexes, path, node]);
 
   useEffect(() => {
