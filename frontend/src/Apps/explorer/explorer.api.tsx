@@ -8,7 +8,7 @@ import { isDefined } from "utils/utilities";
 export const getProjectStructure = (
   id: string
 ): Promise<AxiosResponse<any, any>> => {
-  return axios.get(`kitab/explorer/projectRoot/${id}`);
+  return axios.get(`/kitab/explorer/projectRoot/${id}`);
 };
 
 /**
@@ -18,7 +18,7 @@ export const getProjectStructure = (
 export const getResourceApi = (
   id: string
 ): Promise<AxiosResponse<any, any>> => {
-  return axios.get(`kitab/explorer/resource/${id}`);
+  return axios.get(`/kitab/explorer/resource/${id}`);
 };
 
 /**
@@ -29,7 +29,7 @@ export const getResourceApi2 = (props: {
   id: string;
 }): Promise<AxiosResponse<any, any>> => {
   if (isDefined(props.id)) {
-    return axios.get(`kitab/explorer/resource/${props.id}`);
+    return axios.get(`/kitab/explorer/resource/${props.id}`);
   }
   throw "Bad request undefined Id";
 };
@@ -42,7 +42,7 @@ export const putResource = (
   id: string,
   payload: { name?: string; description?: string; parent?: string }
 ): Promise<AxiosResponse<any, any>> => {
-  return axios.put(`kitab/explorer/resource/${id}`, payload);
+  return axios.put(`/kitab/explorer/resource/${id}`, payload);
 };
 
 /**
@@ -54,7 +54,7 @@ export const moveResource = (
   moveToId: string
 ): Promise<AxiosResponse<any, any>> => {
   // Update resource parent
-  return axios.put(`kitab/explorer/resource/${resourceId}`, {
+  return axios.put(`/kitab/explorer/resource/${resourceId}`, {
     parent: moveToId,
   });
 };
