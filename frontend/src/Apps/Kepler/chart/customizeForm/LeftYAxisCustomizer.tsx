@@ -3,9 +3,9 @@ import {
   BottomAlignIcon,
   MiddleAlignIcon,
   TopAlignIcon,
-} from "assets/icons/boslerActionIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdActionIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { KeplerConfig } from "../charts.config";
@@ -16,7 +16,7 @@ const { Panel } = Collapse;
 
 export const LeftYAxisCustomizer = () => {
   return (
-    <BoslerCollapse
+    <MtdCollapse
       header={
         <div className="query_item__heading">{getLanguageLabel("yAxis")}</div>
       }
@@ -28,7 +28,7 @@ export const LeftYAxisCustomizer = () => {
         {
           <>
             <Form.Item name="yaxisLeft" label={getLanguageLabel("title")}>
-              <BoslerInput
+              <MtdInput
                 placeholder={getLanguageLabel("title")}
                 maxLength={KeplerConfig.chartLabelMaxLength}
                 showCount={{
@@ -121,6 +121,6 @@ export const LeftYAxisCustomizer = () => {
           </>
         }
       </div>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

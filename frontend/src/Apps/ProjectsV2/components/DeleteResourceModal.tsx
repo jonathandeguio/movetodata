@@ -1,9 +1,9 @@
 import { Form } from "antd";
 import { FORM_FIELDS } from "Apps/ProjectsV2/utils/Projects.utils";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -37,12 +37,12 @@ const DeleteResourceModal = ({
         }
       }}
     >
-      <BoslerModal
+      <MtdModal
         open={isOpen}
         onCancel={close}
         footerButtonArea={
           <Form.Item>
-            <BoslerButton
+            <MtdButton
               intent="dangerous"
               htmlType="submit"
               disabled={name != resourceName}
@@ -50,7 +50,7 @@ const DeleteResourceModal = ({
               icon={<TrashIcon />}
             >
               {getLanguageLabel("delete")}
-            </BoslerButton>
+            </MtdButton>
           </Form.Item>
         }
         headingIcon={<TrashIcon color={"var(--DANGEROUS_COLOR)"} />}
@@ -65,9 +65,9 @@ const DeleteResourceModal = ({
           }
           name={FORM_FIELDS.NAME}
         >
-          <BoslerInput suffix={icon} placeholder={getLanguageLabel("name")} />
+          <MtdInput suffix={icon} placeholder={getLanguageLabel("name")} />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

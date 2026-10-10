@@ -11,12 +11,12 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { TagsIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { TagsIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   getLanguageLabel,
   isDefined,
@@ -106,7 +106,7 @@ const Tags = ({ id }: { id: string }) => {
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<TagsIcon />}
         heading={
           <Row justify={"space-between"} align="middle">
@@ -115,20 +115,20 @@ const Tags = ({ id }: { id: string }) => {
         }
         extraActionHeading={
           isEditingOn ? (
-            <BoslerButton
+            <MtdButton
               icon={<TickIcon />}
               intent="success"
               onClick={handleAddRemoveTags}
             >
               {getLanguageLabel("apply")}
-            </BoslerButton>
+            </MtdButton>
           ) : (
-            <BoslerButton
+            <MtdButton
               icon={<EditIcon />}
               onClick={() => setIsEditingOn(true)}
             >
               {getLanguageLabel("edit")}
-            </BoslerButton>
+            </MtdButton>
           )
         }
         open={tagsModal}
@@ -207,7 +207,7 @@ const Tags = ({ id }: { id: string }) => {
                       if (category.enabled) {
                         return (
                           <>
-                            <div className="BoslerHeader1">{category.name}</div>
+                            <div className="MtdHeader1">{category.name}</div>
                             {category.tags.map((value: any) => {
                               return (
                                 <Tag
@@ -287,7 +287,7 @@ const Tags = ({ id }: { id: string }) => {
                                     <th>{getLanguageLabel("createdBy")}</th>
                                     <td>
                                       {createdBy === "" ? (
-                                        <BoslerLoader size="tiny" />
+                                        <MtdLoader size="tiny" />
                                       ) : (
                                         createdBy
                                       )}
@@ -305,7 +305,7 @@ const Tags = ({ id }: { id: string }) => {
                                     <th>{getLanguageLabel("updatedBy")}</th>
                                     <td>
                                       {updatedBy === "" ? (
-                                        <BoslerLoader size="tiny" />
+                                        <MtdLoader size="tiny" />
                                       ) : (
                                         updatedBy
                                       )}
@@ -341,10 +341,10 @@ const Tags = ({ id }: { id: string }) => {
             </>
           )}
         </div>
-      </BoslerModal>
+      </MtdModal>
 
       <Tooltip title={getLanguageLabel("tags")} placement={"bottom"}>
-        <BoslerButton
+        <MtdButton
           onClick={() => {
             setTagsModal(true);
             fetchAllTagsWithCategoryAPI()

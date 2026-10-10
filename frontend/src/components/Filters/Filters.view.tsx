@@ -1,4 +1,4 @@
-import { FilterLinesIcon } from "assets/icons/boslerTableIcons";
+import { FilterLinesIcon } from "assets/icons/mtdTableIcons";
 import React, { useEffect, useState } from "react";
 import {
   decodeFromBase64,
@@ -7,7 +7,7 @@ import {
 } from "utils/utilities";
 
 import { Tooltip } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";

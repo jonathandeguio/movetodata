@@ -1,10 +1,10 @@
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
 import { Badge, Col, Popover, Row, Tooltip, Typography } from "antd";
-import { CodeCellIcon, CopyIcon } from "assets/icons/boslerEditorIcons";
-import { InfoIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "components/UserPopover/userpopover";
-import BoslerLoader from "components/boslerLoader";
+import { CodeCellIcon, CopyIcon } from "assets/icons/mtdEditorIcons";
+import { InfoIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "components/UserPopover/userpopover";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -238,9 +238,9 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
                     </Tooltip>
                     &nbsp; <Text>{getLanguageLabel("by")}</Text> &nbsp;
                     {createuserBuild === "" ? (
-                      <BoslerLoader size="tiny" />
+                      <MtdLoader size="tiny" />
                     ) : (
-                      <BoslerUserPopover
+                      <MtdUserPopover
                         id={(createuserBuild as any).id}
                         record={createuserBuild}
                       >
@@ -252,7 +252,7 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
                         >
                           <Text>{(createuserBuild as $TSFixMe).name}</Text>
                         </div>
-                      </BoslerUserPopover>
+                      </MtdUserPopover>
                     )}
                   </Col>
                 </Row>
@@ -267,7 +267,7 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
                   </Col>
                   <Col span={18}>
                     <div className="text-and-icon-center">
-                      <BoslerButton
+                      <MtdButton
                         onClick={() =>
                           navigate(
                             `/portal/kitab/repository/${dataBuildHistory[0].repository}/${dataBuildHistory[0].branch}?f=${dataBuildHistory[0].scriptPath}`
@@ -278,7 +278,7 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
                         dashed
                       >
                         {getLanguageLabel("repository")}
-                      </BoslerButton>
+                      </MtdButton>
                     </div>
                   </Col>
                 </Row>
@@ -286,11 +286,11 @@ const DatasetInfo = ({ id, branch, transactionId, datasetDetails }: TProps) => {
             )}
           </div>
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )
       }
     >
-      <BoslerButton
+      <MtdButton
         icon={<InfoIcon size={20} />}
         minimal
         icononly

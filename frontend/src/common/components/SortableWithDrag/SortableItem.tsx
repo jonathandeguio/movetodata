@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { DragHandleVerticalIcon } from "assets/icons/boslerActionIcons";
+import { DragHandleVerticalIcon } from "assets/icons/mtdActionIcons";
 import React from "react";
 
 interface IProps {

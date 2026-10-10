@@ -1,8 +1,8 @@
 import { DatePicker, Form, Select, Slider } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { RefreshIcon, RemoveIcon } from "assets/icons/boslerActionIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { RefreshIcon, RemoveIcon } from "assets/icons/mtdActionIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useMemo } from "react";
 import { ObjectKeys, getLanguageLabel, isDefined } from "utils/utilities";
 
@@ -169,7 +169,7 @@ export const ParameterChart = ({ chartOptions, onClickChart }: any) => {
         })}
       </Form>
       <div style={{ display: "flex", marginTop: "1rem", gap: "0.7rem" }}>
-        <BoslerButton
+        <MtdButton
           size={chartOptions?.chartCustomization?.parameterFormSize}
           onClick={() => {
             form.submit();
@@ -178,8 +178,8 @@ export const ParameterChart = ({ chartOptions, onClickChart }: any) => {
           icon={<TickIcon />}
         >
           {getLanguageLabel("apply")}
-        </BoslerButton>
-        <BoslerButton
+        </MtdButton>
+        <MtdButton
           size={chartOptions?.chartCustomization?.parameterFormSize}
           intent="primary"
           onClick={() => {
@@ -188,8 +188,8 @@ export const ParameterChart = ({ chartOptions, onClickChart }: any) => {
           icon={<RemoveIcon />}
         >
           Clear
-        </BoslerButton>
-        <BoslerButton
+        </MtdButton>
+        <MtdButton
           size={chartOptions?.chartCustomization?.parameterFormSize}
           onClick={() => {
             form.resetFields();
@@ -199,7 +199,7 @@ export const ParameterChart = ({ chartOptions, onClickChart }: any) => {
           icon={<RefreshIcon />}
         >
           {getLanguageLabel("reset")}
-        </BoslerButton>
+        </MtdButton>
       </div>
     </div>
   );

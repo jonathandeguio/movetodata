@@ -2,10 +2,10 @@ import { Col, Divider, Input, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Form } from "antd";
-import BoslerButton from "../../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "../../../components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "../../../components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "../../../components/MtdComponents/InputComponent/MtdInput";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { getSmtpConfig, updateSmtpConfig } from "../apis";
 
 const { Title, Text } = Typography;
@@ -53,7 +53,7 @@ const SMTPSettings = () => {
               <Col span={8}>
                 <Text type="secondary">SMTP host name like smtp.gmail.com</Text>
                 <Form.Item name="host">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -65,7 +65,7 @@ const SMTPSettings = () => {
               <Col span={8}>
                 <Text type="secondary">Port for the SMTP host like 587</Text>
                 <Form.Item name="port">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -76,7 +76,7 @@ const SMTPSettings = () => {
               </Col>
               <Col span={8}>
                 <Form.Item name="auth">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -87,7 +87,7 @@ const SMTPSettings = () => {
               </Col>
               <Col span={8}>
                 <Form.Item name="ttls">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -99,7 +99,7 @@ const SMTPSettings = () => {
               <Col span={8}>
                 <Text type="secondary">Email for the mailer</Text>
                 <Form.Item name="smtpEmail">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -119,7 +119,7 @@ const SMTPSettings = () => {
             <Row justify="space-between">
               <Col span={16}>
                 <div
-                  className="BoslerSubHeader1 text-and-icon-center"
+                  className="MtdSubHeader1 text-and-icon-center"
                   style={{ marginRight: "0.5rem" }}
                 >
                   Only platform administrators can view or edit this
@@ -128,9 +128,9 @@ const SMTPSettings = () => {
               </Col>
               <Col span={8}>
                 <Form.Item style={{ marginBottom: 0, marginLeft: "auto" }}>
-                  <BoslerButton htmlType="submit" intent="primary">
+                  <MtdButton htmlType="submit" intent="primary">
                     Update Configuration
-                  </BoslerButton>
+                  </MtdButton>
                 </Form.Item>
               </Col>
             </Row>
@@ -138,7 +138,7 @@ const SMTPSettings = () => {
             <br />
           </Form>
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </p>
     </div>

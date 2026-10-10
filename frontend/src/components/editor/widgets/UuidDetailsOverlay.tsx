@@ -2,9 +2,9 @@ import { Monaco } from "@monaco-editor/react";
 import { useNavigateHelper, usePath } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
 import { Divider, Popover, Tooltip, Typography } from "antd";
-import { DuplicateIcon } from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
+import { DuplicateIcon } from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
 import {
   useFileExplorerService,
   useResourceHook,

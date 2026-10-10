@@ -2,14 +2,14 @@ import { getResourceApi } from "Apps/explorer/explorer.api";
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
 import { Avatar, Badge, Col, Popover, Row, Skeleton, Typography } from "antd";
-import { BuildIcon, WarningIcon } from "assets/icons/boslerActionIcons";
-import { EmailIcon } from "assets/icons/boslerFileIcons";
+import { BuildIcon, WarningIcon } from "assets/icons/mtdActionIcons";
+import { EmailIcon } from "assets/icons/mtdFileIcons";
 import {
   GroupsIcon,
   ScheduledRunIcon,
   UserIcon,
-} from "assets/icons/boslerInterfaceIcons";
-import { SharedWorkspaceIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdInterfaceIcons";
+import { SharedWorkspaceIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { GitCommitIcon } from "assets/icons/gitIcons";
 import { fetchBuildLogsAPI } from "components/Builds/Builds.api";
 import { TBuildLog } from "components/Builds/Builds.types";
@@ -20,13 +20,13 @@ import {
   getTimeDisplay,
 } from "utils/utilities";
 import { fetchUserDetailsAPI } from "../UserInfo/UserInfo.api";
-import styles from "./BoslerResourceOverlay.module.scss";
+import styles from "./MtdResourceOverlay.module.scss";
 const { Title, Text } = Typography;
 
-type TBoslerOverlayResource = "RESOURCE" | "BUILD" | "USER" | "SCHEDULE";
+type TMtdOverlayResource = "RESOURCE" | "BUILD" | "USER" | "SCHEDULE";
 interface IProps {
   id: string;
-  type: TBoslerOverlayResource;
+  type: TMtdOverlayResource;
   showPopover?: boolean;
 }
 
@@ -35,7 +35,7 @@ interface IOverlay {
   icon: any;
   onClick: any;
   popupContent: any;
-  type: TBoslerOverlayResource;
+  type: TMtdOverlayResource;
   loading: boolean;
   error: boolean;
 }
@@ -43,7 +43,7 @@ interface IOverlay {
 interface IContent {
   label: string;
   icon: any;
-  type: TBoslerOverlayResource;
+  type: TMtdOverlayResource;
   onClick: any;
 }
 
@@ -76,7 +76,7 @@ const Overlay = ({
   console.log("POPUP CONTENT : ", popupContent);
   if (error) {
     return (
-      <div className="BoslerBtnHeading">
+      <div className="MtdBtnHeading">
         <WarningIcon />
         <div>Not Found</div>
       </div>
@@ -84,7 +84,7 @@ const Overlay = ({
   }
   if (loading) {
     return (
-      <div className="BoslerBtnHeading">
+      <div className="MtdBtnHeading">
         <Skeleton />
       </div>
     );
@@ -176,7 +176,7 @@ const SchedulePopover = ({ scheduleData }: { scheduleData: any }) => {
   return <>Schedule</>;
 };
 
-const BoslerResourceOverlay = ({ id, type, showPopover = true }: IProps) => {
+const MtdResourceOverlay = ({ id, type, showPopover = true }: IProps) => {
   const navigator = useNavigateHelper();
   const [label, setLabel] = useState<string>(id);
   const [icon, setIcon] = useState<any>();
@@ -253,4 +253,4 @@ const BoslerResourceOverlay = ({ id, type, showPopover = true }: IProps) => {
   );
 };
 
-export default BoslerResourceOverlay;
+export default MtdResourceOverlay;

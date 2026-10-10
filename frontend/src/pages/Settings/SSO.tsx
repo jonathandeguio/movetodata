@@ -2,17 +2,17 @@ import { Col, Divider, Dropdown, Row, Table, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddIcon, MoreMenuIcon } from "../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AddIcon, MoreMenuIcon } from "../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
 
 import { getSSODetails } from "../../redux/actions/authActions";
 
-import { AddUserIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { AddUserIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { getLanguageLabel, openNotification } from "utils/utilities";
 import { ThunkAppDispatch } from "../../redux/types/store";
 const { Text, Title } = Typography;
@@ -201,26 +201,26 @@ const SSO = () => {
   return (
     <>
       {/* create sso provider */}
-      <BoslerModal
+      <MtdModal
         headingIcon={<AddUserIcon />}
         heading={getLanguageLabel("addNewSSODetails")}
         open={createView}
         onCancel={handleCreateCancel}
         onOk={handleCreateOk}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             intent="action"
             key="submit"
             onClick={handleCreateOk}
           >
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
 
-        <BoslerInput
+        <MtdInput
           onChange={(e) =>
             setNewSSODetails({
               ...newSSODetails,
@@ -231,8 +231,8 @@ const SSO = () => {
           name="Uname"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+        <MtdInput
           onChange={(e) =>
             setNewSSODetails({
               ...newSSODetails,
@@ -243,8 +243,8 @@ const SSO = () => {
           name="description"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("providerName")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("providerName")}</div>
+        <MtdInput
           onChange={(e) =>
             setNewSSODetails({
               ...newSSODetails,
@@ -255,8 +255,8 @@ const SSO = () => {
           name="providerName"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("clientId")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("clientId")}</div>
+        <MtdInput
           onChange={(e) =>
             setNewSSODetails({
               ...newSSODetails,
@@ -267,8 +267,8 @@ const SSO = () => {
           name="clientId"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("clientSecret")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("clientSecret")}</div>
+        <MtdInput
           onChange={(e) =>
             setNewSSODetails({
               ...newSSODetails,
@@ -279,11 +279,11 @@ const SSO = () => {
           name="clientSecret"
           required
         />
-      </BoslerModal>
+      </MtdModal>
 
       {/* are you sure you want to delete modal */}
 
-      <BoslerModal
+      <MtdModal
         headingIcon={<TrashIcon color="var(--DANGEROUS_COLOR)" />}
         heading={getLanguageLabel("areYouSureYouWantToDeleteThis?")}
         open={deleteModal}
@@ -297,20 +297,20 @@ const SSO = () => {
           // >
           //   <CrossIcon /> {getLanguageLabel("cancel")}
           // </Button>,
-          <BoslerButton
+          <MtdButton
             key="submit"
             onClick={() => handleDelete(deleteSSO.id)}
             intent="dangerous"
             icon={<TrashIcon />}
           >
             {getLanguageLabel("delete")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         {deleteSSO.name} SSO{" "}
-      </BoslerModal>
+      </MtdModal>
 
-      <BoslerModal
+      <MtdModal
         headingIcon={<EditIcon />}
         heading={`${getLanguageLabel("edit")} SSO`}
         open={editModal}
@@ -320,17 +320,17 @@ const SSO = () => {
           // <Button className="interactive" key="back" onClick={handleEditCancel}>
           //   <CrossIcon /> {getLanguageLabel("cancel")}
           // </Button>,
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             onClick={() => handleEdit(editSSO.id)}
           >
             {getLanguageLabel("edit")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
 
-        <BoslerInput
+        <MtdInput
           onChange={(e) =>
             setEditSSO({
               ...editSSO,
@@ -341,8 +341,8 @@ const SSO = () => {
           name="Uname"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+        <MtdInput
           onChange={(e) =>
             setEditSSO({
               ...editSSO,
@@ -353,8 +353,8 @@ const SSO = () => {
           name="description"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("providerName")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("providerName")}</div>
+        <MtdInput
           onChange={(e) =>
             setEditSSO({
               ...editSSO,
@@ -365,8 +365,8 @@ const SSO = () => {
           name="providerName"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("clientId")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("clientId")}</div>
+        <MtdInput
           onChange={(e) =>
             setEditSSO({
               ...editSSO,
@@ -377,8 +377,8 @@ const SSO = () => {
           name="clientId"
           required
         />
-        <div className="BoslerHeader1">{getLanguageLabel("clientSecret")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("clientSecret")}</div>
+        <MtdInput
           onChange={(e) =>
             setEditSSO({
               ...editSSO,
@@ -389,7 +389,7 @@ const SSO = () => {
           name="clientSecret"
           required
         />
-      </BoslerModal>
+      </MtdModal>
 
       <div className="settings-center-block">
         <p>
@@ -402,14 +402,14 @@ const SSO = () => {
             </Col>
             <Col>
               {platformAdmin ? (
-                <BoslerButton
+                <MtdButton
                   icon={<AddIcon />}
                   intent="action"
                   onClick={() => setCreateView(true)}
                 >
                   {" "}
                   {getLanguageLabel("addSSOProvider")}{" "}
-                </BoslerButton>
+                </MtdButton>
               ) : (
                 ""
               )}

@@ -1,0 +1,31 @@
+.mtdButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: none;
+  &:hover {
+    box-shadow: inset 0px 0px 0 0px rgba(17, 20, 24, 0.2),
+      0px 1px 1px 0px rgba(17, 20, 24, 0.2);
+    opacity: 0.85;
+    // animation: glowing 1300ms infinite;
+  }
+  &-children {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &-actionIcon {
+    // background-color: #d9d9d9;
+    margin-left: auto;
+  }
+  &-tempsuccess {
+    background-color: var(--SUCCESS_COLOR) !important;
+    color: var(--SUCCESS_COLOR_FONT) !important;
+    border-color: var(--SUCCESS_COLOR_BORDER) !important;
+  }
+  &-tempfailure {
+    background-color: var(--DANGEROUS_COLOR) !important;
+    color: var(--DANGEROUS_COLOR_FONT) !important;
+    border-color: var(--DANGEROUS_COLOR_BORDER) !important;
+  }
+}

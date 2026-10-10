@@ -2,7 +2,7 @@ import React from "react";
 
 import { defaultSeries } from "Apps/Kepler/utils/DefaultValues";
 import { Collapse, Form } from "antd";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
 import {
   generateUUID,
   getLanguageLabel,

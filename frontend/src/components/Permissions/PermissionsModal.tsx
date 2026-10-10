@@ -26,33 +26,33 @@ import {
   EyeIcon,
   SearchIcon,
   SharedIcon,
-} from "../../assets/icons/boslerActionIcons";
+} from "../../assets/icons/mtdActionIcons";
 import {
   AddUserIcon,
   EyeOpenIcon,
   GroupsIcon,
   KeyIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdInterfaceIcons";
 
 import { getAllUserDetails } from "../../redux/actions/userActions";
 import { RootState, ThunkAppDispatch } from "../../redux/types/store";
-import BoslerUserPopover from "../UserPopover/userpopover";
+import MtdUserPopover from "../UserPopover/userpopover";
 
 import { Resource } from "Apps/explorer/explorer";
 import { usePath } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
 import {
   LibraryIcon,
   LightBulbIcon,
   TrashIcon,
-} from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronRightIcon,
   TickIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdNavigationIcon";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import NoData from "components/CommonUI/NoData";
 import {
   createPermissionMappingAPI,
@@ -63,9 +63,9 @@ import {
   updatePermissionsMappingAPI,
 } from "components/Permissions/Permissions.api";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
-import { UserIcon } from "../../assets/icons/boslerInterfaceIcons";
+import { UserIcon } from "../../assets/icons/mtdInterfaceIcons";
 import { getAllGroups } from "../../redux/actions/authActions";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import styles from "./Permissions.module.scss";
 import { getAllIdentityChoices } from "./Permissions.utils";
 
@@ -125,7 +125,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
               src={val.identity?.profileImage}
             />
             {isDefined(val.identity?.username) ? (
-              <BoslerUserPopover record={val.identity}>
+              <MtdUserPopover record={val.identity}>
                 <div
                   className="pop-over-item"
                   style={{ display: "inline" }}
@@ -135,9 +135,9 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
                 >
                   {val.identity?.name}
                 </div>
-              </BoslerUserPopover>
+              </MtdUserPopover>
             ) : (
-              <BoslerUserPopover record={val.identity}>
+              <MtdUserPopover record={val.identity}>
                 <div
                   className="pop-over-item"
                   style={{ display: "inline" }}
@@ -149,7 +149,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
                 >
                   {val.identity?.name}
                 </div>
-              </BoslerUserPopover>
+              </MtdUserPopover>
             )}
           </div>
         </Col>
@@ -205,7 +205,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
                 </Select>
               </Col>
               <Col>
-                <BoslerButton
+                <MtdButton
                   icononly
                   minimal
                   trimicononlypadding
@@ -226,7 +226,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
                       setFilteredUsersWithAccess(newFilteredUserWithAccess);
                     });
                   }}
-                ></BoslerButton>
+                ></MtdButton>
               </Col>
             </Row>
           ) : (
@@ -286,7 +286,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
   console.log("filter", filteredUsersWithAccess);
 
   return (
-    <BoslerModal
+    <MtdModal
       heading={
         isDefined(resource) && (
           <>
@@ -314,7 +314,7 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
       extraActionHeading={
         <Form form={form}>
           <Form.Item name="searchText">
-            <BoslerInput
+            <MtdInput
               placeholder="Search all permissions"
               suffix={<SearchIcon />}
               autofocus
@@ -698,14 +698,14 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
               </Col>
             </Row>
           ) : (
-            <BoslerButton
+            <MtdButton
               intent="success"
               fill
               onClick={() => setIsAddPermissionOpen(true)}
               icon={<AddIcon />}
             >
               Permissions
-            </BoslerButton>
+            </MtdButton>
           )}
         </div>
       )}
@@ -722,6 +722,6 @@ export const PermissionModel = ({ id, open, handleClose }: any) => {
           filteredUsersWithAccess && filteredUsersWithAccess?.map(displayMap)
         )}
       </div>
-    </BoslerModal>
+    </MtdModal>
   );
 };

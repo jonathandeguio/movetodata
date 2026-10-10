@@ -1,7 +1,7 @@
 import { Avatar, Form, Mentions, Row, Tabs } from "antd";
-import { AddIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import { AddIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import { User } from "global";
 import React, { KeyboardEvent, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -45,7 +45,7 @@ export const CommentsContent = ({
     }
   };
 
-  if (!isDefined(allusers)) return <BoslerLoader />;
+  if (!isDefined(allusers)) return <MtdLoader />;
   return (
     <>
       <div
@@ -156,7 +156,7 @@ export const CommentsContent = ({
                   />
                 </Form.Item>
                 <Row justify="end">
-                  <BoslerButton
+                  <MtdButton
                     intent="dangerous"
                     size="small"
                     onClick={(e: any) => {
@@ -168,9 +168,9 @@ export const CommentsContent = ({
                     minimal
                   >
                     {getLanguageLabel("cancel")}
-                  </BoslerButton>
+                  </MtdButton>
                   &nbsp;
-                  <BoslerButton
+                  <MtdButton
                     intent="primary"
                     size="small"
                     htmlType="submit"
@@ -178,13 +178,13 @@ export const CommentsContent = ({
                     minimal
                   >
                     {getLanguageLabel("addComment")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Row>
               </Form>
             </>
           ) : (
             <Row justify={"center"}>
-              <BoslerButton
+              <MtdButton
                 onClick={(e: any) => {
                   // e.preventDefault();
                   e.stopPropagation();
@@ -197,7 +197,7 @@ export const CommentsContent = ({
                 minimal
               >
                 {getLanguageLabel("new")} {getLanguageLabel("comment")}
-              </BoslerButton>
+              </MtdButton>
             </Row>
           )}
         </div>

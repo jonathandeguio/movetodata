@@ -1,4 +1,4 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import React from "react";
 
 const PipelineTable = ({ id, branch }: $TSFixMe) => {
@@ -9,7 +9,7 @@ const PipelineTable = ({ id, branch }: $TSFixMe) => {
         width: "100%",
       }}
     >
-      <BoslerTable
+      <MtdTable
         onDataLoad={() => {}}
         isTableFromBottomBar={true}
         id={id}

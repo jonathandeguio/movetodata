@@ -1,5 +1,5 @@
-import BoslerLoader from "components/boslerLoader";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import MtdLoader from "components/mtdLoader";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import React, { useEffect, useState } from "react";
 import { fetchUserDetailsAPI } from "./UserInfo.api";
 interface TProps {
@@ -32,7 +32,7 @@ const UserInfo = ({ userId }: TProps) => {
   }
 
   if (isLoading) {
-    return <BoslerLoader size="tiny" />;
+    return <MtdLoader size="tiny" />;
   }
 
   if (!userData) {
@@ -40,11 +40,11 @@ const UserInfo = ({ userId }: TProps) => {
   }
 
   return (
-    <BoslerUserPopover record={userData}>
+    <MtdUserPopover record={userData}>
       <div className="pop-over-item" style={{ display: "inline" }}>
         {userData.name}
       </div>
-    </BoslerUserPopover>
+    </MtdUserPopover>
   );
 };
 

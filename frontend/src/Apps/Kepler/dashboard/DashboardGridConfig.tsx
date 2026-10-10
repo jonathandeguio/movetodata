@@ -1,8 +1,8 @@
 import { ColorPicker, Form, InputNumber, Switch } from "antd";
 import { Color } from "antd/es/color-picker";
 import { useForm } from "antd/es/form/Form";
-import { AppIcon } from "assets/icons/boslerInterfaceIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { AppIcon } from "assets/icons/mtdInterfaceIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -46,7 +46,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
 
   return (
     <Form form={form} layout="horizontal" initialValues={gridConfig}>
-      <BoslerCollapse
+      <MtdCollapse
         collapsible="HEADER"
         header={getLanguageLabel("canvas")}
         key={`canvas`}
@@ -142,9 +142,9 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
             </div>
           </div>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
 
-      <BoslerCollapse
+      <MtdCollapse
         collapsible="HEADER"
         header={getLanguageLabel("dashboard")}
         key={`dashboard`}
@@ -153,7 +153,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="pageBg"
             label={
-              <div className="boslerFormLabel">{getLanguageLabel("page")}</div>
+              <div className="mtdFormLabel">{getLanguageLabel("page")}</div>
             }
             labelCol={labelCol}
             wrapperCol={wrapperCol}
@@ -183,7 +183,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="canvasBg"
             label={
-              <div className="boslerFormLabel">
+              <div className="mtdFormLabel">
                 {getLanguageLabel("canvas")}
               </div>
             }
@@ -212,9 +212,9 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
 
-      <BoslerCollapse
+      <MtdCollapse
         collapsible="HEADER"
         header={getLanguageLabel("chart")}
         key={`chart`}
@@ -223,7 +223,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="chartBodyBg"
             label={
-              <div className="boslerFormLabel">
+              <div className="mtdFormLabel">
                 {getLanguageLabel("background")}
               </div>
             }
@@ -254,7 +254,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="chartHeadingTextColor"
             label={
-              <div className="boslerFormLabel">{getLanguageLabel("text")}</div>
+              <div className="mtdFormLabel">{getLanguageLabel("text")}</div>
             }
             labelCol={labelCol}
             wrapperCol={wrapperCol}
@@ -283,7 +283,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="chartHeadingBg"
             label={
-              <div className="boslerFormLabel">
+              <div className="mtdFormLabel">
                 {getLanguageLabel("headingBackground")}
               </div>
             }
@@ -312,9 +312,9 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
 
-      <BoslerCollapse
+      <MtdCollapse
         collapsible="HEADER"
         header={getLanguageLabel("responsiveGrid")}
         key={`grid`}
@@ -323,7 +323,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="preventCollision"
             label={
-              <div className="boslerFormLabel">
+              <div className="mtdFormLabel">
                 {getLanguageLabel("preventCollision")}
               </div>
             }
@@ -347,7 +347,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
           <Form.Item
             name="allowOverlap"
             label={
-              <div className="boslerFormLabel">
+              <div className="mtdFormLabel">
                 {getLanguageLabel("allowOverlap")}
               </div>
             }
@@ -368,7 +368,7 @@ const DashboardGridConfig = ({ tabId, dashboardId }: IProps) => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </Form>
   );
 };

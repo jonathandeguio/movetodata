@@ -5,13 +5,13 @@ import {
   CrossIcon,
   HistoryIcon,
   SettingsIcon,
-} from "assets/icons/boslerActionIcons";
-import { CalendarIcon } from "assets/icons/boslerInterfaceIcons";
+} from "assets/icons/mtdActionIcons";
+import { CalendarIcon } from "assets/icons/mtdInterfaceIcons";
 import { PlatformPagesEnum } from "common/enums";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -117,7 +117,7 @@ const DatasetHistoryHeaderAction = ({
   }, []);
 
   if (!resourcePermission) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
@@ -134,10 +134,10 @@ const DatasetHistoryHeaderAction = ({
         trigger="click"
         onOpenChange={handleClickChange}
       >
-        <BoslerButton minimal icon={<CalendarIcon />} icononly />
+        <MtdButton minimal icon={<CalendarIcon />} icononly />
       </Popover>
 
-      <BoslerButton
+      <MtdButton
         onClick={() => {
           setOpenModal(true);
         }}
@@ -146,7 +146,7 @@ const DatasetHistoryHeaderAction = ({
         icononly
       />
 
-      <BoslerButton
+      <MtdButton
         onClick={() => {
           handleClose();
         }}
@@ -155,19 +155,19 @@ const DatasetHistoryHeaderAction = ({
         icononly
         minimal
       />
-      <BoslerModal
+      <MtdModal
         headingIcon={<HistoryIcon />}
         heading={<Col>{getLanguageLabel("retention")}</Col>}
         open={openModal}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             onClick={handleHistorySetting}
             intent={getIntent(result)}
             loading={loading}
             textTransform="none"
           >
             {getLanguageLabel("update")}
-          </BoslerButton>
+          </MtdButton>
         }
         footerExtraText={
           getLanguageLabel("onlyPlatformAdminCanDefineCopiesToRetain")
@@ -193,7 +193,7 @@ const DatasetHistoryHeaderAction = ({
         />{" "}
         Dataset Retention
         {currentHistoryCountSource && (
-          <BoslerInput
+          <MtdInput
             type="number"
             value={currentCount}
             onChange={(e: any) => {
@@ -208,7 +208,7 @@ const DatasetHistoryHeaderAction = ({
           {getLanguageLabel("datasetRetentionPriority")}{" "}
           {datasetMapping.historyStoreType}
         </Text>
-      </BoslerModal>
+      </MtdModal>
     </div>
   );
 };

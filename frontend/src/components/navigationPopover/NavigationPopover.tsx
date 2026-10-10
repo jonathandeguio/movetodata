@@ -1,15 +1,15 @@
 import { putChart } from "Apps/Kepler/chart/charts.utils";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { unstable_useBlocker as useBlocker } from "react-router-dom";
 import { RootState } from "redux/types/store";
 import { getLanguageLabel } from "utils/utilities";
-import { SaveIcon, WarningIcon } from "../../assets/icons/boslerActionIcons";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import { SaveIcon, WarningIcon } from "../../assets/icons/mtdActionIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 
 export function AlertDialog({ isBlocking, isSaving, onSave }: any) {
@@ -69,11 +69,11 @@ export function AlertDialog({ isBlocking, isSaving, onSave }: any) {
   const dispatch = useDispatch();
 
   if (!datasetMapping) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<WarningIcon color="#FFA500" />}
       heading={getLanguageLabel("unSaved")}
       open={showPrompt as any}
@@ -81,7 +81,7 @@ export function AlertDialog({ isBlocking, isSaving, onSave }: any) {
       okType="danger"
       footerButtonArea={
         <>
-          <BoslerButton
+          <MtdButton
             icon={<SaveIcon />}
             intent="action"
             key="submit"
@@ -100,19 +100,19 @@ export function AlertDialog({ isBlocking, isSaving, onSave }: any) {
             textTransform="capitalize"
           >
             {getLanguageLabel("save")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<TrashIcon />}
             intent="dangerous"
             key="submit"
             onClick={confirmNavigation as any}
           >
             Discard
-          </BoslerButton>
+          </MtdButton>
         </>
       }
     >
       {getLanguageLabel("unsavedMsg")}
-    </BoslerModal>
+    </MtdModal>
   );
 }

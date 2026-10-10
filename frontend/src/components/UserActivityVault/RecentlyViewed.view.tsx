@@ -11,7 +11,7 @@ import {
   openNotification,
   timeConverter,
 } from "utils/utilities";
-import { StarIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { StarIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 
 import { Resource } from "Apps/explorer/explorer";
 import {
@@ -22,7 +22,7 @@ import {
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
 import UserInfo from "common/components/UserInfo";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 
 const { Title, Text } = Typography;
 

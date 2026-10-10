@@ -1,12 +1,12 @@
 import { Tooltip } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { ArrowDownIcon, ArrowUpIcon } from "assets/icons/boslerNavigationIcon";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { ArrowDownIcon, ArrowUpIcon } from "assets/icons/mtdNavigationIcon";
 import {
   closeBottomBarItem,
   openBottomBarItem,
   updateBottomBarItemContext,
-} from "common/components/BoslerLayout/bottomBarSlice";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+} from "common/components/MtdLayout/bottomBarSlice";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, {
   useCallback,
   useEffect,
@@ -18,12 +18,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { RootState } from "redux/types/store";
 import { getLanguageLabel, isDefined, notEmpty } from "utils/utilities";
-import Tabs from "../BoslerTabs";
-import { TabState } from "../BoslerTabs/types";
-import { IBoslerBottomBarItem, IBoslerBottomBarItemBody } from "./type";
-import { bottomBarToggleAnimator } from "./BoslerBottomBar.utils";
+import Tabs from "../MtdTabs";
+import { TabState } from "../MtdTabs/types";
+import { IMtdBottomBarItem, IMtdBottomBarItemBody } from "./type";
+import { bottomBarToggleAnimator } from "./MtdBottomBar.utils";
 
-export const BoslerBottomBarHeaderItem = ({
+export const MtdBottomBarHeaderItem = ({
   id,
   label,
   icon,
@@ -31,12 +31,12 @@ export const BoslerBottomBarHeaderItem = ({
   type,
   onOpen,
   primaryPanelRef,
-}: IBoslerBottomBarItem & { primaryPanelRef: React.MutableRefObject<any> }) => {
+}: IMtdBottomBarItem & { primaryPanelRef: React.MutableRefObject<any> }) => {
   const dispatch = useDispatch();
   const { activeItem } = useSelector((state: RootState) => state.bottomBar);
 
   return (
-    <BoslerButton
+    <MtdButton
       disabled={isDefined(intent) && intent === "DISABLED"}
       onClick={() => {
         if (type === "BUTTON") {
@@ -56,11 +56,11 @@ export const BoslerBottomBarHeaderItem = ({
       minimal
     >
       {label}
-    </BoslerButton>
+    </MtdButton>
   );
 };
 
-export const BoslerBottomBarItem = (item: IBoslerBottomBarItemBody) => {
+export const MtdBottomBarItem = (item: IMtdBottomBarItemBody) => {
   const dispatch = useDispatch();
 
   const [tabContext, setTabContext] = useState<TabState | undefined>();
@@ -87,7 +87,7 @@ export const BoslerBottomBarItem = (item: IBoslerBottomBarItemBody) => {
                 : getLanguageLabel("expand")
             }
           >
-            <BoslerButton
+            <MtdButton
               minimal
               // outlined
               icononly
@@ -103,7 +103,7 @@ export const BoslerBottomBarItem = (item: IBoslerBottomBarItemBody) => {
             />
           </Tooltip>
           <Tooltip title={getLanguageLabel("close")}>
-            <BoslerButton
+            <MtdButton
               minimal
               // outlined
               icononly
@@ -130,7 +130,7 @@ export const BoslerBottomBarItem = (item: IBoslerBottomBarItemBody) => {
   );
 };
 
-export const BoslerBottomBar = ({ children, destroyOnClose = true }: any) => {
+export const MtdBottomBar = ({ children, destroyOnClose = true }: any) => {
   const [paneSize, setPaneSize] = useState(0);
   const { leftItems, rightItems, activeItem, bottomBarItems } = useSelector(
     (state: RootState) => state.bottomBar
@@ -195,7 +195,7 @@ export const BoslerBottomBar = ({ children, destroyOnClose = true }: any) => {
                     activeItem === item.id ? "bottomPane--active" : ""
                   } `}
                 >
-                  <BoslerBottomBarItem
+                  <MtdBottomBarItem
                     key={`${item.id}-bottom-bar-item`}
                     paneSize={paneSize}
                     primaryPanelRef={primaryPanelRef}
@@ -210,9 +210,9 @@ export const BoslerBottomBar = ({ children, destroyOnClose = true }: any) => {
       <div className="bottombar">
         <div className="bottombar-left">
           <div className="bottombar-left-buttons">
-            {(leftItems as IBoslerBottomBarItem[]).map(
-              (item: IBoslerBottomBarItem) => (
-                <BoslerBottomBarHeaderItem
+            {(leftItems as IMtdBottomBarItem[]).map(
+              (item: IMtdBottomBarItem) => (
+                <MtdBottomBarHeaderItem
                   primaryPanelRef={primaryPanelRef}
                   key={`${item.id}-bottom-bar-header-item`}
                   {...item}
@@ -224,8 +224,8 @@ export const BoslerBottomBar = ({ children, destroyOnClose = true }: any) => {
         {notEmpty(rightItems) && (
           <div className="bottombar-right">
             <div className="bottombar-right-buttons">
-              {rightItems?.map((item: IBoslerBottomBarItem) => (
-                <BoslerBottomBarHeaderItem
+              {rightItems?.map((item: IMtdBottomBarItem) => (
+                <MtdBottomBarHeaderItem
                   primaryPanelRef={primaryPanelRef}
                   key={`${item.id}-bottom-bar-header-item`}
                   {...item}

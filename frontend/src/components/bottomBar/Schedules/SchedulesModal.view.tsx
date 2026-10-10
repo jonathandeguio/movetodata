@@ -1,14 +1,14 @@
 import { Alert, Radio } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { CalendarIcon, ScheduledRunIcon } from "assets/icons/boslerInterfaceIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { CalendarIcon, ScheduledRunIcon } from "assets/icons/mtdInterfaceIcons";
 import { DATASET } from "components/Builds/Builds.constants";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useEffect, useState } from "react";
 import { isEmpty } from "utils/utilities";
-import BoslerButton from "../../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../../boslerLoader";
+import MtdButton from "../../MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../../mtdLoader";
 import CronJobInput from "../../common/CronJob";
 import ScheduleSource from "./Components/ScheduleSource";
 import ShowScheduleInfo from "./Components/SchedulesInfo";
@@ -71,22 +71,22 @@ const ScheduleModal = ({
 
   useEffect(() => {}, [schedule]);
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<ScheduledRunIcon />}
       heading={TITLE_TEXT}
       open={visible}
       onCancel={() => handleCancel(setVisible)}
       footerButtonArea={
         <>
-          <BoslerButton
+          <MtdButton
             icon={<CrossIcon />}
             intent="none"
             onClick={() => handleCancel(setVisible)}
             key="back"
           >
             {CLOSE_TEXT}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<CalendarIcon />}
             intent="action"
             disabled={
@@ -108,12 +108,12 @@ const ScheduleModal = ({
             }
           >
             {schedule?.jobId ? UPDATE_SCHEDULE_TEXT : SCHEDULE_TEXT}
-          </BoslerButton>
+          </MtdButton>
         </>
       }
     >
       {isLoading ? (
-        <BoslerLoader size={"small"} />
+        <MtdLoader size={"small"} />
       ) : (
         <>
           <Alert
@@ -150,7 +150,7 @@ const ScheduleModal = ({
               )}
               <>
                 {FAILURE_RETRIVES}
-                <BoslerInput
+                <MtdInput
                   placeholder={retry.toString()}
                   onChange={(e) => setretry(+e.target.value)}
                   style={{
@@ -163,7 +163,7 @@ const ScheduleModal = ({
           )}
         </>
       )}
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

@@ -1,8 +1,8 @@
 import TextArea from "antd/es/input/TextArea";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { KeyIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { KeyIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
 
@@ -19,7 +19,7 @@ export const CopyLicenseKeyModal = ({
 }: IProps) => {
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<KeyIcon />}
         heading={getLanguageLabel("productLicensing")}
         open={isOpen}
@@ -27,7 +27,7 @@ export const CopyLicenseKeyModal = ({
         width={800}
         footerButtonArea={
           <>
-            <BoslerButton
+            <MtdButton
               intent="action"
               icon={<CopyIcon />}
               onClick={() => {
@@ -35,12 +35,12 @@ export const CopyLicenseKeyModal = ({
               }}
             >
               Copy
-            </BoslerButton>
+            </MtdButton>
           </>
         }
       >
         <TextArea value={licenseKey} disabled rows={5} />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

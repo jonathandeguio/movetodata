@@ -1,4 +1,4 @@
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -27,7 +27,7 @@ const SDElementLogo = ({
   return (
     <Link to="/" style={{ textDecoration: "none" }}>
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : isDefined(config) && isDefined(config.logo) ? (
         <img
           style={{

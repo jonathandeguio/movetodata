@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
 import { isCurrentConfigThemeDark, isDefined } from "utils/utilities";
 import { sunBurstChartArrPrepare } from "../charts.utils";
-import { ZoomOutIcon } from "assets/icons/boslerNavigationIcon";
+import { ZoomOutIcon } from "assets/icons/mtdNavigationIcon";
 echarts.registerTheme("dark-movetodata", eChartDarkTheme);
 
 function KeplerEChart({

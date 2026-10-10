@@ -1,8 +1,8 @@
 import { Card, Col, Row, Tooltip, Typography } from "antd";
-import { DataAgentsIcon } from "assets/icons/boslerDataIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { DataAgentsIcon } from "assets/icons/mtdDataIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   useFileExplorerService,
   useResourceHook,
@@ -16,17 +16,17 @@ import {
   notEmpty,
   openNotification,
 } from "utils/utilities";
-import { FolderIcon } from "../../../assets/icons/boslerFileIcons";
+import { FolderIcon } from "../../../assets/icons/mtdFileIcons";
 import {
   HelpIcon,
   PulseIcon,
-} from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdMiscellaneousIcons";
 import {
   ArrowHorizontalIcon,
   SingleChevronRightIcon,
   TickIcon,
-} from "../../../assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "../../../assets/icons/boslerTableIcons";
+} from "../../../assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "../../../assets/icons/mtdTableIcons";
 import { openFileExplorerModal } from "../../../redux/ModalSlice";
 import { createAgent, listAgents } from "../../../redux/actions/agentActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
@@ -138,7 +138,7 @@ const AgentModal = ({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<DataAgentsIcon />}
         heading={getLanguageLabel("agent")}
         open={isVisible}
@@ -147,7 +147,7 @@ const AgentModal = ({
         footerExtraText={getLanguageLabel("connectAdminOnlyMessage")}
         width={800}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent="primary"
             onClick={updateDetails ? handleUpdate : handleOk}
             icon={<TickIcon />}
@@ -156,7 +156,7 @@ const AgentModal = ({
             {updateDetails
               ? getLanguageLabel("update")
               : getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
         information={
           <div style={{ padding: "10px", width: "300px" }}>
@@ -203,8 +203,8 @@ const AgentModal = ({
           </div>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+        <MtdInput
           bordered
           autofocus
           onChange={(e) =>
@@ -218,8 +218,8 @@ const AgentModal = ({
           required
           placeholder={getLanguageLabel("agentName")}
         />
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+        <MtdInput
           onChange={(e) =>
             setNewAgentDetails({
               ...newAgentDetails,
@@ -240,7 +240,7 @@ const AgentModal = ({
         >
           <Col span={8}>{getLanguageLabel("parentFolder")}</Col>
           <Col span={16}>
-            <BoslerButton
+            <MtdButton
               icon={<FolderIcon />}
               onClick={() => {
                 dispatch(
@@ -263,7 +263,7 @@ const AgentModal = ({
               {selectedParent
                 ? selectedParent
                 : getLanguageLabel("parentFolder")}
-            </BoslerButton>
+            </MtdButton>
             <br />
             {notEmpty(path) ? (
               <Text
@@ -310,16 +310,16 @@ const AgentModal = ({
             )}
           </Col>
         </Row>
-      </BoslerModal>
+      </MtdModal>
 
       {createdAgent && (
-        <BoslerModal
+        <MtdModal
           heading={getLanguageLabel("agentDetails")}
           open={oneTimeCode}
           onOk={() => setOneTimeCode(false)}
           onCancel={() => setOneTimeCode(false)}
           footerButtonArea={
-            <BoslerButton
+            <MtdButton
               icon={<CopyCellIcon />}
               onClick={() =>
                 copyToClipboard(
@@ -329,7 +329,7 @@ const AgentModal = ({
               minimal
             >
               {getLanguageLabel("code")}
-            </BoslerButton>
+            </MtdButton>
           }
         >
           <Text>{getLanguageLabel("agentMsg")}</Text>
@@ -338,7 +338,7 @@ const AgentModal = ({
             <Text strong>
               {`bash < (/ usr/ bin/ curl -k -s ${PUBLIC_URL}/ api/ connect/ agent/ install/ ${createdAgent.oneTimeCode})`}
               <Tooltip title={"Click to copy agent secret id"}>
-                <BoslerButton
+                <MtdButton
                   icon={<CopyCellIcon />}
                   onClick={() =>
                     copyToClipboard(
@@ -353,7 +353,7 @@ const AgentModal = ({
           </Card>
 
           <Row justify="end"></Row>
-        </BoslerModal>
+        </MtdModal>
       )}
     </>
   );

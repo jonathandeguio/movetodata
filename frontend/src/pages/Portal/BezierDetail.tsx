@@ -7,8 +7,8 @@ import BottomTabs from "../../components/bottomBar/bottomTabs";
 
 import { Spin } from "antd";
 
-import { BottomBarLayout } from "common/components/BoslerLayout/BottomBarLayout";
-import { initBottomBar } from "common/components/BoslerLayout/bottomBarSlice";
+import { BottomBarLayout } from "common/components/MtdLayout/BottomBarLayout";
+import { initBottomBar } from "common/components/MtdLayout/bottomBarSlice";
 import Avatars from "components/Avatars/Avatars";
 import Comments from "components/Comments/Comments.view";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
@@ -16,12 +16,12 @@ import { getBezierBottomBarItems } from "components/bezier/Bezier.utils";
 import {
   favIconLoading,
   getDefaultFavicon,
-} from "components/boslerLoader/FavIconLoader";
+} from "components/mtdLoader/FavIconLoader";
 import { RootState } from "redux/types/store";
 import { getLanguageLabel, isDefined, openNotification } from "utils/utilities";
-import BoslerLoader from "../../components/boslerLoader";
+import MtdLoader from "../../components/mtdLoader";
 
-const antIcon = <BoslerLoader />;
+const antIcon = <MtdLoader />;
 
 const BezierDetail = () => {
   const { id, branch } = useParams();
@@ -144,7 +144,7 @@ const BezierDetail = () => {
                 name={selectedName}
               />
             ) : (
-              <Spin indicator={<BoslerLoader />} />
+              <Spin indicator={<MtdLoader />} />
             )}
             <BottomTabs id={id} branch={branch} page="pipeline" />
           </div>

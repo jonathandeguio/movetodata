@@ -1,2 +1,2 @@
-import BoslerResourceOverlay from "./BoslerResourceOverlay";
-export default BoslerResourceOverlay;
+import MtdResourceOverlay from "./MtdResourceOverlay";
+export default MtdResourceOverlay;

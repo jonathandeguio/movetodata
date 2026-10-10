@@ -1,12 +1,12 @@
 import { Form, Slider } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
 export const ParallelChartCustomizer = () => {
   return (
     <div className="customizer-subHeader">
-      <BoslerCollapse
+      <MtdCollapse
         key="parallelSettings"
         collapsible="HEADER"
         header={
@@ -27,7 +27,7 @@ export const ParallelChartCustomizer = () => {
             <Slider min={0} max={1} step={0.05} tooltip={{ open: false }} />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

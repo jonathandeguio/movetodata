@@ -1,5 +1,5 @@
 import { Tooltip, Typography } from "antd";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
 import UserInfo from "common/components/UserInfo";
 import React, { useState } from "react";
 import {

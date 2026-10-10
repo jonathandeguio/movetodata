@@ -1,6 +1,6 @@
 import { ColorPicker } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -18,7 +18,7 @@ export const ColorCustomizer = () => {
       {customize?.colorScheme &&
         Object.keys(customize.colorScheme).map((cSeries: string) => (
           <div className="customizer-subHeader">
-            <BoslerCollapse
+            <MtdCollapse
               collapsible="HEADER"
               header={
                 <div className="query_item__heading">
@@ -63,7 +63,7 @@ export const ColorCustomizer = () => {
                         ]}
                       />
 
-                      <BoslerInput
+                      <MtdInput
                         defaultValue={customize?.customLabel?.[item] ?? item}
                         debounceInterval={1000}
                         onChange={(e) => {
@@ -86,7 +86,7 @@ export const ColorCustomizer = () => {
                   )
                 )}
               </>
-            </BoslerCollapse>
+            </MtdCollapse>
           </div>
         ))}
     </>

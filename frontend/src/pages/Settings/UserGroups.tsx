@@ -9,9 +9,9 @@ import { useSelector } from "react-redux";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
-import { GroupsIcon } from "assets/icons/boslerInterfaceIcons";
+import { GroupsIcon } from "assets/icons/mtdInterfaceIcons";
 import { useNavigate } from "react-router";
-import BoslerLoader from "../../components/boslerLoader";
+import MtdLoader from "../../components/mtdLoader";
 
 const { Title, Text } = Typography;
 
@@ -63,7 +63,7 @@ const LoginActivity = () => {
   ];
 
   return !user ? (
-    <BoslerLoader />
+    <MtdLoader />
   ) : (
     <div className="settings-center-block">
       <p>

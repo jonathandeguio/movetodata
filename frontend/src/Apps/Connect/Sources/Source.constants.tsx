@@ -1,13 +1,13 @@
-import { AddIcon } from "assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "assets/icons/boslerDataIcons";
+import { AddIcon } from "assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "assets/icons/mtdDataIcons";
 import {
   MariaDBIcon,
   MSSQLIcon,
   MySQLIcon,
   OracleIcon,
   PostgresIcon,
-} from "assets/icons/boslerExternalIcons";
-import { APIIcon, UploadIcon } from "assets/icons/boslerInterfaceIcons";
+} from "assets/icons/mtdExternalIcons";
+import { APIIcon, UploadIcon } from "assets/icons/mtdInterfaceIcons";
 import React from "react";
 import { SourceAuthTypeEnum } from "../Enums/SourceAuthTypeEnum";
 import { SourceTypeEnum } from "../Enums/SourceTypeEnum";

@@ -1,6 +1,6 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Editor } from "@monaco-editor/react";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { useDebounceState } from "hooks/useDebounce";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -73,7 +73,7 @@ const BlobRender = ({ resourceId }: IProps) => {
   }, [debouncedInput]);
 
   if (loading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return checkAvailableFileType(fileDetails.subType) ? (

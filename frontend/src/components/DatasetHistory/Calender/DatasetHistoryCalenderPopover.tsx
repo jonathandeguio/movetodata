@@ -1,8 +1,8 @@
 import { Popover, Tooltip } from "antd";
-import { VersionHistoryIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { VersionHistoryIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { PlatformPagesEnum } from "common/enums";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -33,7 +33,7 @@ const DatasetHistoryCalenderPopover = ({ datasetId, page }: TProps) => {
             page={page}
           />
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )
       }
       open={openCalendarPopover}
@@ -41,7 +41,7 @@ const DatasetHistoryCalenderPopover = ({ datasetId, page }: TProps) => {
       onOpenChange={handleClickChange}
     >
       <Tooltip title={getLanguageLabel("transactions")} placement={"bottom"}>
-        <BoslerButton minimal icon={<VersionHistoryIcon size={22} />} icononly trimicononlypadding/>
+        <MtdButton minimal icon={<VersionHistoryIcon size={22} />} icononly trimicononlypadding/>
       </Tooltip>
     </Popover>
   );

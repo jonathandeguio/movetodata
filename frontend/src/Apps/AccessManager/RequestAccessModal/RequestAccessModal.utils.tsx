@@ -1,6 +1,6 @@
 import { Resource } from "Apps/explorer/explorer";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { EyeOpenIcon, UserIcon } from "assets/icons/boslerInterfaceIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { EyeOpenIcon, UserIcon } from "assets/icons/mtdInterfaceIcons";
 import { User } from "global";
 import { Group } from "pages/Settings/Groups/Group";
 

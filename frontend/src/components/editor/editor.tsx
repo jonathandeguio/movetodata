@@ -35,25 +35,25 @@ import DirectoryTree from "./directoryTree";
 import "./editor.scss";
 import EditorHome from "./editorHome";
 
-import { MapIcon } from "assets/icons/boslerChartIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MapIcon } from "assets/icons/mtdChartIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import {
   RemoveIcon,
   SearchIcon,
   SparklesIcon,
-} from "../../assets/icons/boslerActionIcons";
+} from "../../assets/icons/mtdActionIcons";
 import {
   GitMergeBranchIcon,
   GitNewBranchIcon,
-} from "../../assets/icons/boslerExternalIcons";
+} from "../../assets/icons/mtdExternalIcons";
 import {
   InfoIcon,
   TrashIcon,
-} from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickSmallIcon } from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
-import { CollapserHandler } from "../BoslerComponents/ResizablePane/ResizablePaneUtil";
+} from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickSmallIcon } from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
+import { CollapserHandler } from "../MtdComponents/ResizablePane/ResizablePaneUtil";
 
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -64,17 +64,17 @@ import {
   buildParentIndex,
   getNodeIcon,
 } from "Apps/explorer/explorer.utils";
-import { EditIcon, StylesIcon } from "assets/icons/boslerEditorIcons";
+import { EditIcon, StylesIcon } from "assets/icons/mtdEditorIcons";
 import { GitDiffIcon } from "assets/icons/gitIcons";
 import {
   initBottomBar,
   updateBottomBarItemState,
-} from "common/components/BoslerLayout/bottomBarSlice";
-import Tabs from "common/components/BoslerTabs";
-import { ITabPane } from "common/components/BoslerTabs/types";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+} from "common/components/MtdLayout/bottomBarSlice";
+import Tabs from "common/components/MtdTabs";
+import { ITabPane } from "common/components/MtdTabs/types";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { updateUserDetails } from "../../redux/actions/userActions";
 import {
@@ -90,7 +90,7 @@ import {
   updateRepositoryPaneGitBlame,
 } from "../../redux/repositoryEditorSlice";
 import { RootState, ThunkAppDispatch } from "../../redux/types/store";
-import BoslerEditor from "./BoslerEditor";
+import MtdEditor from "./MtdEditor";
 import GitStatusInfo from "./components/GitStatusInfo";
 import JupyterNotebook from "./components/JupyterNotebook";
 import {
@@ -759,7 +759,7 @@ const CodeEditor = () => {
                       sqlformattingLoading ? "shimmer" : ""
                     }`}
                   >
-                    <BoslerEditor
+                    <MtdEditor
                       onChangeContent={handleEditorChange}
                       readOnly={detachedHead}
                       editorRef={editorRef}
@@ -853,14 +853,14 @@ const CodeEditor = () => {
             <InfoIcon />
             &nbsp;&nbsp; {"HEAD is in detached state, you can not edit files."}
             &nbsp;&nbsp;&nbsp;
-            <BoslerButton
+            <MtdButton
               onClick={() => changeBranch("master")}
               minimal
               size="small"
               intent="warning"
             >
               &nbsp; {"Checkout to master"}
-            </BoslerButton>
+            </MtdButton>
           </div>
         )}
 
@@ -946,7 +946,7 @@ const CodeEditor = () => {
                                         {getLanguageLabel("formatSQL")}
                                       </Col>
                                       <Col span={6}>
-                                        <BoslerButton
+                                        <MtdButton
                                           onClick={() => {
                                             if (isDefined(activeId)) {
                                               autoFormatSQL(
@@ -964,7 +964,7 @@ const CodeEditor = () => {
                                           ) : (
                                             <>{userOSkey} M</>
                                           )}
-                                        </BoslerButton>
+                                        </MtdButton>
                                       </Col>
                                     </Row>
                                   </>
@@ -983,7 +983,7 @@ const CodeEditor = () => {
                                 }
                                 placement="bottom"
                               >
-                                <BoslerButton
+                                <MtdButton
                                   icon={<SparklesIcon />}
                                   onClick={() => {
                                     if (notEmpty(activeId)) {
@@ -997,14 +997,14 @@ const CodeEditor = () => {
                                   loading={sqlformattingLoading}
                                   icononly
                                   minimal
-                                ></BoslerButton>
+                                ></MtdButton>
                               </Popover>
 
                               <Divider type="vertical" />
                             </>
                           )}
                           <Popover title={<GitStatusInfo />} placement="bottom">
-                            <BoslerButton
+                            <MtdButton
                               minimal
                               icononly
                               icon={<StylesIcon />}
@@ -1013,10 +1013,10 @@ const CodeEditor = () => {
                               <span className="icon-text">
                                 {getLanguageLabel("status")}
                               </span>
-                            </BoslerButton>
+                            </MtdButton>
                           </Popover>
                           <Divider type="vertical" />
-                          <BoslerButton
+                          <MtdButton
                             icon={<SearchIcon />}
                             onClick={() => {
                               setIsSearchOpen(true);
@@ -1026,9 +1026,9 @@ const CodeEditor = () => {
                             }}
                             icononly
                             minimal
-                          ></BoslerButton>
+                          ></MtdButton>
                           <Divider type="vertical" />
-                          <BoslerButton
+                          <MtdButton
                             icon={<MapIcon />}
                             onClick={() => {
                               setIsMiniMapOpen((prev: boolean) => {
@@ -1043,7 +1043,7 @@ const CodeEditor = () => {
                             }}
                             icononly
                             minimal
-                          ></BoslerButton>
+                          ></MtdButton>
                           <Divider type="vertical" />
                           <Tooltip title={getLanguageLabel("changeFont")}>
                             {/* <InputNumber
@@ -1085,19 +1085,19 @@ const CodeEditor = () => {
             {/* Build log drawer */}
             {/* Settings Modal */}
             {/* CREATE BRANCH MODAL */}
-            <BoslerModal
+            <MtdModal
               headingIcon={<GitNewBranchIcon />}
               heading={getLanguageLabel("createNewBranch")}
               open={createBranchModal}
               footerButtonArea={
                 <>
-                  <BoslerButton
+                  <MtdButton
                     icon={<RemoveIcon />}
                     onClick={() => setCreateBranchModal(false)}
                   >
                     cancel
-                  </BoslerButton>
-                  <BoslerButton
+                  </MtdButton>
+                  <MtdButton
                     intent="success"
                     onClick={() => {
                       if (validBranch.validateStatus === "success") {
@@ -1107,7 +1107,7 @@ const CodeEditor = () => {
                     icon={<TickSmallIcon />}
                   >
                     create
-                  </BoslerButton>
+                  </MtdButton>
                 </>
               }
             >
@@ -1140,7 +1140,7 @@ const CodeEditor = () => {
                     while (false);
                   }}
                 >
-                  <BoslerInput value={newBranchName} onChange={onBranchEnter} />
+                  <MtdInput value={newBranchName} onChange={onBranchEnter} />
                 </Form.Item>
                 <Form.Item
                   name="baseBranch"
@@ -1152,25 +1152,25 @@ const CodeEditor = () => {
                   ]}
                   initialValue={activeBranch}
                 >
-                  <BoslerInput disabled />
+                  <MtdInput disabled />
                 </Form.Item>
               </Form>
-            </BoslerModal>
+            </MtdModal>
             {/* MERGE BRANCH MODAL */}
-            <BoslerModal
+            <MtdModal
               headingIcon={<GitMergeBranchIcon />}
               heading={getLanguageLabel("mergeBranches")}
               onCancel={() => setMergeBranchModal(false)}
               open={mergeBranchModal}
               footerButtonArea={
                 <>
-                  <BoslerButton
+                  <MtdButton
                     icon={<RemoveIcon />}
                     onClick={() => setMergeBranchModal(false)}
                   >
                     cancel
-                  </BoslerButton>
-                  <BoslerButton
+                  </MtdButton>
+                  <MtdButton
                     intent="success"
                     onClick={() => {
                       if (validBranch.validateStatus === "success") {
@@ -1180,7 +1180,7 @@ const CodeEditor = () => {
                     icon={<TickSmallIcon />}
                   >
                     merge
-                  </BoslerButton>
+                  </MtdButton>
                 </>
               }
             >
@@ -1232,7 +1232,7 @@ const CodeEditor = () => {
                   ]}
                   initialValue={activeBranch}
                 >
-                  <BoslerInput disabled />
+                  <MtdInput disabled />
                   {/* <Select loading={!localBranches}>
                     {localBranches &&
                       (localBranches as any).map((activeBranch: any) => (
@@ -1244,22 +1244,22 @@ const CodeEditor = () => {
                   </Select> */}
                 </Form.Item>
               </Form>
-            </BoslerModal>
+            </MtdModal>
             {/* RENAME BRANCH MODAL */}
-            <BoslerModal
+            <MtdModal
               headingIcon={<EditIcon />}
               heading={getLanguageLabel("renameBranch")}
               onCancel={() => setRenameBranchModal(false)}
               open={renameBranchModal}
               footerButtonArea={
                 <>
-                  <BoslerButton
+                  <MtdButton
                     icon={<RemoveIcon />}
                     onClick={() => setRenameBranchModal(false)}
                   >
                     cancel
-                  </BoslerButton>
-                  <BoslerButton
+                  </MtdButton>
+                  <MtdButton
                     intent="success"
                     onClick={() => {
                       if (validBranch.validateStatus === "success") {
@@ -1269,7 +1269,7 @@ const CodeEditor = () => {
                     icon={<TickSmallIcon />}
                   >
                     rename
-                  </BoslerButton>
+                  </MtdButton>
                 </>
               }
             >
@@ -1302,16 +1302,16 @@ const CodeEditor = () => {
                       margin: 0,
                     }}
                   >
-                    <BoslerInput
+                    <MtdInput
                       // value={newBranchName}
                       onChange={onBranchEnter}
                     />
                   </Form.Item>
                 </Form>
               </div>
-            </BoslerModal>
+            </MtdModal>
             {/* DELETE BRANCH MODAL */}
-            <BoslerModal
+            <MtdModal
               headingIcon={<TrashIcon />}
               heading={getLanguageLabel("deleteBranch")}
               onCancel={() => setDeleteBranchModal(false)}
@@ -1323,13 +1323,13 @@ const CodeEditor = () => {
               }}
               footerButtonArea={
                 <>
-                  <BoslerButton
+                  <MtdButton
                     icon={<RemoveIcon />}
                     onClick={() => setDeleteBranchModal(false)}
                   >
                     cancel
-                  </BoslerButton>
-                  <BoslerButton
+                  </MtdButton>
+                  <MtdButton
                     intent="dangerous"
                     onClick={() => {
                       if (validBranch.validateStatus === "success") {
@@ -1339,7 +1339,7 @@ const CodeEditor = () => {
                     icon={<TrashIcon />}
                   >
                     delete
-                  </BoslerButton>
+                  </MtdButton>
                 </>
               }
             >
@@ -1368,11 +1368,11 @@ const CodeEditor = () => {
                       margin: 0,
                     }}
                   >
-                    <BoslerInput onChange={onDeleteBranchEnter} />
+                    <MtdInput onChange={onDeleteBranchEnter} />
                   </Form.Item>
                 </Form>
               </div>
-            </BoslerModal>
+            </MtdModal>
           </div>
         </div>
       </div>

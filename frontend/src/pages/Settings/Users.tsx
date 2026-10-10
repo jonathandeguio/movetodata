@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import BoslerUserPopover from "../../components/UserPopover/userpopover";
+import MtdUserPopover from "../../components/UserPopover/userpopover";
 import UserButton from "../../components/buttons/Userbutton";
 import GlobalSearch from "../../helpers/GlobalSearch";
 import { getAllUserDetails } from "../../redux/actions/userActions";
@@ -26,20 +26,20 @@ import {
   isDefined,
   openNotification,
 } from "utils/utilities";
-import { MoreMenuIcon, SearchIcon } from "../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../assets/icons/boslerEditorIcons";
+import { MoreMenuIcon, SearchIcon } from "../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../assets/icons/mtdEditorIcons";
 import { deleteUser } from "../../redux/actions/authActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import {
   InfoIcon,
   TrashIcon,
-} from "../../assets/icons/boslerMiscellaneousIcons";
-import BoslerLoader from "../../components/boslerLoader";
+} from "../../assets/icons/mtdMiscellaneousIcons";
+import MtdLoader from "../../components/mtdLoader";
 
 const { Title, Text } = Typography;
 
@@ -112,7 +112,7 @@ const Users = () => {
       width: "20%",
       render: (text: $TSFixMe, row: $TSFixMe) => (
         <>
-          <BoslerUserPopover record={row}>
+          <MtdUserPopover record={row}>
             <div
               style={{
                 display: "flex",
@@ -142,7 +142,7 @@ const Users = () => {
                 {text}
               </div>
             </div>
-          </BoslerUserPopover>
+          </MtdUserPopover>
         </>
       ),
     },
@@ -292,38 +292,38 @@ const Users = () => {
   return (
     <>
       {/* ── Modal suppression ──────────────────────────────────────────────── */}
-      <BoslerModal
+      <MtdModal
         headingIcon={<TrashIcon color="var(--DANGEROUS_COLOR)" />}
         heading={getLanguageLabel("areYouSureYouWantToDeleteThis?")}
         open={deleteModal}
         onCancel={handleDeleteCancel}
         onOk={() => deleteUserHandler()}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<TrashIcon />}
             onClick={() => deleteUserHandler()}
             intent="dangerous"
           >
             {getLanguageLabel("delete")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         {deleteUserDetails.name}
-      </BoslerModal>
+      </MtdModal>
 
       {/* ── Modal création utilisateur ─────────────────────────────────────── */}
-      <BoslerModal
+      <MtdModal
         heading="Créer un utilisateur"
         open={createModal}
         onCancel={() => { setCreateModal(false); createForm.resetFields(); }}
         onOk={handleCreateUser}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             onClick={handleCreateUser}
             loading={createLoading}
           >
             Créer
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <Form form={createForm} layout="vertical" style={{ marginTop: 16 }}>
@@ -343,21 +343,21 @@ const Users = () => {
             <Input.Password placeholder="••••••••" />
           </Form.Item>
         </Form>
-      </BoslerModal>
+      </MtdModal>
 
       {/* ── En-tête + bouton Créer ─────────────────────────────────────────── */}
       {(platformAdmin || userAdmin) && (
         <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 16px" }}>
-          <BoslerButton onClick={() => setCreateModal(true)}>
+          <MtdButton onClick={() => setCreateModal(true)}>
             + Créer un utilisateur
-          </BoslerButton>
+          </MtdButton>
         </div>
       )}
 
       {/* ── Table ─────────────────────────────────────────────────────────── */}
       {!allusers || allusers === "" ? (
         <div className="settings-center-block">
-          <BoslerLoader />
+          <MtdLoader />
         </div>
       ) : (
         <div className="settings-center-block">

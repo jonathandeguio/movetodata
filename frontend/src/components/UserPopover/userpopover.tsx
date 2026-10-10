@@ -1,10 +1,10 @@
 import { Avatar, Badge, Col, Popover, Row, Typography } from "antd";
-import { GitCommitIcon } from "assets/icons/boslerExternalIcons";
-import { EmailIcon } from "assets/icons/boslerFileIcons";
-import { GroupsIcon } from "assets/icons/boslerInterfaceIcons";
-import { SharedWorkspaceIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerAvatar from "components/BoslerComponents/BoslerAvatar/BoslerAvatar";
-import BoslerLoader from "components/boslerLoader";
+import { GitCommitIcon } from "assets/icons/mtdExternalIcons";
+import { EmailIcon } from "assets/icons/mtdFileIcons";
+import { GroupsIcon } from "assets/icons/mtdInterfaceIcons";
+import { SharedWorkspaceIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdAvatar from "components/MtdComponents/MtdAvatar/MtdAvatar";
+import MtdLoader from "components/mtdLoader";
 import { User } from "global";
 import { useUserHook } from "hooks/useUsers";
 import React, { useEffect, useState } from "react";
@@ -96,10 +96,10 @@ export const UserContent = (userData: User | undefined) =>
       </div>
     </>
   ) : (
-    <BoslerLoader />
+    <MtdLoader />
   );
 
-const BoslerUserPopover = ({
+const MtdUserPopover = ({
   children,
   record,
   id,
@@ -124,7 +124,7 @@ const BoslerUserPopover = ({
     if (isEmpty(children)) {
       return (
         <Popover content={UserContent(userData)}>
-          {avaterMode ? <BoslerAvatar userId={userData.id} /> : userData.name}
+          {avaterMode ? <MtdAvatar userId={userData.id} /> : userData.name}
         </Popover>
       );
     }
@@ -135,4 +135,4 @@ const BoslerUserPopover = ({
   }
 };
 
-export default BoslerUserPopover;
+export default MtdUserPopover;

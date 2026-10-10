@@ -1,6 +1,6 @@
 import { Popover } from "antd";
-import { BuildIcon, StopIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { BuildIcon, StopIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
@@ -42,14 +42,14 @@ const BuildBtn = ({
   const getTitle = () => {
     if (buildID && buildActive) {
       return (
-        <BoslerButton
+        <MtdButton
           intent="dangerous"
           onClick={() => abortBuild(buildID)}
           icon={<StopIcon />}
           fill
         >
           {getLanguageLabel("abort")}
-        </BoslerButton>
+        </MtdButton>
       );
     } else if (!CONDITION) {
       return "Build : " + editorPanes[activeId!].path;
@@ -77,7 +77,7 @@ const BuildBtn = ({
 
   return ON_VALID_SCRIPT ? (
     <Popover title={getTitle()} placement="bottom">
-      <BoslerButton
+      <MtdButton
         onClick={() => build()}
         intent={getIntent()}
         // disabled={getButtonState()}
@@ -85,7 +85,7 @@ const BuildBtn = ({
         icon={<BuildIcon color={getIconColor()} />}
       >
         {getLanguageLabel("build")}
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   ) : (
     <></>

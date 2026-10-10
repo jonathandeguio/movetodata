@@ -14,7 +14,7 @@ import { HotkeysProvider } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { registerOneTimeWindowsFunctions } from "utils/WindowsObject";
 import { isCurrentConfigThemeDark, setTheme } from "utils/utilities";
-import BoslerLoader from "../components/boslerLoader";
+import MtdLoader from "../components/mtdLoader";
 import { useRouter } from "./routes";
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
         },
       }}
     >
-      <React.Suspense fallback={<BoslerLoader type="fallback" />}>
+      <React.Suspense fallback={<MtdLoader type="fallback" />}>
         <HotkeysProvider>
           <DndProvider backend={HTML5Backend}>
             <RouterProvider router={router} />

@@ -1,6 +1,6 @@
 import { Tooltip } from "antd";
-import { EyeOpenIcon } from "assets/icons/boslerInterfaceIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { EyeOpenIcon } from "assets/icons/mtdInterfaceIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { WarningState } from "assets/Illustrations/EmptyState";
 import axios, { AxiosResponse } from "axios";
 import NoData from "components/CommonUI/NoData";

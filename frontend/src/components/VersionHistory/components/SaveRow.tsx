@@ -1,4 +1,4 @@
-import { SaveIcon } from "assets/icons/boslerActionIcons";
+import { SaveIcon } from "assets/icons/mtdActionIcons";
 import UserInfo from "common/components/UserInfo";
 import React from "react";
 import { getLanguageLabel, getTimeDisplay } from "utils/utilities";

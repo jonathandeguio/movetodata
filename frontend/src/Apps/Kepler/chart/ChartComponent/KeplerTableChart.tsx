@@ -3,7 +3,7 @@ import {
   parseCompactNumber,
 } from "Apps/Kepler/utils/NumberFormatter";
 import { Table } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -91,7 +91,7 @@ const KeplerTableChart = ({
             : column.name;
           return {
             title: isDefined(customizeForm) ? (
-              <BoslerInput
+              <MtdInput
                 dynamicWidth
                 style={{
                   fontWeight: chartCustomization.tableHeaderFontWeight ?? 800,

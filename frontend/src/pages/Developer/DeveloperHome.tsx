@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { AppIcon, HomeIcon } from "../../assets/icons/boslerInterfaceIcons";
-import { PopOutIcon } from "../../assets/icons/boslerNavigationIcon";
+import { AppIcon, HomeIcon } from "../../assets/icons/mtdInterfaceIcons";
+import { PopOutIcon } from "../../assets/icons/mtdNavigationIcon";
 
 import { Divider } from "antd";
 import { getLanguageLabel } from "utils/utilities";
@@ -10,8 +10,8 @@ import {
     SettingsIcon,
     SparklesIcon,
     StopIcon,
-} from "../../assets/icons/boslerActionIcons";
-import { StylesIcon, TextIcon } from "../../assets/icons/boslerEditorIcons";
+} from "../../assets/icons/mtdActionIcons";
+import { StylesIcon, TextIcon } from "../../assets/icons/mtdEditorIcons";
 import "./DeveloperHome.scss";
 
 function DeveloperHome() {

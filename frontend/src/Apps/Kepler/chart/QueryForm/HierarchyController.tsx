@@ -1,8 +1,8 @@
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Collapse, Typography } from "antd";
-import { AddIcon, CrossIcon } from "assets/icons/boslerActionIcons";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
+import { AddIcon, CrossIcon } from "assets/icons/mtdActionIcons";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
 import SortableWithDrag from "common/components/SortableWithDrag";
 import { TSortableWithDragItem } from "common/components/SortableWithDrag/SortableWithDrag";
 import React, { useEffect, useState } from "react";

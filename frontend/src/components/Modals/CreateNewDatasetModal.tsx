@@ -3,20 +3,20 @@ import React from "react";
 
 import { useDispatch } from "react-redux";
 import { getLanguageLabel, isDefined, openNotification } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import axios from "axios";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { ErrorResponse } from "global";
-import { InfoIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import { InfoIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { createDataset } from "../../redux/actions/datasetActions";
 import { listFolderDetails } from "../../redux/actions/projectActions";
 import { addNewResource } from "../../redux/fileIndexSlice";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerInput from "../BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "../MtdComponents/InputComponent/MtdInput";
 
 const { Text, Title } = Typography;
 
@@ -78,20 +78,20 @@ export default ({ id, isVisible, setIsVisible }: any) => {
         handleOk(values.name, values.description);
       }}
     >
-      <BoslerModal
+      <MtdModal
         heading={getLanguageLabel("dataset")}
         headingIcon={<TableIcon />}
         open={isVisible}
         onCancel={() => setIsVisible(false)}
         footerExtraText={getLanguageLabel("accessMessage")}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent="primary"
             onClick={() => form.submit()}
             icon={<TickIcon />}
           >
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
         information={
           <div style={{ padding: "15px", width: "200px" }}>
@@ -107,7 +107,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
           </div>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
         <Form.Item
           name="name"
           rules={[
@@ -116,20 +116,20 @@ export default ({ id, isVisible, setIsVisible }: any) => {
             },
           ]}
         >
-          <BoslerInput
+          <MtdInput
             autofocus
             placeholder={getLanguageLabel("dataset")}
             style={{ width: "20vw", minWidth: "300px" }}
           />
         </Form.Item>
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
         <Form.Item name="description">
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("descriptionOpt")}
             style={{ width: "20vw", minWidth: "300px" }}
           />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

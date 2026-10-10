@@ -20,8 +20,8 @@ import {
   Tag,
   Typography,
 } from "antd";
-import BoslerLoader from "components/boslerLoader";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import MtdLoader from "components/mtdLoader";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import { ActivatePlatform } from "pages/Settings/PlatformConfig/License/ActivatePlatform.view";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -188,7 +188,7 @@ const Home: React.FC = () => {
     };
   }, [config]);
 
-  if (licenseLoading) return <BoslerLoader />;
+  if (licenseLoading) return <MtdLoader />;
   if (!isLicenseKeyUsedValid(info)) return <ActivatePlatform />;
 
   const platformName =

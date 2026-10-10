@@ -1,12 +1,12 @@
 // import { Outlet, Link } from "react-router-dom";
-import { FromCacheIcon } from "assets/icons/boslerDataIcons";
-import { CodeCellIcon, StylesIcon } from "assets/icons/boslerEditorIcons";
-import { GitNewBranchIcon, PythonIcon } from "assets/icons/boslerExternalIcons";
-import { EmailIcon } from "assets/icons/boslerFileIcons";
-import { OpenIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BTHInternal } from "components/CommonUI/BoslerTypography";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import { FromCacheIcon } from "assets/icons/mtdDataIcons";
+import { CodeCellIcon, StylesIcon } from "assets/icons/mtdEditorIcons";
+import { GitNewBranchIcon, PythonIcon } from "assets/icons/mtdExternalIcons";
+import { EmailIcon } from "assets/icons/mtdFileIcons";
+import { OpenIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { BTHInternal } from "components/CommonUI/MtdTypography";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import DebugInfoModal from "layouts/Sidebar/DebugInfoModal";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,7 @@ import {
   NotificationIcon,
   PreferencesIcon,
   SparklesIcon,
-} from "../../assets/icons/boslerActionIcons";
+} from "../../assets/icons/mtdActionIcons";
 import {
   ChangeLogIcon,
   ComponentIcon,
@@ -29,13 +29,13 @@ import {
   KeyIcon,
   UploadIcon,
   UserIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdInterfaceIcons";
 import {
   BugIcon,
   PulseIcon,
   TagsIcon,
   TimeZoneIcon,
-} from "../../assets/icons/boslerMiscellaneousIcons";
+} from "../../assets/icons/mtdMiscellaneousIcons";
 import {
   isGroupAdmin,
   isPlatformAdmin,
@@ -576,14 +576,14 @@ const Setting = () => {
             </>
           )}
         </div>
-        <BoslerButton
+        <MtdButton
           onClick={() => setIsDebugInfoOpen(true)}
           minimal
           icon={<BugIcon />}
           textTransform={"capitalize"}
         >
           {getLanguageLabel("information")}
-        </BoslerButton>
+        </MtdButton>
         {isDebugInfoOpen && (
           <DebugInfoModal
             isOpen={isDebugInfoOpen}

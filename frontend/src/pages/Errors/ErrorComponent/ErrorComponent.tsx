@@ -1,14 +1,14 @@
 import "Apps/Kepler/dashboard/DashboardSubscribeMenu/DashboardSubscribeMenu.scss";
 import axios, { AxiosResponse } from "axios";
-import BoslerModalContainer from "components/CommonUI/BoslerModalContainer/BoslerModalContainer";
+import MtdModalContainer from "components/CommonUI/MtdModalContainer/MtdModalContainer";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ParticleApp } from "utils/ParticleApp";
 import { getLanguageLabel, isIpPlatform } from "utils/utilities";
 import "../../../Apps/Kepler/dashboard/DashboardSubscribeMenu/DashboardSubscribeMenu.scss";
-import { WarningIcon } from "../../../assets/icons/boslerActionIcons";
-import { ArrowRightIcon } from "../../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { WarningIcon } from "../../../assets/icons/mtdActionIcons";
+import { ArrowRightIcon } from "../../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../../components/MtdComponents/ButtonComponent/MtdButton";
 
 interface ErrorComponentProps {
   lineStroke: string;
@@ -77,19 +77,19 @@ export const ErrorComponent = ({
         >
           {!isIpPlatform() && <img src="/logoMoveToData.png" alt="MoveToData" style={{ height: 128, marginBottom: 8 }} />}
           <div className="form-containerNew">
-            <BoslerModalContainer
+            <MtdModalContainer
               headingIcon={<WarningIcon color="orange" />}
               heading={errorHeading}
               footerExtraText={getLanguageLabel("homePageMsg")}
               footerButtonArea={
                 <Link to="/portal/home">
-                  <BoslerButton
+                  <MtdButton
                     intent="action"
                     icon={<ArrowRightIcon />}
                     htmlType="submit"
                   >
                     {getLanguageLabel("homePage")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Link>
               }
               outerBorder={false}
@@ -145,7 +145,7 @@ export const ErrorComponent = ({
               }
             >
               <div
-                className="BoslerHeader1"
+                className="MtdHeader1"
                 style={{ marginBottom: "10px" }}
               ></div>
 
@@ -155,7 +155,7 @@ export const ErrorComponent = ({
               <div className="contant_box_404">
                 <h3 className="h4">{errorMsg}</h3>
               </div>
-            </BoslerModalContainer>
+            </MtdModalContainer>
           </div>
         </div>
       </div>

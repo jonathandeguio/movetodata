@@ -20,26 +20,26 @@ import {
   openNotification,
 } from "utils/utilities";
 import * as XLSX from "xlsx";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { DocsIcon, FolderIcon } from "assets/icons/boslerFileIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { DocsIcon, FolderIcon } from "assets/icons/mtdFileIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import axios from "axios";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router";
 import { autoFormatter } from "utils/AutoFormatter";
-import { CrossIcon } from "../../assets/icons/boslerActionIcons";
+import { CrossIcon } from "../../assets/icons/mtdActionIcons";
 import {
   ChangeLogIcon,
   UploadIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdInterfaceIcons";
 import { listFolderDetails } from "../../redux/actions/projectActions";
 import { addNewResource } from "../../redux/fileIndexSlice";
 import { ThunkAppDispatch } from "../../redux/types/store";
@@ -152,7 +152,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
                     <Row justify={"space-between"}>
                       <Col span={4}>
                         <div className="text-and-icon-center">
-                          <BoslerLoader size="small" />
+                          <MtdLoader size="small" />
                         </div>
                       </Col>
                       <Col span={20}>
@@ -181,7 +181,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
                     <TickIcon color="#ffffff" />
                   </div>
                 ) : (
-                  <BoslerLoader size="small" />
+                  <MtdLoader size="small" />
                 )}
               </>
             ),
@@ -232,7 +232,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
               <Col>{getLanguageLabel("fileUploadCompleted")}</Col>
               <Col>
                 <a href={`/portal/kitab/folder/${id}`}>
-                  <BoslerButton minimal icon={<FolderIcon />} />
+                  <MtdButton minimal icon={<FolderIcon />} />
                 </a>
               </Col>
             </Row>
@@ -299,7 +299,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
     if (uploadedFile) {
       return (
         <>
-          <BoslerButton
+          <MtdButton
             icon={<ChangeLogIcon />}
             intent="dangerous"
             key="submit"
@@ -309,8 +309,8 @@ export default ({ id, isVisible, setIsVisible }: any) => {
             disabled={uploadLoading}
           >
             {getLanguageLabel("replace")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<UploadIcon />}
             intent={uploadLoading ? "primary" : "success"}
             key="submit"
@@ -323,7 +323,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
             }}
           >
             {getLanguageLabel("upload")}
-          </BoslerButton>
+          </MtdButton>
         </>
       );
     }
@@ -336,7 +336,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
   const BUTTON_AREA = buttonArea();
 
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<UploadIcon />}
       heading={getLanguageLabel("upload") + getLanguageLabel("newFile")}
       open={isVisible}
@@ -355,7 +355,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
                     <Col span={8}>Name</Col>
                     <Col span={16}>
                       <Form.Item name="fileName">
-                        <BoslerInput
+                        <MtdInput
                           placeholder={getLanguageLabel("fileName")}
                           suffix={<EditIcon />}
                         />
@@ -368,7 +368,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
                     </Col>
                     <Col span={16}>
                       <Form.Item name="description">
-                        <BoslerInput
+                        <MtdInput
                           value={getLanguageLabel("uploaded")}
                           placeholder={getLanguageLabel("uploaded")}
                           disabled={uploadLoading}
@@ -516,6 +516,6 @@ export default ({ id, isVisible, setIsVisible }: any) => {
           </Row>
         </>
       )}
-    </BoslerModal>
+    </MtdModal>
   );
 };

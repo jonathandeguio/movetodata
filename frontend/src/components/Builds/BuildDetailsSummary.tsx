@@ -1,5 +1,5 @@
 import { Descriptions } from "antd";
-import BoslerResourceOverlay from "common/components/BoslerResourceOverlay";
+import MtdResourceOverlay from "common/components/MtdResourceOverlay";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { TBuildLog, TBuildSpec } from "./Builds.types";
@@ -14,7 +14,7 @@ const items = (buildLog: TBuildLog, buildSpecs: TBuildSpec[] | undefined) => {
     {
       key: "1",
       label: getLanguageLabel("buildId"),
-      children: <BoslerResourceOverlay id={buildLog.id} type={"BUILD"} />,
+      children: <MtdResourceOverlay id={buildLog.id} type={"BUILD"} />,
     },
     {
       key: "2",
@@ -25,7 +25,7 @@ const items = (buildLog: TBuildLog, buildSpecs: TBuildSpec[] | undefined) => {
       key: "3",
       label: getLanguageLabel("builder"),
       children: (
-        <BoslerResourceOverlay id={buildLog.builder} type={"RESOURCE"} />
+        <MtdResourceOverlay id={buildLog.builder} type={"RESOURCE"} />
       ),
     },
     {
@@ -36,7 +36,7 @@ const items = (buildLog: TBuildLog, buildSpecs: TBuildSpec[] | undefined) => {
     {
       key: "5",
       label: "Started By",
-      children: <BoslerResourceOverlay id={buildLog.startedBy} type={"USER"} />,
+      children: <MtdResourceOverlay id={buildLog.startedBy} type={"USER"} />,
     },
     {
       key: "5",

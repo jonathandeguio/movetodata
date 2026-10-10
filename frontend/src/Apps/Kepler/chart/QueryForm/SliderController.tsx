@@ -17,10 +17,10 @@ import {
   TreeMapIcon,
   WaterFallIcon,
   WordCloudIcon,
-} from "assets/icons/boslerChartIcons";
-import { BigNumberIcon } from "assets/icons/boslerDataIcons";
-import { MapLegendIcon } from "assets/icons/boslerInterfaceIcons";
-import { TableCellIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdChartIcons";
+import { BigNumberIcon } from "assets/icons/mtdDataIcons";
+import { MapLegendIcon } from "assets/icons/mtdInterfaceIcons";
+import { TableCellIcon } from "assets/icons/mtdTableIcons";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";

@@ -1,8 +1,8 @@
 import { Col, Divider, Row, Skeleton, Typography, Upload } from "antd";
-import { WarningIcon } from "assets/icons/boslerActionIcons";
-import { DownloadIcon, UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { WarningIcon } from "assets/icons/mtdActionIcons";
+import { DownloadIcon, UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 
 import React, { useState } from "react";
 import {
@@ -55,13 +55,13 @@ export const BulkUserCreationSettings = () => {
               showUploadList={false}
               customRequest={({ file }) => uploadCsvFile(file)}
             >
-              <BoslerButton
+              <MtdButton
                 intent="action"
                 icon={<UploadIcon />}
                 loading={loading}
               >
                 Upload File
-              </BoslerButton>
+              </MtdButton>
             </Upload>
             <br />
 
@@ -175,13 +175,13 @@ export const BulkUserCreationSettings = () => {
                   </Col>
                   <Col>
                     <Text type="secondary">
-                      <BoslerButton
+                      <MtdButton
                         onClick={downloadSampleUserFile}
                         intent="primary"
                         icon={<DownloadIcon />}
                       >
                         Sample CSV File
-                      </BoslerButton>
+                      </MtdButton>
                     </Text>
                   </Col>
                 </Row>

@@ -3,15 +3,15 @@ import { ProjectDropdownButton } from "Apps/explorer/ProjectDropdownButton";
 import { usePath } from "Apps/explorer/explorer.hooks";
 import { treeNodeComparator } from "Apps/explorer/explorer.utils";
 import { FolderDetailPanel } from "Apps/explorer/folderDetailPanel";
-import { RefreshIcon, RemoveIcon } from "assets/icons/boslerActionIcons";
+import { RefreshIcon, RemoveIcon } from "assets/icons/mtdActionIcons";
 import {
   SingleChevronRightIcon,
   TickIcon,
   TickSmallIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -148,7 +148,7 @@ export const ExplorerModal: React.FC = () => {
 
   if (isDefined(activeProject))
     return (
-      <BoslerModal
+      <MtdModal
         open={open}
         onOk={() => {}}
         onCancel={(e) => {
@@ -182,7 +182,7 @@ export const ExplorerModal: React.FC = () => {
                 ))}
               </>
             )}
-            <BoslerButton
+            <MtdButton
               onClick={() => {
                 if (notEmpty(activeId)) {
                   getFileIndex(activeId).then((data) => {
@@ -222,7 +222,7 @@ export const ExplorerModal: React.FC = () => {
               icon={<TickIcon />}
             >
               {getLanguageLabel("select")}
-            </BoslerButton>
+            </MtdButton>
           </div>
         }
       >
@@ -292,7 +292,7 @@ export const ExplorerModal: React.FC = () => {
             </div>
           </Panel>
         </PanelGroup>
-      </BoslerModal>
+      </MtdModal>
     );
 
   return <></>;

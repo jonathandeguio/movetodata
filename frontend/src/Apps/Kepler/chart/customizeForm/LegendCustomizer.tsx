@@ -1,5 +1,5 @@
 import { Collapse, Form, Select, Switch } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -14,7 +14,7 @@ export const LegendCustomizer = () => {
   const legendValue = Form.useWatch("legend", customizeForm);
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       key="legendPanel"
       collapsible={legendValue === true ? "HEADER" : "DISABLED"}
       header={
@@ -90,6 +90,6 @@ export const LegendCustomizer = () => {
           />
         </Form.Item>
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

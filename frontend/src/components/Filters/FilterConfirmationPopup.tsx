@@ -1,7 +1,7 @@
 import { KeplerFilter } from "Apps/Kepler/kepler";
 import { Checkbox } from "antd";
-import { CrossIcon, ExcludeIcon, IncludeIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { CrossIcon, ExcludeIcon, IncludeIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useOutsideClickHandler } from "hooks/useOutsideClickHandler";
 import React, { useRef, useState } from "react";
 import { getLanguageLabel } from "utils/utilities";
@@ -48,7 +48,7 @@ const FilterConfirmationPopup = ({ setPopupResult, filters }: Props) => {
         {/* <div className={styles.popupText}>
           {getLanguageLabel("selection") + ": "}
         </div> */}
-        <BoslerButton
+        <MtdButton
           icon={<IncludeIcon color="#00ff00" />}
           textTransform="capitalize"
           size="small"
@@ -56,8 +56,8 @@ const FilterConfirmationPopup = ({ setPopupResult, filters }: Props) => {
           onClick={() => setPopupResult({ value: "keep", filters: _filters })}
         >
           <strong>{getLanguageLabel("keep")}</strong>
-        </BoslerButton>
-        <BoslerButton
+        </MtdButton>
+        <MtdButton
           icon={<ExcludeIcon color="#ff0000" />}
           textTransform="capitalize"
           size="small"
@@ -65,8 +65,8 @@ const FilterConfirmationPopup = ({ setPopupResult, filters }: Props) => {
           onClick={() => setPopupResult({ value: "remove", filters: _filters })}
         >
           <strong>{getLanguageLabel("remove")}</strong>
-        </BoslerButton>
-        <BoslerButton
+        </MtdButton>
+        <MtdButton
           icon={<CrossIcon size={25} />}
           
           icononly
@@ -93,8 +93,8 @@ const FilterConfirmationPopup = ({ setPopupResult, filters }: Props) => {
                     checked={filter.checked}
                   />
                 )}
-                <div className="BoslerNormalHeader">{filter.columnName}</div>
-                <div className="BoslerSubHeader1">{filter.FilterValue}</div>
+                <div className="MtdNormalHeader">{filter.columnName}</div>
+                <div className="MtdSubHeader1">{filter.FilterValue}</div>
               </div>
             );
           })}

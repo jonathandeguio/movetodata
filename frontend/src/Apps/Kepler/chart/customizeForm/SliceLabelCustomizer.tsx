@@ -1,5 +1,5 @@
 import { Form, InputNumber, Select, Switch } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { KeplerConfig } from "../charts.config";
@@ -12,7 +12,7 @@ export const SliceLabelCustomizer = ({
   chartCustomize: any;
 }) => {
   return (
-    <BoslerCollapse
+    <MtdCollapse
       key="pieSiceCustomizer"
       header={
         <Form.Item
@@ -45,6 +45,6 @@ export const SliceLabelCustomizer = ({
         </Form.Item>
         <NumberCustomizer name="sliceLabel" />
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

@@ -13,9 +13,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, isDefined } from "utils/utilities";
-import { RefreshIcon, SearchIcon } from "../../assets/icons/boslerActionIcons";
-import { AppIcon } from "../../assets/icons/boslerInterfaceIcons";
-import { FilterIcon } from "../../assets/icons/boslerTableIcons";
+import { RefreshIcon, SearchIcon } from "../../assets/icons/mtdActionIcons";
+import { AppIcon } from "../../assets/icons/mtdInterfaceIcons";
+import { FilterIcon } from "../../assets/icons/mtdTableIcons";
 import { listProjects } from "../../redux/actions/projectActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 

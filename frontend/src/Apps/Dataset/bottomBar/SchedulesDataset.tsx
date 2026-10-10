@@ -1,9 +1,9 @@
 import { Alert, Radio } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { DATASET } from "components/Builds/Builds.constants";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import ScheduleSource from "components/bottomBar/Schedules/Components/ScheduleSource";
 import ShowScheduleInfo from "components/bottomBar/Schedules/Components/SchedulesInfo";
 import {
@@ -26,7 +26,7 @@ import {
 import { TScheduleJobInfo } from "components/bottomBar/Schedules/SchedulesModal.types";
 import CronJobInput from "components/common/CronJob";
 import React, { useEffect, useState } from "react";
-import { CalendarIcon } from "../../../assets/icons/boslerInterfaceIcons";
+import { CalendarIcon } from "../../../assets/icons/mtdInterfaceIcons";
 
 const SchedulesDataset = ({
   id,
@@ -64,7 +64,7 @@ const SchedulesDataset = ({
   return (
     <div style={{ margin: "1rem" }}>
       {isLoading ? (
-        <BoslerLoader size={"small"} />
+        <MtdLoader size={"small"} />
       ) : (
         <>
           <Alert
@@ -99,7 +99,7 @@ const SchedulesDataset = ({
           )}
           <div style={{ display: "flex", gap: "1rem" }}>
             {FAILURE_RETRIVES}
-            <BoslerInput
+            <MtdInput
               placeholder={retry.toString()}
               onChange={(e) => setretry(+e.target.value)}
               style={{
@@ -116,7 +116,7 @@ const SchedulesDataset = ({
               gap: "1rem",
             }}
           >
-            <BoslerButton
+            <MtdButton
               icon={<CalendarIcon />}
               intent="action"
               disabled={radio == 2 && triggers.length == 0}
@@ -135,7 +135,7 @@ const SchedulesDataset = ({
               }
             >
               {schedule?.jobId ? UPDATE_SCHEDULE_TEXT : SCHEDULE_TEXT}
-            </BoslerButton>
+            </MtdButton>
           </div>
         </>
       )}

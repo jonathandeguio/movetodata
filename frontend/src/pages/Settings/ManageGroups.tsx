@@ -9,8 +9,8 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,14 +20,14 @@ import {
   DisableIcon,
   LockIcon,
   RemoveIcon,
-} from "../../assets/icons/boslerActionIcons";
-import { AddUserIcon, UserIcon } from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdActionIcons";
+import { AddUserIcon, UserIcon } from "../../assets/icons/mtdInterfaceIcons";
 import {
   ArrowLeftIcon,
   TickIcon,
-} from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "../../components/UserPopover/userpopover";
+} from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "../../components/UserPopover/userpopover";
 import {
   getAllUserDetails,
   isPlatformAdmin,
@@ -100,7 +100,7 @@ const ManageGroups = () => {
       width: "30%",
       render: (e: $TSFixMe, row: $TSFixMe) => (
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <BoslerUserPopover record={row}>
+          <MtdUserPopover record={row}>
             <div
               style={{
                 display: "flex",
@@ -128,10 +128,10 @@ const ManageGroups = () => {
                   || row.id}
               </div>
             </div>
-          </BoslerUserPopover>
+          </MtdUserPopover>
           {canEditGroupDetails(false) && (
             <Tooltip title={getLanguageLabel("remove")} placement="right">
-              <BoslerButton
+              <MtdButton
                 icon={<RemoveIcon color={"var(--movetodata-intent-danger)"} />}
                 onClick={() =>
                   updateGroupDetailsAPI({
@@ -198,7 +198,7 @@ const ManageGroups = () => {
               <Col>
                 {canEditGroupDetails(true) ? (
                   <Tooltip title={getLanguageLabel("clickToRename")}>
-                    <BoslerInput
+                    <MtdInput
                       editText={true}
                       className={"editText"}
                       debounceInterval={1000}
@@ -220,7 +220,7 @@ const ManageGroups = () => {
             <Row justify={"center"}>
               {canEditGroupDetails(false) ? (
                 <Tooltip title={getLanguageLabel("clickToChangeDescription")}>
-                  <BoslerInput
+                  <MtdInput
                     style={{ fontSize: "22px", fontWeight: 500 }}
                     editText={true}
                     className="editText"
@@ -328,7 +328,7 @@ const ManageGroups = () => {
                 </Col>
                 <Col>
                   <Tooltip title={getLanguageLabel("add")} placement={"right"}>
-                    <BoslerButton
+                    <MtdButton
                       icon={<AddUserIcon />}
                       disabled={addNewUsersToGroupDetails.userIds.length == 0}
                       onClick={() => {
@@ -346,7 +346,7 @@ const ManageGroups = () => {
                       }}
                       minimal
                       icononly
-                    ></BoslerButton>
+                    ></MtdButton>
                   </Tooltip>
                 </Col>
               </Row>
@@ -395,7 +395,7 @@ const ManageGroups = () => {
             </Tabs>
           </>
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </Col>
       <Col

@@ -1,7 +1,7 @@
 import { useContextMenuState } from "common/components/ContextMenu";
 import { fetchBlobFileAPI } from "components/BlobViewer/BlobViewer.api";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
-import BoslerLoader from "components/boslerLoader";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
+import MtdLoader from "components/mtdLoader";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -270,7 +270,7 @@ const FileExplorer = () => {
   }, [id]);
 
   if (isEmpty(projectId)) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (

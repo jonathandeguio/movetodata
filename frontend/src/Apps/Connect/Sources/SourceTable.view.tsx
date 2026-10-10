@@ -1,5 +1,5 @@
 import { Col, Dropdown, Row, Table, Tooltip, Typography } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import DeleteModal from "components/Modals/DeleteModal";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -14,9 +14,9 @@ import {
 import {
   MoreMenuIcon,
   SearchIcon,
-} from "../../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
 import GlobalSearch from "../../../helpers/GlobalSearch";
 import {
   deleteSource,
@@ -205,7 +205,7 @@ const SourceTable2 = ({ tableList, loading }: any) => {
   return (
     <>
       <>
-        <BoslerInput
+        <MtdInput
           placeholder={getLanguageLabel("searchSources")}
           allowClear
           onChange={(e) => {

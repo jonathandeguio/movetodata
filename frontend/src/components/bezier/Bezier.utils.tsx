@@ -1,9 +1,9 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { Files } from "Apps/Dataset/bottomBar/Files";
 import Schema from "Apps/Dataset/bottomBar/Schema/Schema";
-import { DatabaseViewIcon, TreeIcon } from "assets/icons/boslerDataIcons";
-import { DocsIcon } from "assets/icons/boslerFileIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+import { DatabaseViewIcon, TreeIcon } from "assets/icons/mtdDataIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import DatasetSync from "components/bottomBar/sync/Sync.view";
 import React from "react";
 import { NULL_UUID } from "utils/Common.constants";
@@ -13,13 +13,13 @@ export const getBezierBottomBarItems = (
   id: string,
   branch: string,
   type?: string
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     {
       id: "bezierDatasetPanel",
       icon: <DocsIcon />,
       label: getLanguageLabel("dataset"),
-      body: BoslerTable,
+      body: MtdTable,
       intent: isDefined(type) && type === "dataset" ? "PRIMARY" : "DISABLED",
       type: "TAB",
       props: {

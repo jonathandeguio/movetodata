@@ -1,5 +1,5 @@
 import { KeplerChartResponse, TooltipInfo } from "Apps/Kepler/kepler";
-import { BoslerShimmer } from "components/BoslerShimmer";
+import { MtdShimmer } from "components/MtdShimmer";
 import React, { useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -130,7 +130,7 @@ const ParentChartComponent = ({
     !isDefined(chartOptions)
   )
     return (
-      <BoslerShimmer loading={loading}>
+      <MtdShimmer loading={loading}>
         <EmptyChart
           data={
             (chartData as any)?.rows === 0
@@ -138,10 +138,10 @@ const ParentChartComponent = ({
               : getLanguageLabel("chartWillBeDisplayedHere")
           }
         />
-      </BoslerShimmer>
+      </MtdShimmer>
     );
   return (
-    <BoslerShimmer loading={loading}>
+    <MtdShimmer loading={loading}>
       <div className="fullHeightWidth chart-container" ref={onMountElement}
       style={{cursor: !editMode ? "move" : "pointer"}}
       >
@@ -217,7 +217,7 @@ const ParentChartComponent = ({
           </TitleWrapper>
         </div>
       </div>
-    </BoslerShimmer>
+    </MtdShimmer>
   );
 };
 

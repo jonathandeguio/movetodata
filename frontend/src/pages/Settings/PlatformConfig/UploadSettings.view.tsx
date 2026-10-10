@@ -1,5 +1,5 @@
 import { Col, Divider, Row, Switch, Tabs, TabsProps, Typography } from "antd";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, isDefined } from "utils/utilities";
@@ -48,7 +48,7 @@ export const UploadSettings = () => {
   return (
     <div className="settings-center-block">
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           <Row>

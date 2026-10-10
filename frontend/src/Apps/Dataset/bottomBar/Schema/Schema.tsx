@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/types/store";
 
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { TreeIcon } from "assets/icons/boslerDataIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { TreeIcon } from "assets/icons/mtdDataIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { ResourceSubType } from "../../../explorer/explorer.utils";
@@ -213,7 +213,7 @@ export default function Schema({ id, branch }: IProps) {
   }, [changedSchema, changedCustomSchema]);
 
   if (loading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   } else if (isError) {
     return <NoData heading="Error" subHeading="Try reloading!" />;
   }

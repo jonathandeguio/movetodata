@@ -3,28 +3,28 @@ import React, { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, isDefined, openNotification } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
-import { DisableIcon } from "assets/icons/boslerActionIcons";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
+import { DisableIcon } from "assets/icons/mtdActionIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
 import axios from "axios";
 import { PREPARING } from "components/Builds/Builds.constants";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { createRepositoryAPI } from "components/editor/editor.api";
 import { FRACTAL_USE_CASES } from "components/editor/editor.constants";
 import { ErrorResponse } from "global";
 import { LicenseIncapableModal } from "pages/Settings/PlatformConfig/License/LicenseIncapableModal";
 import { useNavigate } from "react-router";
-import { BooleanIcon } from "../../assets/icons/boslerDataIcons";
+import { BooleanIcon } from "../../assets/icons/mtdDataIcons";
 import {
   PySparkIcon,
   SparkSQLIcon,
-} from "../../assets/icons/boslerExternalIcons";
-import { InfoIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+} from "../../assets/icons/mtdExternalIcons";
+import { InfoIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { addNewResource } from "../../redux/fileIndexSlice";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerInput from "../BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "../MtdComponents/InputComponent/MtdInput";
 
 const { Text, Title } = Typography;
 
@@ -141,7 +141,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
     );
 
   return (
-    <BoslerModal
+    <MtdModal
       open={isVisible}
       onOk={handleOk}
       onCancel={() => setIsVisible(false)}
@@ -149,7 +149,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
       heading={getLanguageLabel("repository")}
       footerExtraText={getLanguageLabel("accessMessage")}
       footerButtonArea={
-        <BoslerButton
+        <MtdButton
           intent={createLoading ? "none" : "primary"}
           onClick={handleOk}
           loading={createLoading}
@@ -159,7 +159,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
           {createLoading
             ? getLanguageLabel(PREPARING)
             : getLanguageLabel("create")}
-        </BoslerButton>
+        </MtdButton>
       }
       information={
         <div style={{ padding: "15px", width: "200px" }}>
@@ -175,8 +175,8 @@ export default ({ id, isVisible, setIsVisible }: any) => {
         </div>
       }
     >
-      <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-      <BoslerInput
+      <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+      <MtdInput
         bordered
         autofocus
         onChange={(e) => {
@@ -187,8 +187,8 @@ export default ({ id, isVisible, setIsVisible }: any) => {
         required
         placeholder={getLanguageLabel("repository")}
       />
-      <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-      <BoslerInput
+      <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+      <MtdInput
         onChange={(e) => setDescription(e.target.value)}
         placeholder={getLanguageLabel("descriptionOpt")}
       />
@@ -218,6 +218,6 @@ export default ({ id, isVisible, setIsVisible }: any) => {
           disabled={true}
         />
       </Row>
-    </BoslerModal>
+    </MtdModal>
   );
 };

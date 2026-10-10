@@ -1,6 +1,6 @@
 import { Col, Popover, Row, Typography } from "antd";
-import { CopyCellIcon } from "assets/icons/boslerTableIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { CopyCellIcon } from "assets/icons/mtdTableIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { duplicateChartHandler } from "../charts.utils";
@@ -18,14 +18,14 @@ const KeplerHeaderDuplicate = ({ id, chart, query }: TProps) => {
         <>
           <Row justify="space-between" align="middle">
             <Col span={20}>
-              <BoslerButton
+              <MtdButton
                 minimal
                 icon={<CopyCellIcon />}
                 intent="none"
                 onClick={() => duplicateChartHandler(chart, query)}
               >
                 {getLanguageLabel("duplicate")}
-              </BoslerButton>
+              </MtdButton>
             </Col>
             <Col className="key-binding" span={2}>
               <div className="text-and-icon-center">D</div>
@@ -52,7 +52,7 @@ const KeplerHeaderDuplicate = ({ id, chart, query }: TProps) => {
       }
       placement="bottom"
     >
-      <BoslerButton
+      <MtdButton
         minimal
         icon={<CopyCellIcon />}
         intent="none"

@@ -1,11 +1,11 @@
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { Col, Input, Row, Tooltip, Typography } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { Buffer } from "buffer";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useState } from "react";
 import { getLanguageLabel, getSourceIcon } from "utils/utilities";
 import { ISourceConfig } from "./Source";
@@ -41,13 +41,13 @@ const SourceInfoPanel = ({ source, getSource }: IProps) => {
               </Text>
             </Col>
             <Col>
-              <BoslerButton
+              <MtdButton
                 icon={<EditIcon />}
                 intent="primary"
                 onClick={() => setIsUpdateSourceModalOpen(true)}
               >
                 {getLanguageLabel("edit")}
-              </BoslerButton>
+              </MtdButton>
             </Col>
           </Row>
 
@@ -93,14 +93,14 @@ const SourceInfoPanel = ({ source, getSource }: IProps) => {
               <Text>{getLanguageLabel("parentFolder")}</Text>
             </Col>
             <Col span={16}>
-              <BoslerButton
+              <MtdButton
                 intent="none"
                 onClick={() => navigator(source.parent)}
                 icon={<FolderIcon />}
                 minimal
               >
                 {parent.name}
-              </BoslerButton>
+              </MtdButton>
             </Col>
           </Row>
 
@@ -216,7 +216,7 @@ const SourceInfoPanel = ({ source, getSource }: IProps) => {
                   <Text>{(source as $TSFixMe)["database"]}</Text>
                 </Col>
               </Row>
-              <BoslerCollapse
+              <MtdCollapse
                 key="additionSettings"
                 collapsible={"HEADER"}
                 header={
@@ -272,7 +272,7 @@ const SourceInfoPanel = ({ source, getSource }: IProps) => {
                     <TestConnectionButton source={source} />
                   )}
                 </>
-              </BoslerCollapse>
+              </MtdCollapse>
             </>
           )}
 

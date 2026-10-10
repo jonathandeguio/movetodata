@@ -1,7 +1,7 @@
 import { TreeExplorer } from "Apps/explorer";
 import { ProjectDropdownButton } from "Apps/explorer/ProjectDropdownButton";
 import { Skeleton } from "antd";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -103,7 +103,7 @@ const DashboardAddChartMenuChartsTab = () => {
     <>
       <DashboardAddChartMenuElementsTab dashboardId={id} tabId={tabId} />
 
-      <BoslerSwitch
+      <MtdSwitch
         style={{
           flex: "1 1 auto",
         }}
@@ -150,7 +150,7 @@ const DashboardAddChartMenuChartsTab = () => {
           //           options={SELECT_BEFORE_ITEMS}
           //           // size={"small"}
           //         />
-          //         <BoslerInput
+          //         <MtdInput
           //           allowClear
           //           placeholder="Search Charts"
           //           onChange={(e) => onSearch(e.target.value)}
@@ -171,7 +171,7 @@ const DashboardAddChartMenuChartsTab = () => {
           //         }
           //       >
           //         {filteredCharts == undefined ? (
-          //           <BoslerLoader size="small" />
+          //           <MtdLoader size="small" />
           //         ) : (
           //           <>
           //             {filteredCharts.length > 0 ? (

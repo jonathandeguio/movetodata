@@ -1,8 +1,8 @@
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import DatasetHistory from "components/DatasetHistory";
 import VersionHistory from "components/VersionHistory";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { DEFAULT_BRANCH } from "components/bottomBar/Schedules/SchedulesModal.constants";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +31,7 @@ const ChartForm = ({ resourcePermission }: any) => {
   return (
     <div className="--flex-col-center">
       <SliderController />
-      <BoslerSwitch
+      <MtdSwitch
         style={{
           flex: 1,
           overflow: "auto",
@@ -99,7 +99,7 @@ const KeplerChartFormPanel = ({ id, datasetId }: TProps) => {
     }
   }, [datasetMapping]);
 
-  if (!resourcePermission || !datasetMapping) return <BoslerLoader />;
+  if (!resourcePermission || !datasetMapping) return <MtdLoader />;
 
   return (
     <>

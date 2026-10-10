@@ -33,20 +33,20 @@ import {
 import { ThunkAppDispatch } from "../../redux/types/store";
 
 import type { RcFile } from "antd/es/upload/interface";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
 import { useNavigate } from "react-router";
-import { LockIcon, SaveIcon } from "../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../assets/icons/boslerEditorIcons";
+import { LockIcon, SaveIcon } from "../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../assets/icons/mtdEditorIcons";
 import {
   GroupsIcon,
   UploadIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../../components/boslerLoader";
+} from "../../assets/icons/mtdInterfaceIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../../components/mtdLoader";
 import { updateLanguage } from "../../redux/actions/languageActions";
 import { updateUserDetails } from "../../redux/actions/userActions";
 import "./Profile.scss";
@@ -289,7 +289,7 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
   }
 
   return !user ? (
-    <BoslerLoader />
+    <MtdLoader />
   ) : (
     <div className="settings-center-block">
       <Row className="settings-centre-block-child ">
@@ -303,11 +303,11 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                 </Text>
                 <Divider />
               </p>
-              <div className="BoslerHeader1">
+              <div className="MtdHeader1">
                 {getLanguageLabel("givenName")}
               </div>
 
-              <BoslerInput
+              <MtdInput
                 placeholder={user.givenName}
                 // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                 name={["user", "fname"]}
@@ -319,11 +319,11 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                 }}
                 value={newUserData.givenName}
               />
-              <div className="BoslerHeader1">
+              <div className="MtdHeader1">
                 {getLanguageLabel("familyName")}
               </div>
 
-              <BoslerInput
+              <MtdInput
                 placeholder={user.familyName}
                 // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                 name={["user", "lname"]}
@@ -335,8 +335,8 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                 }
                 value={newUserData.familyName}
               />
-              <div className="BoslerHeader1">{getLanguageLabel("email")}</div>
-              <BoslerInput
+              <div className="MtdHeader1">{getLanguageLabel("email")}</div>
+              <MtdInput
                 placeholder={user.email}
                 // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                 name={["user", "email"]}
@@ -348,8 +348,8 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
               />
 
               {/*
-              <div className="BoslerHeader1">{getLanguageLabel("designation")}</div>
-                  <BoslerInput
+              <div className="MtdHeader1">{getLanguageLabel("designation")}</div>
+                  <MtdInput
                     // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                     name={["designation"]}
                     value={desig}
@@ -358,10 +358,10 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                   />
                  */}
 
-              <div className="BoslerHeader1">
+              <div className="MtdHeader1">
                 {getLanguageLabel("location")}
               </div>
-              <BoslerInput
+              <MtdInput
                 placeholder={user.location}
                 // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
                 name={["location"]}
@@ -374,7 +374,7 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                 value={newUserData.location}
               />
 
-              <BoslerButton
+              <MtdButton
                 id="profileSave"
                 icon={updated ? <TickIcon /> : <SaveIcon />}
                 intent={updated ? "success" : "action"}
@@ -386,13 +386,13 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                 textTransform="none"
               >
                 {getLanguageLabel("update")}
-              </BoslerButton>
+              </MtdButton>
 
               {showPreferences ? (
                 <>
                   <Divider orientation="left">Preferences</Divider>
                   <div className="theme-pref">
-                    <div className="BoslerHeader1">
+                    <div className="MtdHeader1">
                       {getLanguageLabel("languagePreference")}
                     </div>
 
@@ -517,14 +517,14 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                     >
                       <Input.Password placeholder="Confirmer" />
                     </Form.Item>
-                    <BoslerButton
+                    <MtdButton
                       icon={pwChanged ? <TickIcon /> : <LockIcon />}
                       intent={pwChanged ? "success" : "action"}
                       loading={pwLoading}
                       onClick={handleResetPassword}
                     >
                       {getLanguageLabel("changePassword")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Form>
                 </>
               )}
@@ -587,13 +587,13 @@ const Profile = ({ user, self, showPreferences, loginHistory }: $TSFixMe) => {
                     </>
                   }
                 >
-                  <BoslerButton
+                  <MtdButton
                     size="small"
                     icon={<EditIcon />}
                     intent="primary"
                   >
                     {getLanguageLabel("edit")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Popover>
               </div>
               <Divider />

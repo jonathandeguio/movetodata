@@ -1,6 +1,6 @@
 import { FloatButton, Typography } from "antd";
-import { LogoutIcon } from "assets/icons/boslerActionIcons";
-import { DocumentationIcon } from "assets/icons/boslerFileIcons";
+import { LogoutIcon } from "assets/icons/mtdActionIcons";
+import { DocumentationIcon } from "assets/icons/mtdFileIcons";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";

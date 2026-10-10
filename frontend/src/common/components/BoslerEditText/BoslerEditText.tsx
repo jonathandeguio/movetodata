@@ -1,11 +1,11 @@
 import React from "react";
-import "./BoslerEditText.scss";
+import "./MtdEditText.scss";
 
-const BoslerEditText = (props: { children: any }) => {
+const MtdEditText = (props: { children: any }) => {
   return (
     <div
       contentEditable="true"
-      className="bosler_edit_text"
+      className="mtd_edit_text"
       onInput={(e) => {
         e.preventDefault();
       }}
@@ -15,4 +15,4 @@ const BoslerEditText = (props: { children: any }) => {
   );
 };
 
-export default BoslerEditText;
+export default MtdEditText;

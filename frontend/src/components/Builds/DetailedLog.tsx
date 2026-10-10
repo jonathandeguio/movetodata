@@ -1,13 +1,13 @@
 import { Collapse, CollapseProps } from "antd";
 import { WarningState } from "assets/Illustrations/EmptyState";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
 import {
   SingleChevronDownIcon,
   SingleChevronRightIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+} from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -92,7 +92,7 @@ const DetailedLog = ({ id, buildType, buildStatus, language }: IProps) => {
   }, []);
 
   if (detailedLogsLoading) {
-    return <BoslerLoader content={getLanguageLabel("loading...")} />;
+    return <MtdLoader content={getLanguageLabel("loading...")} />;
   }
   if (config.sqlPreview == "local" && language && language == SQL) {
     return (
@@ -129,12 +129,12 @@ const DetailedLog = ({ id, buildType, buildStatus, language }: IProps) => {
       filteredLogs?.length != 0 &&
       buildStatus == FAILED ? (
         <>
-          <BoslerButton
+          <MtdButton
             icon={<CopyIcon />}
             onClick={() => filteredLogs && copyToClipboard(filteredLogs)}
             minimal
             icononly
-          ></BoslerButton>
+          ></MtdButton>
           <div
             style={{
               border: "1px solid var(--movetodata-intent-danger)",

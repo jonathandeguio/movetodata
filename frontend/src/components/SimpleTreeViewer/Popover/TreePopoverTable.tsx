@@ -1,6 +1,6 @@
 import { Resource } from "Apps/explorer/explorer";
 import { Descriptions, Skeleton } from "antd";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import React, { useEffect, useState } from "react";
 import { autoFormatter } from "utils/AutoFormatter";
 import { getTableExplanationAPI } from "./SimpleTreePopover.api";
@@ -114,7 +114,7 @@ const TreePopoverTable = ({ sourceId, tableNode }: IProps) => {
       {isError ? (
         isError
       ) : (
-        <BoslerSwitch
+        <MtdSwitch
           items={[
             {
               label: "Info",

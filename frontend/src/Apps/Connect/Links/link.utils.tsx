@@ -1,6 +1,6 @@
-import { ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+import { ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
@@ -15,7 +15,7 @@ export const getLinkBottombarItems = (
   buildID: string | undefined,
   source: any,
   code: any
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     {
       id: "datasetBuildLogPanel",

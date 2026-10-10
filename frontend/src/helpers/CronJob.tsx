@@ -1,8 +1,8 @@
 import { Divider, InputRef } from "antd";
 import React, { useCallback, useRef, useState } from "react";
 import Cron, { CronError } from "react-js-cron";
-import { InfoIcon } from "../assets/icons/boslerMiscellaneousIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { InfoIcon } from "../assets/icons/mtdMiscellaneousIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 const Demo = () => {
   const inputRef = useRef<InputRef>(null);
@@ -21,7 +21,7 @@ const Demo = () => {
 
   return (
     <div>
-      <BoslerInput
+      <MtdInput
         //ref={inputRef}
         onBlur={(event) => {
           setValue(event.target.value);

@@ -3,10 +3,10 @@ import { getColumnUniqueValues } from "Apps/Kepler/chart/charts.api";
 import { KeplerConfig } from "Apps/Kepler/chart/charts.config";
 import { getFilterOperatorOptions } from "Apps/Kepler/chart/charts.utils";
 import { Form, Select } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import useForceRender from "hooks/useForceRender";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,7 +20,7 @@ import {
 } from "./Filters.constants";
 import styles from "./Filters.module.scss";
 import { TDatasetColumn } from "./Filters.view";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 interface IProps {
   editMode: boolean;
@@ -215,7 +215,7 @@ const FiltersAddPopoverContent = ({
                             name={[_index, "value"]}
                             className={styles.formItem}
                           >
-                            <BoslerDatePicker
+                            <MtdDatePicker
                               loading={loadingFilterValues}
                               disabledDates={filterValuesOptions}
                               value={
@@ -250,7 +250,7 @@ const FiltersAddPopoverContent = ({
                             name={[_index, "value"]}
                             className={styles.formItem}
                           >
-                            <BoslerInput
+                            <MtdInput
                               placeholder="Input a value"
                               style={{
                                 width: 200,
@@ -344,7 +344,7 @@ const FiltersAddPopoverContent = ({
                           // </Form.Item>
                         ))}
                       <div
-                        className="BoslerBtnHeading"
+                        className="MtdBtnHeading"
                         onClick={(e) => {
                           e.stopPropagation();
                           const _conditionCase: any[] = [];
@@ -438,7 +438,7 @@ const FiltersAddPopoverContent = ({
                           name={[_index, "value"]}
                           className={styles.formItem}
                         >
-                          <BoslerDatePicker
+                          <MtdDatePicker
                             loading={loadingFilterValues}
                             disabledDates={filterValuesOptions}
                             value={
@@ -491,7 +491,7 @@ const FiltersAddPopoverContent = ({
         }}
       >
         <div
-          className="BoslerBtnHeading"
+          className="MtdBtnHeading"
           onClick={() => {
             const conditionArr = form.getFieldValue("conditionCase")
               ? [...form.getFieldValue("conditionCase")]
@@ -519,7 +519,7 @@ const FiltersAddPopoverContent = ({
         >
           {ADD_CONDITION_TEXT}
         </div>
-        <BoslerButton
+        <MtdButton
           onClick={() => onFilterApply()}
           intent={"action"}
           icon={<TickIcon />}
@@ -527,7 +527,7 @@ const FiltersAddPopoverContent = ({
           icononly
         >
           {getLanguageLabel("apply")}
-        </BoslerButton>
+        </MtdButton>
       </div>
     </div>
   );

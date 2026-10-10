@@ -1,21 +1,21 @@
 import { Col, Divider, Row, Tooltip, Typography } from "antd";
 import React, { useState } from "react";
 
-import * as ActionIcons from "../../assets/icons/boslerActionIcons";
-import * as ChartIcons from "../../assets/icons/boslerChartIcons";
-import * as DataIcons from "../../assets/icons/boslerDataIcons";
-import * as EditorIcons from "../../assets/icons/boslerEditorIcons";
-import * as ExternalIcons from "../../assets/icons/boslerExternalIcons";
-import * as FileIcons from "../../assets/icons/boslerFileIcons";
-import * as InterfaceIcons from "../../assets/icons/boslerInterfaceIcons";
-import * as MiscellaneousIcons from "../../assets/icons/boslerMiscellaneousIcons";
-import * as NavigationIcons from "../../assets/icons/boslerNavigationIcon";
-import * as SortIcons from "../../assets/icons/boslerSortIcons";
-import * as TableIcons from "../../assets/icons/boslerTableIcons";
+import * as ActionIcons from "../../assets/icons/mtdActionIcons";
+import * as ChartIcons from "../../assets/icons/mtdChartIcons";
+import * as DataIcons from "../../assets/icons/mtdDataIcons";
+import * as EditorIcons from "../../assets/icons/mtdEditorIcons";
+import * as ExternalIcons from "../../assets/icons/mtdExternalIcons";
+import * as FileIcons from "../../assets/icons/mtdFileIcons";
+import * as InterfaceIcons from "../../assets/icons/mtdInterfaceIcons";
+import * as MiscellaneousIcons from "../../assets/icons/mtdMiscellaneousIcons";
+import * as NavigationIcons from "../../assets/icons/mtdNavigationIcon";
+import * as SortIcons from "../../assets/icons/mtdSortIcons";
+import * as TableIcons from "../../assets/icons/mtdTableIcons";
 
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
-import { SearchIcon } from "../../assets/icons/boslerActionIcons";
+import { SearchIcon } from "../../assets/icons/mtdActionIcons";
 
 const { Text } = Typography;
 
@@ -100,7 +100,7 @@ const IconList = () => {
         <br />
         <Row gutter={[10, 10]}>
           <Col span={24}>
-            <BoslerInput
+            <MtdInput
               placeholder="Search for icons..."
               onChange={(e) => {
                 setActionIconsSearchValue(e.target.value);

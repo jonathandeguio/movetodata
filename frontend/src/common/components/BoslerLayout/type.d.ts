@@ -1,6 +1,6 @@
-import { ITabPane, TabState } from "../BoslerTabs/types";
+import { ITabPane, TabState } from "../MtdTabs/types";
 
-export interface IBoslerBottomBarItem {
+export interface IMtdBottomBarItem {
   id: string;
   type: "TAB" | "BUTTON";
   label: JSX.Element | string;
@@ -11,19 +11,19 @@ export interface IBoslerBottomBarItem {
   onOpen?: () => void;
   intent?: "PRIMARY" | "DISABLED" | "WARNING" | "ERROR";
 }
-export interface IBoslerBottomBarItemBody extends IBoslerBottomBarItem {
+export interface IMtdBottomBarItemBody extends IMtdBottomBarItem {
   collapseToggle: () => void;
   paneSize: number;
   primaryPanelRef: React.MutableRefObject<any>;
 }
 
-export interface IBoslerBottomBar {
+export interface IMtdBottomBar {
   primaryPanelRef: React.MutableRefObject<any>;
 }
 export interface BottomBarState {
-  leftItems: IBoslerBottomBarItem[];
-  rightItems?: IBoslerBottomBarItem[];
-  bottomBarItems: { [id: string]: IBoslerBottomBarItem };
+  leftItems: IMtdBottomBarItem[];
+  rightItems?: IMtdBottomBarItem[];
+  bottomBarItems: { [id: string]: IMtdBottomBarItem };
   tabContext: { [id: string]: TabState };
   activeItem: string | null;
 }

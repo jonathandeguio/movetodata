@@ -6,14 +6,14 @@ import {
   BuildIcon,
   StopIcon,
   WarningIcon,
-} from "../../../assets/icons/boslerActionIcons";
-import { TickIcon } from "../../../assets/icons/boslerNavigationIcon";
-import BoslerLoader from "../../boslerLoader";
+} from "../../../assets/icons/mtdActionIcons";
+import { TickIcon } from "../../../assets/icons/mtdNavigationIcon";
+import MtdLoader from "../../mtdLoader";
 
 import { ConnectBuildAPI } from "Apps/Connect/Connect.api";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { FilterPanel } from "components/BoslerComponents/FilterPanel/FilterPanel.view";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { FilterPanel } from "components/MtdComponents/FilterPanel/FilterPanel.view";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import { useSelector } from "react-redux";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { RootState } from "redux/types/store";
@@ -349,7 +349,7 @@ const Builds = () => {
         <Col>
           <Row justify={"center"}>
             <Col>
-              <BoslerButton
+              <MtdButton
                 onClick={() =>
                   setFilters((filters: any) => {
                     return {
@@ -361,10 +361,10 @@ const Builds = () => {
                 intent={filters.status.length == 0 ? "primary" : "none"}
               >
                 {getLanguageLabel("all")}
-              </BoslerButton>
+              </MtdButton>
             </Col>
             <Col>
-              <BoslerButton
+              <MtdButton
                 onClick={() =>
                   setFilters((filters: any) => {
                     return { ...filters, status: [ACTIVE] };
@@ -378,10 +378,10 @@ const Builds = () => {
                 }
               >
                 {getLanguageLabel("buildInProgress")}
-              </BoslerButton>
+              </MtdButton>
             </Col>
             <Col>
-              <BoslerButton
+              <MtdButton
                 menuItems={items}
                 onClick={() => {
                   setFilters((filters: any) => {
@@ -402,7 +402,7 @@ const Builds = () => {
                 }
               >
                 {getLanguageLabel("FINISHED")}
-              </BoslerButton>
+              </MtdButton>
             </Col>
           </Row>
         </Col>
@@ -418,7 +418,7 @@ const Builds = () => {
         </PanelResizeHandle>
         <Panel style={{ padding: "1rem" }}>
           {tableLoading ? (
-            <BoslerLoader />
+            <MtdLoader />
           ) : (
             <Table
               columns={getBuildTableColumns(
@@ -447,7 +447,7 @@ const Builds = () => {
                 };
               }}
               className={styles.buildsTable}
-              {...(isLoading ? { footer: () => <BoslerLoader /> } : {})}
+              {...(isLoading ? { footer: () => <MtdLoader /> } : {})}
             />
           )}
         </Panel>

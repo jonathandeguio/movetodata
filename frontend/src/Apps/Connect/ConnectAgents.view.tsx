@@ -2,11 +2,11 @@ import { Col, Divider, Row, Tabs, Typography } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
-import { AddIcon } from "assets/icons/boslerActionIcons";
-import { DataAgentsIcon } from "assets/icons/boslerDataIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AddIcon } from "assets/icons/mtdActionIcons";
+import { DataAgentsIcon } from "assets/icons/mtdDataIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -66,13 +66,13 @@ const ConnectAgents = () => {
               <Col span={8}>
                 <Row justify="end">
                   <Col>
-                    <BoslerButton
+                    <MtdButton
                       icon={<AddIcon />}
                       onClick={() => setIsNewAgentModalOpen(true)}
                       intent="action"
                     >
                       {getLanguageLabel("new")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Col>
                 </Row>
               </Col>
@@ -88,7 +88,7 @@ const ConnectAgents = () => {
           />
         </React.Fragment>
       ) : (
-        <BoslerLoader />
+        <MtdLoader />
       )}
     </>
   );

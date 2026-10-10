@@ -1,5 +1,5 @@
 import { Form, InputNumber, Select, Slider, Switch } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React, { ReactNode, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -22,7 +22,7 @@ export const LabelCustomizer: React.FC<ILabelCustomizer> = ({ series }) => {
   }, [customize?.seriesCustomize, customize.showLabel]);
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       collapsible={showLabel ? "HEADER" : "DISABLED"}
       key="labelCustomizer"
       header={
@@ -98,6 +98,6 @@ export const LabelCustomizer: React.FC<ILabelCustomizer> = ({ series }) => {
           name={"label"}
         />
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

@@ -1,8 +1,8 @@
-import { SyncIcon } from "assets/icons/boslerActionIcons";
-import { ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import { QuickStartIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import { RunCellSelectIcon } from "assets/icons/boslerTableIcons";
+import { SyncIcon } from "assets/icons/mtdActionIcons";
+import { ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import { QuickStartIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import { RunCellSelectIcon } from "assets/icons/mtdTableIcons";
 import React from "react";
 import { formatDuration, getLanguageLabel } from "utils/utilities";
 import {

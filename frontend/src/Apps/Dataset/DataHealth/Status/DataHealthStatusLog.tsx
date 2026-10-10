@@ -1,14 +1,14 @@
 import { Badge, Descriptions, Divider, Popover, Skeleton } from "antd";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
 import {
   ApplicationIcon,
   PackageIcon,
-} from "assets/icons/boslerInterfaceIcons";
+} from "assets/icons/mtdInterfaceIcons";
 import {
   SingleChevronDownIcon,
   SingleChevronUpIcon,
-} from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdNavigationIcon";
 import NoData from "components/CommonUI/NoData";
 import React, { useEffect, useState } from "react";
 import { timeConverter } from "utils/utilities";
@@ -51,7 +51,7 @@ const HealthBadge = ({
           color={log.isPassed ? "green" : "red"}
         />
         {showText && (
-          <div className="BoslerSubHeader1">
+          <div className="MtdSubHeader1">
             {log.isPassed ? "passed" : "failed"}
           </div>
         )}
@@ -113,11 +113,11 @@ const LogContent = ({
     <>
       <div className={styles.log_content}>
         <div className={styles.log_check}>
-          <div className="BoslerHeader1">Rule</div>
+          <div className="MtdHeader1">Rule</div>
           <div>Checks most recent status</div>
         </div>
         <div className={styles.log_status}>
-          <div className="BoslerHeader1">Current Status</div>
+          <div className="MtdHeader1">Current Status</div>
           <div className="--flex-row-start">
             {latestLog ? (
               <HealthBadge log={latestLog} showText />
@@ -130,7 +130,7 @@ const LogContent = ({
           </div>
         </div>
         <div className={styles.log_recent}>
-          <div className="BoslerHeader1">History (Recent on right)</div>
+          <div className="MtdHeader1">History (Recent on right)</div>
           <div
             className="--flex-row-start --flex-gap10"
             style={{ flexWrap: "wrap" }}

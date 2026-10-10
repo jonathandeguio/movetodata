@@ -1,5 +1,5 @@
 import Filters from "components/Filters";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
@@ -35,7 +35,7 @@ function DashboardGridDataFetcher({
     (state: RootState) => state.dashboardEdit
   );
 
-  if (!resourcePermission) return <BoslerLoader size="tiny" />;
+  if (!resourcePermission) return <MtdLoader size="tiny" />;
 
   const editable = resourcePermission.mode == EDIT_MODE;
 
@@ -58,7 +58,7 @@ function DashboardGridDataFetcher({
       for (const [key, value] of Object.entries(datasets)) {
         getDatasetColumns(key, "master", NULL_UUID).then((cols) => {
           cols.map((column: any) => {
-            // sync these with BoslerTable and KeplerEChartContainer
+            // sync these with MtdTable and KeplerEChartContainer
             const columnObj = {
               name: column.headerName,
               value: column.headerName,
@@ -95,7 +95,7 @@ function DashboardGridDataFetcher({
   }, [editable]);
 
   if (!editable && filterColumnsLoading && defaultFilterLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (

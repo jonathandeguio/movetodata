@@ -1,7 +1,7 @@
 import { Typography } from "antd";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
-import { SyncIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { SyncIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import NoData from "components/CommonUI/NoData";
 import React from "react";
 
@@ -15,9 +15,9 @@ const NoDataComponents = () => {
         subHeading="Add charts from the section on right."
         icon={<SearchEmptyState size={"90px"} />}
         actionArea={
-          <BoslerButton icon={<SyncIcon spin={false} />} borderless>
+          <MtdButton icon={<SyncIcon spin={false} />} borderless>
             Reload
-          </BoslerButton>
+          </MtdButton>
         }
       />
     </>

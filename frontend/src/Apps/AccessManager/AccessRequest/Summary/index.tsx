@@ -17,8 +17,8 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import { BoslerTag } from "components/Tag/Tag";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import { MtdTag } from "components/Tag/Tag";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import { DESCRIPTION_1_COL_RESPONSIVE_SPAN } from "pages/Settings/settings.utils";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -79,7 +79,7 @@ export const AccessRequestSummary = ({ accessRequest }: IProps) => {
       children:
         accessRequest.requesters &&
         accessRequest.requesters.map((requester) => (
-          <BoslerUserPopover id={requester} />
+          <MtdUserPopover id={requester} />
         )),
     },
   ];
@@ -90,9 +90,9 @@ export const AccessRequestSummary = ({ accessRequest }: IProps) => {
           <Text className={styles.title}>{accessRequest.title}</Text>
         </Col>
         <Col>
-          <BoslerTag color={getStatusBasedColor(accessRequest.status)}>
+          <MtdTag color={getStatusBasedColor(accessRequest.status)}>
             {ACCESS_MANAGER_STATUS_TYPES_LABEL[accessRequest.status]}
-          </BoslerTag>
+          </MtdTag>
         </Col>
       </Row>
 
@@ -105,7 +105,7 @@ export const AccessRequestSummary = ({ accessRequest }: IProps) => {
         type="secondary"
       >
         {getLanguageLabel("created")}{" "}
-        <BoslerUserPopover id={accessRequest.createdBy} />{" "}
+        <MtdUserPopover id={accessRequest.createdBy} />{" "}
         {getLanguageLabel("by")}{" "}
         <Tooltip title={timeConverter(accessRequest.createdAt)}>
           {getTimeDisplay(accessRequest.createdAt)}

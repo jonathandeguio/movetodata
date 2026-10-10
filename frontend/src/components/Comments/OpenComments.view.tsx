@@ -11,11 +11,11 @@ import {
   Typography,
 } from "antd";
 
-import { MoreMenuIcon } from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { ResolveIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { MoreMenuIcon } from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { ResolveIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { KeyboardEvent, useState } from "react";
 
 import {
@@ -286,7 +286,7 @@ const OpenComments = ({
                     </Form.Item>
 
                     <Row justify="end">
-                      <BoslerButton
+                      <MtdButton
                         intent="dangerous"
                         size="small"
                         onClick={(e: any) => {
@@ -297,16 +297,16 @@ const OpenComments = ({
                         minimal
                       >
                         {getLanguageLabel("cancel")}
-                      </BoslerButton>
+                      </MtdButton>
                       &nbsp;
-                      <BoslerButton
+                      <MtdButton
                         intent="primary"
                         size="small"
                         htmlType="submit"
                         minimal
                       >
                         {getLanguageLabel("save")}
-                      </BoslerButton>
+                      </MtdButton>
                     </Row>
                   </Form>
                 ) : (
@@ -527,7 +527,7 @@ const OpenComments = ({
                               </Form.Item>
 
                               <Row justify="end">
-                                <BoslerButton
+                                <MtdButton
                                   intent="dangerous"
                                   size="small"
                                   onClick={(e: any) => {
@@ -539,9 +539,9 @@ const OpenComments = ({
                                   minimal
                                 >
                                   {getLanguageLabel("cancel")}
-                                </BoslerButton>
+                                </MtdButton>
                                 &nbsp;
-                                <BoslerButton
+                                <MtdButton
                                   intent="primary"
                                   size="small"
                                   htmlType="submit"
@@ -549,7 +549,7 @@ const OpenComments = ({
                                   minimal
                                 >
                                   {getLanguageLabel("save")}
-                                </BoslerButton>
+                                </MtdButton>
                               </Row>
                             </Form>
                           ) : (
@@ -611,7 +611,7 @@ const OpenComments = ({
                     </Form.Item>
 
                     <Row justify="end">
-                      <BoslerButton
+                      <MtdButton
                         intent="dangerous"
                         size="small"
                         onClick={(e: any) => {
@@ -623,9 +623,9 @@ const OpenComments = ({
                         minimal
                       >
                         {getLanguageLabel("cancel")}
-                      </BoslerButton>
+                      </MtdButton>
                       &nbsp;
-                      <BoslerButton
+                      <MtdButton
                         intent="primary"
                         size="small"
                         htmlType="submit"
@@ -633,11 +633,11 @@ const OpenComments = ({
                         minimal
                       >
                         {getLanguageLabel("reply")}
-                      </BoslerButton>
+                      </MtdButton>
                     </Row>
                   </Form>
                 ) : (
-                  <BoslerButton
+                  <MtdButton
                     onClick={(e: any) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -649,7 +649,7 @@ const OpenComments = ({
                     // icon={<ChatIcon />}
                   >
                     {getLanguageLabel("reply")}
-                  </BoslerButton>
+                  </MtdButton>
                 )}
               </Row>
               <br />

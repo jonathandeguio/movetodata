@@ -3,7 +3,7 @@ import "./contextMenu.scss";
 import { ContextMenuStore } from "./store";
 
 import { Divider } from "antd";
-import { SingleChevronRightIcon } from "assets/icons/boslerNavigationIcon";
+import { SingleChevronRightIcon } from "assets/icons/mtdNavigationIcon";
 import { useOutsideClickHandler } from "hooks/useOutsideClickHandler";
 import { isDefined, notEmpty } from "utils/utilities";
 import { useContextMenuState } from "./store";

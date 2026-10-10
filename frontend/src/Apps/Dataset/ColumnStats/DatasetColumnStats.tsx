@@ -1,7 +1,7 @@
 import { Col, Divider, Progress, Row, Typography } from "antd";
-import { HistoricalRunsIcon } from "assets/icons/boslerActionIcons";
-import BoslerLoader from "components/boslerLoader";
-import { BoslerTag } from "components/Tag/Tag";
+import { HistoricalRunsIcon } from "assets/icons/mtdActionIcons";
+import MtdLoader from "components/mtdLoader";
+import { MtdTag } from "components/Tag/Tag";
 import React, { ReactNode } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
@@ -51,7 +51,7 @@ const DatasetColumnStats = (props: $TSFixMe) => {
               </>
             )
           ) : (
-            <BoslerLoader />
+            <MtdLoader />
           )}
         </div>
       </Panel>
@@ -99,7 +99,7 @@ const DatasetColumnStats = (props: $TSFixMe) => {
               </>
             )
           ) : (
-            <BoslerLoader />
+            <MtdLoader />
           )}
         </div>
       </Panel>
@@ -112,7 +112,7 @@ const DatasetColumnStats = (props: $TSFixMe) => {
             <Text strong>{getLanguageLabel("length")}</Text>
           </Col>
           <Col>
-            <BoslerTag
+            <MtdTag
               color={props.info.loading ? "var(--movetodata-intent-danger)" : ""}
               icon={
                 <HistoricalRunsIcon
@@ -122,7 +122,7 @@ const DatasetColumnStats = (props: $TSFixMe) => {
               }
             >
               <TimeCounter nudge={props.info.loading ? "start" : "stop"} />
-            </BoslerTag>
+            </MtdTag>
           </Col>
         </Row>
         <Divider className={styles.zeroMarginDivider} />
@@ -159,7 +159,7 @@ const DatasetColumnStats = (props: $TSFixMe) => {
               })
             )
           ) : (
-            <BoslerLoader />
+            <MtdLoader />
           )}
         </div>
       </Panel>

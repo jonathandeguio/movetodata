@@ -1,12 +1,12 @@
 import { Checkbox, Form, Select } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
 export const ParameterChartCustomizer = () => {
   return (
     <>
-      <BoslerCollapse
+      <MtdCollapse
         header={
           <div className="query_item__heading">
             {getLanguageLabel("parametersChart")}
@@ -97,7 +97,7 @@ export const ParameterChartCustomizer = () => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </>
   );
 };

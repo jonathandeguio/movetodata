@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 const svgString = renderToStaticMarkup(<MonitorIcon />);
 
-import { MonitorIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { MonitorIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { getResourcePermissionAPI } from "common/common.api";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { renderToStaticMarkup } from "react-dom/server";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -47,7 +47,7 @@ const Dashboard = () => {
   if (!KEPLER_USE_CASES.includes(info.product)) return <KeplerRestricted />;
 
   if (isLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   /* As kepler-container class is also used on kepler chart, and there the

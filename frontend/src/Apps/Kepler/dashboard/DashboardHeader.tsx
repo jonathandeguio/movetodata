@@ -21,18 +21,18 @@ import {
     MoreMenuIcon,
     RefreshIcon,
     SharedIcon,
-} from "assets/icons/boslerActionIcons";
-import { GraphIcon } from "assets/icons/boslerChartIcons";
-import { DownloadIcon } from "assets/icons/boslerInterfaceIcons";
+} from "assets/icons/mtdActionIcons";
+import { GraphIcon } from "assets/icons/mtdChartIcons";
+import { DownloadIcon } from "assets/icons/mtdInterfaceIcons";
 import {
     PopOutIcon,
     ZoomToFitIcon,
-} from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdNavigationIcon";
 import Avatars from "components/Avatars/Avatars";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import DashboardExportModal from "components/Modals/DashboardExportModal";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
 import { createVersionAPI } from "components/VersionHistory/VersionHistory.api";
@@ -353,7 +353,7 @@ function DashboardHeader({ id, gridRef }: { id: string; gridRef: any }) {
       <CustomBreadCrumb />
       <div className="kepler-container-header-btns">
         {isDefined(dashboardData) && (
-          <BoslerInfoPopover id={dashboardData.id} type={dashboardData.type} />
+          <MtdInfoPopover id={dashboardData.id} type={dashboardData.type} />
         )}
         <Popover
           title={
@@ -373,7 +373,7 @@ function DashboardHeader({ id, gridRef }: { id: string; gridRef: any }) {
           }
           content={"Dashboard Versions"}
         >
-          <BoslerButton
+          <MtdButton
             icononly
             icon={<HistoryIcon size={20} />}
             minimal
@@ -416,7 +416,7 @@ function DashboardHeader({ id, gridRef }: { id: string; gridRef: any }) {
             placement="bottom"
           >
             <Link to={`/portal/bezier/${dashboardData.id}/master`}>
-              <BoslerButton
+              <MtdButton
                 icononly
                 icon={<GraphIcon />}
                 minimal
@@ -434,12 +434,12 @@ function DashboardHeader({ id, gridRef }: { id: string; gridRef: any }) {
         <DashboardHeaderActionBtn id={id} />
 
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <BoslerButton
+          <MtdButton
             icon={<MoreMenuIcon />}
             minimal
             icononly
             trimicononlypadding
-          ></BoslerButton>
+          ></MtdButton>
         </Dropdown>
         <DashboardExportModal
           openExportModal={openExportModal}

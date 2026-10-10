@@ -1,7 +1,7 @@
 import { Form, InputNumber, Select } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -89,7 +89,7 @@ const NumberCustomizer = ({ name, series }: INumberCustomizer) => {
     ) ?? "none"
   );
   return (
-    <BoslerCollapse
+    <MtdCollapse
       defaultCollpased={true}
       collapsible="HEADER"
       header={
@@ -107,10 +107,10 @@ const NumberCustomizer = ({ name, series }: INumberCustomizer) => {
               isDefined(series) ? [...series, `${name}Mode`] : `${name}Mode`
             }
           >
-            <BoslerInput />
+            <MtdInput />
           </Form.Item>
         </div>
-        <BoslerSwitch
+        <MtdSwitch
           items={[
             {
               label: getLanguageLabel("none"),
@@ -145,7 +145,7 @@ const NumberCustomizer = ({ name, series }: INumberCustomizer) => {
           }}
         />
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };
 

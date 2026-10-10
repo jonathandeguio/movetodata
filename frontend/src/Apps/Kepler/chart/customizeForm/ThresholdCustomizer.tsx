@@ -1,8 +1,8 @@
 import { defaultThresholdCustomize } from "Apps/Kepler/utils/DefaultValues";
 import { ColorPicker, Form, InputNumber, Select, Space, Switch } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -77,7 +77,7 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
   }
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       header={
         <div className="query_item__heading">
           {getLanguageLabel("threshold")}
@@ -148,7 +148,7 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
                   }
 
                   return (
-                    <BoslerCollapse
+                    <MtdCollapse
                       key={`${field.name}Threshold`}
                       collapsible="HEADER"
                       sections={
@@ -286,7 +286,7 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
                           </Space.Compact>
                         </Form.Item>
                         {skeleton.meta.threshold === "LABELED" && (
-                          <BoslerCollapse
+                          <MtdCollapse
                             collapsible={
                               currrentThreshold?.showThresholdLabel
                                 ? "HEADER"
@@ -309,7 +309,7 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
                                 name={[field.name, "name"]}
                                 style={{ width: "100%" }}
                               >
-                                <BoslerInput />
+                                <MtdInput />
                               </Form.Item>
                               <Form.Item
                                 label={"Position"}
@@ -330,10 +330,10 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
                                 hasFormatter={true}
                               />
                             </>
-                          </BoslerCollapse>
+                          </MtdCollapse>
                         )}
                       </>
-                    </BoslerCollapse>
+                    </MtdCollapse>
                   );
                 })}
                 <KeplerTransparentButton
@@ -350,6 +350,6 @@ export const ThresholdCustomizer: React.FC<IThresholdCustomizer> = ({
           }}
         </Form.List>
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

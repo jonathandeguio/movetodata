@@ -1,5 +1,5 @@
 import { Popover } from "antd";
-import { RunIcon } from "assets/icons/boslerActionIcons";
+import { RunIcon } from "assets/icons/mtdActionIcons";
 import React from "react";
 
 const BuildRunbuttonWidget = () => {

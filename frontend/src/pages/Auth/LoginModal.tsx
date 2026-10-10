@@ -1,26 +1,26 @@
 import { Form, Input } from "antd";
-import { ArrowRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModalContainer from "components/CommonUI/BoslerModalContainer/BoslerModalContainer";
+import { ArrowRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModalContainer from "components/CommonUI/MtdModalContainer/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
 const LoginModal = () => {
   return (
     <div className="form-containerNew">
-      <BoslerModalContainer
+      <MtdModalContainer
         heading={<img src="/logoMoveToData.png" alt="MoveToData" style={{ height: 48 }} />}
         footerExtraText={getLanguageLabel("loginAgreement")}
         footerButtonArea={
           <Form.Item style={{ margin: 0 }}>
-            <BoslerButton
+            <MtdButton
               intent="success"
               icon={<ArrowRightIcon />}
               htmlType="submit"
             >
               {getLanguageLabel("login")}
-            </BoslerButton>
+            </MtdButton>
           </Form.Item>
         }
         // information={
@@ -37,14 +37,14 @@ const LoginModal = () => {
         //       textAlign: "left",
         //     }}
         //   >
-        //     <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+        //     <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
         //       Single-Sign-On
         //     </div>
 
         //     {/* <Link to={GITHUB_AUTH_URL} style={{ width: "100%" }}>
-        //       <BoslerButton icon={<CodeCellIcon />} fill outlined>
+        //       <MtdButton icon={<CodeCellIcon />} fill outlined>
         //         Github
-        //       </BoslerButton>
+        //       </MtdButton>
         //     </Link> */}
         //      <a className="btn btn-block social-btn google" style = {{margin: "0 5px" }} href={GITHUB_AUTH_URL}>
         //         <img height={"25px"} width={"25px"}src="/github.svg" alt="image" />
@@ -54,23 +54,23 @@ const LoginModal = () => {
         //       </a>
 
         //     {/* <Link to={GOOGLE_AUTH_URL} style={{ width: "100%" }}>
-        //       <BoslerButton icon={<EmailIcon />} fill outlined>
+        //       <MtdButton icon={<EmailIcon />} fill outlined>
         //         Google
-        //       </BoslerButton>
+        //       </MtdButton>
         //     </Link> */}
-        //     <BoslerButton icon={<LockIcon />} fill outlined disabled>
+        //     <MtdButton icon={<LockIcon />} fill outlined disabled>
         //       Keycloak
-        //     </BoslerButton>
+        //     </MtdButton>
         //   </div>
         // }
         outerBorder={false}
       >
-        <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+        <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
           {getLanguageLabel("login")}
         </div>
         <Form.Item
           name="username"
-          // label={<div className="boslerFormLabel">{getLanguageLabel("userName")}</div>}
+          // label={<div className="mtdFormLabel">{getLanguageLabel("userName")}</div>}
           colon={false}
           required
           rules={[
@@ -80,11 +80,11 @@ const LoginModal = () => {
             },
           ]}
         >
-          <BoslerInput autofocus placeholder={getLanguageLabel("userName")} />
+          <MtdInput autofocus placeholder={getLanguageLabel("userName")} />
         </Form.Item>
         <Form.Item
           name="password"
-          // label={<div className="boslerFormLabel">{getLanguageLabel("password")}</div>}
+          // label={<div className="mtdFormLabel">{getLanguageLabel("password")}</div>}
           colon={false}
           required
           rules={[
@@ -111,7 +111,7 @@ const LoginModal = () => {
             {getLanguageLabel("rememberMe")}
           </div>
         </Form.Item> */}
-      </BoslerModalContainer>
+      </MtdModalContainer>
     </div>
   );
 };

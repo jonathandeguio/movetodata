@@ -1,8 +1,8 @@
 import { Col, Row, Tooltip, Typography } from "antd";
-import { ArrowLeftIcon } from "assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "assets/icons/boslerTableIcons";
+import { ArrowLeftIcon } from "assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "assets/icons/mtdTableIcons";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React from "react";
 import { useNavigate } from "react-router";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
@@ -33,12 +33,12 @@ export const AccessRequestHeader = ({ id }: IProps) => {
         </Col>
         <Col>
           <Tooltip title={getLanguageLabel("clickToCopyIntoClipboard")}>
-            <BoslerButton
+            <MtdButton
               onClick={() => copyToClipboard(window.location.href)}
               icon={<CopyCellIcon />}
             >
               {getLanguageLabel("copy")} URL
-            </BoslerButton>
+            </MtdButton>
           </Tooltip>
         </Col>
       </Row>

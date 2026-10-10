@@ -1,4 +1,4 @@
-import { TabState } from "common/components/BoslerTabs/types";
+import { TabState } from "common/components/MtdTabs/types";
 
 export type PaneType =
   | "EDITOR"

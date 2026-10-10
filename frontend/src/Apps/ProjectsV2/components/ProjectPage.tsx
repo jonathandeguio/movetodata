@@ -1,4 +1,4 @@
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
 import { PermissionModel } from "components/Permissions/PermissionsModal";
 import React from "react";
 

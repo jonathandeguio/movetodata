@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
 
-import { ArrowLeftIcon } from "../../assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "../../assets/icons/boslerTableIcons";
+import { ArrowLeftIcon } from "../../assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "../../assets/icons/mtdTableIcons";
 import Avatars from "../Avatars/Avatars";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import Comments from "../Comments/Comments.view";
 import BuildDetailsTable from "./BuildDetailsTable.view";
 
@@ -48,7 +48,7 @@ const BuildDetails = () => {
           </Col>
           <Col>
             <Tooltip title={tooltipTitle}>
-              <BoslerButton
+              <MtdButton
                 onClick={() => {
                   const url = window.location.href;
                   copyToClipboard(url, setTooltipTitle);
@@ -56,7 +56,7 @@ const BuildDetails = () => {
                 icon={<CopyCellIcon />}
               >
                 {getLanguageLabel("copy")} URL
-              </BoslerButton>
+              </MtdButton>
             </Tooltip>
           </Col>
         </Row>

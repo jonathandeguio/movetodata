@@ -1,4 +1,4 @@
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import VersionHistory from "components/VersionHistory";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -15,7 +15,7 @@ const DashboardVersionsContainer = () => {
     (state) => (state as $TSFixMe).resourcePermission[id]
   );
 
-  if (!resourcePermission) return <BoslerLoader />;
+  if (!resourcePermission) return <MtdLoader />;
 
   if (resourcePermission.mode != VERSION_MODE) return null;
 

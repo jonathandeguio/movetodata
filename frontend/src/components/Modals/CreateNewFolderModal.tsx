@@ -3,17 +3,17 @@ import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { getLanguageLabel, openNotification } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import { createFolderApi } from "common/common.api";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import { LockIcon } from "../../assets/icons/boslerActionIcons";
-import { InfoIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import { LockIcon } from "../../assets/icons/mtdActionIcons";
+import { InfoIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { addNewResource } from "../../redux/fileIndexSlice";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerInput from "../BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "../MtdComponents/InputComponent/MtdInput";
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
 
 const { Text } = Typography;
@@ -67,7 +67,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
         }
       }}
     >
-      <BoslerModal
+      <MtdModal
         open={isVisible}
         onCancel={() => setIsVisible(false)}
         headingIcon={<FolderIcon />}
@@ -75,7 +75,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
         footerExtraText={getLanguageLabel("accessMessage")}
         footerButtonArea={
           <Form.Item>
-            <BoslerButton
+            <MtdButton
               loading={loading}
               intent="primary"
               htmlType={"submit"}
@@ -83,7 +83,7 @@ export default ({ id, isVisible, setIsVisible }: any) => {
               icon={<TickIcon />}
             >
               {getLanguageLabel("create")}
-            </BoslerButton>
+            </MtdButton>
           </Form.Item>
         }
         information={
@@ -119,16 +119,16 @@ export default ({ id, isVisible, setIsVisible }: any) => {
             },
           ]}
         >
-          <BoslerInput autofocus placeholder={getLanguageLabel("folder")} />
+          <MtdInput autofocus placeholder={getLanguageLabel("folder")} />
         </Form.Item>
 
         <Form.Item
           name="description"
           label={getLanguageLabel("description").toUpperCase()}
         >
-          <BoslerInput placeholder={getLanguageLabel("descriptionOpt")} />
+          <MtdInput placeholder={getLanguageLabel("descriptionOpt")} />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

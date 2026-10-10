@@ -11,9 +11,9 @@ import {
 } from "utils/utilities";
 import { RootState, ThunkAppDispatch } from "../../../redux/types/store";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { CollapserHandler } from "../../../components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import { CollapserHandler } from "../../../components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import {
   getConnectElementAPI,
   getParentAPI,
@@ -22,12 +22,12 @@ import {
 
 import LinkTable2 from "../Links/LinkTable.view";
 
-import { BottomBarLayout } from "common/components/BoslerLayout/BottomBarLayout";
+import { BottomBarLayout } from "common/components/MtdLayout/BottomBarLayout";
 import {
   initBottomBar,
   updateBottomBarItemState,
-} from "common/components/BoslerLayout/bottomBarSlice";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+} from "common/components/MtdLayout/bottomBarSlice";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import { initialSourceDetails } from "./Source.constants";
 import { getSourceBottombarItems } from "./Source.utils";
@@ -35,14 +35,14 @@ import SourceHeader from "./SourceHeader.view";
 import SourceInfoPanel from "./SourceInfoPanel";
 import SourceTree from "./SourceTree";
 
-type TBoslerSwitch = "dataBrowser" | "info";
+type TMtdSwitch = "dataBrowser" | "info";
 
 const SourceDetails = () => {
   const primaryPanelRef = useRef<any>(null);
   const { id } = useParams();
   const dispatch = useDispatch<ThunkAppDispatch>();
   const [selectedDataSourceSwitch, setSelectedDataSourceSwitch] =
-    useState<TBoslerSwitch>("dataBrowser");
+    useState<TMtdSwitch>("dataBrowser");
 
   const { sourceLinks, loading } = useSelector(
     (state) => (state as $TSFixMe).sourceLinksList
@@ -111,7 +111,7 @@ const SourceDetails = () => {
   }, [previewSource]);
 
   if (!source || source.id == "") {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
@@ -125,7 +125,7 @@ const SourceDetails = () => {
         />
         <PanelGroup direction={"horizontal"}>
           <Panel collapsible={true} defaultSize={25} ref={primaryPanelRef}>
-            <BoslerSwitch
+            <MtdSwitch
               items={[
                 {
                   label: getLanguageLabel("dataBrowser"),
@@ -141,7 +141,7 @@ const SourceDetails = () => {
                 },
               ]}
               value={selectedDataSourceSwitch}
-              onChange={(newSwitch: TBoslerSwitch) => {
+              onChange={(newSwitch: TMtdSwitch) => {
                 setSelectedDataSourceSwitch(newSwitch);
               }}
             />

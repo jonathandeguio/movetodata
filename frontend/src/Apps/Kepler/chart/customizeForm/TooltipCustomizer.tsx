@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
 import { getLanguageLabel } from "utils/utilities";
 import { chartConfig } from "../charts.config";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import NumberCustomizer from "./NumberCustomizer";
 
 const { Panel } = Collapse;
@@ -24,7 +24,7 @@ export const TooltipCustomizer: React.FC<ITooltipCustomizer> = ({
   const querySkeleton = chartConfig[chartType];
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       key="tooltipPanel"
       collapsible={tooltipValue === true ? "HEADER" : "DISABLED"}
       header={
@@ -73,6 +73,6 @@ export const TooltipCustomizer: React.FC<ITooltipCustomizer> = ({
         )}
         <NumberCustomizer name="tooltip" />
       </>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import { BTH1, BTHInternal } from "components/CommonUI/BoslerTypography";
+import { BTH1, BTHInternal } from "components/CommonUI/MtdTypography";
 import React from "react";
 
 const { Title } = Typography;

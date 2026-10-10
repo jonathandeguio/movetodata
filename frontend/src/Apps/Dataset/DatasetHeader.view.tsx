@@ -1,12 +1,12 @@
 import { RobotOutlined } from "@ant-design/icons";
 import { Popover, Tooltip, Typography } from "antd";
-import { HistoryIcon } from "assets/icons/boslerActionIcons";
+import { HistoryIcon } from "assets/icons/mtdActionIcons";
 
-import { GraphIcon, GroupedColumnIcon } from "assets/icons/boslerChartIcons";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
+import { GraphIcon, GroupedColumnIcon } from "assets/icons/mtdChartIcons";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
 import Avatars from "components/Avatars/Avatars";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
 import CreateNewChartModal from "components/Modals/CreateNewChartModal";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
@@ -17,8 +17,8 @@ import AiTextToSqlPanel from "./components/AiTextToSqlPanel/AiTextToSqlPanel";
 
 import { KEPLER_USE_CASES } from "Apps/Kepler/chart/charts.utils";
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { KeyIcon } from "assets/icons/boslerInterfaceIcons";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { KeyIcon } from "assets/icons/mtdInterfaceIcons";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getLanguageLabel,
@@ -70,7 +70,7 @@ const DatasetHeader = ({
     <div className="dataset-splitpane-header">
       <CustomBreadCrumb />
       <div className="dataset-splitpane-header-btns">
-        <BoslerInfoPopover
+        <MtdInfoPopover
           id={id}
           branch={branch}
           transactionId={transactionId}
@@ -84,7 +84,7 @@ const DatasetHeader = ({
           }
           content={"View the historical data based on different transactions."}
         >
-          <BoslerButton
+          <MtdButton
             icononly
             icon={<HistoryIcon size={20} />}
             minimal
@@ -136,12 +136,12 @@ const DatasetHeader = ({
           // trigger={"click"}
         >
           <Link to={`/portal/bezier/${datasetDetails.id}/master`}>
-            <BoslerButton
+            <MtdButton
               icon={<GraphIcon />}
               icononly={true}
               minimal
               trimicononlypadding
-            ></BoslerButton>
+            ></MtdButton>
           </Link>
         </Popover>
         <Comments id={datasetDetails.id} />
@@ -156,7 +156,7 @@ const DatasetHeader = ({
             placement="bottom"
             content={getLanguageLabel("createNewChart")}
           >
-            <BoslerButton
+            <MtdButton
               icon={<GroupedColumnIcon />}
               intent="action"
               onClick={() => {
@@ -167,7 +167,7 @@ const DatasetHeader = ({
               }
             >
               {getLanguageLabel("chart")}
-            </BoslerButton>
+            </MtdButton>
           </Popover>
         )}
         {datasetDetails.subType == ResourceSubTypeEnum.BUILDDATASET && (
@@ -189,14 +189,14 @@ const DatasetHeader = ({
                 : "Générer du SQL avec l'IA"
             }
           >
-            <BoslerButton
+            <MtdButton
               icon={<RobotOutlined />}
               intent={isAiPanelOpen ? "action" : undefined}
               minimal
               onClick={() => setIsAiPanelOpen((open) => !open)}
             >
               IA
-            </BoslerButton>
+            </MtdButton>
           </Tooltip>
         )}
       </div>

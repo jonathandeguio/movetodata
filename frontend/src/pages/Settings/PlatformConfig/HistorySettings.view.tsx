@@ -1,7 +1,7 @@
 import { Col, Divider, Popconfirm, Row, Typography } from "antd";
-import { SaveIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { SaveIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -41,7 +41,7 @@ export const HistorySettings = () => {
               <Text type="secondary">{getLanguageLabel("transactions")}</Text>
             </Col>
             <Col>
-              <BoslerInput
+              <MtdInput
                 value={transactions}
                 onChange={(e) => setTransactions(e.target.value)}
               />
@@ -65,13 +65,13 @@ export const HistorySettings = () => {
                 okText="Yes"
                 cancelText="No"
               >
-                <BoslerButton
+                <MtdButton
                   icon={<SaveIcon />}
                   intent="primary"
                   textTransform="none"
                 >
                   {getLanguageLabel("update")}{" "}
-                </BoslerButton>
+                </MtdButton>
               </Popconfirm>
             </Col>
           </Row>

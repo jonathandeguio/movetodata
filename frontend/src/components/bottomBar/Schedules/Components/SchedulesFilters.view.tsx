@@ -1,6 +1,6 @@
 import { Col, Flex, Row, Select } from "antd";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { JobStatusEnum } from "../SchedulesModal.constants";
@@ -24,7 +24,7 @@ export const SchedulesFilters = ({ filters, setFilters }: Props) => {
       <Row gutter={[8, 8]}>
         <Col span={24}>Resource ID</Col>
         <Col span={24}>
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("search")}
             value={filters.searchText}
             onChange={(e) => {
@@ -66,7 +66,7 @@ export const SchedulesFilters = ({ filters, setFilters }: Props) => {
         <Col span={24}>{getLanguageLabel("createdAt")}</Col>
         <Col span={12}>
           {getLanguageLabel("from")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeFrom}
             onChange={(date: number) => {
               onChange(
@@ -78,7 +78,7 @@ export const SchedulesFilters = ({ filters, setFilters }: Props) => {
         </Col>
         <Col span={12}>
           {getLanguageLabel("to")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeTo}
             onChange={(date: number) => {
               onChange("rangeTo", date ? new Date(date).valueOf() : undefined);
@@ -91,7 +91,7 @@ export const SchedulesFilters = ({ filters, setFilters }: Props) => {
         <Col span={24}>{getLanguageLabel("lastExecutedAt")}</Col>
         <Col span={12}>
           {getLanguageLabel("from")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.lastExecutionDateFrom}
             onChange={(date: number) => {
               onChange(
@@ -103,7 +103,7 @@ export const SchedulesFilters = ({ filters, setFilters }: Props) => {
         </Col>
         <Col span={12}>
           {getLanguageLabel("to")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.lastExecutionDateTo}
             onChange={(date: number) => {
               onChange(

@@ -20,12 +20,12 @@ import Sync from "./sync/sync";
 import { getRepoLinkUsingBuildSpec } from "components/Builds/Builds.utils";
 import BuildLog from "components/Builds/BuildsDetailsDrawer.view";
 import { NULL_UUID } from "utils/Common.constants";
-import { DatabaseViewIcon, TreeIcon } from "../../assets/icons/boslerDataIcons";
-import { CodeCellIcon } from "../../assets/icons/boslerEditorIcons";
-import { DocsIcon } from "../../assets/icons/boslerFileIcons";
-import { CalendarIcon, ComponentIcon } from "../../assets/icons/boslerInterfaceIcons";
-import { TableIcon } from "../../assets/icons/boslerTableIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import { DatabaseViewIcon, TreeIcon } from "../../assets/icons/mtdDataIcons";
+import { CodeCellIcon } from "../../assets/icons/mtdEditorIcons";
+import { DocsIcon } from "../../assets/icons/mtdFileIcons";
+import { CalendarIcon, ComponentIcon } from "../../assets/icons/mtdInterfaceIcons";
+import { TableIcon } from "../../assets/icons/mtdTableIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 export default function BottomTabs({ id, branch, page }: $TSFixMe) {
   const dispatch = useDispatch<ThunkAppDispatch>();
@@ -238,7 +238,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                       title={getLanguageLabel("openDataset")}
                     >
                       <div className="bottombar-left-buttons">
-                        <BoslerButton
+                        <MtdButton
                           minimal
                           disabled={
                             page === "DATASET" ||
@@ -259,7 +259,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                           icon={<TableIcon />}
                         >
                           {getLanguageLabel("dataset")}
-                        </BoslerButton>
+                        </MtdButton>
                       </div>
                     </Tooltip>
                     <Divider
@@ -280,7 +280,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                     placement="top"
                     title={getLanguageLabel("displayBuildLog")}
                   >
-                    <BoslerButton
+                    <MtdButton
                       minimal
                       disabled={datasetBuildSpec ? false : true}
                       onClick={() => {
@@ -296,7 +296,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                       icon={<ComponentIcon />}
                     >
                       {getLanguageLabel("buildLog")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                   <Divider
                     type="vertical"
@@ -361,7 +361,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
               {/* {datasetBuildSpec ? (
                 <>
                   <Tooltip placement="top" title={getLanguageLabel("history")}>
-                    <BoslerButton
+                    <MtdButton
                       minimal
                       disabled={datasetBuildSpec ? false : true}
                       onClick={() => {
@@ -377,7 +377,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                       icon={<HistoryIcon />}
                     >
                       {getLanguageLabel("history")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                   <Divider
                     type="vertical"
@@ -399,7 +399,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                     placement="top"
                     title={getLanguageLabel("scheduleInfo")}
                   >
-                    <BoslerButton
+                    <MtdButton
                       minimal
                       disabled={datasetBuildSpec ? false : true}
                       onClick={() => {
@@ -416,7 +416,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                       icon={<CalendarIcon />}
                     >
                       {getLanguageLabel("schedules")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                   <Divider
                     type="vertical"
@@ -433,7 +433,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
 
               {/* Files Button  */}
               <Tooltip placement="top" title={getLanguageLabel("files")}>
-                <BoslerButton
+                <MtdButton
                   disabled={
                     currentSelectedNode.type != "DATASET" ? true : false
                   }
@@ -452,7 +452,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                   icon={<DocsIcon />}
                 >
                   {getLanguageLabel("files")}
-                </BoslerButton>
+                </MtdButton>
               </Tooltip>
               <Divider
                 type="vertical"
@@ -467,7 +467,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                 placement="top"
                 title={getLanguageLabel("datasetSynchronistionStatus")}
               >
-                <BoslerButton
+                <MtdButton
                   minimal
                   disabled={
                     currentSelectedNode.type != "DATASET" ? true : false
@@ -486,7 +486,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                   icon={<DatabaseViewIcon />}
                 >
                   {getLanguageLabel("sync")}
-                </BoslerButton>
+                </MtdButton>
               </Tooltip>
               <Divider
                 type="vertical"
@@ -499,7 +499,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
 
               {/* Schema Button  */}
               <Tooltip placement="top" title={getLanguageLabel("schemaStatus")}>
-                <BoslerButton
+                <MtdButton
                   minimal
                   disabled={
                     currentSelectedNode.type != "DATASET" ? true : false
@@ -518,7 +518,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                   icon={<TreeIcon />}
                 >
                   {getLanguageLabel("schema")}
-                </BoslerButton>
+                </MtdButton>
               </Tooltip>
               <Divider
                 type="vertical"
@@ -536,7 +536,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                     placement="top"
                     title={getLanguageLabel("openCodeRepository")}
                   >
-                    <BoslerButton
+                    <MtdButton
                       minimal
                       // disabled={currentSelectedNode.type != "DATASET" ? true : false}
                       disabled={false}
@@ -561,7 +561,7 @@ export default function BottomTabs({ id, branch, page }: $TSFixMe) {
                       icon={<CodeCellIcon />}
                     >
                       {getLanguageLabel("code")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                   <Divider
                     type="vertical"

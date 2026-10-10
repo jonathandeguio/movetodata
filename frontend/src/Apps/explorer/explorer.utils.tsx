@@ -1,6 +1,6 @@
 import { SourceTypeEnum } from "Apps/Connect/Enums/SourceTypeEnum";
 import { IDatasetMetaData } from "Apps/Dataset/DatasetDetail";
-import { LinkIcon, SparklesIcon } from "assets/icons/boslerActionIcons";
+import { LinkIcon, SparklesIcon } from "assets/icons/mtdActionIcons";
 import {
   ChartIcon,
   GaugeIcon,
@@ -16,7 +16,7 @@ import {
   TreeMapIcon,
   WaterFallIcon,
   WordCloudIcon,
-} from "assets/icons/boslerChartIcons";
+} from "assets/icons/mtdChartIcons";
 import {
   BigNumberIcon,
   BooleanIcon,
@@ -25,8 +25,8 @@ import {
   NumberIcon,
   ProjectIcon,
   StringIcon,
-} from "assets/icons/boslerDataIcons";
-import { CodeCellIcon, TextIcon } from "assets/icons/boslerEditorIcons";
+} from "assets/icons/mtdDataIcons";
+import { CodeCellIcon, TextIcon } from "assets/icons/mtdEditorIcons";
 import {
   JupyterIcon,
   MSSQLIcon,
@@ -38,15 +38,15 @@ import {
   PythonIcon,
   SnowflakeIcon,
   SparkSQLIcon,
-} from "assets/icons/boslerExternalIcons";
+} from "assets/icons/mtdExternalIcons";
 import {
   DocsIcon,
   FolderIcon,
   FolderOpen2Icon,
-} from "assets/icons/boslerFileIcons";
-import { CalendarIcon, MapLegendIcon } from "assets/icons/boslerInterfaceIcons";
-import { HelpIcon, MonitorIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TableCellIcon, TableIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdFileIcons";
+import { CalendarIcon, MapLegendIcon } from "assets/icons/mtdInterfaceIcons";
+import { HelpIcon, MonitorIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TableCellIcon, TableIcon } from "assets/icons/mtdTableIcons";
 import { CONNECT } from "components/Builds/Builds.constants";
 import React from "react";
 import { isDefined, notEmpty } from "utils/utilities";
@@ -386,7 +386,7 @@ export const getNodeFavIcon = (type: string, subType: string) => {
           return "/favicons/dataset/emptyIcon.svg";
       }
     default:
-      return "/favicons/boslerLogo.svg";
+      return "/favicons/movetodataLogo.svg";
   }
 };
 

@@ -1,14 +1,14 @@
 import { Card, Col, Divider, Input, Row, Select, Switch, Tag, Tooltip, Typography } from "antd";
 import axios from "axios";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import { Buffer } from "buffer";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { Link } from "react-router-dom";
 import {
@@ -19,18 +19,18 @@ import {
   openNotification,
 } from "utils/utilities";
 // isDefined still used below for newSourceDetails.password check
-import { SearchIcon } from "../../../assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "../../../assets/icons/boslerDataIcons";
-import { KeyIcon } from "../../../assets/icons/boslerInterfaceIcons";
+import { SearchIcon } from "../../../assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "../../../assets/icons/mtdDataIcons";
+import { KeyIcon } from "../../../assets/icons/mtdInterfaceIcons";
 import {
   LibraryIcon,
   LightBulbIcon,
-} from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdMiscellaneousIcons";
 import {
   ArrowHorizontalIcon,
   SingleChevronRightIcon,
   TickIcon,
-} from "../../../assets/icons/boslerNavigationIcon";
+} from "../../../assets/icons/mtdNavigationIcon";
 import { openFileExplorerModal } from "../../../redux/ModalSlice";
 import { listAgents } from "../../../redux/actions/agentActions";
 import { listSources } from "../../../redux/actions/sourceActions";
@@ -230,7 +230,7 @@ const SourceModal = ({
   console.log(newSourceDetails, selectedConnector);
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={
           !selectedConnector.type ? <DatabaseIcon /> : selectedConnector.icon
         }
@@ -246,7 +246,7 @@ const SourceModal = ({
             >
               <div
                 onClick={() => deSelectConnector()}
-                className="BoslerBtnHeading"
+                className="MtdBtnHeading"
                 style={{
                   fontSize: "14px",
                 }}
@@ -255,7 +255,7 @@ const SourceModal = ({
               </div>
               <SingleChevronRightIcon />
               <div
-                className="BoslerBtnHeading"
+                className="MtdBtnHeading"
                 style={{
                   fontSize: "14px",
                 }}
@@ -266,7 +266,7 @@ const SourceModal = ({
           )
         }
         extraActionHeading={
-          <BoslerInput
+          <MtdInput
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder={getLanguageLabel("search")}
@@ -281,7 +281,7 @@ const SourceModal = ({
         footerExtraText={getLanguageLabel("connectAdminOnlyMessage")}
         footerButtonArea={
           selectedConnector.type && (
-            <BoslerButton
+            <MtdButton
               intent="primary"
               onClick={updateDetails ? handleUpdate : handleOk}
               icon={<TickIcon />}
@@ -290,7 +290,7 @@ const SourceModal = ({
               {updateDetails
                 ? getLanguageLabel("update")
                 : getLanguageLabel("create")}
-            </BoslerButton>
+            </MtdButton>
           )
         }
         information={
@@ -402,7 +402,7 @@ const SourceModal = ({
               marginBottom: "10px",
             }}
           >
-            <div className="BoslerHeader1">{getLanguageLabel("general")}</div>
+            <div className="MtdHeader1">{getLanguageLabel("general")}</div>
             <Row
               justify={"space-between"}
               align="middle"
@@ -413,7 +413,7 @@ const SourceModal = ({
                 <Text>{getLanguageLabel("name")}</Text>
               </Col>
               <Col span={16}>
-                <BoslerInput
+                <MtdInput
                   bordered
                   autofocus
                   onChange={(e) =>
@@ -438,7 +438,7 @@ const SourceModal = ({
                 <Text>{getLanguageLabel("description")}</Text>
               </Col>
               <Col span={16}>
-                <BoslerInput
+                <MtdInput
                   onChange={(e) =>
                     setNewSourceDetails({
                       ...newSourceDetails,
@@ -458,7 +458,7 @@ const SourceModal = ({
             >
               <Col span={8}>{getLanguageLabel("parentFolder")}</Col>
               <Col span={16}>
-                <BoslerButton
+                <MtdButton
                   intent={selectedParent ? "success" : "warning"}
                   icon={<FolderIcon />}
                   onClick={() => {
@@ -476,7 +476,7 @@ const SourceModal = ({
                   {selectedParent
                     ? selectedParent
                     : getLanguageLabel("parentFolder")}
-                </BoslerButton>
+                </MtdButton>
                 <Text
                   type="secondary"
                   style={{
@@ -492,7 +492,7 @@ const SourceModal = ({
 
             {newSourceDetails.type === "jdbc" && (
               <>
-                <div className="BoslerHeader1">
+                <div className="MtdHeader1">
                   {getLanguageLabel("database").toUpperCase()}
                 </div>
 
@@ -513,7 +513,7 @@ const SourceModal = ({
                     </Text>
                   </Col>
                   <Col span={10}>
-                    <BoslerInput
+                    <MtdInput
                       placeholder={getLanguageLabel("server")}
                       onChange={(e) =>
                         setNewSourceDetails({
@@ -526,7 +526,7 @@ const SourceModal = ({
                     />
                   </Col>
                   <Col span={6}>
-                    <BoslerInput
+                    <MtdInput
                       placeholder={"443"}
                       onChange={(e) =>
                         setNewSourceDetails({
@@ -554,7 +554,7 @@ const SourceModal = ({
                       <Text>File Path</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder={
                           newSourceDetails.dbmsType === SourceTypeEnum.SQLITE
                             ? "e.g. /data/mydb.sqlite"
@@ -585,7 +585,7 @@ const SourceModal = ({
                       <Text>AWS Region</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder="e.g. eu-west-1"
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -612,7 +612,7 @@ const SourceModal = ({
                       <Text>Workspace Host</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder="e.g. adb-1234567890.12.azuredatabricks.net"
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -637,7 +637,7 @@ const SourceModal = ({
                       <Text>{getLanguageLabel("warehouse")}</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder={getLanguageLabel("warehouse")}
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -673,7 +673,7 @@ const SourceModal = ({
                     </Text>
                   </Col>
                   <Col span={16}>
-                    <BoslerInput
+                    <MtdInput
                       placeholder={
                         newSourceDetails.dbmsType === SourceTypeEnum.TRINO ||
                         newSourceDetails.dbmsType === SourceTypeEnum.STARBURST
@@ -707,7 +707,7 @@ const SourceModal = ({
                       <Text>HTTP Path</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder="e.g. /sql/1.0/warehouses/abc123"
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -733,7 +733,7 @@ const SourceModal = ({
                       <Text>{getLanguageLabel("schema")} (Optional)</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder={getLanguageLabel("schema")}
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -760,7 +760,7 @@ const SourceModal = ({
                       <Text>{getLanguageLabel("schema")} (Optional)</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder={getLanguageLabel("schema")}
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -786,7 +786,7 @@ const SourceModal = ({
                       <Text>Auth Source (Optional)</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder="admin"
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -838,7 +838,7 @@ const SourceModal = ({
                           <Text>DSN Name</Text>
                         </Col>
                         <Col span={16}>
-                          <BoslerInput
+                          <MtdInput
                             placeholder="e.g. MyAS400DSN"
                             onChange={(e) =>
                               setNewSourceDetails({
@@ -864,7 +864,7 @@ const SourceModal = ({
                           <Text>Connection String</Text>
                         </Col>
                         <Col span={16}>
-                          <BoslerInput
+                          <MtdInput
                             placeholder="Driver={FreeTDS};Server=myserver;Port=1433;Database=mydb;UID=user;PWD=pass"
                             onChange={(e) =>
                               setNewSourceDetails({
@@ -915,7 +915,7 @@ const SourceModal = ({
                 {newSourceDetails.dbmsType !== SourceTypeEnum.SQLITE &&
                   newSourceDetails.dbmsType !== SourceTypeEnum.DUCKDB && (
                 <>
-                <div className="BoslerHeader1">
+                <div className="MtdHeader1">
                   {getLanguageLabel("authentication")}
                 </div>
                 {newSourceDetails.dbmsType == SourceTypeEnum.SNOWFLAKE && (
@@ -997,7 +997,7 @@ const SourceModal = ({
                         <Text>{getLanguageLabel("userName")}</Text>
                       </Col>
                       <Col span={16}>
-                        <BoslerInput
+                        <MtdInput
                           placeholder={getLanguageLabel("userName")}
                           onChange={(e) =>
                             setNewSourceDetails({
@@ -1045,7 +1045,7 @@ const SourceModal = ({
                         <Text>{getLanguageLabel("privateKeyPassPhrase")}</Text>
                       </Col>
                       <Col span={16}>
-                        <BoslerInput
+                        <MtdInput
                           className="input"
                           placeholder={getLanguageLabel("privateKeyPassPhrase")}
                           onChange={(e) =>
@@ -1075,7 +1075,7 @@ const SourceModal = ({
                         </Text>
                       </Col>
                       <Col span={16}>
-                        <BoslerInput
+                        <MtdInput
                           placeholder={
                             newSourceDetails.dbmsType === SourceTypeEnum.ATHENA
                               ? "e.g. AKIAIOSFODNN7EXAMPLE"
@@ -1154,7 +1154,7 @@ const SourceModal = ({
                       <Text>{getLanguageLabel("userRole")} (Optional)</Text>
                     </Col>
                     <Col span={16}>
-                      <BoslerInput
+                      <MtdInput
                         placeholder={getLanguageLabel("userRole")}
                         onChange={(e) =>
                           setNewSourceDetails({
@@ -1213,7 +1213,7 @@ const SourceModal = ({
                     <Text>{getLanguageLabel("token")}</Text>
                   </Col>
                   <Col span={16}>
-                    <BoslerInput
+                    <MtdInput
                       onChange={(e) =>
                         setNewSourceDetails({
                           ...newSourceDetails,
@@ -1236,7 +1236,7 @@ const SourceModal = ({
                     <Text>URL</Text>
                   </Col>
                   <Col span={16}>
-                    <BoslerInput
+                    <MtdInput
                       onChange={(e) =>
                         setNewSourceDetails({
                           ...newSourceDetails,
@@ -1290,7 +1290,7 @@ const SourceModal = ({
                   <Text>{getLanguageLabel("folder")}</Text>
                 </Col>
                 <Col span={16}>
-                  <BoslerInput
+                  <MtdInput
                     placeholder="Folder Path : e.g. /data/folder1"
                     value={newSourceDetails.path}
                     required
@@ -1305,7 +1305,7 @@ const SourceModal = ({
               </Row>
             )}
 
-            <div className="BoslerHeader1">
+            <div className="MtdHeader1">
               {getLanguageLabel("connection").toUpperCase()}
             </div>
             <Row align="middle">
@@ -1367,7 +1367,7 @@ const SourceModal = ({
             )}
           </div>
         )}
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

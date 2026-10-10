@@ -5,10 +5,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import "./BoslerHamburger.scss";
+import "./MtdHamburger.scss";
 import { isDefined, notEmpty } from "utils/utilities";
-import { MoreMenuVerticalIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { MoreMenuVerticalIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { Popover } from "antd";
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
   collapseFrom?: "LEFT" | "RIGHT";
   hamburgerIcon?: React.ReactNode;
 }
-export const BoslerHamburger: React.FC<Props> = ({
+export const MtdHamburger: React.FC<Props> = ({
   children,
   //   size,
   style = {},
@@ -106,7 +106,7 @@ export const BoslerHamburger: React.FC<Props> = ({
       {visibleChildrenItems.map((child) => child)}
       {notEmpty(collapsedItems) && (
         <Popover content={collapsedItems.map((child) => child)}>
-          <BoslerButton minimal icononly icon={hamburgerIcon} />
+          <MtdButton minimal icononly icon={hamburgerIcon} />
         </Popover>
       )}
     </div>

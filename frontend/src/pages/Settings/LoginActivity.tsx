@@ -26,7 +26,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import BoslerLoader from "../../components/boslerLoader";
+import MtdLoader from "../../components/mtdLoader";
 import { getLanguageLabel, openNotification } from "utils/utilities";
 
 const { Title, Text } = Typography;
@@ -214,7 +214,7 @@ const LoginActivity = () => {
     },
   ];
 
-  if (!user) return <BoslerLoader />;
+  if (!user) return <MtdLoader />;
 
   return (
     <div className="settings-center-block">
@@ -274,7 +274,7 @@ const LoginActivity = () => {
       </Card>
 
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           {stats && (

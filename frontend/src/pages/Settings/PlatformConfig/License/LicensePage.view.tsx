@@ -6,7 +6,7 @@ import {
   Row,
   Typography,
 } from "antd";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
 import React from "react";
 import { useSelector } from "react-redux";
@@ -85,7 +85,7 @@ export const LicensePage = () => {
   return (
     <>
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <div className="settings-center-block">
           <Row align={"middle"} justify={"space-between"}>
@@ -100,7 +100,7 @@ export const LicensePage = () => {
           <LicenseForm isDisabledPage={false} />
 
           {licenseLoading ? (
-            <BoslerLoader />
+            <MtdLoader />
           ) : (
             <>
               <Title level={5}>General</Title>

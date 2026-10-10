@@ -1,7 +1,7 @@
 import { Form, Input, Typography, message } from "antd";
-import { ArrowRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModalContainer from "components/CommonUI/BoslerModalContainer/BoslerModalContainer";
+import { ArrowRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModalContainer from "components/CommonUI/MtdModalContainer/MtdModalContainer";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import {
   openNotification,
   setTheme,
 } from "utils/utilities";
-import { BOSLER_TOKEN, USERNAME } from "Authentication/constants";
+import { MTD_TOKEN, USERNAME } from "Authentication/constants";
 import { refreshTokenStatus } from "../../redux/actions/tokenActions";
 import { login } from "../../redux/actions/userActions";
 import { USER_LOGIN_SUCCESS } from "../../redux/constants/userConstants";
@@ -88,7 +88,7 @@ const Login = () => {
         otp,
       });
       localStorage.setItem(USERNAME, mfaState.username);
-      localStorage.setItem(BOSLER_TOKEN, data.accessToken);
+      localStorage.setItem(MTD_TOKEN, data.accessToken);
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
       dispatch(refreshTokenStatus());
       setTheme(data);
@@ -142,24 +142,24 @@ const Login = () => {
         >
           {mfaState ? (
             <div className="form-containerNew">
-              <BoslerModalContainer
+              <MtdModalContainer
                 heading={<img src="/logoMoveToData.png" alt="MoveToData" style={{ height: 48 }} />}
                 footerExtraText=""
                 footerButtonArea={
                   <Form.Item style={{ margin: 0 }}>
-                    <BoslerButton
+                    <MtdButton
                       intent="success"
                       icon={<ArrowRightIcon />}
                       loading={otpLoading}
                       onClick={handleOtpSubmit}
                     >
                       Vérifier
-                    </BoslerButton>
+                    </MtdButton>
                   </Form.Item>
                 }
                 outerBorder={false}
               >
-                <div className="BoslerHeader1" style={{ marginBottom: 10 }}>
+                <div className="MtdHeader1" style={{ marginBottom: 10 }}>
                   Authentification à deux facteurs
                 </div>
                 <Text type="secondary" style={{ display: "block", marginBottom: 16 }}>
@@ -188,7 +188,7 @@ const Login = () => {
                 >
                   Retour à la connexion
                 </Text>
-              </BoslerModalContainer>
+              </MtdModalContainer>
             </div>
           ) : (
             <Form

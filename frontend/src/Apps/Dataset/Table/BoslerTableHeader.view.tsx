@@ -19,15 +19,15 @@ import {
   DuplicateIcon,
   PinIcon,
   PreferencesIcon,
-} from "assets/icons/boslerActionIcons";
+} from "assets/icons/mtdActionIcons";
 import {
   BooleanIcon,
   NumberIcon,
   StringIcon,
-} from "assets/icons/boslerDataIcons";
-import { CalendarIcon } from "assets/icons/boslerInterfaceIcons";
-import { SortAscIcon, SortDescIcon } from "assets/icons/boslerSortIcons";
-import { FilterIcon, FilterLinesIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdDataIcons";
+import { CalendarIcon } from "assets/icons/mtdInterfaceIcons";
+import { SortAscIcon, SortDescIcon } from "assets/icons/mtdSortIcons";
+import { FilterIcon, FilterLinesIcon } from "assets/icons/mtdTableIcons";
 import RenameModal from "components/Modals/RenameModal";
 import React, { FC, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
@@ -49,14 +49,14 @@ import {
 import { fetchSchema } from "../../../redux/actions/pipelineActions";
 import { COLUMN_STATS_PANE_OPEN_SUCCESS } from "../../../redux/constants/datasetConstants";
 import { ThunkAppDispatch } from "../../../redux/types/store";
-import { changeColumnNameOrTypeAPI } from "./BoslerTable.api";
+import { changeColumnNameOrTypeAPI } from "./MtdTable.api";
 import {
   getColumnSelectedFormat,
   getColumnType,
   getDataTypeIcon,
   isColumnFilter,
   timestampFormats,
-} from "./BoslerTable.utils";
+} from "./MtdTable.utils";
 
 const { Text } = Typography;
 
@@ -191,7 +191,7 @@ export const DraggableColumnHeader: FC<{
             }}
           >
             <StringIcon />
-            <Text className="boslertable-header-row-th-container-text-small">
+            <Text className="mtdtable-header-row-th-container-text-small">
               String
             </Text>
           </div>
@@ -212,7 +212,7 @@ export const DraggableColumnHeader: FC<{
             }}
           >
             <NumberIcon />
-            <Text className="boslertable-header-row-th-container-text-small">
+            <Text className="mtdtable-header-row-th-container-text-small">
               Integer
             </Text>
           </div>
@@ -232,7 +232,7 @@ export const DraggableColumnHeader: FC<{
             }}
           >
             <NumberIcon />
-            <Text className="boslertable-header-row-th-container-text-small">
+            <Text className="mtdtable-header-row-th-container-text-small">
               Double
             </Text>
           </div>
@@ -252,7 +252,7 @@ export const DraggableColumnHeader: FC<{
             }}
           >
             <CalendarIcon />
-            <Text className="boslertable-header-row-th-container-text-small">
+            <Text className="mtdtable-header-row-th-container-text-small">
               Timestamp
             </Text>
           </div>
@@ -273,7 +273,7 @@ export const DraggableColumnHeader: FC<{
             }}
           >
             <BooleanIcon />
-            <Text className="boslertable-header-row-th-container-text-small">
+            <Text className="mtdtable-header-row-th-container-text-small">
               Boolean
             </Text>
           </div>
@@ -756,22 +756,22 @@ export const DraggableColumnHeader: FC<{
           position: "relative",
           width: header.getSize(),
         }}
-        className={"boslertable-header-row-th"}
+        className={"mtdtable-header-row-th"}
       >
-        <div ref={previewRef} className="boslertable-header-row-th-container">
+        <div ref={previewRef} className="mtdtable-header-row-th-container">
           <div
             ref={previewRef}
-            className="boslertable-header-row-th-container-text"
+            className="mtdtable-header-row-th-container-text"
           >
             {header.isPlaceholder ? null : (
-              <div className="boslertable-header-row-th-container-text-large">
+              <div className="mtdtable-header-row-th-container-text-large">
                 {flexRender(
                   header.column.columnDef.header,
                   header.getContext()
                 )}
               </div>
             )}
-            <div className="boslertable-header-row-th-container-text-small">
+            <div className="mtdtable-header-row-th-container-text-small">
               {header.isPlaceholder ? null : (
                 <>
                   {getDataTypeIcon((header.column.columnDef as any).type)}{" "}
@@ -834,7 +834,7 @@ export const DraggableColumnHeader: FC<{
               }`}
             ></div>
           )}
-          <div className="boslertable-header-row-th-container-btns">
+          <div className="mtdtable-header-row-th-container-btns">
             <Dropdown
               menu={{
                 items:

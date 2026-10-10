@@ -1,10 +1,10 @@
 import { Form } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const RenameModal = ({
   renameServiceDetails,
@@ -30,7 +30,7 @@ const RenameModal = ({
         handleUpdate(renameServiceDetails.id, values.name);
       }}
     >
-      <BoslerModal
+      <MtdModal
         open={renameServiceDetails.modalView}
         onCancel={() =>
           setRenameServiceDetails({ ...renameServiceDetails, modalView: false })
@@ -38,20 +38,20 @@ const RenameModal = ({
         headingIcon={<EditIcon />}
         heading={"Rename"}
         footerButtonArea={
-          <BoslerButton intent="action" onClick={() => form.submit()}>
+          <MtdButton intent="action" onClick={() => form.submit()}>
             {getLanguageLabel("rename")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         Rename "{renameServiceDetails.name}"
         <Form.Item name="name">
-          <BoslerInput
+          <MtdInput
             autoselect
             placeholder={getLanguageLabel("newName")}
             defaultValue={renameServiceDetails.name}
           />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

@@ -1,4 +1,4 @@
-export const BoslerConfig: {
+export const MtdConfig: {
   [key: string]: any;
 } = {
   colorTheme: {

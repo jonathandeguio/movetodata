@@ -1,4 +1,4 @@
-export interface TBoslerIconProps {
+export interface TMtdIconProps {
   size?: number | string;
   color?: string;
   stroke?: string;

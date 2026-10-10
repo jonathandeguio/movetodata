@@ -1,7 +1,7 @@
 import { TDatasetMapping } from "Apps/Dataset/Dataset.contants";
 import { Divider } from "antd";
 import { getResourcePermissionAPI } from "common/common.api";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -45,7 +45,7 @@ const DatasetHistory = ({ datasetId, branch, datasetMapping }: TProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.panel}>
-        <BoslerHeader
+        <MtdHeader
           heading={getLanguageLabel("historyAndVersions")}
           description={getLanguageLabel("recentEditsAndVersions")}
           actionComponent={

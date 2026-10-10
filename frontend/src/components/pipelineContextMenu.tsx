@@ -1,17 +1,17 @@
 import axios from "axios";
-import { PublishIcon } from "../assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "../assets/icons/boslerDataIcons";
+import { PublishIcon } from "../assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "../assets/icons/mtdDataIcons";
 
 import React from "react";
 import { updateContextMenu } from "../redux/actions/contextMenuActions";
 import Popup, { customContextMenu } from "./customContextMenu";
 
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import { CalendarIcon } from "assets/icons/boslerInterfaceIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import { CalendarIcon } from "assets/icons/mtdInterfaceIcons";
 import { getLanguageLabel, openNotification } from "utils/utilities";
-import { BuildIcon } from "../assets/icons/boslerActionIcons";
-import { GraphIcon } from "../assets/icons/boslerChartIcons";
-import { DocsIcon, FolderIcon } from "../assets/icons/boslerFileIcons";
+import { BuildIcon } from "../assets/icons/mtdActionIcons";
+import { GraphIcon } from "../assets/icons/mtdChartIcons";
+import { DocsIcon, FolderIcon } from "../assets/icons/mtdFileIcons";
 import { DATASET } from "./Builds/Builds.constants";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;

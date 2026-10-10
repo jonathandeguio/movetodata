@@ -1,9 +1,9 @@
 import { Tooltip } from "antd";
-import { AddIcon, CrossIcon, SaveIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import { AddIcon, CrossIcon, SaveIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NULL_UUID } from "utils/Common.constants";
@@ -90,11 +90,11 @@ const NewVersionModal = ({ history, pageType, resourceId }: TProps) => {
     }
   };
 
-  if (!resourcePermission) return <BoslerLoader size="tiny" />;
+  if (!resourcePermission) return <MtdLoader size="tiny" />;
 
   return (
     <>
-      <BoslerButton
+      <MtdButton
         icon={<AddIcon />}
         size="small"
         borderless
@@ -103,9 +103,9 @@ const NewVersionModal = ({ history, pageType, resourceId }: TProps) => {
         textTransform="capitalize"
       >
         {getLanguageLabel("version")}
-      </BoslerButton>
+      </MtdButton>
       <Tooltip title={getLanguageLabel("close")}>
-        <BoslerButton
+        <MtdButton
           icon={<CrossIcon />}
           onClick={handleCloseVersionArea}
           size="small"
@@ -115,7 +115,7 @@ const NewVersionModal = ({ history, pageType, resourceId }: TProps) => {
         />
       </Tooltip>
 
-      <BoslerModal
+      <MtdModal
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -123,23 +123,23 @@ const NewVersionModal = ({ history, pageType, resourceId }: TProps) => {
         heading="Save a version"
         footerButtonArea={
           <>
-            <BoslerButton onClick={handleCancel} textTransform="capitalize">
+            <MtdButton onClick={handleCancel} textTransform="capitalize">
               {getLanguageLabel("cancel")}
-            </BoslerButton>
-            <BoslerButton onClick={handleOk} textTransform="capitalize">
+            </MtdButton>
+            <MtdButton onClick={handleOk} textTransform="capitalize">
               {getLanguageLabel("save")}
-            </BoslerButton>
+            </MtdButton>
           </>
         }
       >
-        <BoslerInput
+        <MtdInput
           autoselect
           value={versionName}
           onChange={(e) => {
             setVersionName(e.target.value);
           }}
         />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

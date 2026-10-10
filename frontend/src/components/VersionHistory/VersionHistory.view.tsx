@@ -1,6 +1,6 @@
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
-import BoslerLoader from "components/boslerLoader";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -41,13 +41,13 @@ const VersionHistory = ({ resourceId, pageType }: TProps) => {
   }, [newVersion]);
 
   if (isLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.panel}>
-        <BoslerHeader
+        <MtdHeader
           heading={getLanguageLabel("historyAndVersions")}
           description={getLanguageLabel("recentEditsAndVersions")}
           actionComponent={
@@ -59,7 +59,7 @@ const VersionHistory = ({ resourceId, pageType }: TProps) => {
           }
         />
         <div className={styles.switch}>
-          <BoslerSwitch
+          <MtdSwitch
             items={[
               {
                 label: getLanguageLabel("allHistory"),

@@ -1,8 +1,8 @@
 import { IAccessRequest } from "Apps/AccessManager/AccessManager";
 import { Flex, Typography } from "antd";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import Comments from "components/Comments/CommentsV2";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router";
@@ -24,7 +24,7 @@ export const AccessRequest = () => {
       getAccessRequestDetailsAPI(id).then(({ data }) => setAccessRequest(data));
   }, [id]);
 
-  if (!isDefined(id) || !isDefined(accessRequest)) return <BoslerLoader />;
+  if (!isDefined(id) || !isDefined(accessRequest)) return <MtdLoader />;
 
   return (
     <div className={styles.content}>

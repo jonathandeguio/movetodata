@@ -19,7 +19,7 @@ import {
 } from "../../../redux/actions/keplerActions";
 import { createNewChart, getChartData } from "./charts.api";
 
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { Files } from "Apps/Dataset/bottomBar/Files";
 import Schema from "Apps/Dataset/bottomBar/Schema/Schema";
 import { KeplerConfig } from "Apps/Kepler/chart/charts.config";
@@ -30,10 +30,10 @@ import {
   NumberIcon,
   StringIcon,
   TreeIcon,
-} from "assets/icons/boslerDataIcons";
-import { DocsIcon } from "assets/icons/boslerFileIcons";
-import { CalendarIcon } from "assets/icons/boslerInterfaceIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdDataIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
+import { CalendarIcon } from "assets/icons/mtdInterfaceIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import {
   SortAlphaHorizontalIcon,
   SortAscHorizontalIcon,
@@ -41,9 +41,9 @@ import {
   SortNumericAscHrizontalIcon,
   SortNumericDescHrizontalIcon,
   SortReverseAlphaHorizontalIcon,
-} from "assets/icons/boslerSortIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+} from "assets/icons/mtdSortIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import DatasetSync from "components/bottomBar/sync/Sync.view";
 import { ErrorResponse } from "global";
 import { PRODUCT_ENUM } from "pages/Settings/PlatformConfig/License/License.utils";
@@ -89,13 +89,13 @@ export const getChartBottombarItems = (
   branch: string,
   isBuildDataset: boolean,
   transactionId: string
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     {
       id: "chartDatasetPanel",
       icon: <TableIcon />,
       label: getLanguageLabel("dataset"),
-      body: BoslerTable,
+      body: MtdTable,
       type: "TAB",
       props: {
         id,

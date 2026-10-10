@@ -5,7 +5,7 @@ import {
   LineChartIcon,
   ScatterIcon,
   SmallAreaChartIcon,
-} from "assets/icons/boslerChartIcons";
+} from "assets/icons/mtdChartIcons";
 import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -18,7 +18,7 @@ import {
   getAggregateOptions,
 } from "../charts.utils";
 import ColumnSelect from "./ColumnSelect";
-import { RemoveIcon } from "assets/icons/boslerActionIcons";
+import { RemoveIcon } from "assets/icons/mtdActionIcons";
 const { Text } = Typography;
 
 interface SeriesItemControllerProps {

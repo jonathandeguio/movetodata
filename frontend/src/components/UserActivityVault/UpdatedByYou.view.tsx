@@ -18,10 +18,10 @@ import {
 } from "Apps/explorer/explorer.api";
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
-import { StarIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { BoslerInfiniteScroll } from "components/BoslerInfiniteScroll/BoslerInfiniteScroll.view";
-import BoslerLoader from "components/boslerLoader";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import { StarIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { MtdInfiniteScroll } from "components/MtdInfiniteScroll/MtdInfiniteScroll.view";
+import MtdLoader from "components/mtdLoader";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import { UPDATED_BY_YOU_INFY_DIV_ID } from "./UserActivity.constants";
 
 const { Title, Text } = Typography;
@@ -96,7 +96,7 @@ const UpdatedByYou = () => {
         }}
         className="--p10"
       >
-        <BoslerInfiniteScroll
+        <MtdInfiniteScroll
           pageSize={pageSize}
           isLoading={isLoading}
           next={resurfaceUpdatedByYou}
@@ -110,7 +110,7 @@ const UpdatedByYou = () => {
           scrollableTarget={UPDATED_BY_YOU_INFY_DIV_ID}
         >
           {initLoading ? (
-            <BoslerLoader />
+            <MtdLoader />
           ) : (
             <List
               // pagination={{ position, align }}
@@ -170,7 +170,7 @@ const UpdatedByYou = () => {
               )}
             />
           )}
-        </BoslerInfiniteScroll>
+        </MtdInfiniteScroll>
       </div>
     </div>
   );

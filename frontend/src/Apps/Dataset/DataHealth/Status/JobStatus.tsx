@@ -1,7 +1,7 @@
 import { Form } from "antd";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
 import React from "react";
 import {
   DataHealthTypeEnum,
@@ -12,7 +12,7 @@ import {
 const JobStatus = ({ form, handleSave }: IDataHealthCheck) => {
   return (
     <div>
-      <BoslerHeader
+      <MtdHeader
         icon={<TableIcon />}
         heading={"Job Status"}
         description="Checks the status of most recent job of a dataset"
@@ -34,13 +34,13 @@ const JobStatus = ({ form, handleSave }: IDataHealthCheck) => {
           handleSave(dataHealthDTO);
         }}
       >
-        <div className="BoslerHeader1">{"Rule"}</div>
+        <div className="MtdHeader1">{"Rule"}</div>
         <Form.Item name="rule">
           {
             "This check passes when status of the most recent job of the dataset."
           }
         </Form.Item>
-        <div className="BoslerHeader1">{"Notes"}</div>
+        <div className="MtdHeader1">{"Notes"}</div>
         <Form.Item
           name="notes"
           rules={[
@@ -49,7 +49,7 @@ const JobStatus = ({ form, handleSave }: IDataHealthCheck) => {
             },
           ]}
         >
-          <BoslerInput />
+          <MtdInput />
         </Form.Item>
       </Form>
     </div>

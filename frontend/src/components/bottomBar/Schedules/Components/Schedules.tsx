@@ -1,13 +1,13 @@
 import { Col, Row, Table, Typography } from "antd";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ScheduledRunIcon } from "../../../../assets/icons/boslerInterfaceIcons";
+import { ScheduledRunIcon } from "../../../../assets/icons/mtdInterfaceIcons";
 
-import BoslerLoader from "../../../boslerLoader";
+import MtdLoader from "../../../mtdLoader";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { FilterPanel } from "components/BoslerComponents/FilterPanel/FilterPanel.view";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { FilterPanel } from "components/MtdComponents/FilterPanel/FilterPanel.view";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import { fetchResourcesListAPI } from "components/Builds/Builds.api";
 import {
   JobStatusEnum,
@@ -186,7 +186,7 @@ const Schedules = () => {
         </Col>
         <Row justify={"center"}>
           <Col>
-            <BoslerButton
+            <MtdButton
               onClick={() =>
                 setFilters((filters: any) => {
                   return {
@@ -200,10 +200,10 @@ const Schedules = () => {
               }
             >
               {getLanguageLabel("all")}
-            </BoslerButton>
+            </MtdButton>
           </Col>
           <Col>
-            <BoslerButton
+            <MtdButton
               onClick={() => {
                 setFilters((filters: any) => {
                   return {
@@ -221,10 +221,10 @@ const Schedules = () => {
               }
             >
               {getLanguageLabel("schedule")}
-            </BoslerButton>
+            </MtdButton>
           </Col>
           <Col>
-            <BoslerButton
+            <MtdButton
               onClick={() => {
                 setFilters((filters: any) => {
                   return {
@@ -242,7 +242,7 @@ const Schedules = () => {
               }
             >
               {ScheduleTriggerType.SOURCE}
-            </BoslerButton>
+            </MtdButton>
           </Col>
         </Row>
       </Row>
@@ -257,7 +257,7 @@ const Schedules = () => {
         </PanelResizeHandle>
         <Panel style={{ padding: "1rem" }}>
           {tableLoading ? (
-            <BoslerLoader />
+            <MtdLoader />
           ) : (
             <Table
               columns={
@@ -287,7 +287,7 @@ const Schedules = () => {
                 };
               }}
               className={styles.schedulesTable}
-              {...(isLoading ? { footer: () => <BoslerLoader /> } : {})}
+              {...(isLoading ? { footer: () => <MtdLoader /> } : {})}
             />
           )}
         </Panel>

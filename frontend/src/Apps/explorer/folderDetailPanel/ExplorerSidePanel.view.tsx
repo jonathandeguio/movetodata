@@ -8,20 +8,20 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import { CrossIcon, MultiselectIcon } from "assets/icons/boslerActionIcons";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { EyeOpenIcon, KeyIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { CrossIcon, MultiselectIcon } from "assets/icons/mtdActionIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { EyeOpenIcon, KeyIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import {
   fetchPermissionMappingAPI,
   fetchUserToResourcePermissionsAPI,
 } from "components/Permissions/Permissions.api";
 import { PermissionModel } from "components/Permissions/PermissionsModal";
-import { BoslerTag } from "components/Tag/Tag";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import { MtdTag } from "components/Tag/Tag";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import { User } from "global";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { useToggleState } from "hooks/useToggleState";
@@ -165,7 +165,7 @@ export const ExplorerSidePanel: React.FC<Props> = ({
           )}
         </Col>
         <Col>
-          <BoslerButton
+          <MtdButton
             onClick={() =>
               setIsSidePanelOpen((state: boolean) => {
                 updateUserDataAPI({
@@ -229,7 +229,7 @@ export const ExplorerSidePanel: React.FC<Props> = ({
 
             <Row justify={"space-evenly"}>
               <Col>
-                <BoslerButton
+                <MtdButton
                   intent={userWithAcccess ? "primary" : "none"}
                   disabled={!userWithAcccess}
                   style={{ borderRadius: "1rem" }}
@@ -237,7 +237,7 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                   icon={<KeyIcon />}
                 >
                   {getLanguageLabel("manageAccess")}
-                </BoslerButton>
+                </MtdButton>
               </Col>
             </Row>
             {isPermissionsModalOpen && (
@@ -251,7 +251,7 @@ export const ExplorerSidePanel: React.FC<Props> = ({
             <br />
             <Divider style={{ margin: "1rem 0" }} />
 
-            <BoslerSwitch
+            <MtdSwitch
               items={[
                 {
                   label: getLanguageLabel("info"),
@@ -269,7 +269,7 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                                 "clickHereToEnterDesciption"
                               )}
                             >
-                              <BoslerInput
+                              <MtdInput
                                 dynamicWidth
                                 editText
                                 className="editText"
@@ -387,9 +387,9 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                         </Row>
                         <Row>
                           <Col>
-                            <BoslerUserPopover record={createdBy}>
+                            <MtdUserPopover record={createdBy}>
                               {createdBy?.name}{" "}
-                            </BoslerUserPopover>
+                            </MtdUserPopover>
                             <Text type="secondary">
                               {timeConverter(resource?.createdAt)}
                             </Text>
@@ -402,9 +402,9 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                         </Row>
                         <Row>
                           <Col>
-                            <BoslerUserPopover record={updatedBy}>
+                            <MtdUserPopover record={updatedBy}>
                               {updatedBy?.name}{" "}
-                            </BoslerUserPopover>{" "}
+                            </MtdUserPopover>{" "}
                             <Text type="secondary">
                               {" "}
                               {resource?.updatedAt
@@ -433,9 +433,9 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                               </Col>
                               <Col>
                                 <Tooltip title="An owner has all the rights on the resource and it's security.">
-                                  <BoslerTag color="#e74c3c">
+                                  <MtdTag color="#e74c3c">
                                     {getLanguageLabel("owner")}
-                                  </BoslerTag>
+                                  </MtdTag>
                                 </Tooltip>
                               </Col>
                             </>
@@ -450,9 +450,9 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                               </Col>
                               <Col>
                                 <Tooltip title="An editor can edit resources.">
-                                  <BoslerTag color={"#3498db"}>
+                                  <MtdTag color={"#3498db"}>
                                     {getLanguageLabel("editor")}
-                                  </BoslerTag>
+                                  </MtdTag>
                                 </Tooltip>
                               </Col>
                             </>
@@ -468,9 +468,9 @@ export const ExplorerSidePanel: React.FC<Props> = ({
                                 </Col>
                                 <Col>
                                   <Tooltip title="An viewer can only view resources and can not edit or change resource security.">
-                                    <BoslerTag color="#27ae60">
+                                    <MtdTag color="#27ae60">
                                       {getLanguageLabel("viewer")}
-                                    </BoslerTag>
+                                    </MtdTag>
                                   </Tooltip>
                                 </Col>
                               </>

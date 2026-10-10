@@ -1,10 +1,10 @@
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
 import { Alert, Checkbox, Divider, Form, Select, Tag } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { EyeOpenIcon } from "assets/icons/boslerInterfaceIcons";
+import { EyeOpenIcon } from "assets/icons/mtdInterfaceIcons";
 import LogoImg from "assets/images/logoSmall.png";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import {
   JobStatusEnum,
   ScheduleTriggerType,
@@ -216,24 +216,24 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
           <div className="kepler-container-plane-subscribe-modal-container-top-left">
             <div className="kepler-container-plane-subscribe-modal-container-top-left-content">
               <div className="kepler-container-plane-subscribe-modal-container-top-left-content-form">
-                <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+                <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
                   {getLanguageLabel("general")}
                 </div>
                 {form.getFieldValue("id") && (
                   <Form.Item
                     name="id"
-                    label={<div className="boslerFormLabel">ID</div>}
+                    label={<div className="mtdFormLabel">ID</div>}
                     labelCol={labelCol}
                     wrapperCol={wrapperCol}
                     colon={false}
                   >
-                    <BoslerInput disabled />
+                    <MtdInput disabled />
                   </Form.Item>
                 )}
                 <Form.Item
                   name="name"
                   label={
-                    <div className="boslerFormLabel">
+                    <div className="mtdFormLabel">
                       {getLanguageLabel("name")}
                     </div>
                   }
@@ -244,12 +244,12 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                     { required: true, message: "This field is required" },
                   ]}
                 >
-                  <BoslerInput bordered autoselect />
+                  <MtdInput bordered autoselect />
                 </Form.Item>
                 <Form.Item
                   name="subscribers"
                   label={
-                    <div className="boslerFormLabel">
+                    <div className="mtdFormLabel">
                       {getLanguageLabel("subscribers")}
                     </div>
                   }
@@ -283,7 +283,7 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                 <Form.Item
                   name="subject"
                   label={
-                    <div className="boslerFormLabel">
+                    <div className="mtdFormLabel">
                       {getLanguageLabel("subject")}
                     </div>
                   }
@@ -294,12 +294,12 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                     { required: true, message: "This field is required" },
                   ]}
                 >
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
                 <Form.Item
                   name="body"
                   label={
-                    <div className="boslerFormLabel">
+                    <div className="mtdFormLabel">
                       {getLanguageLabel("body")}
                     </div>
                   }
@@ -316,13 +316,13 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                     }}
                   />
                 </Form.Item>
-                <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+                <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
                   {getLanguageLabel("dashboard")}
                 </div>
                 <Form.Item
                   name="dashboardTab"
                   label={
-                    <div className="boslerFormLabel">
+                    <div className="mtdFormLabel">
                       {getLanguageLabel("tab")}
                     </div>
                   }
@@ -343,7 +343,7 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                     options={dashboardTabs}
                   />
                 </Form.Item>
-                <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+                <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
                   {getLanguageLabel("schedule")}
                 </div>
                 <Form.Item name="cronExpression" colon={false}>
@@ -355,7 +355,7 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                     }}
                   />
                 </Form.Item>
-                <div className="BoslerHeader1" style={{ marginBottom: "10px" }}>
+                <div className="MtdHeader1" style={{ marginBottom: "10px" }}>
                   integrations
                 </div>
                 <Form.Item name="previewImageCheckBox" valuePropName="checked">
@@ -370,11 +370,11 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
             </div>
           </div>
           <div className="kepler-container-plane-subscribe-modal-container-top-right">
-            <div className="BoslerNormalHeader text-and-icon-center">
+            <div className="MtdNormalHeader text-and-icon-center">
               <EyeOpenIcon />
               {getLanguageLabel("preview")}
             </div>
-            <span className="BoslerSpan" style={{ marginBottom: "1rem" }}>
+            <span className="MtdSpan" style={{ marginBottom: "1rem" }}>
               {}
             </span>
             <div className="kepler-container-plane-subscribe-modal-container-top-right-preview">
@@ -395,20 +395,20 @@ const DashboardSubscribeMenuPopover = ({ initialData }: TProps) => {
                   {emailBody}
                 </div>
 
-                <BoslerButton intent="success">
+                <MtdButton intent="success">
                   {getLanguageLabel("dashboard")}
-                </BoslerButton>
+                </MtdButton>
               </div>
             </div>
           </div>
         </div>
         <Divider />
         <Form.Item style={{ marginBottom: 0 }}>
-          <BoslerButton htmlType="submit" intent="action" textTransform="none">
+          <MtdButton htmlType="submit" intent="action" textTransform="none">
             {initialData && initialData.dashboardTab
               ? getLanguageLabel("update")
               : getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         </Form.Item>
       </Form>
     </div>

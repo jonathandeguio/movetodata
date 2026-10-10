@@ -1,10 +1,10 @@
 import { DatasetColumn } from "Apps/Kepler/kepler";
 import { Collapse, Form, Select, Typography } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -127,7 +127,7 @@ export const FilterComponent = ({
   }, [column, operator, filterValue]);
 
   if (!datasetMapping) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
@@ -220,7 +220,7 @@ export const FilterComponent = ({
                         }}
                       >
                         <Form.Item name={[field.name, "filterValue"]}>
-                          <BoslerDatePicker
+                          <MtdDatePicker
                             loading={loadingFilterValues}
                             disabledDates={filterValuesOptions}
                           />
@@ -247,7 +247,7 @@ export const FilterComponent = ({
                           ]}
                         >
                           {operator === "like" ? (
-                            <BoslerInput
+                            <MtdInput
                               debounceInterval={1000}
                               placeholder="Enter filter values"
                             />

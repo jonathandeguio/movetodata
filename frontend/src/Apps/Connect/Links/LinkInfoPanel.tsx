@@ -4,12 +4,12 @@ import {
   CodeCellIcon,
   CopyIcon,
   EditIcon,
-} from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { ScheduleTriggerType } from "components/bottomBar/Schedules/SchedulesModal.constants";
 import { getExpressionString } from "components/common/CronJob/CronJob.services";
 import React, { useState } from "react";
@@ -63,13 +63,13 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
             </Text>
           </Col>
           <Col>
-            <BoslerButton
+            <MtdButton
               icon={<EditIcon />}
               intent="primary"
               onClick={() => setIsUpdateLinkModalOpen(true)}
             >
               {getLanguageLabel("edit")}
-            </BoslerButton>
+            </MtdButton>
           </Col>
         </Row>
         <Row
@@ -110,7 +110,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
             <Text>{getLanguageLabel("parentFolder")}</Text>
           </Col>
           <Col span={16}>
-            <BoslerButton
+            <MtdButton
               intent="none"
               icon={<FolderIcon />}
               onClick={() => {
@@ -119,7 +119,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
               minimal
             >
               {parent.name}
-            </BoslerButton>
+            </MtdButton>
           </Col>
         </Row>
         {!link.dataLiveLoad && (
@@ -141,7 +141,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
                   </Col>
                   <Col span={16}>
                     <DatasetButtonPopover dataset={dataset}>
-                      <BoslerButton
+                      <MtdButton
                         onClick={() =>
                           navigator(dataset.id, { branch: link.branch })
                         }
@@ -150,7 +150,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
                         minimal
                       >
                         {dataset.name}
-                      </BoslerButton>
+                      </MtdButton>
                     </DatasetButtonPopover>
                   </Col>
                 </Row>
@@ -197,20 +197,20 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
                 </Col>
                 <Col span={16}>
                   <SourceButtonPopover source={source}>
-                    <BoslerButton
+                    <MtdButton
                       onClick={() => navigator(source.id)}
                       icon={getSourceIcon(source.type, source.dbmsType)}
                       minimal
                     >
                       {source.name}
-                    </BoslerButton>
+                    </MtdButton>
                   </SourceButtonPopover>
                 </Col>
               </Row>
               {!link.dataLiveLoad && (
                 <>
                   <div className="customizer-subHeader">
-                    <BoslerCollapse
+                    <MtdCollapse
                       key="additionSettings"
                       collapsible={"HEADER"}
                       header={
@@ -286,7 +286,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
                                 <Text>{getLanguageLabel("schedules")}</Text>
                               </Col>
                               <Col span={16}>
-                                <BoslerInput
+                                <MtdInput
                                   value={link.cronExpression}
                                   readOnly
                                   suffix={
@@ -324,7 +324,7 @@ const LinkInfoPanel = ({ dataset, source, getLink, link }: IProps) => {
                           </>
                         )}
                       </>
-                    </BoslerCollapse>
+                    </MtdCollapse>
                   </div>
                 </>
               )}

@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { ParticleApp } from "utils/ParticleApp";
 import { getLanguageLabel, isIpPlatform } from "utils/utilities";
 import { BASE_URL } from "../../Authentication/constants";
-import { ArrowRightIcon } from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { ArrowRightIcon } from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
 import {
   setTokenInvalid,
   setTokenValid,
@@ -114,7 +114,7 @@ const LoginError = () => {
             <h3>{getLanguageLabel("sessionExpired")}</h3>
           </div>
 
-          <BoslerButton
+          <MtdButton
             key="submit"
             onClick={() => {
               window.open(
@@ -128,7 +128,7 @@ const LoginError = () => {
             intent="action"
           >
             {getLanguageLabel("login")}
-          </BoslerButton>
+          </MtdButton>
         </div>
       </div>
     </>

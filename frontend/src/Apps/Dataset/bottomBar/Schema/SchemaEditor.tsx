@@ -1,5 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -35,7 +35,7 @@ const SchemaEditor = ({
   }
 
   if (!datasetMapping || loading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   if (tabType == "schema") {

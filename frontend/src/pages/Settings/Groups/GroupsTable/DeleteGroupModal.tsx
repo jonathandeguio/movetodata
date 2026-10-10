@@ -1,6 +1,6 @@
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getAllGroups } from "../../../../redux/actions/authActions";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -17,13 +17,13 @@ interface IProps {
 export const DeleteGroupModal = ({ id, name, isOpen, closeModal }: IProps) => {
   const dispatch = useDispatch<ThunkAppDispatch>();
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<TrashIcon color="var(--DANGEROUS_COLOR)" />}
       heading={getLanguageLabel("areYouSureYouWantToDeleteThis?")}
       open={isOpen}
       onCancel={closeModal}
       footerButtonArea={
-        <BoslerButton
+        <MtdButton
           icon={<TrashIcon />}
           intent="dangerous"
           onClick={() =>
@@ -38,10 +38,10 @@ export const DeleteGroupModal = ({ id, name, isOpen, closeModal }: IProps) => {
           }
         >
           {getLanguageLabel("delete")}
-        </BoslerButton>
+        </MtdButton>
       }
     >
       {name} Group
-    </BoslerModal>
+    </MtdModal>
   );
 };

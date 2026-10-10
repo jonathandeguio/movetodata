@@ -6,7 +6,7 @@ import {
   Space,
   Typography,
 } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { getLanguageLabel, isDefined } from "utils/utilities";
 import { KeplerConfig } from "../charts.config";
@@ -122,7 +122,7 @@ export const FontCustomizer: React.FC<IFontCustomizer> = ({
               }
               style={{ width: "100%" }}
             >
-              <BoslerInput
+              <MtdInput
                 maxLength={5}
                 showCount={{
                   formatter: (args) => <>{50 - args.value.length}</>,
@@ -138,7 +138,7 @@ export const FontCustomizer: React.FC<IFontCustomizer> = ({
               }
               style={{ width: "100%" }}
             >
-              <BoslerInput
+              <MtdInput
                 maxLength={5}
                 showCount={{
                   formatter: (args) => <>{50 - args.value.length}</>,

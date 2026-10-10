@@ -5,10 +5,10 @@ import {
   MonacoLanguageClient,
 } from "@codingame/monaco-languageclient";
 import { Monaco } from "@monaco-editor/react";
-import { AutoModeIcon } from "assets/icons/boslerActionIcons";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import { ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+import { AutoModeIcon } from "assets/icons/mtdActionIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import { ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
 import { PYTHON, SQL } from "components/Builds/Builds.constants";
 import React, { MutableRefObject } from "react";
@@ -30,7 +30,7 @@ export const getBottombarItems = (
   buildID: any,
   changeBranch: any,
   activeBranch: string
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     {
       id: "previewPanelEditor",

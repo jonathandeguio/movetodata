@@ -1,5 +1,5 @@
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect } from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { VIEWER_MODE } from "../../../../redux/constants/resourcePermissionConstants";
@@ -27,7 +27,7 @@ const KeplerSaveBtn = ({
   }, [showDialog]);
 
   return (
-    <BoslerButton
+    <MtdButton
       intent="action"
       icon={<EditIcon />}
       menuItems={items}
@@ -39,7 +39,7 @@ const KeplerSaveBtn = ({
       }}
     >
       {getLanguageLabel("editing")}
-    </BoslerButton>
+    </MtdButton>
   );
 };
 

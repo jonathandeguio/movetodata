@@ -1,5 +1,5 @@
 import { Col, Dropdown, Row, Table, Tooltip, Typography } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import DeleteModal from "components/Modals/DeleteModal";
 
 import React, { useEffect, useState } from "react";
@@ -15,11 +15,11 @@ import {
   LinkIcon,
   MoreMenuIcon,
   SearchIcon,
-} from "../../../assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "../../../assets/icons/boslerDataIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
-import { TableIcon } from "../../../assets/icons/boslerTableIcons";
+} from "../../../assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "../../../assets/icons/mtdDataIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
+import { TableIcon } from "../../../assets/icons/mtdTableIcons";
 import GlobalSearch from "../../../helpers/GlobalSearch";
 import { deleteLink, listLinks } from "../../../redux/actions/linkActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
@@ -332,7 +332,7 @@ const LinkTable2 = ({ tableList, loading }: any) => {
     <>
       {!loading && (
         <>
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("searchLinks")}
             allowClear
             onChange={(e) => {

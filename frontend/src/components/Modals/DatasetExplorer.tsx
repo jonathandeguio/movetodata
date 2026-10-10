@@ -9,16 +9,16 @@ import {
 } from "../../redux/actions/projectActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { ErrorResponse } from "global";
-import { ProjectIcon } from "../../assets/icons/boslerDataIcons";
-import { FolderIcon } from "../../assets/icons/boslerFileIcons";
+import { ProjectIcon } from "../../assets/icons/mtdDataIcons";
+import { FolderIcon } from "../../assets/icons/mtdFileIcons";
 import {
   ArrowLeftIcon,
   TickIcon,
-} from "../../assets/icons/boslerNavigationIcon";
-import { TableIcon } from "../../assets/icons/boslerTableIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+} from "../../assets/icons/mtdNavigationIcon";
+import { TableIcon } from "../../assets/icons/mtdTableIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const DatasetExplorer = (props: $TSFixMe) => {
   const dispatch = useDispatch<ThunkAppDispatch>();
@@ -194,7 +194,7 @@ const DatasetExplorer = (props: $TSFixMe) => {
         onOk={() => setCreateView(false)}
         onCancel={() => setCreateView(false)}
         footer={[
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             intent="action"
             key="submit"
@@ -204,7 +204,7 @@ const DatasetExplorer = (props: $TSFixMe) => {
           >
             {" "}
             {getLanguageLabel("create")}{" "}
-          </BoslerButton>,
+          </MtdButton>,
         ]}
         styles={{
           mask: {
@@ -212,13 +212,13 @@ const DatasetExplorer = (props: $TSFixMe) => {
           },
         }}
       >
-        <BoslerInput
+        <MtdInput
           value={datasetName}
           // @ts-expect-error TS(2345): Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
           onChange={(e) => setDatasetName(e.target.value)}
           placeholder={getLanguageLabel("datasetName")}
         />
-        <BoslerInput
+        <MtdInput
           value={datasetDesc}
           // @ts-expect-error TS(2345): Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
           onChange={(e) => setDatasetDesc(e.target.value)}
@@ -226,21 +226,21 @@ const DatasetExplorer = (props: $TSFixMe) => {
         />
       </Modal>
 
-      <BoslerButton
+      <MtdButton
         icon={<ArrowLeftIcon />}
         size="small"
         onClick={handleHistory}
       >
         {getLanguageLabel("back")}
-      </BoslerButton>
-      <BoslerButton
+      </MtdButton>
+      <MtdButton
         intent="action"
         icon={<FolderIcon />}
         size="small"
         onClick={selectParent}
       >
         {getLanguageLabel("select")}
-      </BoslerButton>
+      </MtdButton>
     </>
   );
 };

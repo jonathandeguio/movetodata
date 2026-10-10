@@ -1,16 +1,16 @@
 import { IProject } from "Apps/explorer/explorer";
 import { Col, List, Row, Tooltip } from "antd";
-import { RefreshIcon } from "assets/icons/boslerActionIcons";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
+import { RefreshIcon } from "assets/icons/mtdActionIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
 import {
   AddUserIcon,
   CalendarIcon,
   KeyIcon,
   UserIcon,
-} from "assets/icons/boslerInterfaceIcons";
-import BoslerAvatarGroup from "components/BoslerComponents/BoslerAvatar/BoslerAvatarGroup";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+} from "assets/icons/mtdInterfaceIcons";
+import MtdAvatarGroup from "components/MtdComponents/MtdAvatar/MtdAvatarGroup";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import React from "react";
 import {
   getLanguageLabel,
@@ -54,7 +54,7 @@ const ProjectPageItem = ({
               placement="left"
               title={getLanguageLabel("addPeopleToFolder")}
             >
-              <BoslerButton
+              <MtdButton
                 outlined
                 size={"small"}
                 intent="none"
@@ -67,10 +67,10 @@ const ProjectPageItem = ({
                 }}
               >
                 {getLanguageLabel("manageAccess")}
-              </BoslerButton>
+              </MtdButton>
             </Tooltip>
           ) : (
-            <BoslerButton
+            <MtdButton
               outlined
               size={"small"}
               icon={<KeyIcon />}
@@ -82,13 +82,13 @@ const ProjectPageItem = ({
               }}
             >
               {getLanguageLabel("requestAccess")}
-            </BoslerButton>
+            </MtdButton>
           )}
 
           <Row gutter={[8, 8]} align={"middle"}>
             <Col>{getLanguageLabel("team")} :</Col>
             <Col>
-              <BoslerAvatarGroup userIds={project.team} />
+              <MtdAvatarGroup userIds={project.team} />
             </Col>
           </Row>
         </div>
@@ -98,7 +98,7 @@ const ProjectPageItem = ({
         <Row justify={"start"}>
           <UserIcon />
           <div className={styles.createdBy}>
-            <BoslerUserPopover id={project.createdBy} />
+            <MtdUserPopover id={project.createdBy} />
           </div>
           <CalendarIcon />
           <Tooltip title={timeConverter(project.createdAt)}>
@@ -109,7 +109,7 @@ const ProjectPageItem = ({
           <Row justify={"start"}>
             <RefreshIcon />
             <div className={styles.createdBy}>
-              <BoslerUserPopover id={project.updatedBy} />
+              <MtdUserPopover id={project.updatedBy} />
             </div>
             <CalendarIcon />
             <Tooltip title={timeConverter(project.updatedAt)}>

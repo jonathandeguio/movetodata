@@ -1,12 +1,12 @@
 import { Dropdown, Popover } from "antd";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import {
   deleteSchedulesByResourceIdAPI,
   putScheduleAPI,
 } from "components/bottomBar/Schedules/api";
 import Comments from "components/Comments/Comments.view";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import DeleteModal from "components/Modals/DeleteModal";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
 
@@ -25,11 +25,11 @@ import {
 import {
   MoreMenuIcon,
   SaveIcon,
-} from "../../../assets/icons/boslerActionIcons";
-import { GraphIcon } from "../../../assets/icons/boslerChartIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
-import { PopOutIcon } from "../../../assets/icons/boslerNavigationIcon";
+} from "../../../assets/icons/mtdActionIcons";
+import { GraphIcon } from "../../../assets/icons/mtdChartIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
+import { PopOutIcon } from "../../../assets/icons/mtdNavigationIcon";
 import SourcesTargets from "../../../helpers/SourcesTargets";
 import { listAgents } from "../../../redux/actions/agentActions";
 import { deleteLink } from "../../../redux/actions/linkActions";
@@ -182,7 +182,7 @@ const LinkHeader = ({
     <div className="connect-container-header">
       <CustomBreadCrumb />
       <div className="connect-container-header-btns">
-        <BoslerInfoPopover id={linkDetails.id} type={linkDetails.type} />
+        <MtdInfoPopover id={linkDetails.id} type={linkDetails.type} />
         <Popover
           title={
             <Link to={`/portal/bezier/${linkDetails.sourceId}/master`}>
@@ -209,12 +209,12 @@ const LinkHeader = ({
           // trigger={"click"}
         >
           <Link to={`/portal/bezier/${linkDetails.sourceId}/master`}>
-            <BoslerButton
+            <MtdButton
               icon={<GraphIcon />}
               icononly={true}
               minimal
               trimicononlypadding
-            ></BoslerButton>
+            ></MtdButton>
           </Link>
         </Popover>
 
@@ -259,7 +259,7 @@ const LinkHeader = ({
             }
           >
             <>
-              <BoslerButton
+              <MtdButton
                 icon={<SaveIcon />}
                 onClick={handleUpdate}
                 intent={noChanges ? "none" : "action"}
@@ -267,7 +267,7 @@ const LinkHeader = ({
                 disabled={updateCodeLoading || noChanges}
               >
                 {getLanguageLabel("save")}
-              </BoslerButton>
+              </MtdButton>
             </>
           </Popover>
         )}

@@ -4,10 +4,10 @@ import "./branchInfo.scss";
 import { getDatasetBranchesAPI } from "Apps/Dataset/Dataset.api";
 import { Divider, Popover, Tag } from "antd";
 import Search from "antd/es/input/Search";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { getLanguageLabel, isDefined } from "utils/utilities";
-import { GitNewBranchIcon } from "../../assets/icons/boslerExternalIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import { GitNewBranchIcon } from "../../assets/icons/mtdExternalIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 
 interface IProps {
   datasetId: string;
@@ -62,7 +62,7 @@ const BranchInfo = ({
       }
       content={
         isLoading ? (
-          <BoslerLoader />
+          <MtdLoader />
         ) : (
           <>
             <>

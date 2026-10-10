@@ -3,16 +3,16 @@ import { ExperimentOutlined } from "@ant-design/icons";
 import {
   HistoricalRunsIcon,
   RefreshIcon,
-} from "assets/icons/boslerActionIcons";
-import { DownloadIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+} from "assets/icons/mtdActionIcons";
+import { DownloadIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import Filters from "components/Filters";
 import FilterConfirmationPopup, {
   TFilterAddOperator,
   TPopupResultObj,
 } from "components/Filters/FilterConfirmationPopup";
-import { BoslerTag } from "components/Tag/Tag";
+import { MtdTag } from "components/Tag/Tag";
 import { useOnlyOnce } from "hooks/useEffectOnlyOnce";
 import React, { useEffect, useMemo, useState } from "react";
 import { CSVLink } from "react-csv";
@@ -91,7 +91,7 @@ const ChartComponentContainer = () => {
       allDatasetMapping[chart?.datasetId]?.datasetMapping?.currentTransaction
     ).then((cols) => {
       cols.map((column: any) => {
-        // sync these with BoslerTable and DashboardGridFetcher
+        // sync these with MtdTable and DashboardGridFetcher
         const columnObj = {
           name: column.headerName,
           value: column.headerName,
@@ -174,7 +174,7 @@ const ChartComponentContainer = () => {
   if (!isDefined(queryMemo?.chartType))
     return <EmptyChart data="Sélectionnez un type de graphique" />;
   if (!isDefined(data))
-    return <BoslerLoader />;
+    return <MtdLoader />;
 
   return (
     <div className="kepler-container-plane-right">
@@ -195,7 +195,7 @@ const ChartComponentContainer = () => {
                 <div style={{ marginRight: "0.5rem" }} className="text-and-icon-center">
                   <Tooltip title="Analytics IA (anomalies, prévision, segments, résumé)" placement="bottom">
                     <div style={{ position: "relative", display: "inline-flex" }}>
-                      <BoslerButton
+                      <MtdButton
                         icon={<ExperimentOutlined />}
                         minimal
                         icononly
@@ -239,20 +239,20 @@ const ChartComponentContainer = () => {
                         );
                       }}
                     >
-                      <BoslerButton
+                      <MtdButton
                         icon={<DownloadIcon />}
                         intent="none"
                         size="small"
                         minimal
                         icononly
                         trimicononlypadding
-                      ></BoslerButton>
+                      ></MtdButton>
                     </CSVLink>
                   </div>
                 )}
                 {data.payload?.cachedData && (
                   <Tooltip title={getLanguageLabel("cachedDataMsg")}>
-                    <BoslerTag
+                    <MtdTag
                       onClick={() =>
                         fetchChartData(
                           false,
@@ -267,15 +267,15 @@ const ChartComponentContainer = () => {
                       icon={<RefreshIcon color={"#2D72D2"} size={8} />}
                     >
                       {getLanguageLabel("cached")}
-                    </BoslerTag>
+                    </MtdTag>
                   </Tooltip>
                 )}
                 {data.payload?.rows !== undefined && (
-                  <BoslerTag>
+                  <MtdTag>
                     {`${data.payload?.rows} ${getLanguageLabel("rows")}`}{" "}
-                  </BoslerTag>
+                  </MtdTag>
                 )}
-                <BoslerTag
+                <MtdTag
                   color={
                     data.loading === true ? "var(--movetodata-intent-danger)" : ""
                   }
@@ -290,7 +290,7 @@ const ChartComponentContainer = () => {
                     nudge={data.loading === true ? "start" : "stop"}
                     poke={queryMemo}
                   />
-                </BoslerTag>
+                </MtdTag>
               </div>
             </div>
           ),

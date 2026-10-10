@@ -1,4 +1,4 @@
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect, useState } from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { abortDatasetWritingTransactionAPI } from "../Builds.api";
@@ -52,13 +52,13 @@ const BuildTableDatasetWritingTransactionActive = ({
 
   return (
     <div>
-      <BoslerButton
+      <MtdButton
         intent="action"
         onClick={handleTransactionAborting}
         id={ABORT_TRANSACTION_BTN}
       >
         {getLanguageLabel("abortTransaction")}
-      </BoslerButton>
+      </MtdButton>
     </div>
   );
 };

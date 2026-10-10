@@ -1,9 +1,9 @@
 import { Badge, Popover, Tooltip } from "antd";
 import React from "react";
-import { ChatIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { ChatIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 
 import { getLanguageLabel } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import { CommentsContent } from "./Content";
 import { useCommentController } from "./Hooks/useCommentController";
 
@@ -44,7 +44,7 @@ const Comments = ({ id }: any) => {
             offset={[-5, 3]}
             size="small"
           >
-            <BoslerButton
+            <MtdButton
               icon={
                 <ChatIcon
                   size={20}

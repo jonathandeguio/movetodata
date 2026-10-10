@@ -8,7 +8,7 @@ import Loading from "../pages/Errors/Loading";
 import { logout } from "../redux/actions/userActions";
 import { refreshTokenStatus } from "../redux/actions/tokenActions";
 import { ThunkAppDispatch } from "../redux/types/store";
-import { BOSLER_TOKEN } from "./constants";
+import { MTD_TOKEN } from "./constants";
 
 const PrivateOutlet = () => {
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ const PrivateOutlet = () => {
 
   useEffect(() => {
     if (
-      localStorage.getItem(BOSLER_TOKEN) !== undefined &&
-      localStorage.getItem(BOSLER_TOKEN) !== null
+      localStorage.getItem(MTD_TOKEN) !== undefined &&
+      localStorage.getItem(MTD_TOKEN) !== null
     ) {
       if (!isTokenValid && !tokenStatusLoading) {
         navigate("/auth/relogin");

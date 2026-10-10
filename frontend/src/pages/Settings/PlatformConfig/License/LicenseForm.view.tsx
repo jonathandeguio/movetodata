@@ -1,7 +1,7 @@
 import { Col, Form, Input, Row } from "antd";
 
 import axios from "axios";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { ErrorResponse } from "global";
 import { decryptLicenseKeyAPI } from "pages/Settings/apis";
 import React, { useState } from "react";
@@ -68,7 +68,7 @@ export const LicenseForm = ({ isDisabledPage }: Props) => {
             label={"License Key"}
             wrapperCol={{ span: 24 }}
           >
-            {/* <BoslerInput
+            {/* <MtdInput
                     value={config.licenseKey}
                     placeholder="Enter Your License Key"
                     onChange={() => setActivateUpdateButton(true)}
@@ -86,13 +86,13 @@ export const LicenseForm = ({ isDisabledPage }: Props) => {
       <Row justify={"center"} align={"middle"}>
         <Col>
           <Item>
-            <BoslerButton
+            <MtdButton
               intent="primary"
               htmlType="submit"
               disabled={!activateUpdateButton}
             >
               {getLanguageLabel("update")}
-            </BoslerButton>
+            </MtdButton>
           </Item>
         </Col>
       </Row>

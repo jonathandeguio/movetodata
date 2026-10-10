@@ -1,10 +1,10 @@
 import { Col, MenuProps, Row } from "antd";
-import { SaveIcon } from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { EyeOpenIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { SaveIcon } from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { EyeOpenIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useDispatch, useSelector } from "react-redux";
@@ -130,7 +130,7 @@ const DashboardHeaderActionBtn = ({ id }: TProps) => {
     },
   ];
 
-  if (!resourcePermission) return <BoslerLoader size="tiny" />;
+  if (!resourcePermission) return <MtdLoader size="tiny" />;
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -195,7 +195,7 @@ const DashboardHeaderActionBtn = ({ id }: TProps) => {
     <>
       {resourcePermission.mode == EDIT_MODE ? (
         <>
-          <BoslerButton
+          <MtdButton
             icon={<SaveIcon />}
             intent="action"
             textTransform="capitalize"
@@ -206,8 +206,8 @@ const DashboardHeaderActionBtn = ({ id }: TProps) => {
             disabled={!isDashboardChanged}
           >
             {getLanguageLabel("save")}&nbsp; {getLanguageLabel("dashboard")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<EditIcon />}
             intent={isDashboardChanged ? "dangerous" : "action"}
             textTransform="capitalize"
@@ -222,10 +222,10 @@ const DashboardHeaderActionBtn = ({ id }: TProps) => {
             }}
           >
             {isDashboardChanged ? "discard" : getLanguageLabel("editing")}
-          </BoslerButton>
+          </MtdButton>
         </>
       ) : (
-        <BoslerButton
+        <MtdButton
           icon={<EyeOpenIcon />}
           disabled={resourcePermission.permission == VIEWER_PERMISSION}
           intent={"action"}
@@ -243,7 +243,7 @@ const DashboardHeaderActionBtn = ({ id }: TProps) => {
           }}
         >
           {getLanguageLabel("viewing")}
-        </BoslerButton>
+        </MtdButton>
       )}
     </>
   );

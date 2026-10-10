@@ -3,7 +3,7 @@ import React from "react";
 import { isDefined } from "utils/utilities";
 import sm from "./Tag.module.scss";
 
-interface BoslerTagProps {
+interface MtdTagProps {
   onClick?: any;
   icon?: JSX.Element;
   color?: string;
@@ -12,17 +12,17 @@ interface BoslerTagProps {
   onMouseLeave?: any;
 }
 
-export const BoslerTag = ({
+export const MtdTag = ({
   onClick,
   icon,
   color,
   children,
   onMouseEnter,
   onMouseLeave,
-}: BoslerTagProps) => {
+}: MtdTagProps) => {
   return (
     <Tag
-      className={sm.boslertag}
+      className={sm.mtdtag}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={() => (isDefined(onClick) ? onClick() : null)}

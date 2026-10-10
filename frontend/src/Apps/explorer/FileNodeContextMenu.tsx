@@ -10,36 +10,36 @@ import {
   BuildIcon,
   CrossIcon,
   LinkIcon,
-} from "assets/icons/boslerActionIcons";
-import { GraphIcon, GroupedColumnIcon } from "assets/icons/boslerChartIcons";
-import { DataAgentsIcon, DatabaseIcon } from "assets/icons/boslerDataIcons";
+} from "assets/icons/mtdActionIcons";
+import { GraphIcon, GroupedColumnIcon } from "assets/icons/mtdChartIcons";
+import { DataAgentsIcon, DatabaseIcon } from "assets/icons/mtdDataIcons";
 import {
   CodeCellIcon,
   CopyIcon,
   CutIcon,
   EditIcon,
   PasteIcon,
-} from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+} from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import {
   ChangeLogIcon,
   KeyIcon,
   UploadIcon,
-} from "assets/icons/boslerInterfaceIcons";
+} from "assets/icons/mtdInterfaceIcons";
 import {
   CardIcon,
   MonitorIcon,
   TrashIcon,
-} from "assets/icons/boslerMiscellaneousIcons";
-import { ArrowRightIcon, PopOutIcon } from "assets/icons/boslerNavigationIcon";
-import { SortAscIcon, SortDescIcon } from "assets/icons/boslerSortIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdMiscellaneousIcons";
+import { ArrowRightIcon, PopOutIcon } from "assets/icons/mtdNavigationIcon";
+import { SortAscIcon, SortDescIcon } from "assets/icons/mtdSortIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import { ContextMenu, MenuItem } from "common/components/ContextMenu";
 import { ContextMenuStore } from "common/components/ContextMenu/store";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import CreateNewChartModal from "components/Modals/CreateNewChartModal";
 import CreateNewDatasetModal from "components/Modals/CreateNewDatasetModal";
 import CreateNewFolderModal from "components/Modals/CreateNewFolderModal";
@@ -183,7 +183,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
 
   const footerButtons = (
     <>
-      <BoslerButton
+      <MtdButton
         intent="primary"
         onClick={() => {
           submitHandler();
@@ -191,7 +191,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
         textTransform="none"
       >
         {getLanguageLabel("update")}
-      </BoslerButton>
+      </MtdButton>
     </>
   );
 
@@ -333,7 +333,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
         if (notEmpty(id)) navigator(id);
       },
       extra: (
-        <BoslerButton
+        <MtdButton
           icon={<PopOutIcon />}
           minimal
           icononly
@@ -481,7 +481,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
                     },
                   ]}
                 >
-                  <BoslerInput autoselect />
+                  <MtdInput autoselect />
                 </Form.Item>
               </Form>
             ),
@@ -524,7 +524,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
                     },
                   ]}
                 >
-                  <BoslerInput autoselect />
+                  <MtdInput autoselect />
                 </Form.Item>
               </Form>
             ),
@@ -864,7 +864,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
       <div ref={contextMenuRef}>
         <ContextMenu items={contextMenuItems} {...store} />
       </div>
-      <BoslerModal destroyOnClose onCancel={cancelHandler} {...modalProps} />
+      <MtdModal destroyOnClose onCancel={cancelHandler} {...modalProps} />
       <CreateNewChartModal
         defaultParent={contextMenuId}
         isVisible={value == "chart"}
@@ -929,7 +929,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
         isVisible={value == "source"}
         setIsVisible={setValue}
       />
-      <BoslerModal
+      <MtdModal
         open={buildLogVisible}
         headingIcon={<BuildIcon />}
         heading={
@@ -938,13 +938,13 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
           </Row>
         }
         extraActionHeading={
-          <BoslerButton
+          <MtdButton
             icon={<CrossIcon />}
             icononly
             trimicononlypadding
             minimal
             onClick={() => setBuildLogVisible(false)}
-          ></BoslerButton>
+          ></MtdButton>
         }
         width={"80%"}
         onCancel={() => setBuildLogVisible(false)}
@@ -954,7 +954,7 @@ export const TreeNodeContextMenu: React.FC<TreeNodeContextMenuProps> = ({
           showHeader={false}
           page="DATASET"
         />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

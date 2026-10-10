@@ -1,5 +1,5 @@
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -12,7 +12,7 @@ export const ChartLabelCustomizer = () => {
   const dispatch = useDispatch();
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       key={`customize_name`}
       collapsible="HEADER"
       header={getLanguageLabel("labels")}
@@ -22,7 +22,7 @@ export const ChartLabelCustomizer = () => {
           query.chartType === "pieChart" ? "pieChart" : series.id;
         return (
           <>
-            <BoslerCollapse
+            <MtdCollapse
               key={`customize_${series.id}`}
               collapsible="HEADER"
               header={series.seriesName}
@@ -45,7 +45,7 @@ export const ChartLabelCustomizer = () => {
                         color={customize.colorScheme[seriesId][label]}
                         dim="0.9rem"
                       />
-                      <BoslerInput
+                      <MtdInput
                         defaultValue={label}
                         debounceInterval={1000}
                         onChange={(e) => {
@@ -63,10 +63,10 @@ export const ChartLabelCustomizer = () => {
                   )
                 )}
               </div>
-            </BoslerCollapse>
+            </MtdCollapse>
           </>
         );
       })}
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

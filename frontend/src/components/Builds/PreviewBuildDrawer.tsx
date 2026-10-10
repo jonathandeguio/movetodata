@@ -1,15 +1,15 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { Col, Row, Typography } from "antd";
 import { CommentState } from "assets/Illustrations/EmptyState";
 import {
   DuplicateIcon,
   HistoricalRunsIcon,
-} from "assets/icons/boslerActionIcons";
-import { ZoomToFitIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+} from "assets/icons/mtdActionIcons";
+import { ZoomToFitIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import NoData from "components/CommonUI/NoData";
-import { BoslerTag } from "components/Tag/Tag";
-import BoslerLoader from "components/boslerLoader";
+import { MtdTag } from "components/Tag/Tag";
+import MtdLoader from "components/mtdLoader";
 import React, { useState } from "react";
 import {
   IsUUID,
@@ -133,7 +133,7 @@ const PreviewBuildData = ({
               justify="end"
             >
               <Col>
-                <BoslerTag
+                <MtdTag
                   // color={loading ? "var(--movetodata-intent-danger)" : ""}
                   icon={
                     <HistoricalRunsIcon
@@ -143,7 +143,7 @@ const PreviewBuildData = ({
                   }
                 >
                   <TimeCounter nudge={loading ? "start" : "stop"} />
-                </BoslerTag>
+                </MtdTag>
               </Col>
             </Row>
             <Row
@@ -160,7 +160,7 @@ const PreviewBuildData = ({
               justify="space-between"
             >
               <Col>
-                <BoslerLoader
+                <MtdLoader
                   content={
                     <div
                       style={{
@@ -198,7 +198,7 @@ const PreviewBuildData = ({
           {error.status != "ABORTED" && (
             <>
               {IsUUID(error) && error.length == 36 ? (
-                <BoslerButton
+                <MtdButton
                   icon={<ZoomToFitIcon />}
                   onClick={() => {
                     getDetailedLogs();
@@ -207,7 +207,7 @@ const PreviewBuildData = ({
                   loading={detailedLogsLoading}
                 >
                   {getLanguageLabel("detailedLogs")}
-                </BoslerButton>
+                </MtdButton>
               ) : (
                 <>
                   <Row>
@@ -215,14 +215,14 @@ const PreviewBuildData = ({
                       <Text type="danger">Error in preview</Text>
                     </Col>
                     <Col>
-                      <BoslerButton
+                      <MtdButton
                         icon={<DuplicateIcon />}
                         minimal
                         icononly
                         onClick={() => {
                           copyToClipboard(error.debug);
                         }}
-                      ></BoslerButton>
+                      ></MtdButton>
                     </Col>
                   </Row>
 
@@ -258,7 +258,7 @@ const PreviewBuildData = ({
           )}
         </div>
       ) : data ? (
-        <BoslerTable
+        <MtdTable
           isTableFromBottomBar={true}
           offlineData={{ rows: data?.data ?? [], cols: new_columns }}
         />

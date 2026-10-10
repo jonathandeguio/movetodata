@@ -1,6 +1,6 @@
 import { Divider, InputNumber, Popover, Switch } from "antd";
-import { AutoModeIcon, StopIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AutoModeIcon, StopIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -83,13 +83,13 @@ const PreviewBtn = ({
         >
           <div>{getLanguageLabel("pleaseWait")}</div>
           <div>
-            <BoslerButton
+            <MtdButton
               icon={<StopIcon />}
               intent="dangerous"
               onClick={handleAbort}
             >
               {getLanguageLabel("abort")}
-            </BoslerButton>
+            </MtdButton>
           </div>
         </div>
       );
@@ -98,12 +98,12 @@ const PreviewBtn = ({
     } else {
       return (
         <div>
-          <div className="BoslerHeader1">
+          <div className="MtdHeader1">
             {getLanguageLabel("previewSpecs")}
           </div>
           <Divider style={{ margin: "0" }} />
           <div className="--flex-row-space-between">
-            <div className="BoslerSubHeader1">
+            <div className="MtdSubHeader1">
               {getLanguageLabel("completeDataset")}
             </div>
             <Switch
@@ -116,7 +116,7 @@ const PreviewBtn = ({
           </div>
           {!previewFullDataset ? (
             <div className="--flex-row-space-between --mt10">
-              <div className="BoslerSubHeader1">{getLanguageLabel("rows")}</div>
+              <div className="MtdSubHeader1">{getLanguageLabel("rows")}</div>
 
               <InputNumber
                 value={previewRowLimit}
@@ -171,7 +171,7 @@ const PreviewBtn = ({
 
   return ON_VALID_SCRIPT ? (
     <Popover title={getTitle()} placement="bottom">
-      <BoslerButton
+      <MtdButton
         onClick={() => {
           previewBuild(previewFullDataset ? null : previewRowLimit);
         }}
@@ -183,7 +183,7 @@ const PreviewBtn = ({
         <span className="icon-text">
           {capitalizeFirstLetter(getLanguageLabel("preview"))}
         </span>
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   ) : (
     <></>

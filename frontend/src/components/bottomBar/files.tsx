@@ -1,12 +1,12 @@
 import { Alert, Table } from "antd";
 
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import axios from "axios";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useEffect, useState } from "react";
 import { getLanguageLabel, isDefined, openNotification } from "utils/utilities";
-import { CrossIcon } from "../../assets/icons/boslerActionIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import { CrossIcon } from "../../assets/icons/mtdActionIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 interface TProps {
   id: string;
@@ -56,20 +56,20 @@ const FilesModal = ({ id, branch, transactionId, view }: TProps) => {
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<FolderIcon />}
         heading={getLanguageLabel("titles")}
         open={visible}
         onCancel={handleCancel}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<CrossIcon />}
             intent="none"
             key="back"
             onClick={handleCancel}
           >
             {getLanguageLabel("close")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <Alert
@@ -85,7 +85,7 @@ const FilesModal = ({ id, branch, transactionId, view }: TProps) => {
           pagination={false}
           bordered={true}
         />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

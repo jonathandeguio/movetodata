@@ -1,4 +1,4 @@
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect } from "react";
 import { getLanguageLabel, isDefined, ObjectKeys } from "utils/utilities";
 
@@ -13,15 +13,15 @@ import {
   RESOURCE_SORT_BY_TYPE,
   RESOURCE_SORT_DIRECTION,
 } from "Apps/ProjectsV2/utils/Projects.utils";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
 import {
   SortAlphaIcon,
   SortNumericAscHrizontalIcon,
   SortNumericDescHrizontalIcon,
   SortReverseAlphaIcon,
-} from "assets/icons/boslerSortIcons";
-import { FilterIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdSortIcons";
+import { FilterIcon } from "assets/icons/mtdTableIcons";
 import classNames from "classnames";
 import { useDebounceState } from "hooks/useDebounce";
 import styles from "./FilterMenu.module.scss";
@@ -261,7 +261,7 @@ const FilterMenu = ({ filters, updateFilters, resetFilters }: IProps) => {
 
         <Divider type="vertical" className={styles.divider} />
         <div className={styles.sortDirectionButton}>
-          <BoslerButton
+          <MtdButton
             minimal
             icononly
             intent="none"
@@ -291,14 +291,14 @@ const FilterMenu = ({ filters, updateFilters, resetFilters }: IProps) => {
             }}
           >
             {getLanguageLabel("changeSortDirection")}
-          </BoslerButton>
+          </MtdButton>
         </div>
         <Divider type="vertical" className={styles.divider} />
         <div
           className={classNames(styles.leftDivider, styles.resetFiltersButton)}
         >
           <Tooltip title={getLanguageLabel("resetFilters")}>
-            <BoslerButton
+            <MtdButton
               minimal
               intent="none"
               trimicononlypadding
@@ -309,7 +309,7 @@ const FilterMenu = ({ filters, updateFilters, resetFilters }: IProps) => {
               // icononly
             >
               {getLanguageLabel("reset")}
-            </BoslerButton>
+            </MtdButton>
           </Tooltip>
         </div>
       </div>

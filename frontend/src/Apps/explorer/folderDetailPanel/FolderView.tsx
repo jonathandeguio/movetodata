@@ -8,7 +8,7 @@ import { FileExplorerContextMenuHandlerType } from "../FileExplorer";
 import { ResourceType, ResourceTypeEnum } from "../explorer.utils";
 import { ExplorerSidePanel } from "./ExplorerSidePanel.view";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { FolderGrid } from "./FolderGrid";
 import FolderList from "./FolderList";
 import "./folderList.scss";
@@ -161,7 +161,7 @@ export const FolderView: React.FC<Props> = ({
             />
           )
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </Col>
       {isEditable && isSidePanelOpen && (

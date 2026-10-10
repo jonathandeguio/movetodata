@@ -13,21 +13,21 @@ import {
 } from "../redux/actions/projectActions";
 import Popup, { customContextMenu } from "./customContextMenu";
 
-import { CopyIcon, EditIcon } from "../assets/icons/boslerEditorIcons";
-import { FolderIcon } from "../assets/icons/boslerFileIcons";
+import { CopyIcon, EditIcon } from "../assets/icons/mtdEditorIcons";
+import { FolderIcon } from "../assets/icons/mtdFileIcons";
 
 import {
     ArrowRightIcon,
     PopOutIcon,
-} from "../assets/icons/boslerNavigationIcon";
+} from "../assets/icons/mtdNavigationIcon";
 
 import {
     getTrashBinItems,
     moveToTrash,
 } from "../redux/actions/trashBinActions";
 
-import { CardIcon, TrashIcon } from "../assets/icons/boslerMiscellaneousIcons";
-import BoslerInput from "./BoslerComponents/InputComponent/BoslerInput";
+import { CardIcon, TrashIcon } from "../assets/icons/mtdMiscellaneousIcons";
+import MtdInput from "./MtdComponents/InputComponent/MtdInput";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -75,7 +75,7 @@ const projectContextMenu = (
         },
       ]}
     >
-      <BoslerInput />
+      <MtdInput />
     </Form.Item>
   );
 
@@ -113,7 +113,7 @@ const projectContextMenu = (
         },
       ]}
     >
-      <BoslerInput />
+      <MtdInput />
     </Form.Item>
   );
 
@@ -248,7 +248,7 @@ const ProjectContextMenu = (state: {
         },
       ]}
     >
-      <BoslerInput />
+      <MtdInput />
     </Form.Item>
   );
 
@@ -287,7 +287,7 @@ const ProjectContextMenu = (state: {
         },
       ]}
     >
-      <BoslerInput />
+      <MtdInput />
     </Form.Item>
   );
 

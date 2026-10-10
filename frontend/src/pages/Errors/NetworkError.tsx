@@ -1,6 +1,6 @@
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
-import { RefreshIcon, WarningIcon } from "../../assets/icons/boslerActionIcons";
+import { RefreshIcon, WarningIcon } from "../../assets/icons/mtdActionIcons";
 
 const NetworkError = () => {
   return (

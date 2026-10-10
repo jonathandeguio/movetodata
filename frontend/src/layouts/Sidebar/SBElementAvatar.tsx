@@ -1,6 +1,6 @@
 import { Avatar, Dropdown, MenuProps } from "antd";
-import { LogoutIcon, SettingsIcon } from "assets/icons/boslerActionIcons";
-import { DocumentationIcon } from "assets/icons/boslerFileIcons";
+import { LogoutIcon, SettingsIcon } from "assets/icons/mtdActionIcons";
+import { DocumentationIcon } from "assets/icons/mtdFileIcons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { refreshTokenStatus } from "../../redux/actions/tokenActions";
 import { logout } from "../../redux/actions/userActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 import SBElement from "./SBElement";
-import BoslerAvatar from "components/BoslerComponents/BoslerAvatar/BoslerAvatar";
+import MtdAvatar from "components/MtdComponents/MtdAvatar/MtdAvatar";
 
 interface TProps {
   iconSize?: number;
@@ -112,7 +112,7 @@ const SBElementAvatar = ({
             placement="topRight"
             trigger={["hover"]}
           >
-            <BoslerAvatar
+            <MtdAvatar
               userId={user.id}
               className="cursor-ptr"
               size={iconSize && iconSize > 18 ? "default" : "small"}

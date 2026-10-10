@@ -4,8 +4,8 @@ import {
   ResourceTypeEnum,
 } from "Apps/explorer/explorer.utils";
 import { Tooltip } from "antd";
-import { EyeIcon, LinkIcon } from "assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "assets/icons/boslerDataIcons";
+import { EyeIcon, LinkIcon } from "assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "assets/icons/mtdDataIcons";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";

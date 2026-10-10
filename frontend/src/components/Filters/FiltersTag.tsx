@@ -1,6 +1,6 @@
 import { labelMap } from "Apps/Kepler/chart/charts.utils";
 import { Tooltip } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
 import React, { useState } from "react";
 import { TCondition } from "./FilterAddPopoverContent";
 import styles from "./Filters.module.scss";

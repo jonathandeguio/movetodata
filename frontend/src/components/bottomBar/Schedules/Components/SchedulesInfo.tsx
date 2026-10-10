@@ -1,8 +1,8 @@
 import { Alert } from "antd";
 import cronstrue from "cronstrue";
 import React from "react";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "../../../BoslerComponents/ButtonComponent/BoslerButton";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "../../../MtdComponents/ButtonComponent/MtdButton";
 import {
   SCHEDULE_AVAILABLE_TEXT,
   SCHEDULE_BY_SOURCE_TEXT,
@@ -33,7 +33,7 @@ const ShowScheduleInfo = ({
       showIcon
       style={{ marginBottom: "1rem" }}
       action={
-        <BoslerButton
+        <MtdButton
           minimal
           intent="dangerous"
           icononly

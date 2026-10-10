@@ -2,7 +2,7 @@ import { Avatar, Form, Select, Typography } from "antd";
 import { IRequestAccessReview } from "Apps/AccessManager/AccessManager";
 import { Resource } from "Apps/explorer/explorer";
 import { getNodeIcon, ResourceTypeEnum } from "Apps/explorer/explorer.utils";
-import { SearchIcon } from "assets/icons/boslerActionIcons";
+import { SearchIcon } from "assets/icons/mtdActionIcons";
 import { Group } from "pages/Settings/Groups/Group";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { isDefined } from "utils/utilities";

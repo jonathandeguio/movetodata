@@ -1,6 +1,6 @@
 import "@blocknote/core/style.css";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
 import React from "react";
 

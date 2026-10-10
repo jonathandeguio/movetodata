@@ -2,7 +2,7 @@ import { AutoComplete, Select } from "antd";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import React, { useState } from "react";
 import { TFilterAddOperator } from "./FilterConfirmationPopup";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 interface IProps {
   form: any;
@@ -41,7 +41,7 @@ const FilterAddPopoverInput = ({
 
   if (type == "like") {
     return (
-      <BoslerInput
+      <MtdInput
         placeholder="Input a value"
         value={value}
         onChange={(e: any) => onChange(e.target.value)}

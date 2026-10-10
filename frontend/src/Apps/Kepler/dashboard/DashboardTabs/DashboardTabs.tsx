@@ -4,13 +4,13 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { Popconfirm, Typography } from "antd";
 import DraggableTabs from "components/CommonUI/DraggableTabs";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { isDefined, openNotification } from "utils/utilities";
-import { CrossIcon } from "../../../../assets/icons/boslerActionIcons";
+import { CrossIcon } from "../../../../assets/icons/mtdActionIcons";
 import {
   changeDashboardTab,
   updateGridConfig,
@@ -246,7 +246,7 @@ const DashboardTabs = ({ gridRef }: { gridRef: any }) => {
     if (tabsItems != undefined) alterTabs();
   }, [editable]);
 
-  if (!tabsItems) return <BoslerLoader />;
+  if (!tabsItems) return <MtdLoader />;
 
   tabsItems.map((tab: any, _i: any) => {
     if (activeKey == tab.key && editable) {

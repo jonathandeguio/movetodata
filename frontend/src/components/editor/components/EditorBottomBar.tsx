@@ -1,7 +1,7 @@
 import { Tooltip } from "antd";
-import { AutoModeIcon } from "assets/icons/boslerActionIcons";
-import { ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AutoModeIcon } from "assets/icons/mtdActionIcons";
+import { ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { togglePreviewBuildPanel } from "redux/actions/repoActions";
@@ -45,7 +45,7 @@ const EditorBottomBar = ({
       <div className="bottombar-left">
         <div className="bottombar-left-buttons">
           <Tooltip placement="top" title={getLanguageLabel("preview")}>
-            <BoslerButton
+            <MtdButton
               onClick={() => {
                 handleLogDrawers("preview");
               }}
@@ -54,11 +54,11 @@ const EditorBottomBar = ({
               autoFocus={status}
             >
               {getLanguageLabel("preview")}
-            </BoslerButton>
+            </MtdButton>
           </Tooltip>
         </div>
         <div className="bottombar-left-buttons">
-          <BoslerButton
+          <MtdButton
             onClick={() => {
               if (buildId != undefined) handleLogDrawers("build");
               else openNotification("No Build Available", " ", "info");
@@ -68,7 +68,7 @@ const EditorBottomBar = ({
             autoFocus={buildLogDrawer}
           >
             {getLanguageLabel("buildLog")}
-          </BoslerButton>
+          </MtdButton>
         </div>
       </div>
     </div>

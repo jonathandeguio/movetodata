@@ -1,5 +1,5 @@
-import { RefreshIcon, ThreeDotIcon } from "assets/icons/boslerActionIcons";
-import { SingleChevronRightIcon } from "assets/icons/boslerNavigationIcon";
+import { RefreshIcon, ThreeDotIcon } from "assets/icons/mtdActionIcons";
+import { SingleChevronRightIcon } from "assets/icons/mtdNavigationIcon";
 import { SimpleTreeChildrenLoader } from "components/SimpleTreeViewer/SimpleTree.utils";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { minimatch } from "minimatch";

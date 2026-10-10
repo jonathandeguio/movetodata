@@ -1,5 +1,5 @@
 import { Badge, Col, Dropdown, Row, Table, Tooltip, Typography } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import DeleteModal from "components/Modals/DeleteModal";
 
 import React, { useState } from "react";
@@ -13,10 +13,10 @@ import {
 import {
   MoreMenuIcon,
   SearchIcon,
-} from "../../../assets/icons/boslerActionIcons";
-import { DataAgentsIcon } from "../../../assets/icons/boslerDataIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdActionIcons";
+import { DataAgentsIcon } from "../../../assets/icons/mtdDataIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
 import GlobalSearch from "../../../helpers/GlobalSearch";
 import { deleteAgent, listAgents } from "../../../redux/actions/agentActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
@@ -184,7 +184,7 @@ const AgentTable2 = ({ tableList, loading }: any) => {
   };
   return (
     <>
-      <BoslerInput
+      <MtdInput
         placeholder={getLanguageLabel("searchAgents")}
         allowClear
         onChange={(e) => {

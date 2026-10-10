@@ -1,5 +1,5 @@
 import { Form, Slider, Switch } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -17,7 +17,7 @@ export const PieChartCustomizer = () => {
   return (
     <>
       <div className="customizer-subHeader">
-        <BoslerCollapse
+        <MtdCollapse
           key="additionSettings"
           collapsible={"HEADER"}
           header={
@@ -60,14 +60,14 @@ export const PieChartCustomizer = () => {
               <Switch size={"small"} />
             </Form.Item>
           </>
-        </BoslerCollapse>
+        </MtdCollapse>
       </div>
       <ColorCustomizer />
 
       <LabelCustomizer />
       <SliceLabelCustomizer chartCustomize={chartCustomize} />
       <div className="customizer-subHeader">
-        <BoslerCollapse
+        <MtdCollapse
           key="showSumCustomizer"
           header={
             <Form.Item
@@ -88,7 +88,7 @@ export const PieChartCustomizer = () => {
             <FontCustomizer name="sum" />
             <NumberCustomizer name="showSum" />
           </>
-        </BoslerCollapse>
+        </MtdCollapse>
       </div>
     </>
   );

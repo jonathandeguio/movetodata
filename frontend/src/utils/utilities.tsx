@@ -16,7 +16,7 @@ import {
 } from "Apps/explorer/explorer.utils";
 import { BASE_URL } from "Authentication/constants";
 import { notification } from "antd";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
 import axios from "axios";
 import { CONNECT } from "components/Builds/Builds.constants";
 import { FRACTAL_USE_CASES } from "components/editor/editor.constants";
@@ -28,7 +28,7 @@ import { User } from "global";
 import { PRODUCT_ENUM } from "pages/Settings/PlatformConfig/License/License.utils";
 import { License } from "redux/licenseInfoSlice";
 import SockJS from "sockjs-client";
-import { LinkIcon } from "../assets/icons/boslerActionIcons";
+import { LinkIcon } from "../assets/icons/mtdActionIcons";
 import {
   ChartIcon,
   GaugeIcon,
@@ -41,14 +41,14 @@ import {
   SmallAreaChartIcon,
   StackedGroupedBarIcon,
   SunburstIcon,
-} from "../assets/icons/boslerChartIcons";
+} from "../assets/icons/mtdChartIcons";
 import {
   BigNumberIcon,
   DataAgentsIcon,
   DataFrameIcon,
   DatabaseIcon,
   ProjectIcon,
-} from "../assets/icons/boslerDataIcons";
+} from "../assets/icons/mtdDataIcons";
 import {
   MariaDBIcon,
   MySQLIcon,
@@ -56,17 +56,17 @@ import {
   PostgresIcon,
   PySparkIcon,
   SparkSQLIcon,
-} from "../assets/icons/boslerExternalIcons";
-import { DocsIcon, FolderIcon } from "../assets/icons/boslerFileIcons";
+} from "../assets/icons/mtdExternalIcons";
+import { DocsIcon, FolderIcon } from "../assets/icons/mtdFileIcons";
 import {
   APIIcon,
   KeyCommandIcon,
   MapLegendIcon,
-} from "../assets/icons/boslerInterfaceIcons";
-import { MonitorIcon } from "../assets/icons/boslerMiscellaneousIcons";
-import { SingleChevronUpIcon } from "../assets/icons/boslerNavigationIcon";
-import { TableCellIcon, TableIcon } from "../assets/icons/boslerTableIcons";
-import { BoslerConfig } from "../config";
+} from "../assets/icons/mtdInterfaceIcons";
+import { MonitorIcon } from "../assets/icons/mtdMiscellaneousIcons";
+import { SingleChevronUpIcon } from "../assets/icons/mtdNavigationIcon";
+import { TableCellIcon, TableIcon } from "../assets/icons/mtdTableIcons";
+import { MtdConfig } from "../config";
 import { AllLabels } from "./language";
 
 dayjs.extend(dayLocaleData);
@@ -1205,10 +1205,10 @@ const getColorTheme = (themeName: string, customize: any) => {
 
   if (isDefined(theme)) {
     return theme;
-  } else if (BoslerConfig.colorTheme.hasOwnProperty(themeName)) {
-    return BoslerConfig.colorTheme[themeName];
+  } else if (MtdConfig.colorTheme.hasOwnProperty(themeName)) {
+    return MtdConfig.colorTheme[themeName];
   } else {
-    return BoslerConfig.colorTheme.custom;
+    return MtdConfig.colorTheme.custom;
   }
 };
 

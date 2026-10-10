@@ -2,11 +2,11 @@ import { Col, Divider, Popover, Row, Typography } from "antd";
 import React from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useDispatch, useSelector } from "react-redux";
-import { SparklesIcon } from "../../assets/icons/boslerActionIcons";
+import { SparklesIcon } from "../../assets/icons/mtdActionIcons";
 
-import { timestampFormats } from "Apps/Dataset/Table/BoslerTable.utils";
-import { AppIcon, CollectionIcon } from "assets/icons/boslerInterfaceIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+import { timestampFormats } from "Apps/Dataset/Table/MtdTable.utils";
+import { AppIcon, CollectionIcon } from "assets/icons/mtdInterfaceIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
 import { useThemeDetector } from "hooks/useThemeDetector";
 import { LayoutViewEnum } from "layouts/Sidebar/Sidebar.utils";

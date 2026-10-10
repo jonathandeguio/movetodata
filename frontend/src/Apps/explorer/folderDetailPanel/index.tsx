@@ -6,7 +6,7 @@ import { FileExplorerContextMenuHandlerType } from "../FileExplorer";
 import { FolderDetailHeader } from "./FolderDetailHeader";
 import { FolderView } from "./FolderView";
 import Loader from "components/loader";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
 interface Props {
   children: any[] | null;

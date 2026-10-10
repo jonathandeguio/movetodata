@@ -1,5 +1,5 @@
 import { Col, Divider, Form, Row, Select, Tooltip, Typography } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,16 +8,16 @@ import {
   AddIcon,
   DuplicateIcon,
   SaveIcon,
-} from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BTH1 } from "components/CommonUI/BoslerTypography";
+} from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { BTH1 } from "components/CommonUI/MtdTypography";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
 import { updatePlatformConfig } from "../../../redux/actions/platformSettingsActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
 import UploadLogoButton from "../UploadLogoButton.view";
-import { BoslerColorPallete } from "../components/BoslerColorPallete";
+import { MtdColorPallete } from "../components/MtdColorPallete";
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -56,7 +56,7 @@ export const ThemeSettings = () => {
             </Text>
           </Col>
           <Col>
-            <BoslerInput
+            <MtdInput
               value={config.platformName}
               debounceInterval={2000}
               onChange={(e) => {
@@ -115,7 +115,7 @@ export const ThemeSettings = () => {
                         }
                       </Col>
                       <Col span={4}>
-                        <BoslerButton
+                        <MtdButton
                           intent="success"
                           icon={<AddIcon />}
                           onClick={() => {
@@ -129,7 +129,7 @@ export const ThemeSettings = () => {
                           borderless
                         >
                           Add Palette
-                        </BoslerButton>
+                        </MtdButton>
                       </Col>
                     </Row>
                     <div className="themeBody">
@@ -170,7 +170,7 @@ export const ThemeSettings = () => {
                                 title={getLanguageLabel("clickToRename")}
                               >
                                 <Form.Item name={[themeField.name, "name"]}>
-                                  <BoslerInput
+                                  <MtdInput
                                     style={{
                                       fontSize: "22px",
                                       fontWeight: 400,
@@ -246,7 +246,7 @@ export const ThemeSettings = () => {
                                           <Tooltip
                                             title={"Click to remove colors"}
                                           >
-                                            <BoslerButton
+                                            <MtdButton
                                               onClick={() => {
                                                 remove(themeField.name);
                                               }}
@@ -267,7 +267,7 @@ export const ThemeSettings = () => {
                             <Col span={8} style={{ marginTop: "7px" }}>
                               <Row justify={"end"} gutter={[32, 32]}>
                                 <Col>
-                                  <BoslerButton
+                                  <MtdButton
                                     onClick={() => {
                                       setDisplay(themeField.name);
                                     }}
@@ -275,10 +275,10 @@ export const ThemeSettings = () => {
                                     // className="text-and-icon-center"
                                   >
                                     {getLanguageLabel("edit")}
-                                  </BoslerButton>
+                                  </MtdButton>
                                 </Col>
                                 <Col>
-                                  <BoslerButton
+                                  <MtdButton
                                     intent="dangerous"
                                     onClick={() => {
                                       remove(themeField.name);
@@ -286,13 +286,13 @@ export const ThemeSettings = () => {
                                     icon={<TrashIcon />}
                                   >
                                     {getLanguageLabel("delete")}
-                                  </BoslerButton>
+                                  </MtdButton>
                                 </Col>
                               </Row>
                             </Col>
                           </Row>
                           {display === themeField.name && (
-                            <BoslerColorPallete
+                            <MtdColorPallete
                               display={display}
                               setDisplay={setDisplay}
                               name={themeField.name}
@@ -309,7 +309,7 @@ export const ThemeSettings = () => {
               }}
             </Form.List>
             <Form.Item wrapperCol={{ offset: 10, span: 14 }} className="--mt10">
-              <BoslerButton
+              <MtdButton
                 disabled={!isUpdateButtonActive}
                 onClick={() => {
                   dispatch(
@@ -323,7 +323,7 @@ export const ThemeSettings = () => {
                 intent={"action"}
               >
                 Save Changes
-              </BoslerButton>
+              </MtdButton>
             </Form.Item>
           </Form>
         </div>

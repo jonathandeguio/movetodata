@@ -1,17 +1,17 @@
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { GRID_CONFIG } from "Apps/Kepler/dashboard/Dashboard.contants";
 import { Popover, Tooltip, Typography } from "antd";
-import { AddIcon } from "assets/icons/boslerActionIcons";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+import { AddIcon } from "assets/icons/mtdActionIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import SortableWithDrag from "common/components/SortableWithDrag";
 import StripMenu from "common/components/StripMenu";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModalContainer from "components/CommonUI/BoslerModalContainer/BoslerModalContainer";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModalContainer from "components/CommonUI/MtdModalContainer/MtdModalContainer";
 import { SimpleTreeViewer } from "components/SimpleTreeViewer";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useState } from "react";
 import LexicalEditor from "../../Apps/LexicalEditor/LexicalEditor";
 const { Responsive, WidthProvider } = require("react-grid-layout");
@@ -1946,11 +1946,11 @@ const TestingArea = () => {
       <Title>Testing Area</Title>
       <Tooltip title={<>YEAHHH</>}>
         {/* use somemeaning full id */}
-        <BoslerButton icon={<CodeCellIcon />} intent="warning" id="mybtn1">
+        <MtdButton icon={<CodeCellIcon />} intent="warning" id="mybtn1">
           Hello world
-        </BoslerButton>
+        </MtdButton>
       </Tooltip>
-      <BoslerButton
+      <MtdButton
         icon={<CodeCellIcon />}
         intent="primary"
         onClick={() =>
@@ -1958,15 +1958,15 @@ const TestingArea = () => {
         }
       >
         Click here to test btn success
-      </BoslerButton>
+      </MtdButton>
 
-      <BoslerButton
+      <MtdButton
         icon={<CodeCellIcon />}
         intent="primary"
         onClick={() => (window as any).makeButtonTemporaryFailure("mybtn1")}
       >
         Click here to test btn failure
-      </BoslerButton>
+      </MtdButton>
 
       <SimpleTreeViewer
         defaultActiveId="6f691b6d-3c75-4685-9919-6b88b2c78609"
@@ -2019,31 +2019,31 @@ const TestingArea = () => {
       <Title level={3}>Version History</Title>
       {/* <VersionHistory  /> */}
       <Tooltip title={"A BERYYYYYYYYYYYYYYYYYYYY PARENT"}>
-        <BoslerButton icon={<FolderIcon />}>With Icon</BoslerButton>
+        <MtdButton icon={<FolderIcon />}>With Icon</MtdButton>
       </Tooltip>
       <Popover title={"A BERYYYYYYYYYYYYYYYYYYYY PARENT"}>
-        <BoslerButton icon={<FolderIcon />}>With Icon</BoslerButton>
+        <MtdButton icon={<FolderIcon />}>With Icon</MtdButton>
       </Popover>
-      <BoslerButton>Without Icon</BoslerButton>
-      <BoslerButton icon={<FolderIcon />}>With Icon</BoslerButton>
+      <MtdButton>Without Icon</MtdButton>
+      <MtdButton icon={<FolderIcon />}>With Icon</MtdButton>
       <Title level={3}>MoveToData Model Container</Title>
-      <BoslerModalContainer
+      <MtdModalContainer
         heading="Heading"
         headingIcon={<AddIcon />}
         extraActionHeading={
-          <BoslerButton intent="success">Run Now</BoslerButton>
+          <MtdButton intent="success">Run Now</MtdButton>
         }
         information={<>Infor</>}
         footerExtraText="footer text"
         footerButtonArea={
           <>
-            <BoslerButton> Submit</BoslerButton>
+            <MtdButton> Submit</MtdButton>
           </>
         }
       >
         This is the body
-      </BoslerModalContainer>
-      <BoslerTable
+      </MtdModalContainer>
+      <MtdTable
         isTableFromBottomBar={true}
         offlineData={{ rows: data.data, cols: new_columns }}
       />
@@ -2088,10 +2088,10 @@ const TestingArea = () => {
           </div>
         </ResponsiveGridLayout>
       </div>
-      <BoslerLoader size="large" />
-      <BoslerLoader size="medium" />
-      <BoslerLoader size="small" />
-      <BoslerLoader size="tiny" />
+      <MtdLoader size="large" />
+      <MtdLoader size="medium" />
+      <MtdLoader size="small" />
+      <MtdLoader size="tiny" />
     </>
   );
 };

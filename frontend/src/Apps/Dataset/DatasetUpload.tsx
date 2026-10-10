@@ -9,11 +9,11 @@ import {
   Row,
   Typography,
 } from "antd";
-import { CrossIcon, PublishIcon } from "assets/icons/boslerActionIcons";
-import { DocsIcon } from "assets/icons/boslerFileIcons";
-import { UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerLoader from "components/boslerLoader";
+import { CrossIcon, PublishIcon } from "assets/icons/mtdActionIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
+import { UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdLoader from "components/mtdLoader";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
@@ -360,7 +360,7 @@ const DatasetUpload = ({ id, branch }: TProps) => {
                         gutter={[16, 16]}
                       >
                         <Col>
-                          <BoslerLoader />
+                          <MtdLoader />
                         </Col>
                         <Col>Your file is getting ready...</Col>
                       </Row>
@@ -389,7 +389,7 @@ const DatasetUpload = ({ id, branch }: TProps) => {
                     <>
                       <Title>
                         <div className="text-and-icon-center">
-                          <BoslerLoader size="small" />
+                          <MtdLoader size="small" />
                           &nbsp;{" "}
                           <Text type="secondary">
                             {getLanguageLabel("processing")}

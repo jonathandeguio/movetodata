@@ -1,4 +1,4 @@
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import { useTabMetaDataController } from "hooks/useTabIconController";
 import React, { useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";

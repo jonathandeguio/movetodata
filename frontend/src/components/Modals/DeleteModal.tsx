@@ -1,11 +1,11 @@
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const DeleteModal = ({
   deleteServiceDetails,
@@ -15,20 +15,20 @@ const DeleteModal = ({
   const dispatch = useDispatch<ThunkAppDispatch>();
 
   return (
-    <BoslerModal
+    <MtdModal
       open={deleteServiceDetails.modalView}
       onCancel={() =>
         setDeleteServiceDetails({ ...deleteServiceDetails, modalView: false })
       }
       footerButtonArea={
-        <BoslerButton
+        <MtdButton
           intent="dangerous"
           disabled={deleteServiceDetails.disabled}
           onClick={() => handleDelete(deleteServiceDetails.id)}
           icon={<TrashIcon />}
         >
           {getLanguageLabel("delete")}
-        </BoslerButton>
+        </MtdButton>
       }
       headingIcon={<TrashIcon color={"var(--DANGEROUS_COLOR)"} />}
       heading={"Delete"}
@@ -36,7 +36,7 @@ const DeleteModal = ({
       Please Type{" "}
       <b style={{ fontWeight: "bold" }}>{deleteServiceDetails.name}</b> to
       confirm.
-      <BoslerInput
+      <MtdInput
         bordered
         placeholder={getLanguageLabel("linkName")}
         onChange={(e) => {
@@ -53,7 +53,7 @@ const DeleteModal = ({
           }
         }}
       />
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

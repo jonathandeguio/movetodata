@@ -1,17 +1,17 @@
 import { Col, Divider, Row, Table, Tooltip, Typography } from "antd";
 
 import { ResourceTypeEnum, getNodeFavIcon } from "Apps/explorer/explorer.utils";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { PermissionModel } from "components/Permissions/PermissionsModal";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getLanguageLabel, getTimeDisplay, isDefined } from "utils/utilities";
-import { AddIcon, SearchIcon } from "../../assets/icons/boslerActionIcons";
-import { ProjectIcon } from "../../assets/icons/boslerDataIcons";
-import { AddUserIcon } from "../../assets/icons/boslerInterfaceIcons";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AddIcon, SearchIcon } from "../../assets/icons/mtdActionIcons";
+import { ProjectIcon } from "../../assets/icons/mtdDataIcons";
+import { AddUserIcon } from "../../assets/icons/mtdInterfaceIcons";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
 import ProjectButton from "../../components/buttons/ProjectButton";
 import ProjectContextMenu, {
   projectContextMenu,
@@ -87,7 +87,7 @@ const Projects = () => {
             placement="left"
             title={getLanguageLabel("addPeopleToFolder")}
           >
-            <BoslerButton
+            <MtdButton
               icononly
               outlined
               icon={<AddUserIcon />}
@@ -203,13 +203,13 @@ const Projects = () => {
                         : getLanguageLabel("noAccessToCreateProjects")
                     }
                   >
-                    <BoslerButton
+                    <MtdButton
                       icon={<AddIcon />}
                       intent={projectAdmin ? "success" : "none"}
                       disabled={!projectAdmin}
                     >
                       {getLanguageLabel("newProject")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                 </ProjectButton>
               </Col>
@@ -219,7 +219,7 @@ const Projects = () => {
         </div>
 
         {!loading && (
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("search")}
             allowClear
             onChange={(e) => {
@@ -254,7 +254,7 @@ const Projects = () => {
             },
           })}
           loading={{
-            indicator: <BoslerLoader size="small" />,
+            indicator: <MtdLoader size="small" />,
             spinning: loading,
           }}
         />

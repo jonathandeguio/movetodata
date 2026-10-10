@@ -1,7 +1,7 @@
 import { Popover } from "antd";
-import { AutoModeIcon, StopIcon } from "assets/icons/boslerActionIcons";
-import { updateBottomBarItemState } from "common/components/BoslerLayout/bottomBarSlice";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AutoModeIcon, StopIcon } from "assets/icons/mtdActionIcons";
+import { updateBottomBarItemState } from "common/components/MtdLayout/bottomBarSlice";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -102,13 +102,13 @@ const ConnectPreviewBtn = ({ linkId }: IConnectPreviewBtn) => {
         >
           <div>{getLanguageLabel("pleaseWait")}</div>
           <div>
-            <BoslerButton
+            <MtdButton
               icon={<StopIcon />}
               intent="dangerous"
               onClick={handleAbort}
             >
               {getLanguageLabel("abort")}
-            </BoslerButton>
+            </MtdButton>
           </div>
         </div>
       );
@@ -118,14 +118,14 @@ const ConnectPreviewBtn = ({ linkId }: IConnectPreviewBtn) => {
   };
   return (
     <Popover title={getTitle()} placement="bottom">
-      <BoslerButton
+      <MtdButton
         intent={getIntent()}
         icon={<AutoModeIcon />}
         onClick={() => handlePreview(querySource.code)}
         loading={previewActive}
       >
         {getLanguageLabel("preview")}
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   );
 };

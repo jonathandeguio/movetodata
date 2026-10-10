@@ -34,7 +34,7 @@ const PreviewSpecs = ({ id, branch }: IProps) => {
 
   return (
     <div>
-      <div className="BoslerHeader1">Input Row Limit</div>
+      <div className="MtdHeader1">Input Row Limit</div>
       <InputNumber
         value={previewRowLimit}
         disabled={!previewRowLimit}

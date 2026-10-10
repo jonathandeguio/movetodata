@@ -1,12 +1,12 @@
 import { Select } from "antd";
-import { ScheduledRunIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
+import { ScheduledRunIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { AddIcon, CrossIcon } from "../../../../assets/icons/boslerActionIcons";
-import { TableIcon } from "../../../../assets/icons/boslerTableIcons";
-import BoslerButton from "../../../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../../../boslerLoader";
+import { AddIcon, CrossIcon } from "../../../../assets/icons/mtdActionIcons";
+import { TableIcon } from "../../../../assets/icons/mtdTableIcons";
+import MtdButton from "../../../MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../../../mtdLoader";
 import {
   ADD,
   DATASET_PLACEHOLDER,
@@ -40,16 +40,16 @@ const ScheduleSource = ({
   }, [id, branch]);
 
   if (isLoading) {
-    return <BoslerLoader size={"small"} />;
+    return <MtdLoader size={"small"} />;
   }
 
   if (!sources) {
-    return <BoslerLoader size={"small"} />;
+    return <MtdLoader size={"small"} />;
   }
 
   return (
     <>
-      <BoslerHeader
+      <MtdHeader
         heading="Schedule by Source"
         description="Schedule a dataset by source. Whenever the selected sources gets updated based on the created condition, it will trigger the current dataset build right at that moment."
         icon={<ScheduledRunIcon />}
@@ -79,7 +79,7 @@ const ScheduleSource = ({
                   <div style={{ fontStyle: "italic", color: "var(--movetodata" }}>
                     {trigger.operator}
                   </div>
-                  <BoslerButton
+                  <MtdButton
                     intent="dangerous"
                     minimal
                     icon={<CrossIcon />}
@@ -125,7 +125,7 @@ const ScheduleSource = ({
             onChange={(value: string) => setOperator(value)}
             options={OPERATORS_OPTIONS}
           />
-          <BoslerButton
+          <MtdButton
             intent="success"
             icon={<AddIcon />}
             icononly
@@ -142,7 +142,7 @@ const ScheduleSource = ({
             }
           >
             {ADD}
-          </BoslerButton>
+          </MtdButton>
         </div>
       </div>
       <div className="pipeline-menu-schedule-content"></div>

@@ -1,4 +1,4 @@
-import { BOSLER_TOKEN, LANGUAGE, USERNAME } from "Authentication/constants";
+import { MTD_TOKEN, LANGUAGE, USERNAME } from "Authentication/constants";
 import axios from "axios";
 import {
   ALL_USER_DETAILS_FAIL,
@@ -54,7 +54,7 @@ export const login =
       });
 
       localStorage.setItem(USERNAME, username);
-      localStorage.setItem(BOSLER_TOKEN, data.accessToken);
+      localStorage.setItem(MTD_TOKEN, data.accessToken);
     } catch (error) {
       dispatch({
         type: USER_LOGIN_FAIL,
@@ -72,7 +72,7 @@ export const logout =
       // ignore — cookies still get cleared by the backend response headers
     }
     localStorage.removeItem(USERNAME);
-    localStorage.removeItem(BOSLER_TOKEN);
+    localStorage.removeItem(MTD_TOKEN);
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });
   };

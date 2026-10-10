@@ -1,5 +1,5 @@
 import { Form, InputNumber } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { ColorCustomizer } from "./ColorCustomizer";
@@ -10,7 +10,7 @@ export const GaugeChartCustomizer = () => {
   return (
     <div style={{ width: "100%" }}>
       <div className="customizer-subHeader">
-        <BoslerCollapse
+        <MtdCollapse
           key="additionSettings"
           collapsible={"HEADER"} header={<div className="query_item__heading">{getLanguageLabel("additional")}</div>}
           >
@@ -30,7 +30,7 @@ export const GaugeChartCustomizer = () => {
 
       <ColorCustomizer />
       </>
-      </BoslerCollapse>
+      </MtdCollapse>
       </div>
     </div>
   );

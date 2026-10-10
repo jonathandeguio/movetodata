@@ -23,18 +23,18 @@ import {
   BuildIcon,
   CrossIcon,
   ThreeDotIcon,
-} from "assets/icons/boslerActionIcons";
-import { GitNewBranchIcon } from "assets/icons/boslerExternalIcons";
-import { AddUserIcon, ChangeLogIcon } from "assets/icons/boslerInterfaceIcons";
-import { StarIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { UndoIcon } from "assets/icons/boslerNavigationIcon";
-import { SortAscIcon, SortDescIcon } from "assets/icons/boslerSortIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+} from "assets/icons/mtdActionIcons";
+import { GitNewBranchIcon } from "assets/icons/mtdExternalIcons";
+import { AddUserIcon, ChangeLogIcon } from "assets/icons/mtdInterfaceIcons";
+import { StarIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { UndoIcon } from "assets/icons/mtdNavigationIcon";
+import { SortAscIcon, SortDescIcon } from "assets/icons/mtdSortIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import BranchInfo from "components/branchInfo";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { PermissionModel } from "components/Permissions/PermissionsModal";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { useToggleState } from "hooks/useToggleState";
 import { useDispatch, useSelector } from "react-redux";
@@ -217,7 +217,7 @@ const ListTable: React.FC<Props> = ({
           </Tooltip>
         );
       } else if (cell.column.columnDef?.meta?.type === ColumnTypes.USER) {
-        return <BoslerUserPopover id={cell.getValue() as string} />;
+        return <MtdUserPopover id={cell.getValue() as string} />;
       } else if (cell.column.columnDef?.meta?.type === ColumnTypes.ICON) {
         return getNodeIcon(
           cell.getValue(),
@@ -258,7 +258,7 @@ const ListTable: React.FC<Props> = ({
                     {ResourceTypeEnum.LINK === row.original.type &&
                       row.original.subType ===
                         ResourceSubTypeEnum.STORELINK && (
-                        <BoslerButton
+                        <MtdButton
                           onClick={(e: any) => {
                             e.stopPropagation();
                             ConnectBuildAPI(row.original.id)
@@ -300,7 +300,7 @@ const ListTable: React.FC<Props> = ({
                             );
                           }}
                         >
-                          <BoslerButton
+                          <MtdButton
                             icononly
                             icon={<GitNewBranchIcon size={12} />}
                             minimal
@@ -308,7 +308,7 @@ const ListTable: React.FC<Props> = ({
                           />
                         </BranchInfo>
                       )}
-                    <BoslerButton
+                    <MtdButton
                       onClick={(e: any) => {
                         e.stopPropagation();
                         if (row.original.favourite) {
@@ -329,7 +329,7 @@ const ListTable: React.FC<Props> = ({
                         />
                       }
                     />
-                    <BoslerButton
+                    <MtdButton
                       onClick={(e: any) => {
                         e.stopPropagation();
                         setSelectedId(row.original.id);
@@ -339,7 +339,7 @@ const ListTable: React.FC<Props> = ({
                       minimal
                       icon={<AddUserIcon />}
                     />
-                    <BoslerButton
+                    <MtdButton
                       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                         e.stopPropagation();
 
@@ -353,7 +353,7 @@ const ListTable: React.FC<Props> = ({
                   </>
                 ) : (
                   <Tooltip title={getLanguageLabel("restore")}>
-                    <BoslerButton
+                    <MtdButton
                       onClick={(e: MouseEvent) => {
                         e.stopPropagation();
                         removeFromRecycleBin(row.original.id);
@@ -562,7 +562,7 @@ const ListTable: React.FC<Props> = ({
           id={selectedId}
         />
       )}
-      <BoslerModal
+      <MtdModal
         open={buildLogVisible}
         headingIcon={<BuildIcon />}
         heading={
@@ -571,13 +571,13 @@ const ListTable: React.FC<Props> = ({
           </Row>
         }
         extraActionHeading={
-          <BoslerButton
+          <MtdButton
             icon={<CrossIcon />}
             icononly
             trimicononlypadding
             minimal
             onClick={() => setBuildLogVisible(false)}
-          ></BoslerButton>
+          ></MtdButton>
         }
         width={"80%"}
         onCancel={() => setBuildLogVisible(false)}
@@ -587,7 +587,7 @@ const ListTable: React.FC<Props> = ({
           showHeader={false}
           page="DATASET"
         />
-      </BoslerModal>
+      </MtdModal>
     </div>
   );
 };

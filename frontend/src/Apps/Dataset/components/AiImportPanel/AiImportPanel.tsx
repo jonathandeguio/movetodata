@@ -15,7 +15,7 @@
 
 import { RobotOutlined } from "@ant-design/icons";
 import { Alert, Card, Collapse, Progress, Spin, Tag, Typography } from "antd";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   describeDatasetAPI,
@@ -258,9 +258,9 @@ const AiImportPanel: React.FC<AiImportPanelProps> = ({
             <div className="ai-import-panel__desc-section">
               {descState === "idle" && (
                 <div className="ai-import-panel__analyse-btn-row">
-                  <BoslerButton intent="action" onClick={handleAnalyse}>
+                  <MtdButton intent="action" onClick={handleAnalyse}>
                     Analyser avec l'IA
-                  </BoslerButton>
+                  </MtdButton>
                 </div>
               )}
 

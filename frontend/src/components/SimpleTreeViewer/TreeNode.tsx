@@ -7,8 +7,8 @@ import {
   getNodeIcon,
 } from "Apps/explorer/explorer.utils";
 import { Popover } from "antd";
-import { ThreeDotIcon } from "assets/icons/boslerActionIcons";
-import { SingleChevronRightIcon } from "assets/icons/boslerNavigationIcon";
+import { ThreeDotIcon } from "assets/icons/mtdActionIcons";
+import { SingleChevronRightIcon } from "assets/icons/mtdNavigationIcon";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { isDefined, notEmpty } from "utils/utilities";

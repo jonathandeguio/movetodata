@@ -1,12 +1,12 @@
 import { IProject } from "Apps/explorer/explorer";
 import { List, Skeleton } from "antd";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
 import { ContextMenu, MenuItem } from "common/components/ContextMenu";
 import NoData from "components/CommonUI/NoData";
 import React, { Dispatch, SetStateAction } from "react";
 import styles from "../Project.module.scss";
 import ProjectPageItem from "./ProjectPageItem";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
 interface IProps {
   openRequestAccessModal: () => void;
@@ -40,7 +40,7 @@ const ProjectPageBody = ({
   if (loading) {
     return (
       <div className={styles.loadingState}>
-        <BoslerLoader />
+        <MtdLoader />
       </div>
     );
   }

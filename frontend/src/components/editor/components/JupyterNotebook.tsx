@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
 import "../editor.scss";
@@ -31,7 +31,7 @@ const JupyterNotebook = ({ pane }: IProps) => {
   }, [user, pane, repoId]);
 
   if (!notebookPath) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (

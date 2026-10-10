@@ -2,15 +2,15 @@ import { Col, Row, Switch, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 import axios from "axios";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   favIconLoading,
   getDefaultFavicon,
-} from "components/boslerLoader/FavIconLoader";
+} from "components/mtdLoader/FavIconLoader";
 import { ErrorResponse } from "global";
 import { LicenseIncapableModal } from "pages/Settings/PlatformConfig/License/LicenseIncapableModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,15 +20,15 @@ import {
   notEmpty,
   openNotification,
 } from "utils/utilities";
-import { FolderIcon } from "../../../assets/icons/boslerFileIcons";
+import { FolderIcon } from "../../../assets/icons/mtdFileIcons";
 import {
   InfoIcon,
   MonitorIcon,
-} from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronRightIcon,
   TickIcon,
-} from "../../../assets/icons/boslerNavigationIcon";
+} from "../../../assets/icons/mtdNavigationIcon";
 import { openFileExplorerModal } from "../../../redux/ModalSlice";
 import { addNewResource } from "../../../redux/fileIndexSlice";
 import { createnewDashboard, getPathApi } from "../chart/charts.api";
@@ -276,7 +276,7 @@ export default ({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<MonitorIcon />}
         heading={getLanguageLabel("dashboard")}
         extraActionHeading={
@@ -306,9 +306,9 @@ export default ({
         onCancel={() => setCreateDashboardModal(false)}
         footerExtraText={getLanguageLabel("accessMessage")}
         footerButtonArea={
-          <BoslerButton intent="primary" onClick={onOk} icon={<TickIcon />}>
+          <MtdButton intent="primary" onClick={onOk} icon={<TickIcon />}>
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
         information={
           <div style={{ padding: "15px", width: "200px" }}>
@@ -324,8 +324,8 @@ export default ({
           </div>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+        <MtdInput
           bordered
           autofocus
           onChange={(e: any) =>
@@ -340,8 +340,8 @@ export default ({
           placeholder={getLanguageLabel("name")}
           style={{ width: "20vw", minWidth: "300px" }}
         />
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+        <MtdInput
           onChange={(e: any) =>
             setDashboardDetails({
               ...dashboardDetails,
@@ -368,7 +368,7 @@ export default ({
                 alignItems: "center",
               }}
             >
-              <BoslerButton
+              <MtdButton
                 icon={<FolderIcon />}
                 onClick={() =>
                   dispatch(
@@ -393,7 +393,7 @@ export default ({
                 {selectedFolder
                   ? selectedFolder
                   : getLanguageLabel("parentFolder")}
-              </BoslerButton>
+              </MtdButton>
             </div>
           </Col>
         </Row>
@@ -440,7 +440,7 @@ export default ({
             </Text>
           )}
         </Row>
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

@@ -2,9 +2,9 @@ import { List, Popover, Skeleton, Tooltip, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { GraphIcon } from "../assets/icons/boslerChartIcons";
-import { FolderIcon } from "../assets/icons/boslerFileIcons";
-import { PopOutIcon } from "../assets/icons/boslerNavigationIcon";
+import { GraphIcon } from "../assets/icons/mtdChartIcons";
+import { FolderIcon } from "../assets/icons/mtdFileIcons";
+import { PopOutIcon } from "../assets/icons/mtdNavigationIcon";
 
 import { getIconUrlPath, getLanguageLabel } from "utils/utilities";
 

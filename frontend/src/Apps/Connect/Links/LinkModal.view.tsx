@@ -4,24 +4,24 @@ import { Checkbox, Col, Row, Select, Switch, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { LinkIcon } from "../../../assets/icons/boslerActionIcons";
-import { GitNewBranchIcon } from "../../../assets/icons/boslerExternalIcons";
-import { FolderIcon } from "../../../assets/icons/boslerFileIcons";
-import { KeyIcon } from "../../../assets/icons/boslerInterfaceIcons";
+import { LinkIcon } from "../../../assets/icons/mtdActionIcons";
+import { GitNewBranchIcon } from "../../../assets/icons/mtdExternalIcons";
+import { FolderIcon } from "../../../assets/icons/mtdFileIcons";
+import { KeyIcon } from "../../../assets/icons/mtdInterfaceIcons";
 import {
   LibraryIcon,
   LightBulbIcon,
-} from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronRightIcon,
   TickIcon,
-} from "../../../assets/icons/boslerNavigationIcon";
-import { TableIcon } from "../../../assets/icons/boslerTableIcons";
+} from "../../../assets/icons/mtdNavigationIcon";
+import { TableIcon } from "../../../assets/icons/mtdTableIcons";
 import { createLink, listLinks } from "../../../redux/actions/linkActions";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   deleteSchedulesByResourceIdAPI,
   getSchedulesAPI,
@@ -47,7 +47,7 @@ import {
 } from "../Connect.api";
 
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
-import { SourceIcon } from "assets/icons/boslerDataIcons";
+import { SourceIcon } from "assets/icons/mtdDataIcons";
 import {
   JobStatusEnum,
   ScheduleTriggerType,
@@ -442,7 +442,7 @@ const LinkModal = ({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         destroyOnClose
         headingIcon={<LinkIcon />}
         heading={getLanguageLabel("dataLink")}
@@ -473,7 +473,7 @@ const LinkModal = ({
         }
         footerExtraText={getLanguageLabel("connectAdminOnlyMessage")}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent="primary"
             onClick={updateDetails ? handleUpdate : handleOk}
             icon={<TickIcon />}
@@ -482,7 +482,7 @@ const LinkModal = ({
             {updateDetails
               ? getLanguageLabel("update")
               : getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
         information={
           <div style={{ width: "300px" }}>
@@ -539,7 +539,7 @@ const LinkModal = ({
             <Text>{getLanguageLabel("name")}</Text>
           </Col>
           <Col span={16}>
-            <BoslerInput
+            <MtdInput
               variant="borderless"
               autofocus
               onChange={(e) =>
@@ -564,7 +564,7 @@ const LinkModal = ({
             <Text>{getLanguageLabel("description")}</Text>
           </Col>
           <Col span={16}>
-            <BoslerInput
+            <MtdInput
               onChange={(e) =>
                 setNewLinkDetails({
                   ...newLinkDetails,
@@ -586,7 +586,7 @@ const LinkModal = ({
         >
           <Col span={8}>{getLanguageLabel("parentFolder")}</Col>
           <Col span={16}>
-            <BoslerButton
+            <MtdButton
               icon={<FolderIcon />}
               onClick={() => {
                 dispatch(
@@ -604,7 +604,7 @@ const LinkModal = ({
               {selectedParent
                 ? selectedParent
                 : getLanguageLabel("parentFolder")}
-            </BoslerButton>
+            </MtdButton>
 
             {notEmpty(parentPath) ? (
               <Text
@@ -703,7 +703,7 @@ const LinkModal = ({
             <Col span={16}>
               <Row gutter={[16, 16]}>
                 <Col span={16}>
-                  <BoslerButton
+                  <MtdButton
                     fill
                     intent={selectedDataset ? "success" : "warning"}
                     icon={<TableIcon />}
@@ -722,11 +722,11 @@ const LinkModal = ({
                     {selectedDataset
                       ? selectedDataset
                       : getLanguageLabel("dataset")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Col>
                 <Col span={8}>
                   <div className="text-and-icon-center">
-                    <BoslerInput
+                    <MtdInput
                       // prefix={}
                       value={newLinkDetails.branch}
                       onChange={(e) =>
@@ -762,7 +762,7 @@ const LinkModal = ({
           </Col>
           <Col span={16}>
             <SourceButtonPopover source={selectedSource}>
-              <BoslerButton
+              <MtdButton
                 icon={
                   selectedSource ? (
                     getSourceIcon(
@@ -789,7 +789,7 @@ const LinkModal = ({
                 {notEmpty(selectedSource)
                   ? (selectedSource as any)?.name
                   : "Select Source"}
-              </BoslerButton>
+              </MtdButton>
             </SourceButtonPopover>
           </Col>
         </Row>
@@ -805,7 +805,7 @@ const LinkModal = ({
               <Text>{getLanguageLabel("subFolder")}</Text>
             </Col>
             <Col span={16}>
-              <BoslerInput
+              <MtdInput
                 onChange={(e) =>
                   setNewLinkDetails({
                     ...newLinkDetails,
@@ -1010,7 +1010,7 @@ const LinkModal = ({
             <br />
           </>
         )}
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

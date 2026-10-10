@@ -12,9 +12,9 @@ import {
   SmallAreaChartIcon,
   SunburstIcon,
   TreeMapIcon,
-} from "assets/icons/boslerChartIcons";
-import { BigNumberIcon } from "assets/icons/boslerDataIcons";
-import { TableCellIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdChartIcons";
+import { BigNumberIcon } from "assets/icons/mtdDataIcons";
+import { TableCellIcon } from "assets/icons/mtdTableIcons";
 import React from "react";
 
 export type chartType = {

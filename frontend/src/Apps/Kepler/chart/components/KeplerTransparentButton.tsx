@@ -1,4 +1,4 @@
-import { AddIcon } from "assets/icons/boslerActionIcons";
+import { AddIcon } from "assets/icons/mtdActionIcons";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 

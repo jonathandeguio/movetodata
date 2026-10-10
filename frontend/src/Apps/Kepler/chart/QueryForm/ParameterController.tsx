@@ -1,10 +1,10 @@
 import { Form, Input, Typography } from "antd";
-import { AddIcon, CrossIcon } from "assets/icons/boslerActionIcons";
+import { AddIcon, CrossIcon } from "assets/icons/mtdActionIcons";
 import React from "react";
 import { getLanguageLabel, openNotification } from "utils/utilities";
 import ColumnSelect from "./ColumnSelect";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 const { Text } = Typography;
 
@@ -17,7 +17,7 @@ export const ParameterController = () => {
             {fields.map((field) => {
               return (
                 <>
-                  <BoslerCollapse
+                  <MtdCollapse
                     collapsible="HEADER"
                     key="parameterController"
                     defaultCollpased={false}
@@ -27,7 +27,7 @@ export const ParameterController = () => {
                           style={{ width: "100%" }}
                           name={[field.name, "label"]}
                         >
-                          <BoslerInput
+                          <MtdInput
                             editText
                             debounceInterval={1000}
                             variant={"borderless"}
@@ -73,7 +73,7 @@ export const ParameterController = () => {
                         ]}
                       />
                     </div>
-                  </BoslerCollapse>
+                  </MtdCollapse>
                 </>
               );
             })}

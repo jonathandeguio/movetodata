@@ -2,9 +2,9 @@ import { MonacoServices } from "@codingame/monaco-languageclient";
 import { Editor } from "@monaco-editor/react";
 import { Col, Divider, InputNumber, Popover, Row, Tabs, Tooltip } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
-import { SearchIcon, SparklesIcon } from "assets/icons/boslerActionIcons";
-import { MapIcon } from "assets/icons/boslerChartIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { SearchIcon, SparklesIcon } from "assets/icons/mtdActionIcons";
+import { MapIcon } from "assets/icons/mtdChartIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
 import { registerMonacoThemes } from "components/editor/editor.utils";
 import React, { useEffect, useRef, useState } from "react";
@@ -184,7 +184,7 @@ const LinkEditor = ({
                         <Row style={{ width: "10rem" }}>
                           <Col span={18}>{getLanguageLabel("formatSQL")}</Col>
                           <Col span={6}>
-                            <BoslerButton
+                            <MtdButton
                               onClick={() => {
                                 autoFormatSQL(
                                   querySource.code,
@@ -195,7 +195,7 @@ const LinkEditor = ({
                               minimal
                             >
                               {sqlformattingLoading ? "" : <>{userOSkey} M</>}
-                            </BoslerButton>
+                            </MtdButton>
                           </Col>
                         </Row>
                       </>
@@ -214,7 +214,7 @@ const LinkEditor = ({
                     }
                     placement="bottom"
                   >
-                    <BoslerButton
+                    <MtdButton
                       icon={<SparklesIcon />}
                       onClick={() => {
                         autoFormatSQL(
@@ -225,12 +225,12 @@ const LinkEditor = ({
                       loading={sqlformattingLoading}
                       icononly
                       minimal
-                    ></BoslerButton>
+                    ></MtdButton>
                   </Popover>
                   <Divider type="vertical" />
                 </>
               )}
-              <BoslerButton
+              <MtdButton
                 icon={<SearchIcon />}
                 onClick={() => {
                   setIsSearchOpen(true);
@@ -240,9 +240,9 @@ const LinkEditor = ({
                 }}
                 icononly
                 minimal
-              ></BoslerButton>
+              ></MtdButton>
               {/* <Divider type="vertical" />
-            <BoslerButton
+            <MtdButton
               icon={<CommandPaletteIcon />}
               onClick={() => {
                 setIsCmdOpen(true);
@@ -252,9 +252,9 @@ const LinkEditor = ({
               }}
               icononly
               minimal
-            ></BoslerButton> */}
+            ></MtdButton> */}
               <Divider type="vertical" />
-              <BoslerButton
+              <MtdButton
                 icon={<MapIcon />}
                 onClick={() => {
                   setIsMiniMapOpen((prev: boolean) => {
@@ -269,7 +269,7 @@ const LinkEditor = ({
                 }}
                 icononly
                 minimal
-              ></BoslerButton>
+              ></MtdButton>
               <Divider type="vertical" />
               <Tooltip title={getLanguageLabel("changeFont")}>
                 {/* 410: Failing on react dev env., resulting in 410 due to infinite rerenders */}

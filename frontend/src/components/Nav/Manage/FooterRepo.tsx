@@ -2,12 +2,12 @@ import { Menu, Select } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AddIcon } from "../../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
+import { AddIcon } from "../../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
 
 import { getLanguageLabel } from "utils/utilities";
-import { InfoIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
-import { SingleChevronDownIcon } from "../../../assets/icons/boslerNavigationIcon";
+import { InfoIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
+import { SingleChevronDownIcon } from "../../../assets/icons/mtdNavigationIcon";
 
 // -----------Branches DropDown---------
 const options = (

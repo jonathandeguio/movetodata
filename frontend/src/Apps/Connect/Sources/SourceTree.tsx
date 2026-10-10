@@ -3,7 +3,7 @@ import {
   getDatabaseColumnIcon,
 } from "Apps/explorer/explorer.utils";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { getLanguageLabel } from "utils/utilities";
@@ -45,14 +45,14 @@ const TableColumns = ({ sourceId, tableName, sourceType }: ITableColsProps) => {
   }, [sourceId, tableName]);
 
   if (isLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   } else if (isError) {
     return <NoData heading="Error" subHeading={isError} />;
   }
 
   return (
     <div className={styles.sourceTree_colsWrapper}>
-      <div className="BoslerHeader1">
+      <div className="MtdHeader1">
         {getLanguageLabel("table")} {getLanguageLabel("columns")}
       </div>
       <div className={styles.sourceTree_cols}>

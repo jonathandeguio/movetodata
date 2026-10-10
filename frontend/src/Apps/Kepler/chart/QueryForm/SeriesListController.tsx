@@ -1,4 +1,4 @@
-import { AddIcon, CrossIcon } from "assets/icons/boslerActionIcons";
+import { AddIcon, CrossIcon } from "assets/icons/mtdActionIcons";
 import React, { useEffect, useState } from "react";
 
 import { DragEndEvent } from "@dnd-kit/core";
@@ -7,8 +7,8 @@ import { defaultSeries } from "Apps/Kepler/utils/DefaultValues";
 import { Form, Tooltip } from "antd";
 import SortableWithDrag from "common/components/SortableWithDrag";
 import { TSortableWithDragItem } from "common/components/SortableWithDrag/SortableWithDrag";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import {
   generateUUID,
   getLanguageLabel,
@@ -38,7 +38,7 @@ const SeriesListController: React.FC<ISeriesListController> = (props) => {
       _items.push({
         id: field.name,
         children: (
-          <BoslerCollapse
+          <MtdCollapse
             collapsible="ICON"
             key={`${index}`}
             header={
@@ -55,7 +55,7 @@ const SeriesListController: React.FC<ISeriesListController> = (props) => {
                         },
                       ]}
                     >
-                      <BoslerInput
+                      <MtdInput
                         editText
                         debounceInterval={1000}
                         variant={"borderless"}
@@ -85,7 +85,7 @@ const SeriesListController: React.FC<ISeriesListController> = (props) => {
               fieldName={field.name}
               groupBy={querySkeleton.groupBy}
             />
-          </BoslerCollapse>
+          </MtdCollapse>
         ),
       });
     });

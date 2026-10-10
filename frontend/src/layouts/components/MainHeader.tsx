@@ -19,16 +19,16 @@ import {
   NotificationIcon,
   SearchFiledIcon,
   SettingsIcon
-} from "assets/icons/boslerActionIcons";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { DocumentationIcon } from "assets/icons/boslerFileIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdActionIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { DocumentationIcon } from "assets/icons/mtdFileIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import axios from "axios";
 import { getIsConnectAdmin } from "common/common.api";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerCommandPalette from "components/CommandPalette/CommandPalette.view";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdCommandPalette from "components/CommandPalette/CommandPalette.view";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useDispatch, useSelector } from "react-redux";
@@ -222,14 +222,14 @@ const MainHeader = () => {
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         footer={null}
         open={isHeaderSearchModalOpen}
         onCancel={() => setIsHeaderSearchModalOpen(false)}
         width={600}
       >
         <HeaderSearch setIsHeaderSearchModalOpen={setIsHeaderSearchModalOpen} />
-      </BoslerModal>
+      </MtdModal>
       <div>
         <Row
           justify={"space-between"}
@@ -245,7 +245,7 @@ const MainHeader = () => {
                     style={{ display: "flex", alignItems: "center" }}
                   >
                     {loading ? (
-                      <BoslerLoader />
+                      <MtdLoader />
                     ) : isDefined(config) && isDefined(config.logo) ? (
                       <img
                         style={{
@@ -266,18 +266,18 @@ const MainHeader = () => {
                 {/* Company Name is removed for now -- Rakesh */}
               </Col>
               {/* <Col>
-                <Menu mode="horizontal" className="boslerHeaderMenu">
+                <Menu mode="horizontal" className="mtdHeaderMenu">
                   <Menu.Item
                     key="projects"
                     onClick={() => navigate(getApplicationLink("projects"))}
-                    className="boslerHeaderMenuItem"
+                    className="mtdHeaderMenuItem"
                   >
                     {getLanguageLabel("projects")}
                   </Menu.Item>
                   <Menu.SubMenu
                     key="chart"
                     title={
-                      <Row align={"middle"} className="boslerHeaderMenuItem">
+                      <Row align={"middle"} className="mtdHeaderMenuItem">
                         {getLanguageLabel("chart")}
                         &nbsp;
                         <SingleChevronDownIcon />
@@ -288,7 +288,7 @@ const MainHeader = () => {
                       return (
                         <Menu.Item
                           key={chart.id}
-                          className="boslerHeaderMenuItem"
+                          className="mtdHeaderMenuItem"
                           onClick={() => navigateResource(chart.id)}
                         >
                           <Row align={"middle"}>
@@ -304,7 +304,7 @@ const MainHeader = () => {
                   <Menu.SubMenu
                     key="dashboard"
                     title={
-                      <Row align={"middle"} className="boslerHeaderMenuItem">
+                      <Row align={"middle"} className="mtdHeaderMenuItem">
                         {getLanguageLabel("dashboard")}
                         &nbsp;
                         <SingleChevronDownIcon />
@@ -315,7 +315,7 @@ const MainHeader = () => {
                       return (
                         <Menu.Item
                           key={dashboard.id}
-                          className="boslerHeaderMenuItem"
+                          className="mtdHeaderMenuItem"
                           onClick={() => navigateResource(dashboard.id)}
                         >
                           <Row align={"middle"}>
@@ -330,7 +330,7 @@ const MainHeader = () => {
                   <Menu.SubMenu
                     key="transformation"
                     title={
-                      <Row align={"middle"} className="boslerHeaderMenuItem">
+                      <Row align={"middle"} className="mtdHeaderMenuItem">
                         {getLanguageLabel("transformation")}
                         &nbsp;
                         <SingleChevronDownIcon />
@@ -341,7 +341,7 @@ const MainHeader = () => {
                       return (
                         <Menu.Item
                           key={transform.id}
-                          className="boslerHeaderMenuItem"
+                          className="mtdHeaderMenuItem"
                           onClick={() => navigateResource(transform.id)}
                         >
                           <Row align={"middle"}>
@@ -356,7 +356,7 @@ const MainHeader = () => {
                   <Menu.SubMenu
                     key="dataset"
                     title={
-                      <Row align={"middle"} className="boslerHeaderMenuItem">
+                      <Row align={"middle"} className="mtdHeaderMenuItem">
                         {getLanguageLabel("dataset")}
                         &nbsp;
                         <SingleChevronDownIcon />
@@ -367,7 +367,7 @@ const MainHeader = () => {
                       return (
                         <Menu.Item
                           key={dataset.id}
-                          className="boslerHeaderMenuItem"
+                          className="mtdHeaderMenuItem"
                           onClick={() => navigateResource(dataset.id)}
                         >
                           <Row align={"middle"}>
@@ -382,7 +382,7 @@ const MainHeader = () => {
 
                   <Menu.Item
                     key="connect"
-                    className="boslerHeaderMenuItem"
+                    className="mtdHeaderMenuItem"
                     onClick={() => navigate(getApplicationLink("connect"))}
                   >
                     {getLanguageLabel("connect")}
@@ -390,21 +390,21 @@ const MainHeader = () => {
                   <Menu.Item
                     key="schedules"
                     onClick={() => navigate(getApplicationLink("schedules"))}
-                    className="boslerHeaderMenuItem"
+                    className="mtdHeaderMenuItem"
                   >
                     {getLanguageLabel("schedules")}
                   </Menu.Item>
                   <Menu.Item
                     key="builds"
                     onClick={() => navigate(getApplicationLink("builds"))}
-                    className="boslerHeaderMenuItem"
+                    className="mtdHeaderMenuItem"
                   >
                     {getLanguageLabel("builds")}
                   </Menu.Item>
                   <Menu.Item
                     key="settings"
                     onClick={() => navigate(getApplicationLink("settings"))}
-                    className="boslerHeaderMenuItem"
+                    className="mtdHeaderMenuItem"
                   >
                     {getLanguageLabel("settings")}
                   </Menu.Item>
@@ -436,7 +436,7 @@ const MainHeader = () => {
                 </Col>
               </Tooltip>
               <Col>
-                <BoslerCommandPalette />
+                <MtdCommandPalette />
               </Col>
               <Col>
                 <Tooltip
@@ -487,7 +487,7 @@ const MainHeader = () => {
           </Col>
         </Row>
       </div>
-      <BoslerModal
+      <MtdModal
         headingIcon={<DuplicateIcon />}
         heading={
           <Row justify={"space-between"} align="middle">
@@ -499,12 +499,12 @@ const MainHeader = () => {
         onCancel={() => setIsDebugInfoOpen(false)}
         width={600}
         extraActionHeading={
-          <BoslerButton
+          <MtdButton
             icon={<CopyIcon />}
             onClick={() => debugInfoText && copyToClipboard(debugInfoText)}
             minimal
             icononly
-          ></BoslerButton>
+          ></MtdButton>
         }
       >
         {debugInfo && debugInfo.lastUpdated && (
@@ -555,7 +555,7 @@ const MainHeader = () => {
                   </Text>
                 </Col>
                 <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<CopyIcon />}
                     onClick={() =>
                       debugInfo &&
@@ -612,7 +612,7 @@ const MainHeader = () => {
               <Col>
                 <span className="text-and-icon-center">
                   <Text strong>{debugInfo.userId}</Text>
-                  <BoslerButton
+                  <MtdButton
                     icon={<CopyIcon />}
                     onClick={() =>
                       debugInfo && copyToClipboard(debugInfo.userId)
@@ -641,7 +641,7 @@ const MainHeader = () => {
                   <Text style={{ fontSize: "0.5rem" }} strong>
                     {debugInfo.location}
                   </Text>
-                  <BoslerButton
+                  <MtdButton
                     icon={<CopyIcon />}
                     onClick={() =>
                       debugInfo && copyToClipboard(debugInfo.location)
@@ -656,7 +656,7 @@ const MainHeader = () => {
           </>
         )}
         <br />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

@@ -1,11 +1,11 @@
 import { Row, Typography } from "antd";
-import { LockIcon } from "assets/icons/boslerActionIcons";
-import { KeyIcon } from "assets/icons/boslerInterfaceIcons";
+import { LockIcon } from "assets/icons/mtdActionIcons";
+import { KeyIcon } from "assets/icons/mtdInterfaceIcons";
 import {
   LibraryIcon,
   LightBulbIcon,
-} from "assets/icons/boslerMiscellaneousIcons";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdMiscellaneousIcons";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { Link } from "react-router-dom";
 import { getLanguageLabel } from "utils/utilities";
@@ -20,7 +20,7 @@ const { Title, Text } = Typography;
 
 export const LicenseIncapableModal = ({ type, isOpen, setIsOpen }: IProps) => {
   return (
-    <BoslerModal
+    <MtdModal
       open={isOpen}
       onCancel={() => setIsOpen(false)}
       headingIcon={<KeyIcon />}
@@ -87,6 +87,6 @@ export const LicenseIncapableModal = ({ type, isOpen, setIsOpen }: IProps) => {
         Regrettably, the feature you're looking for isn't included in the
         current licensing agreement.
       </Row>
-    </BoslerModal>
+    </MtdModal>
   );
 };

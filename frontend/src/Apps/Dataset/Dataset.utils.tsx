@@ -1,10 +1,10 @@
 import { Tag } from "antd";
-import { DatabaseViewIcon, TreeIcon } from "assets/icons/boslerDataIcons";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import { DocsIcon } from "assets/icons/boslerFileIcons";
-import { CalendarIcon, ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import { PulseIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+import { DatabaseViewIcon, TreeIcon } from "assets/icons/mtdDataIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
+import { CalendarIcon, ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import { PulseIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
 import { TBuildTrigger } from "components/Builds/Builds.types";
 import { ReadOnlyCodePanel } from "components/bottomBar/ReadOnlyCodePanel/ReadOnlyCodePanel.view";
@@ -23,7 +23,7 @@ export const getDatasetBottombarItems = (
   isBuildDataset: boolean,
   buildId: string,
   buildTrigger: TBuildTrigger
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     ...(buildId
       ? [

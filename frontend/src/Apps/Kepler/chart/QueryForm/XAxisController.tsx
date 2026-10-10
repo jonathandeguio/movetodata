@@ -1,6 +1,6 @@
 import { DatasetColumn } from "Apps/Kepler/kepler";
 import { Form, Select, Tooltip, Typography } from "antd";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import React, { useState } from "react";
 import { getLanguageLabel, isDefined } from "utils/utilities";
 import { KeplerConfig } from "../charts.config";

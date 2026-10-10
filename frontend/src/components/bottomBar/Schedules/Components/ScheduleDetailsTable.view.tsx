@@ -1,9 +1,9 @@
 import { Col, Row, Skeleton, Tabs, Tooltip, Typography } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
-import { SyncIcon, WarningIcon } from "assets/icons/boslerActionIcons";
-import { InfoIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import { SyncIcon, WarningIcon } from "assets/icons/mtdActionIcons";
+import { InfoIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import NoData from "components/CommonUI/NoData";
 import React, { useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";

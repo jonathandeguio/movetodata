@@ -6,10 +6,10 @@ import {
   getStatusBasedColor,
   TACCESS_MANAGER_STATUS,
 } from "Apps/AccessManager/AccessManager.utils";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { TickSmallIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { TickSmallIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -62,7 +62,7 @@ export const AccessRequestAction = ({
                 {accessRequest.status}
               </strong>{" "}
               {getLanguageLabel("by")}{" "}
-              <BoslerUserPopover id={accessRequest.closedBy} />{" "}
+              <MtdUserPopover id={accessRequest.closedBy} />{" "}
               <Tooltip title={timeConverter(accessRequest.closedAt)}>
                 {getTimeDisplay(accessRequest.closedAt)}
               </Tooltip>
@@ -79,16 +79,16 @@ export const AccessRequestAction = ({
               />
               <Row justify={"end"} gutter={[16, 16]}>
                 {/* <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<ArchiveIcon />}
                     //onClick={() => handleCloseRequest(ACCESS_MANAGER_STATUS.ACCEPTED)}
                     intent="none"
                   >
                     Archive
-                  </BoslerButton>
+                  </MtdButton>
                 </Col> */}
                 <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<TickSmallIcon />}
                     onClick={() =>
                       handleCloseRequest(ACCESS_MANAGER_STATUS.ACCEPTED)
@@ -96,10 +96,10 @@ export const AccessRequestAction = ({
                     intent="success"
                   >
                     {getLanguageLabel("approve")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Col>
                 <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<CrossIcon />}
                     onClick={() =>
                       handleCloseRequest(ACCESS_MANAGER_STATUS.REJECTED)
@@ -107,7 +107,7 @@ export const AccessRequestAction = ({
                     intent="dangerous"
                   >
                     {getLanguageLabel("reject")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Col>
               </Row>
             </>

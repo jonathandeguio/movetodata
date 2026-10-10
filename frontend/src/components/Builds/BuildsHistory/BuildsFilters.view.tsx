@@ -1,15 +1,15 @@
 import { Avatar, Col, Flex, Radio, Row, Select, Space } from "antd";
 import { RadioChangeEvent } from "antd/lib";
-import { LinkIcon } from "assets/icons/boslerActionIcons";
+import { LinkIcon } from "assets/icons/mtdActionIcons";
 import {
   PostgresIcon,
   PythonIcon,
   SparkSQLIcon,
-} from "assets/icons/boslerExternalIcons";
-import { UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import { FilterIcon, TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdExternalIcons";
+import { UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import { FilterIcon, TableIcon } from "assets/icons/mtdTableIcons";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -50,7 +50,7 @@ export const BuildsFilters = ({ filters, setFilters }: IProps) => {
       <Row gutter={[8, 8]}>
         <Col span={24}>Build ID</Col>
         <Col span={24}>
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("search")}
             value={filters.searchText}
             onChange={(e) => {
@@ -114,7 +114,7 @@ export const BuildsFilters = ({ filters, setFilters }: IProps) => {
         <Col span={24}>{getLanguageLabel("startedAt")}</Col>
         <Col span={12}>
           {getLanguageLabel("from")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeFrom}
             onChange={(date: number) => {
               setFilters((f: IBuildFilters) => {
@@ -128,7 +128,7 @@ export const BuildsFilters = ({ filters, setFilters }: IProps) => {
         </Col>
         <Col span={12}>
           {getLanguageLabel("to")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeTo}
             onChange={(date: number) => {
               setFilters((f: IBuildFilters) => {
@@ -146,7 +146,7 @@ export const BuildsFilters = ({ filters, setFilters }: IProps) => {
         <Col span={24}>{getLanguageLabel("finishedAt")}</Col>
         <Col span={12}>
           {getLanguageLabel("from")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.finishRangeFrom}
             onChange={(date: number) => {
               setFilters((f: IBuildFilters) => {
@@ -160,7 +160,7 @@ export const BuildsFilters = ({ filters, setFilters }: IProps) => {
         </Col>
         <Col span={12}>
           {getLanguageLabel("to")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.finishRangeTo}
             onChange={(date: number) => {
               setFilters((f: IBuildFilters) => {

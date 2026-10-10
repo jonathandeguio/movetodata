@@ -1,8 +1,8 @@
 import { Col, Input, Popover, Row, Tooltip, Typography } from "antd";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { Buffer } from "buffer";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BoslerTag } from "components/Tag/Tag";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { MtdTag } from "components/Tag/Tag";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +54,7 @@ export const SourceButtonPopover: React.FC<SourceButtonPopoverProps> = ({
               gutter={[16, 16]}
             >
               <Col>
-                <BoslerButton
+                <MtdButton
                   onClick={() =>
                     navigate(
                       `/portal/connect/source/${(source as $TSFixMe).id}`
@@ -67,13 +67,13 @@ export const SourceButtonPopover: React.FC<SourceButtonPopoverProps> = ({
                   minimal
                 >
                   {(source as $TSFixMe).name}
-                </BoslerButton>
+                </MtdButton>
               </Col>
               <Col>
-                <BoslerTag color={"var(--SUCCESS_COLOR)"}>
+                <MtdTag color={"var(--SUCCESS_COLOR)"}>
                   {(source as $TSFixMe)["dbmsType"] &&
                     capitalizeFirstLetter((source as $TSFixMe)["dbmsType"])}
-                </BoslerTag>
+                </MtdTag>
               </Col>
             </Row>
             <Row

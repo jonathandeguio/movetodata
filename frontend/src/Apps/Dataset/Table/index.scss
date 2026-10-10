@@ -1,17 +1,17 @@
-.boslertable-wrapper {
+.mtdtable-wrapper {
   overflow: auto;
   border: 1px solid var(--movetodata-border-color-muted);
   position: relative;
   display: flex;
 }
 
-.boslertable-container {
+.mtdtable-container {
   overflow: auto;
   border: 1px solid var(--movetodata-border-color-muted);
   width: 100%;
 }
 
-.boslertable {
+.mtdtable {
   // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans,
   //   Ubuntu, Cantarell, Helvetica Neue, sans-serif;
   font-size: 14px;
@@ -157,7 +157,7 @@
   }
 }
 
-.boslertable-topbar {
+.mtdtable-topbar {
   // margin: 0 20px;
   display: flex;
   align-content: center;
@@ -255,7 +255,7 @@
   color: var(--movetodata-table-body-text-color);
 }
 
-.boslertable-container {
+.mtdtable-container {
   tbody {
     // height: calc(((100vh - 3rem) - 40px) - 26px - 80px);
     // table-layout: fixed;
@@ -271,7 +271,7 @@
   }
 }
 
-.boslerTableShimmer {
+.mtdTableShimmer {
   color: grey;
   display: inline-block;
   mask: linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/300% 100%;

@@ -1,17 +1,17 @@
 import { IconForColumnType } from "Apps/Kepler/chart/charts.utils";
 import { Tag } from "antd";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
-import { AddIcon, CrossIcon, SyncIcon } from "assets/icons/boslerActionIcons";
-import { ChangeLogIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { AddIcon, CrossIcon, SyncIcon } from "assets/icons/mtdActionIcons";
+import { ChangeLogIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import NoData from "components/CommonUI/NoData";
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
 import { getLanguageLabel, isDefined } from "utils/utilities";
 import styles from "./ColumnSelection.module.scss";
 import LocalColumnStats from "./LocalColumnStats";
-import { BoslerTypography } from "components/CommonUI/BoslerTypography";
+import { MtdTypography } from "components/CommonUI/MtdTypography";
 import { Opacity } from "tsparticles-engine";
 interface IProps {
   columns: any;
@@ -72,11 +72,11 @@ const ColumnElement = ({
       >
         <div className={styles.columnSelection_text}>
           <IconForColumnType type={column.type} />
-          <BoslerTypography tooltip ellipsis>
+          <MtdTypography tooltip ellipsis>
             {column.id}
-          </BoslerTypography>
+          </MtdTypography>
         </div>
-        <BoslerButton
+        <MtdButton
           style={{ opacity: showBtn ? 1 : 0 }}
           intent={isVisible ? "dangerous" : "primary"}
           onClick={(e: any) => handleColumnChange(e, column)}
@@ -86,7 +86,7 @@ const ColumnElement = ({
           icon={isVisible ? <CrossIcon /> : <AddIcon />}
         >
           {isVisible ? getLanguageLabel("remove") : getLanguageLabel("add")}
-        </BoslerButton>
+        </MtdButton>
       </div>
       {showStats && <LocalColumnStats column={column} data={data} />}
     </div>
@@ -127,11 +127,11 @@ const ColumnSelection = ({ columns, tableInstance }: IProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.columnSelection_search}>
-        <BoslerInput
+        <MtdInput
           placeholder={getLanguageLabel("searchColumns")}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <BoslerButton
+        <MtdButton
           icon={<SyncIcon />}
           icononly
           onClick={handleVisibilityReset}
@@ -139,8 +139,8 @@ const ColumnSelection = ({ columns, tableInstance }: IProps) => {
           size="small"
         >
           {getLanguageLabel("reset")}
-        </BoslerButton>
-        <BoslerButton
+        </MtdButton>
+        <MtdButton
           icon={<ChangeLogIcon />}
           icononly
           onClick={handleColumnsSwap}
@@ -148,9 +148,9 @@ const ColumnSelection = ({ columns, tableInstance }: IProps) => {
           size="small"
         >
           Exchange selected and unselected columns
-        </BoslerButton>
+        </MtdButton>
       </div>
-      <div className="BoslerHeader1 --flex-gap5">
+      <div className="MtdHeader1 --flex-gap5">
         {getLanguageLabel("columns")} {getLanguageLabel("selected")}{" "}
         <Tag color="green">
           {
@@ -171,7 +171,7 @@ const ColumnSelection = ({ columns, tableInstance }: IProps) => {
           />
         );
       })}
-      <div className="BoslerHeader1">{getLanguageLabel("columns")}</div>
+      <div className="MtdHeader1">{getLanguageLabel("columns")}</div>
       {tableInstance.getIsAllColumnsVisible() && (
         <div>
           <NoData icon={<SearchEmptyState />} />

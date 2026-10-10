@@ -1,5 +1,5 @@
 import { Progress } from "antd";
-import { ZoomInIcon, ZoomOutIcon } from "assets/icons/boslerNavigationIcon";
+import { ZoomInIcon, ZoomOutIcon } from "assets/icons/mtdNavigationIcon";
 import { TFilterAddOperator } from "components/Filters/FilterConfirmationPopup";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -105,7 +105,7 @@ const LocalColumnStats = ({ column, data }: IProps) => {
 
   return (
     <div className={styles.distribution}>
-      <div className="BoslerSubHeader1">
+      <div className="MtdSubHeader1">
         Top {distribution.length} values in{" "}
         <a onClick={() => handleAddFilterCase("exists", column, null)}>
           {validValuesCount}
@@ -115,7 +115,7 @@ const LocalColumnStats = ({ column, data }: IProps) => {
       {distribution.map((distribution) => (
         <div className={styles.distribution_element}>
           <div className={styles.distribution_element_header}>
-            <div className="BoslerSubHeader1">{distribution.name}</div>
+            <div className="MtdSubHeader1">{distribution.name}</div>
             <div className={styles.distribution_element_header_icons}>
               <div
                 onClick={() =>

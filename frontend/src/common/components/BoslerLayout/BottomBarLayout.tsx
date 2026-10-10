@@ -1,5 +1,5 @@
 import React from "react";
-import { BoslerBottomBar } from "./BoslerBottomBar";
+import { MtdBottomBar } from "./MtdBottomBar";
 import "./bottomBarLayout.scss";
 
 export interface IBottomBarLayoutBody {}
@@ -11,5 +11,5 @@ export interface IBottomBarLayout {
 export const BottomBarLayout: React.FC<{ children: JSX.Element }> = ({
   children,
 }) => {
-  return <BoslerBottomBar children={children} />;
+  return <MtdBottomBar children={children} />;
 };

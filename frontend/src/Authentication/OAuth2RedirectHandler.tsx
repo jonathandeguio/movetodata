@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { BOSLER_TOKEN } from "./constants";
+import { MTD_TOKEN } from "./constants";
 import { Navigate, useSearchParams } from "react-router-dom";
 
 const OAuth2RedirectHandler = () => {
@@ -10,7 +10,7 @@ const OAuth2RedirectHandler = () => {
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem(BOSLER_TOKEN, token);
+      localStorage.setItem(MTD_TOKEN, token);
     }
   }, []);
 

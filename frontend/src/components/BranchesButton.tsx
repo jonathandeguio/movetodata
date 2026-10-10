@@ -2,19 +2,19 @@ import { Button, Divider, Select, Space, Tooltip } from "antd";
 import {
   GitCommitIcon,
   GitNewBranchIcon,
-} from "assets/icons/boslerExternalIcons";
+} from "assets/icons/mtdExternalIcons";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   SingleChevronRightIcon,
   TickSmallIcon,
-} from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdNavigationIcon";
 import React, { useState } from "react";
 import { getLanguageLabel, isDefined } from "utils/utilities";
-import { AddIcon, RemoveIcon } from "../assets/icons/boslerActionIcons";
-import BoslerButton from "./BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "./BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "./CommonUI/BoslerModalContainer";
+import { AddIcon, RemoveIcon } from "../assets/icons/mtdActionIcons";
+import MtdButton from "./MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "./MtdComponents/InputComponent/MtdInput";
+import MtdModal from "./CommonUI/MtdModalContainer";
 import { gitCommitIdRegex } from "./editor/editor.utils";
 
 interface IEditorBranchesButton {
@@ -185,7 +185,7 @@ const BranchesButton = ({
         </Button>
         </Tooltip>
       </Space.Compact>
-      <BoslerModal
+      <MtdModal
         destroyOnClose
         headingIcon={<GitCommitIcon />}
         heading={"Checkout to a revision"}
@@ -198,7 +198,7 @@ const BranchesButton = ({
         cancelButtonProps={{ icon: <RemoveIcon /> }}
         footerButtonArea={
           <>
-            <BoslerButton
+            <MtdButton
               onClick={() => {
                 setRevisionModal(false);
                 setErrorMessage(undefined);
@@ -206,8 +206,8 @@ const BranchesButton = ({
               icon={<RemoveIcon />}
             >
               Cancel
-            </BoslerButton>
-            <BoslerButton
+            </MtdButton>
+            <MtdButton
               onClick={() => {
                 setRevisionModal(false);
               }}
@@ -216,11 +216,11 @@ const BranchesButton = ({
               icon={<TickSmallIcon />}
             >
               Checkout
-            </BoslerButton>
+            </MtdButton>
           </>
         }
       >
-        <BoslerInput
+        <MtdInput
           placeholder="Enter a valid commit id"
           onChange={(e) => {
             if (gitCommitIdRegex.test(e.target.value)) {
@@ -233,7 +233,7 @@ const BranchesButton = ({
         {isDefined(errorMessage) && (
           <div style={{ color: "red" }}>{errorMessage}</div>
         )}
-      </BoslerModal>
+      </MtdModal>
     </div>
   );
 };

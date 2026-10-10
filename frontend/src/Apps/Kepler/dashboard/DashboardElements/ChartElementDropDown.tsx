@@ -1,12 +1,12 @@
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
 import { Dropdown } from "antd";
-import { RefreshIcon, SettingsIcon } from "assets/icons/boslerActionIcons";
-import { GraphIcon } from "assets/icons/boslerChartIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { ZoomToFitIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { RefreshIcon, SettingsIcon } from "assets/icons/mtdActionIcons";
+import { GraphIcon } from "assets/icons/mtdChartIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { ZoomToFitIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { getLanguageLabel } from "utils/utilities";
@@ -40,7 +40,7 @@ const ChartElementDropDown = ({
             label: (
               <>
                 <div className="text-and-icon-center">
-                  <BoslerInfoPopover
+                  <MtdInfoPopover
                     id={chartData?.chartState?.id}
                     type={ResourceTypeEnum.CHART}
                   />

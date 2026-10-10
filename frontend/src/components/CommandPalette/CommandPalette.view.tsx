@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import {
   DocumentationIcon,
   FolderIcon,
-} from "../../assets/icons/boslerFileIcons";
+} from "../../assets/icons/mtdFileIcons";
 
 import {
   getLanguageLabel,
@@ -21,8 +21,8 @@ import {
   MonitorIcon,
   PulseIcon,
   StarIcon,
-} from "../../assets/icons/boslerMiscellaneousIcons";
-import { TableCellIcon } from "../../assets/icons/boslerTableIcons";
+} from "../../assets/icons/mtdMiscellaneousIcons";
+import { TableCellIcon } from "../../assets/icons/mtdTableIcons";
 import { updateUserDetails } from "../../redux/actions/userActions";
 
 import ReactCountryFlag from "react-country-flag";
@@ -38,8 +38,8 @@ import CreateNewDashboardModal from "Apps/Kepler/utils/CreateNewDashboardModal";
 import CreateNewChartModal from "../Modals/CreateNewChartModal";
 
 import { KEPLER_USE_CASES } from "Apps/Kepler/chart/charts.utils";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { FRACTAL_USE_CASES } from "components/editor/editor.constants";
 import SBElement from "layouts/Sidebar/SBElement";
 import { LayoutViewEnum } from "layouts/Sidebar/Sidebar.utils";
@@ -54,9 +54,9 @@ import {
   SearchIcon,
   SelectNodeIcon,
   SparklesIcon,
-} from "../../assets/icons/boslerActionIcons";
-import { ChartIcon } from "../../assets/icons/boslerChartIcons";
-import { CodeCellIcon, EditIcon } from "../../assets/icons/boslerEditorIcons";
+} from "../../assets/icons/mtdActionIcons";
+import { ChartIcon } from "../../assets/icons/mtdChartIcons";
+import { CodeCellIcon, EditIcon } from "../../assets/icons/mtdEditorIcons";
 import {
   AppIcon,
   ApplicationIcon,
@@ -67,11 +67,11 @@ import {
   KeyIcon,
   ScheduledRunIcon,
   UploadIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdInterfaceIcons";
 import {
   TickIcon,
   ZoomToFitIcon,
-} from "../../assets/icons/boslerNavigationIcon";
+} from "../../assets/icons/mtdNavigationIcon";
 import ConfirmDeleteModal from "../Modals/ConfirmDeleteModal";
 import { updateUserDataAPI } from "./CommandPalette.api";
 import { CLOSE_COMMAND_PALETTE_HOT_KEYS } from "./CommandPalette.constants";
@@ -90,7 +90,7 @@ interface TProps {
   ref?: any;
 }
 
-const BoslerCommandPalette = ({
+const MtdCommandPalette = ({
   iconSize,
   showText,
   selected,
@@ -185,14 +185,14 @@ const BoslerCommandPalette = ({
         </>
       )}
 
-      <BoslerModal
+      <MtdModal
         headingIcon={<SelectNodeIcon />}
         heading={getLanguageLabel("shortcuts")}
         width={650}
         open={isCmdModalOpen}
         onCancel={() => setIsCmdModalOpen(false)}
         extraActionHeading={
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("search")}
             suffix={<SearchIcon />}
             autofocus
@@ -912,7 +912,7 @@ const BoslerCommandPalette = ({
             </Row>
           </Item>
         </Menu>
-      </BoslerModal>
+      </MtdModal>
       <SBElement
         icon={<SelectNodeIcon color={"#7f879f"} size={iconSize} />}
         tooltip={
@@ -932,4 +932,4 @@ const BoslerCommandPalette = ({
   );
 };
 
-export default BoslerCommandPalette;
+export default MtdCommandPalette;

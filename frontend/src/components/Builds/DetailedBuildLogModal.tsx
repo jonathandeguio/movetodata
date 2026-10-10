@@ -1,4 +1,4 @@
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -10,7 +10,7 @@ interface TProps {
 
 const DetailedBuildLogModal = ({ open, content, onCancel }: TProps) => {
   return (
-    <BoslerModal
+    <MtdModal
       heading={getLanguageLabel("detailedLogs")}
       open={open}
       width="70vw"
@@ -29,7 +29,7 @@ const DetailedBuildLogModal = ({ open, content, onCancel }: TProps) => {
       >
         {content}
       </div>
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

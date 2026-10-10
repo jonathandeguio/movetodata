@@ -8,7 +8,7 @@ const BuildLog = ({ id, visible, page }: $TSFixMe) => {
   // );
   //
   // if (!dataBuildSpec) {
-  //   return <BoslerLoader />;
+  //   return <MtdLoader />;
   // }
 
   return (

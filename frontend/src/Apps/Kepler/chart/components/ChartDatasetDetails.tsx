@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { useEffect, useState } from "react";
 
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerLoader from "components/boslerLoader";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdLoader from "components/mtdLoader";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
 import {
@@ -92,7 +92,7 @@ function ChartDatasetDetails({ datasetId }: { datasetId: string }) {
   if (!isDefined(columns) || !isDefined(datasetDetails)) {
     return (
       <div style={{ width: "100%" }}>
-        <BoslerLoader />;
+        <MtdLoader />;
       </div>
     );
   }
@@ -156,7 +156,7 @@ function ChartDatasetDetails({ datasetId }: { datasetId: string }) {
             padding: 12px;
           `}
         >
-          <BoslerInput
+          <MtdInput
             style={{
               marginBottom: "8px",
             }}

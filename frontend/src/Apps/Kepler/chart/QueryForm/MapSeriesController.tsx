@@ -1,10 +1,10 @@
 import { Collapse, Form, Select } from "antd";
-import { AddIcon, CrossIcon } from "assets/icons/boslerActionIcons";
+import { AddIcon, CrossIcon } from "assets/icons/mtdActionIcons";
 import React from "react";
 import { KeplerConfig } from "../charts.config";
 
-import { HeatMapIcon, MapScatterIcon } from "assets/icons/boslerChartIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { HeatMapIcon, MapScatterIcon } from "assets/icons/mtdChartIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { getLanguageLabel } from "utils/utilities";
 
 const MapSeriesItem = (props: {
@@ -179,7 +179,7 @@ const MapSeriesHOC = (props: any) => {
                   name={[props.fieldName, "layerName"]}
                   style={{ marginBottom: "0" }}
                 >
-                  <BoslerInput
+                  <MtdInput
                     debounceInterval={1000}
                     variant={"borderless"}
                     style={{ borderRadius: 0 }}

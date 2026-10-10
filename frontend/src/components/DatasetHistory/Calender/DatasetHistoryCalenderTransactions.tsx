@@ -73,7 +73,7 @@ const DatasetHistoryCalenderTransactions = ({ datasetMapping }: TProps) => {
 
   return (
     <div className={styles.rightPanel}>
-      <div className={"BoslerHeader1"}>Transactions</div>
+      <div className={"MtdHeader1"}>Transactions</div>
       <div className={styles.rightPanelContent}>
         {transactions.map((transaction: TTransaction, _index: number) => {
           if (transaction.buildStatus == BuildStatusEnum.SUCCESS)

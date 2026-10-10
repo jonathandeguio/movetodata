@@ -1,14 +1,14 @@
 import { Col, Flex, Form, Row } from "antd";
-import { RemoveIcon } from "assets/icons/boslerActionIcons";
-import { BooleanIcon } from "assets/icons/boslerDataIcons";
+import { RemoveIcon } from "assets/icons/mtdActionIcons";
+import { BooleanIcon } from "assets/icons/mtdDataIcons";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   TickIcon,
   TickSmallIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -61,7 +61,7 @@ export const RequestAccessModal = ({
   };
 
   return (
-    <BoslerModal
+    <MtdModal
       width="700px"
       destroyOnClose
       headingIcon={<BooleanIcon />}
@@ -73,17 +73,17 @@ export const RequestAccessModal = ({
       footerButtonArea={
         <Row gutter={[16, 16]}>
           <Col>
-            <BoslerButton
+            <MtdButton
               disabled={currentStep == 0}
               icon={<ArrowLeftIcon />}
               onClick={handleMoveBack}
             >
               {getLanguageLabel("back")}
-            </BoslerButton>
+            </MtdButton>
           </Col>
 
           <Col>
-            <BoslerButton
+            <MtdButton
               actionIcon={
                 isLastStep(currentStep) ? <TickIcon /> : <ArrowRightIcon />
               }
@@ -94,7 +94,7 @@ export const RequestAccessModal = ({
               {getLanguageLabel(
                 isLastStep(currentStep) ? "requestAccess" : "next"
               )}
-            </BoslerButton>
+            </MtdButton>
           </Col>
         </Row>
       }
@@ -115,6 +115,6 @@ export const RequestAccessModal = ({
           />
         </Form>
       </Flex>
-    </BoslerModal>
+    </MtdModal>
   );
 };

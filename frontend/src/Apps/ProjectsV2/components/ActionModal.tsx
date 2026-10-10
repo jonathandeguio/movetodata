@@ -1,9 +1,9 @@
 import { Form } from "antd";
 import { FORM_FIELDS } from "Apps/ProjectsV2/utils/Projects.utils";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -37,27 +37,27 @@ const ActionModal = ({
         }
       }}
     >
-      <BoslerModal
+      <MtdModal
         open={isOpen}
         onCancel={close}
         footerButtonArea={
           <Form.Item>
-            <BoslerButton
+            <MtdButton
               intent="success"
               htmlType="submit"
               onClick={() => form.submit()}
               icon={<TickIcon />}
             >
               {getLanguageLabel("update")}
-            </BoslerButton>
+            </MtdButton>
           </Form.Item>
         }
         heading={heading}
       >
         <Form.Item name={FORM_FIELDS.NAME}>
-          <BoslerInput />
+          <MtdInput />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

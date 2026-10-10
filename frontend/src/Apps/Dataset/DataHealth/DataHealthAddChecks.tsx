@@ -4,16 +4,16 @@ import {
   CrossIcon,
   HistoricalRunsIcon,
   SyncIcon,
-} from "assets/icons/boslerActionIcons";
-import { TreeIcon } from "assets/icons/boslerDataIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { DocsIcon } from "assets/icons/boslerFileIcons";
-import { TickSmallIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdActionIcons";
+import { TreeIcon } from "assets/icons/mtdDataIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
+import { TickSmallIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import StripMenu from "common/components/StripMenu";
 import { TGeneralMenuItem } from "common/types";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useState } from "react";
 import { useParams } from "react-router";
 import { putDataHealthAPI } from "./DataHealth.api";
@@ -179,18 +179,18 @@ const DataHealthAddChecks = () => {
 
   return (
     <div>
-      <div className="BoslerHeader1">Add Checks</div>
+      <div className="MtdHeader1">Add Checks</div>
       <div>
         <StripMenu items={items} />
       </div>
       {
-        <BoslerModal
+        <MtdModal
           headingIcon={<EditIcon />}
           heading={"Add Check"}
           open={isOpen}
           footerButtonArea={
             <>
-              <BoslerButton
+              <MtdButton
                 icon={<TickSmallIcon />}
                 loading={isLoading}
                 intent={intent}
@@ -200,8 +200,8 @@ const DataHealthAddChecks = () => {
                 }}
               >
                 save
-              </BoslerButton>
-              <BoslerButton
+              </MtdButton>
+              <MtdButton
                 icon={<CrossIcon />}
                 onClick={() => {
                   handleClose();
@@ -209,12 +209,12 @@ const DataHealthAddChecks = () => {
                 intent="dangerous"
               >
                 cancel
-              </BoslerButton>
+              </MtdButton>
             </>
           }
         >
           {getModelContent(dataHealthType)}
-        </BoslerModal>
+        </MtdModal>
       }
     </div>
   );

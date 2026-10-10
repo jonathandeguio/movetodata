@@ -12,7 +12,7 @@ interface TProps {
 const EntryPopover = ({ userId, entryTime, children }: TProps) => {
   return (
     <Popover
-      title={<div className="BoslerHeader1">{getLanguageLabel("details")}</div>}
+      title={<div className="MtdHeader1">{getLanguageLabel("details")}</div>}
       content={
         <>
           <div className={styles.editRowHead}>

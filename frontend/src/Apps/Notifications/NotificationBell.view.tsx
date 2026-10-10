@@ -17,14 +17,14 @@ import {
   CrossIcon,
   NotificationIcon,
   SparklesIcon,
-} from "assets/icons/boslerActionIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdActionIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import "./Notifications.scss";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BoslerInfiniteScroll } from "components/BoslerInfiniteScroll/BoslerInfiniteScroll.view";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { MtdInfiniteScroll } from "components/MtdInfiniteScroll/MtdInfiniteScroll.view";
 import { fetchUsersDetailsAPI } from "components/Builds/Builds.api";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import SBElement from "layouts/Sidebar/SBElement";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -225,7 +225,7 @@ export const NotificationBell = ({
             </Col>
             {notifications.length > 0 && (
               <Col>
-                <BoslerButton
+                <MtdButton
                   intent={"action"}
                   icon={<SparklesIcon />}
                   onClick={() =>
@@ -242,7 +242,7 @@ export const NotificationBell = ({
                   outlined
                 >
                   Mark as read
-                </BoslerButton>
+                </MtdButton>
               </Col>
             )}
           </Row>
@@ -260,7 +260,7 @@ export const NotificationBell = ({
                 <Col>{getLanguageLabel("noNewNotifications")}</Col>
               </Row>
             )}
-            <BoslerInfiniteScroll
+            <MtdInfiniteScroll
               pageSize={pageSize}
               isLoading={isLoading}
               next={resurfaceNotifications}
@@ -290,7 +290,7 @@ export const NotificationBell = ({
                       }
                       actions={[
                         <Col>
-                          <BoslerButton
+                          <MtdButton
                             intent="dangerous"
                             onClick={() =>
                               deleteNotificationAPI(notification.id).then(() =>
@@ -365,7 +365,7 @@ export const NotificationBell = ({
                             }}
                           >
                             <Col>
-                              <BoslerUserPopover
+                              <MtdUserPopover
                                 record={
                                   userMap != undefined &&
                                   (userMap as any)[notification?.influencer]
@@ -379,7 +379,7 @@ export const NotificationBell = ({
                                     (userMap as any)[notification?.influencer]
                                       ?.name}
                                 </strong>
-                              </BoslerUserPopover>{" "}
+                              </MtdUserPopover>{" "}
                               {getNotificationPrefix(notification.type)}:{" "}
                               {notification.message}
                               <br />
@@ -398,7 +398,7 @@ export const NotificationBell = ({
                   );
                 })}
               </List>
-            </BoslerInfiniteScroll>
+            </MtdInfiniteScroll>
           </div>{" "}
         </div>
       }

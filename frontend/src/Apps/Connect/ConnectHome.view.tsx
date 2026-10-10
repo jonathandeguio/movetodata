@@ -2,12 +2,12 @@ import { Card, Col, Divider, Row, Typography } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
 import Meta from "antd/es/card/Meta";
-import { LinkIcon, PublishIcon } from "assets/icons/boslerActionIcons";
-import { DataAgentsIcon, DatabaseIcon } from "assets/icons/boslerDataIcons";
-import { LightBulbIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { LinkIcon, PublishIcon } from "assets/icons/mtdActionIcons";
+import { DataAgentsIcon, DatabaseIcon } from "assets/icons/mtdDataIcons";
+import { LightBulbIcon } from "assets/icons/mtdMiscellaneousIcons";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -205,7 +205,7 @@ const ConnectHome = () => {
           </div>
         </React.Fragment>
       ) : (
-        <BoslerLoader />
+        <MtdLoader />
       )}
     </>
   );

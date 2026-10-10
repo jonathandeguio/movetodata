@@ -1,9 +1,9 @@
 import { Divider } from "antd";
-import { LinkIcon } from "assets/icons/boslerActionIcons";
-import { DataAgentsIcon, DatabaseIcon } from "assets/icons/boslerDataIcons";
-import { DocsIcon, DocumentationIcon } from "assets/icons/boslerFileIcons";
-import { ChangeLogIcon } from "assets/icons/boslerInterfaceIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { LinkIcon } from "assets/icons/mtdActionIcons";
+import { DataAgentsIcon, DatabaseIcon } from "assets/icons/mtdDataIcons";
+import { DocsIcon, DocumentationIcon } from "assets/icons/mtdFileIcons";
+import { ChangeLogIcon } from "assets/icons/mtdInterfaceIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
 import React from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";

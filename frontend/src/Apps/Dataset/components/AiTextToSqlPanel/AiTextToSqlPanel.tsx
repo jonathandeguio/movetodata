@@ -29,7 +29,7 @@ import {
 import React, { useState } from "react";
 
 import { previewSourceAPI } from "Apps/Connect/Connect.api";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { textToSqlAPI, TextToSqlResponse } from "services/aiService";
 import { encodeToBase64, getLanguageLabel } from "utils/utilities";
 import "./AiTextToSqlPanel.css";
@@ -219,7 +219,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
           }}
           disabled={panelState === "loading"}
         />
-        <BoslerButton
+        <MtdButton
           intent="action"
           onClick={handleGenerate}
           disabled={!question.trim() || panelState === "loading"}
@@ -232,7 +232,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
           }
         >
           Générer le SQL
-        </BoslerButton>
+        </MtdButton>
       </div>
 
       {/* Error states */}
@@ -314,7 +314,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
           {/* Action buttons */}
           <div className="ai-text-to-sql-panel__actions">
             <Tooltip title="Copier le SQL">
-              <BoslerButton
+              <MtdButton
                 icon={<CopyOutlined />}
                 icononly
                 minimal
@@ -323,7 +323,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
             </Tooltip>
 
             <Tooltip title={isEditingSQL ? "Fermer l'éditeur" : "Modifier le SQL"}>
-              <BoslerButton
+              <MtdButton
                 icon={<EditOutlined />}
                 icononly
                 minimal
@@ -332,7 +332,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
               />
             </Tooltip>
 
-            <BoslerButton
+            <MtdButton
               icon={
                 isExecuting ? (
                   <Spin size="small" />
@@ -345,7 +345,7 @@ const AiTextToSqlPanel: React.FC<AiTextToSqlPanelProps> = ({
               disabled={isExecuting || !(isEditingSQL ? editableSql : result.sql)}
             >
               Exécuter
-            </BoslerButton>
+            </MtdButton>
           </div>
 
           {/* Preview error */}

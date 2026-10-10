@@ -1,17 +1,17 @@
 import { formatDateAgo } from "Apps/explorer/explorer.utils";
 import { Tooltip } from "antd";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
-import { EyeIcon, HistoryIcon } from "assets/icons/boslerActionIcons";
-import { GitCommitIcon } from "assets/icons/boslerExternalIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { EyeIcon, HistoryIcon } from "assets/icons/mtdActionIcons";
+import { GitCommitIcon } from "assets/icons/mtdExternalIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronDownIcon,
   SingleChevronRightIcon,
   UndoIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import NoData from "components/CommonUI/NoData";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -224,7 +224,7 @@ export const GitLens = ({ path }: IGitLens) => {
                             placement="topRight"
                             title={"Click hard reset files to this point"}
                           >
-                            <BoslerButton
+                            <MtdButton
                               icononly
                               minimal
                               onClick={() => {
@@ -236,7 +236,7 @@ export const GitLens = ({ path }: IGitLens) => {
                                     headingIcon: <TrashIcon />,
 
                                     footerButtonArea: (
-                                      <BoslerButton
+                                      <MtdButton
                                         intent="dangerous"
                                         onClick={() => {
                                           checkout(id, branch, item.id)
@@ -267,7 +267,7 @@ export const GitLens = ({ path }: IGitLens) => {
                                         }}
                                       >
                                         Reset
-                                      </BoslerButton>
+                                      </MtdButton>
                                     ),
                                     children: (
                                       <>
@@ -294,7 +294,7 @@ export const GitLens = ({ path }: IGitLens) => {
                             placement="rightTop"
                             title={"Click to view files at this commit"}
                           >
-                            <BoslerButton
+                            <MtdButton
                               onClick={(e: MouseEvent) => {
                                 e.preventDefault();
                                 navigate(
@@ -314,7 +314,7 @@ export const GitLens = ({ path }: IGitLens) => {
               </>
             );
           })}
-        <BoslerModal
+        <MtdModal
           onCancel={() =>
             setModalProps({
               open: false,

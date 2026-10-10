@@ -1,8 +1,8 @@
-import { CrossIcon, PinIcon } from "assets/icons/boslerActionIcons";
+import { CrossIcon, PinIcon } from "assets/icons/mtdActionIcons";
 import React, { useContext } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { useContextMenuState } from "../ContextMenu";
-import { TabContext } from "./BoslerTabsContext";
+import { TabContext } from "./MtdTabsContext";
 import { DraggableTabPaneHeaderItemProps, ItemType } from "./Tabs";
 import { ITabPane } from "./types";
 

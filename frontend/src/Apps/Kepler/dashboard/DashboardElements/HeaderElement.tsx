@@ -1,13 +1,13 @@
 import { Dropdown, Popover, Space, Tooltip } from "antd";
 import React, { useState } from "react";
 
-import { SettingsIcon } from "assets/icons/boslerActionIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { SettingsIcon } from "assets/icons/mtdActionIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
 
 import { getLanguageLabel } from "utils/utilities";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
-import { SingleChevronDownIcon } from "../../../../assets/icons/boslerNavigationIcon";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
+import { SingleChevronDownIcon } from "../../../../assets/icons/mtdNavigationIcon";
 import { updateTabElementAPI } from "../Dashboard.api";
 import {
   fontBackgroundItems,
@@ -113,7 +113,7 @@ const HeaderElement = (props: Props) => {
       {props.editable ? (
         <>
           <Tooltip title={getLanguageLabel("clickToRename")}>
-            <BoslerInput
+            <MtdInput
               style={{ fontSize: "22px", fontWeight: 500 }}
               editText
               className="editText"

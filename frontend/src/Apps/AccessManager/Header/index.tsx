@@ -1,5 +1,5 @@
 import { Col, Row, Tag, Typography } from "antd";
-import { BooleanIcon } from "assets/icons/boslerDataIcons";
+import { BooleanIcon } from "assets/icons/mtdDataIcons";
 import React, { Dispatch, SetStateAction } from "react";
 import { getLanguageLabel } from "utils/utilities";
 import styles from "../AcccessManager.module.scss";

@@ -8,7 +8,7 @@ import {
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { getLanguageLabel, getTimeDisplay, isDefined } from "utils/utilities";
-import { SearchIcon } from "../../assets/icons/boslerActionIcons";
+import { SearchIcon } from "../../assets/icons/mtdActionIcons";
 
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";

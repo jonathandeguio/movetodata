@@ -15,10 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUserDetails } from "../../redux/actions/userActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import { getLanguageLabel, openNotification } from "utils/utilities";
-import { LockIcon } from "../../assets/icons/boslerActionIcons";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { LockIcon } from "../../assets/icons/mtdActionIcons";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
 
 const { Text, Title } = Typography;
 const { Item } = Form;
@@ -219,14 +219,14 @@ const ChangePassword = () => {
           </Item>
 
           <Item wrapperCol={{ offset: 10, span: 14 }}>
-            <BoslerButton
+            <MtdButton
               icon={isPasswordChanged ? <TickIcon /> : <LockIcon />}
               intent={isPasswordChanged ? "success" : "action"}
               onClick={handleChangePassword}
               htmlType={"submit"}
             >
               {getLanguageLabel("changePassword")}
-            </BoslerButton>
+            </MtdButton>
           </Item>
         </Form>
       </div>

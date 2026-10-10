@@ -1,10 +1,10 @@
 import { Form } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const ChangeDescModal = ({
   changeDescServiceDetails,
@@ -25,7 +25,7 @@ const ChangeDescModal = ({
         handleUpdate(changeDescServiceDetails.id, values.description);
       }}
     >
-      <BoslerModal
+      <MtdModal
         open={changeDescServiceDetails.modalView}
         onCancel={() =>
           setChangeDescServiceDetails({
@@ -36,24 +36,24 @@ const ChangeDescModal = ({
         headingIcon={<EditIcon />}
         heading={getLanguageLabel("changeDescription")}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent="action"
             onClick={() => form.submit()}
             // icon={<SaveIcon />}
             textTransform="none"
           >
             {getLanguageLabel("update")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <Form.Item name="description">
-          <BoslerInput
+          <MtdInput
             bordered
             autoselect
             placeholder={getLanguageLabel("newDescription")}
           />
         </Form.Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

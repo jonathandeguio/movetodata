@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Divider, Table, Row, Col, Tooltip, Typography, Avatar } from "antd";
-import { AddIcon, SearchIcon } from "assets/icons/boslerActionIcons";
-import { GroupsIcon, KeyIcon } from "assets/icons/boslerInterfaceIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { AddIcon, SearchIcon } from "assets/icons/mtdActionIcons";
+import { GroupsIcon, KeyIcon } from "assets/icons/mtdInterfaceIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import GlobalSearch from "helpers/GlobalSearch";
 
 import { useNavigate } from "react-router-dom";
 import { getLanguageLabel } from "utils/utilities";
 import { GROUP_TYPE_NAME } from "../Groups.utils";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { DeleteGroupModal } from "./DeleteGroupModal";
 import { CreateNewGroupModal } from "./CreateNewGroupModal";
 import { RequestAccessModal } from "Apps/AccessManager/RequestAccessModal";
@@ -92,7 +92,7 @@ export const GroupTab = ({
           <Col>{text}</Col>
           <Col>
             {!isSystemGroup && (
-              <BoslerButton
+              <MtdButton
                 icononly
                 onClick={() => {
                   setDeleteGroupModalDetails({
@@ -106,7 +106,7 @@ export const GroupTab = ({
                 intent="dangerous"
               >
                 {getLanguageLabel("delete")}
-              </BoslerButton>
+              </MtdButton>
             )}
           </Col>
         </Row>
@@ -136,26 +136,26 @@ export const GroupTab = ({
                     placement="top"
                     title={getLanguageLabel("createNewGroup")}
                   >
-                    <BoslerButton
+                    <MtdButton
                       icon={<AddIcon />}
                       intent="action"
                       onClick={() => setIsCreateNewGroupModalOpen(true)}
                     >
                       {getLanguageLabel("newGroup")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Tooltip>
                 </Col>
               )}
 
               {isSystemGroup && (
                 <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<KeyIcon />}
                     intent="primary"
                     onClick={openRequestAccessModal}
                   >
                     {getLanguageLabel("requestAccess")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Col>
               )}
             </Row>
@@ -163,7 +163,7 @@ export const GroupTab = ({
         </Row>
         <Divider />
 
-        <BoslerInput
+        <MtdInput
           placeholder={getLanguageLabel("searchGroupsTable")}
           allowClear
           onChange={(e) => {

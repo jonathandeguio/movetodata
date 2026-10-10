@@ -2,13 +2,13 @@ import { Collapse, ColorPicker, Form } from "antd";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { KeplerConfig } from "../charts.config";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 
 const { Panel } = Collapse;
 
 export const MapCustomizer = () => {
   return (
-    <BoslerCollapse
+    <MtdCollapse
       collapsible="HEADER"
       header={
         <div className="query_item__heading">
@@ -36,6 +36,6 @@ export const MapCustomizer = () => {
           ]}
         />
       </Form.Item>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

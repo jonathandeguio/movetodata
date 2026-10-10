@@ -1,9 +1,9 @@
 import { notification, Typography } from "antd";
-import { CrossIcon, RefreshIcon } from "assets/icons/boslerActionIcons";
-import { BoslerIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { CrossIcon, RefreshIcon } from "assets/icons/mtdActionIcons";
+import { MtdIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { ping } from "common/common.api";
 import { ExplorerModal } from "common/components/ExplorerModal";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import ErrorBoundary from "ErrorBoundary/GeneralErrorBoundary";
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
@@ -88,9 +88,9 @@ function AppContainer() {
             opacity: 0;
           `;
 
-        // Render the BoslerIcon into the container
+        // Render the MtdIcon into the container
         ReactDOM.render(
-          <BoslerIcon size={size} color={color} />,
+          <MtdIcon size={size} color={color} />,
           iconContainer
         );
 
@@ -182,7 +182,7 @@ function AppContainer() {
           placement: "top",
           btn: (
             <div style={{ display: "flex" }}>
-              <BoslerButton
+              <MtdButton
                 onClick={() => {
                   notification.destroy("updatesNotification");
                   setIsCounting(false);
@@ -191,8 +191,8 @@ function AppContainer() {
                 icon={<CrossIcon />}
               >
                 {getLanguageLabel("cancel")}
-              </BoslerButton>
-              <BoslerButton
+              </MtdButton>
+              <MtdButton
                 intent="success"
                 onClick={handleReload}
                 style={{ marginLeft: 10 }}
@@ -201,7 +201,7 @@ function AppContainer() {
                 {getLanguageLabel("reload")} ( {countdown} )
                 {/* {<CountdownSpinner seconds={countdown} />} */}
                 <span className="confetti" ref={elementRef}></span>
-              </BoslerButton>
+              </MtdButton>
             </div>
           ),
         });

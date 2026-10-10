@@ -1,11 +1,11 @@
 import React from "react";
-import { TBoslerIconProps } from "./types";
+import { TMtdIconProps } from "./types";
 
 export const GitCommitIcon = ({
   size = 16, // or any default size of your choice
   color = "#717a94", // or any color of your choice
   style,
-}: TBoslerIconProps) => {
+}: TMtdIconProps) => {
   return (
     <div className="movetodata-icons" style={style}>
       <svg
@@ -58,7 +58,7 @@ export const GitDiffIcon = ({
   size = 16, // or any default size of your choice
   color = "#717a94", // or any color of your choice
   style,
-}: TBoslerIconProps) => {
+}: TMtdIconProps) => {
   return (
     <div className="movetodata-icons" style={style}>
       <svg

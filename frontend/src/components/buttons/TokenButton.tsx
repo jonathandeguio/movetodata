@@ -1,7 +1,7 @@
 import { Col, Divider, Row, Tooltip, Typography } from "antd";
-import { AddUserIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { AddUserIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,15 +10,15 @@ import {
   getStringWithAllowedChars,
   openNotification,
 } from "utils/utilities";
-import { AddIcon } from "../../assets/icons/boslerActionIcons";
-import { CopyIcon } from "../../assets/icons/boslerEditorIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import { AddIcon } from "../../assets/icons/mtdActionIcons";
+import { CopyIcon } from "../../assets/icons/mtdEditorIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { createToken, listTokens } from "../../redux/actions/tokenActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../boslerLoader";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../mtdLoader";
 
-const antIcon = <BoslerLoader />;
+const antIcon = <MtdLoader />;
 
 const { Title, Text } = Typography;
 let prevToken: $TSFixMe = undefined;
@@ -94,20 +94,20 @@ const TokenButton = () => {
             <Text type="secondary">{getLanguageLabel("tokenMsg")}</Text>
           </Col>
           <Col>
-            <BoslerButton
+            <MtdButton
               icon={<AddIcon />}
               intent="action"
               onClick={() => setVisible(true)}
             >
               {" "}
               {getLanguageLabel("newToken")}{" "}
-            </BoslerButton>
+            </MtdButton>
           </Col>
         </Row>
         <Divider />
       </p>
 
-      <BoslerModal
+      <MtdModal
         headingIcon={<AddUserIcon />}
         heading={
           showtoken
@@ -120,15 +120,15 @@ const TokenButton = () => {
         onCancel={handleCancel}
         footerButtonArea={
           showtoken ? (
-            <BoslerButton
+            <MtdButton
               icon={<CopyIcon />}
               intent="action"
               onClick={handleCopy}
             >
               {getLanguageLabel("copy")}
-            </BoslerButton>
+            </MtdButton>
           ) : (
-            <BoslerButton
+            <MtdButton
               icon={<TickIcon />}
               intent="action"
               loading={confirmLoading}
@@ -136,7 +136,7 @@ const TokenButton = () => {
               key="submit"
             >
               {getLanguageLabel("create")}
-            </BoslerButton>
+            </MtdButton>
           )
         }
       >
@@ -155,8 +155,8 @@ const TokenButton = () => {
           </div>
         ) : (
           <>
-            <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-            <BoslerInput
+            <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+            <MtdInput
               bordered
               autofocus
               onChange={(e) =>
@@ -167,10 +167,10 @@ const TokenButton = () => {
               required
             />
 
-            <div className="BoslerHeader1">
+            <div className="MtdHeader1">
               {getLanguageLabel("expiryDate")}
             </div>
-            <BoslerInput
+            <MtdInput
               placeholder="Expiry"
               onChange={(e) => setExpiry(e.target.value)}
               type="date"
@@ -178,7 +178,7 @@ const TokenButton = () => {
             />
           </>
         )}
-      </BoslerModal>
+      </MtdModal>
     </div>
   );
 };

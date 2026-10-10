@@ -1,7 +1,7 @@
 import { Card } from "antd";
-import { DragHandleVerticalIcon } from "assets/icons/boslerActionIcons";
-import { TextIcon } from "assets/icons/boslerEditorIcons";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import { DragHandleVerticalIcon } from "assets/icons/mtdActionIcons";
+import { TextIcon } from "assets/icons/mtdEditorIcons";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import React, { useState } from "react";
 import { getLanguageLabel } from "utils/utilities";
 import DashboardGridConfig from "../DashboardGridConfig";
@@ -19,7 +19,7 @@ const DashboardAddChartMenuElementsTab = ({ dashboardId, tabId }: IProps) => {
   );
   return (
     <div className="kepler-container-plane-layout">
-      <BoslerSwitch
+      <MtdSwitch
         style={{
           flex: "1 1 auto",
         }}

@@ -2,7 +2,7 @@ import React from "react";
 import { Legend } from "./HorizontalLegend";
 import { ColorBlock } from "./SubComponents";
 import { getRelativeFontSize } from "../../chartOptionsFactory";
-import { BoslerTypography } from "components/CommonUI/BoslerTypography";
+import { MtdTypography } from "components/CommonUI/MtdTypography";
 
 export const VerticalLegend: React.FC<Legend> = ({
   data,
@@ -51,9 +51,9 @@ export const VerticalLegend: React.FC<Legend> = ({
                 className="legendItem"
               >
                 <ColorBlock color={item.color} />{" "}
-                <BoslerTypography>
+                <MtdTypography>
                   {customLabel?.[item.name] ?? item.name}
-                </BoslerTypography>
+                </MtdTypography>
               </div>
             ))}
           </div>

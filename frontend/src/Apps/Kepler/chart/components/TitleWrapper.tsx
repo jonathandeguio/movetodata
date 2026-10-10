@@ -1,4 +1,4 @@
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel, isDefined, isEmpty } from "utils/utilities";
@@ -73,7 +73,7 @@ export const TitleWrapper: React.FC<ITitle> = ({
             }}
           >
             {isKepler ? (
-              <BoslerInput
+              <MtdInput
                 debounceInterval={700}
                 editText
                 maxLength={60}
@@ -158,7 +158,7 @@ export const TitleWrapper: React.FC<ITitle> = ({
             }}
           >
             {isKepler ? (
-              <BoslerInput
+              <MtdInput
                 editText
                 maxLength={60}
                 style={{

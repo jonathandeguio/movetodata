@@ -10,8 +10,8 @@ import Loading from "../Errors/Loading";
 
 import "Apps/Kepler/dashboard/DashboardSubscribeMenu/DashboardSubscribeMenu.scss";
 
-import { ArrowRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { ArrowRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { ParticleApp } from "utils/ParticleApp";
 
 const Logout = () => {
@@ -96,14 +96,14 @@ const Logout = () => {
         >
           {getLanguageLabel("loggedOutSuccess")}
 
-          <BoslerButton
+          <MtdButton
             key="submit"
             onClick={() => navigate("/Auth/login")}
             icon={<ArrowRightIcon />}
             intent="action"
           >
             {getLanguageLabel("login")}
-          </BoslerButton>
+          </MtdButton>
         </div>
       </div>
     </>

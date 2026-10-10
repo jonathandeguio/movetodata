@@ -1,5 +1,5 @@
 import { Mentions, Typography } from "antd";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import { User } from "global";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -61,7 +61,7 @@ export const ShowMessageFormatter = ({ message }: { message: string }) => {
           });
           if (userDetails)
             return (
-              <BoslerUserPopover record={userDetails}>
+              <MtdUserPopover record={userDetails}>
                 <span
                   style={{
                     background: "var(--movetodata-table-selected)",
@@ -72,7 +72,7 @@ export const ShowMessageFormatter = ({ message }: { message: string }) => {
                 >
                   @{userDetails.name}
                 </span>
-              </BoslerUserPopover>
+              </MtdUserPopover>
             );
           else return <span>{token}</span>;
         } else if (token.trim() === "") {

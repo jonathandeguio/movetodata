@@ -1,4 +1,4 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
 import NoData from "components/CommonUI/NoData";
 import React from "react";
@@ -37,7 +37,7 @@ const PreviewResultDataset = ({ data }: IProps) => {
     />;
   }
   return (
-    <BoslerTable
+    <MtdTable
       isTableFromBottomBar={true}
       offlineData={{ rows: data?.data ?? [], cols: new_columns }}
     />

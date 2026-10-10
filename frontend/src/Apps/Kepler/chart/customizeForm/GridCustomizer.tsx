@@ -13,11 +13,11 @@ import {
   TreeMapIcon,
   WaterFallIcon,
   WordCloudIcon,
-} from "assets/icons/boslerChartIcons";
-import { BigNumberIcon } from "assets/icons/boslerDataIcons";
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TableCellIcon } from "assets/icons/boslerTableIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+} from "assets/icons/mtdChartIcons";
+import { BigNumberIcon } from "assets/icons/mtdDataIcons";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TableCellIcon } from "assets/icons/mtdTableIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -102,7 +102,7 @@ export const GridCustomizer: React.FC<IGridCustomizer> = ({ query, type }) => {
   }
 
   return (
-    <BoslerCollapse
+    <MtdCollapse
       key="customizerCollapse"
       header={
         <div className="query_item__heading">
@@ -212,6 +212,6 @@ export const GridCustomizer: React.FC<IGridCustomizer> = ({ query, type }) => {
           </Space.Compact>
         </div>
       </div>
-    </BoslerCollapse>
+    </MtdCollapse>
   );
 };

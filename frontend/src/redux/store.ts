@@ -99,7 +99,7 @@ import { getlanguageReducer } from "./reducers/languageReducer";
 import { getTrashBinItemsReducer } from "./reducers/trashBinReducer";
 import { versionReducer } from "./reducers/versionReducer";
 
-import BottomBarReducer from "../common/components/BoslerLayout/bottomBarSlice";
+import BottomBarReducer from "../common/components/MtdLayout/bottomBarSlice";
 import { postApi } from "./FileQuery";
 import modalReducer from "./ModalSlice";
 import contextMenuReducerNew from "./contextMenuSlice";

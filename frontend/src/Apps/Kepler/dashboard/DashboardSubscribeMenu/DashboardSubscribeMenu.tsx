@@ -10,15 +10,15 @@ import {
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { RootState } from "redux/types/store";
 
 import Meta from "antd/es/card/Meta";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { JobStatusEnum } from "components/bottomBar/Schedules/SchedulesModal.constants";
 import { actionScheduleAPI } from "components/bottomBar/Schedules/api";
 import { DEFAULT_CRON_JOB } from "components/common/CronJob/CronJob.constants";
@@ -32,10 +32,10 @@ import {
   RunIcon,
   SearchIcon,
   StopIcon,
-} from "../../../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../../../assets/icons/boslerEditorIcons";
-import { EmailIcon } from "../../../../assets/icons/boslerFileIcons";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../../../assets/icons/mtdEditorIcons";
+import { EmailIcon } from "../../../../assets/icons/mtdFileIcons";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
 import { EDIT_MODE } from "../../../../redux/constants/resourcePermissionConstants";
 import "./DashboardSubscribeMenu.scss";
 import DashboardSubscribeMenuPopover from "./DashboardSubscribeMenuPopover";
@@ -143,15 +143,15 @@ function DashboardSubscribeMenu() {
   const SubscribeHeader = () => {
     return (
       <div className="kepler-container-plane-subscribe-header">
-        <BoslerButton fill={true} icon={<AddIcon />} onClick={showModal}>
+        <MtdButton fill={true} icon={<AddIcon />} onClick={showModal}>
           Subscription
-        </BoslerButton>
-        <BoslerModal
+        </MtdButton>
+        <MtdModal
           headingIcon={<PublishIcon />}
           heading={getLanguageLabel("new")}
           // extraActionHeading={
           //   <div className="text-and-icon-center" style={{ gap: "0.5rem" }}>
-          //     <div className="BoslerSubHeader1">
+          //     <div className="MtdSubHeader1">
           //       {getLanguageLabel("onlineNow")}
           //     </div>
 
@@ -174,7 +174,7 @@ function DashboardSubscribeMenu() {
           // footerExtraText="Only editors and owners can view or edit this configuration."
           // footerButtonArea={
           //   <Form.Item style={{ marginBottom: 0 }}>
-          //     <BoslerButton
+          //     <MtdButton
           //       onClick={() =>
           //         handleFinish(form.getFieldsValue(), initialPopoverData)
           //       }
@@ -183,14 +183,14 @@ function DashboardSubscribeMenu() {
           //       {initialPopoverData && initialPopoverData.dashboardTab
           //         ? "Update Subscription"
           //         : "Create subscription"}
-          //     </BoslerButton>
+          //     </MtdButton>
           //   </Form.Item>
           // }
           width={1000}
         >
           <DashboardSubscribeMenuPopover initialData={initialPopoverData} />
-        </BoslerModal>
-        <BoslerInput
+        </MtdModal>
+        <MtdInput
           allowClear
           placeholder="Search filters"
           suffix={<SearchIcon />}
@@ -241,7 +241,7 @@ function DashboardSubscribeMenu() {
       <div className="kepler-container-plane-subscribe">
         <SubscribeHeader />
         <div className="kepler-container-plane-subscribe-content">
-          <BoslerLoader />
+          <MtdLoader />
         </div>
       </div>
     );

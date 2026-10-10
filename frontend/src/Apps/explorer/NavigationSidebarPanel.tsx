@@ -1,6 +1,6 @@
 import { Tooltip } from "antd";
-import { RefreshIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { RefreshIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";

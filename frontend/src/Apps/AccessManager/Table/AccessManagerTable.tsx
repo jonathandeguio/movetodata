@@ -1,7 +1,7 @@
 import { Col, List, Row, Skeleton, Tooltip, Typography } from "antd";
-import { BoslerTag } from "components/Tag/Tag";
-import BoslerUserPopover from "components/UserPopover/userpopover";
-import BoslerLoader from "components/boslerLoader";
+import { MtdTag } from "components/Tag/Tag";
+import MtdUserPopover from "components/UserPopover/userpopover";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useNavigate } from "react-router";
 import {
@@ -18,7 +18,7 @@ import {
 import styles from "./AccessManagerTable.module.scss";
 import { useManagerTableController } from "./useManagerTableController";
 import NoData from "components/CommonUI/NoData";
-import { KeyIcon } from "assets/icons/boslerInterfaceIcons";
+import { KeyIcon } from "assets/icons/mtdInterfaceIcons";
 
 const { Title, Text } = Typography;
 
@@ -31,7 +31,7 @@ export const AccessManagerTable = ({ filters }: IProps) => {
   const { requests, loading, lastElementRef, isLoadingMore, isListEmpty } =
     useManagerTableController({ filters });
 
-  if (loading) return <BoslerLoader />;
+  if (loading) return <MtdLoader />;
 
   if (isListEmpty)
     return (
@@ -54,9 +54,9 @@ export const AccessManagerTable = ({ filters }: IProps) => {
         <List.Item
           key={item.id}
           extra={
-            <BoslerTag color={getStatusBasedColor(item.status)}>
+            <MtdTag color={getStatusBasedColor(item.status)}>
               {ACCESS_MANAGER_STATUS_TYPES_LABEL[item.status]}
-            </BoslerTag>
+            </MtdTag>
           }
           className={styles.listItem}
           onClick={() => navigate(`/portal/accessManager/${item.id}`)}
@@ -79,7 +79,7 @@ export const AccessManagerTable = ({ filters }: IProps) => {
               <Row align="middle" gutter={[8, 8]}>
                 {getLanguageLabel("createdBy")}
                 &nbsp;
-                <BoslerUserPopover id={item.createdBy} />
+                <MtdUserPopover id={item.createdBy} />
                 &nbsp;
                 <Tooltip title={timeConverter(item.createdAt)}>
                   {getTimeDisplay(item.createdAt)}

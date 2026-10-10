@@ -1,5 +1,5 @@
-import { SearchFiledIcon } from "assets/icons/boslerActionIcons";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { SearchFiledIcon } from "assets/icons/mtdActionIcons";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import HeaderSearch from "layouts/components/HeaderSearch";
 import React, { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -37,7 +37,7 @@ const SBElementSearch = ({
           setIsHeaderSearchModalOpen(true);
         }}
       />
-      <BoslerModal
+      <MtdModal
         footer={null}
         open={isHeaderSearchModalOpen}
         onCancel={() => setIsHeaderSearchModalOpen(false)}
@@ -45,7 +45,7 @@ const SBElementSearch = ({
       >
         <HeaderSearch setIsHeaderSearchModalOpen={setIsHeaderSearchModalOpen} />
         <br />
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

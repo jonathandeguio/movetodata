@@ -1,6 +1,6 @@
 import { Collapse, ColorPicker, Form, InputNumber, Select, Switch } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -34,7 +34,7 @@ export const SeriesCutomizer: React.FC<ISeriesCustomizer> = ({ chartType }) => {
 
             if (seriesCustomize && seriesCustomize.seriesType) {
               return (
-                <BoslerCollapse
+                <MtdCollapse
                   collapsible="HEADER"
                   header={
                     <div className="query_item__heading">
@@ -47,10 +47,10 @@ export const SeriesCutomizer: React.FC<ISeriesCustomizer> = ({ chartType }) => {
                 >
                   <>
                     <Form.Item name={[field.name, "seriesName"]} hidden>
-                      <BoslerInput />
+                      <MtdInput />
                     </Form.Item>
                     <Form.Item name={[field.name, "seriesType"]} hidden>
-                      <BoslerInput />
+                      <MtdInput />
                     </Form.Item>
                     <>
                       {/* LINE CHART OPTIONS */}
@@ -161,7 +161,7 @@ export const SeriesCutomizer: React.FC<ISeriesCustomizer> = ({ chartType }) => {
                       {/* COLOR SCHEME PER SERIES */}
                       {colorScheme[seriesCustomize.id] && (
                         <div className="customizer-subHeader">
-                          <BoslerCollapse
+                          <MtdCollapse
                             collapsible="HEADER"
                             header={
                               <div className="query_item__heading">
@@ -211,7 +211,7 @@ export const SeriesCutomizer: React.FC<ISeriesCustomizer> = ({ chartType }) => {
                                         },
                                       ]}
                                     />
-                                    <BoslerInput
+                                    <MtdInput
                                       defaultValue={
                                         defaultCustomize?.customLabel?.[item] ??
                                         item
@@ -237,12 +237,12 @@ export const SeriesCutomizer: React.FC<ISeriesCustomizer> = ({ chartType }) => {
                                 )
                               )}
                             </>
-                          </BoslerCollapse>
+                          </MtdCollapse>
                         </div>
                       )}
                     </>
                   </>
-                </BoslerCollapse>
+                </MtdCollapse>
               );
             }
           })}

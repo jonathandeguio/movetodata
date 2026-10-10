@@ -1,7 +1,7 @@
 import { Typography } from "antd";
-import { AppIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
-import BoslerLoader from "components/boslerLoader";
+import { AppIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -21,13 +21,13 @@ const DashboardAddChartMenu = () => {
     (state) => (state as $TSFixMe).resourcePermission[id]
   );
 
-  if (!resourcePermission) return <BoslerLoader />;
+  if (!resourcePermission) return <MtdLoader />;
   const editable = resourcePermission.mode == EDIT_MODE;
   if (!editable) return null;
 
   return (
     <div className="kepler-container-plane-rightWrapper-addchart">
-      <BoslerHeader
+      <MtdHeader
         icon={<AppIcon />}
         heading={getLanguageLabel("dashboardElements")}
         description={getLanguageLabel("dragAndDropToDashboard")}

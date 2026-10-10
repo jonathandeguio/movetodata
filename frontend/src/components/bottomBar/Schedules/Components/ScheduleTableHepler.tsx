@@ -4,11 +4,11 @@ import {
   MoreMenuIcon,
   RunIcon,
   StopIcon,
-} from "assets/icons/boslerActionIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdActionIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import UserInfo from "common/components/UserInfo";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import cronParser from "cron-parser";
 import cronstrue from "cronstrue";
 import React from "react";
@@ -148,7 +148,7 @@ export const getScheduleTableColumns = (
           );
         } else if (!text) {
           return <div>{getLanguageLabel("notAvailable")}</div>;
-        } else return <BoslerLoader size="small" />;
+        } else return <MtdLoader size="small" />;
       },
     },
     {

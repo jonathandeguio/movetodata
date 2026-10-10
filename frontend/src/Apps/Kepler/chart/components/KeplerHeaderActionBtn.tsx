@@ -1,10 +1,10 @@
 import { autoSaveVersionCallback } from "Apps/Kepler/dashboard/Dashboard.utils";
 import { Col, MenuProps, Row } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { EyeOpenIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { EyeOpenIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -198,7 +198,7 @@ const KeplerHeaderActionBtn = ({
   ];
 
   if (!resourcePermission || !datasetMapping)
-    return <BoslerLoader size="tiny" />;
+    return <MtdLoader size="tiny" />;
 
   return (
     <>
@@ -210,7 +210,7 @@ const KeplerHeaderActionBtn = ({
           changeResourceMode={changeResourceMode}
         />
       ) : (
-        <BoslerButton
+        <MtdButton
           icon={<EyeOpenIcon />}
           intent="action"
           menuItems={items}
@@ -228,7 +228,7 @@ const KeplerHeaderActionBtn = ({
           }}
         >
           {getLanguageLabel("viewing")}
-        </BoslerButton>
+        </MtdButton>
       )}
     </>
   );

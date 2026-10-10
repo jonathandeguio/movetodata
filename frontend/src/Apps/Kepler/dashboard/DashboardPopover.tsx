@@ -6,11 +6,11 @@ import { CommentState } from "assets/Illustrations/EmptyState";
 import NoData from "components/CommonUI/NoData";
 import { Link } from "react-router-dom";
 import { getLanguageLabel, timeConverter } from "utils/utilities";
-import { ProjectIcon } from "../../../assets/icons/boslerDataIcons";
-import { GitNewBranchIcon } from "../../../assets/icons/boslerExternalIcons";
-import { FolderIcon } from "../../../assets/icons/boslerFileIcons";
-import { AppIcon, CalendarIcon } from "../../../assets/icons/boslerInterfaceIcons";
-import { TableCellIcon } from "../../../assets/icons/boslerTableIcons";
+import { ProjectIcon } from "../../../assets/icons/mtdDataIcons";
+import { GitNewBranchIcon } from "../../../assets/icons/mtdExternalIcons";
+import { FolderIcon } from "../../../assets/icons/mtdFileIcons";
+import { AppIcon, CalendarIcon } from "../../../assets/icons/mtdInterfaceIcons";
+import { TableCellIcon } from "../../../assets/icons/mtdTableIcons";
 import { getChartPopOverInfoAPI } from "./Dashboard.api";
 import { getChartIcon } from "./DashboardAddChartMenu/DashboardAddChart.utils";
 

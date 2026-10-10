@@ -4,8 +4,8 @@ import React from "react";
 import {
   PySparkIcon,
   SparkSQLIcon,
-} from "../../assets/icons/boslerExternalIcons";
-import { LightBulbIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+} from "../../assets/icons/mtdExternalIcons";
+import { LightBulbIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 
 import { getLanguageLabel } from "utils/utilities";
 

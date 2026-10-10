@@ -3,7 +3,7 @@ import { TDatasetMapping, TTransaction } from "Apps/Dataset/Dataset.contants";
 import { Divider, Typography } from "antd";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateTransactionsDatasetMapping } from "../../redux/actions/datasetActions";
@@ -47,7 +47,7 @@ const DatasetHistoryContainer = ({ datasetMapping }: TProps) => {
   }, [datasetMapping]);
 
   if (loading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   if (!transactions || transactions.length == 0) {

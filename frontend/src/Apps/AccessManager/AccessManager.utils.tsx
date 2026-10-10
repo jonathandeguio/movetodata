@@ -1,8 +1,8 @@
 import { Checkbox } from "antd";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
-import { GroupsIcon } from "assets/icons/boslerInterfaceIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
+import { GroupsIcon } from "assets/icons/mtdInterfaceIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import React, { Dispatch, SetStateAction } from "react";
 import { getLanguageLabel, getYesterdayDate } from "utils/utilities";
 import { IAccessManagerFilters } from "./AccessManager";

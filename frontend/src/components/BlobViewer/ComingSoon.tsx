@@ -1,8 +1,8 @@
 import { Card, Space } from "antd";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
-import { DownloadIcon } from "../../assets/icons/boslerInterfaceIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import { DownloadIcon } from "../../assets/icons/mtdInterfaceIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 import { downloadBlobFile } from "./BlobViewer.utils";
 
@@ -25,7 +25,7 @@ const ComingSoon = ({ file, fileDetails }: any) => {
           </Space>
         }
       >
-        <BoslerButton
+        <MtdButton
           intent="primary"
           icon={<DownloadIcon />}
           onClick={() =>
@@ -33,7 +33,7 @@ const ComingSoon = ({ file, fileDetails }: any) => {
           }
         >
           {getLanguageLabel("download")}
-        </BoslerButton>
+        </MtdButton>
       </Card>
     </div>
   );

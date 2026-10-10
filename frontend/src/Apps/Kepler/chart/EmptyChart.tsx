@@ -1,4 +1,4 @@
-import { EmptyChartIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { EmptyChartIcon } from "assets/icons/mtdMiscellaneousIcons";
 import React from "react";
 interface Props {
   data: any;

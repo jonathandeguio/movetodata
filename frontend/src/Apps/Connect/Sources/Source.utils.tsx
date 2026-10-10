@@ -1,11 +1,11 @@
-import { ComponentIcon } from "assets/icons/boslerInterfaceIcons";
-import { IBoslerBottomBarItem } from "common/components/BoslerLayout/type";
+import { ComponentIcon } from "assets/icons/mtdInterfaceIcons";
+import { IMtdBottomBarItem } from "common/components/MtdLayout/type";
 import BuildDetailsTable from "components/Builds/BuildDetailsTable.view";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 import PreviewLink from "../Links/bottomBar/PreviewLink";
 
-import { AutoModeIcon } from "assets/icons/boslerActionIcons";
+import { AutoModeIcon } from "assets/icons/mtdActionIcons";
 import { isDefined } from "utils/utilities";
 import { SourceAuthTypeEnum } from "../Enums/SourceAuthTypeEnum";
 import { SourceTypeEnum } from "../Enums/SourceTypeEnum";
@@ -136,7 +136,7 @@ export const isSourceConfigValid = (source: ISourceConfig) => {
 
 export const getSourceBottombarItems = (
   source: any
-): IBoslerBottomBarItem[] => {
+): IMtdBottomBarItem[] => {
   return [
     {
       id: "datasetBuildLogPanel",

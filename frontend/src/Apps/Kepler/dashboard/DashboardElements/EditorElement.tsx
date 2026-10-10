@@ -1,6 +1,6 @@
 import "@blocknote/core/style.css";
 import LexicalEditor from "Apps/LexicalEditor";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import React from "react";
 
 interface Props {

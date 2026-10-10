@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Col, Divider, Row, theme, Tooltip, Typography } from "antd";
-import { AddIcon } from "assets/icons/boslerActionIcons";
-import { AllProjectsIcon } from "assets/icons/boslerDataIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AddIcon } from "assets/icons/mtdActionIcons";
+import { AllProjectsIcon } from "assets/icons/mtdDataIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import ProjectButton from "components/buttons/ProjectButton";
 import { getLanguageLabel } from "utils/utilities";
 import styles from "../Project.module.scss";
@@ -46,13 +46,13 @@ const ProjectPageHeader = ({
                     : getLanguageLabel("noAccessToCreateProjects")
                 }
               >
-                <BoslerButton
+                <MtdButton
                   icon={<AddIcon />}
                   intent={allowProjectCreation ? "success" : "none"}
                   disabled={!allowProjectCreation}
                 >
                   {getLanguageLabel("newProject")}
-                </BoslerButton>
+                </MtdButton>
               </Tooltip>
             </ProjectButton>
           </Col>

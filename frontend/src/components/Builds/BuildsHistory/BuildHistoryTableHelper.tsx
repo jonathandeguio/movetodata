@@ -5,11 +5,11 @@ import {
   StopIcon,
   SyncIcon,
   WarningIcon,
-} from "assets/icons/boslerActionIcons";
-import { SparkSQLIcon } from "assets/icons/boslerExternalIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdActionIcons";
+import { SparkSQLIcon } from "assets/icons/mtdExternalIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import UserInfo from "common/components/UserInfo";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -186,7 +186,7 @@ export const getBuildTableColumns = (
             <div>{getLanguageLabel("notAvailable")}</div>
           )
         ) : (
-          <BoslerLoader size="small" />
+          <MtdLoader size="small" />
         );
       },
     },
@@ -227,7 +227,7 @@ export const getBuildTableColumns = (
       align: "center",
       onCell: undefined,
       render: (text: number) => (
-        <div className="BoslerSpan">{timeConverter(text)}</div>
+        <div className="MtdSpan">{timeConverter(text)}</div>
       ),
     },
     {
@@ -239,7 +239,7 @@ export const getBuildTableColumns = (
       render: (text: $TSFixMe, row: $TSFixMe) => {
         if (!row.finishedAt) {
           return (
-            <div className="BoslerSpan">
+            <div className="MtdSpan">
               <Tooltip title={timeConverter(row.startedAt)}>
                 {getTimeDisplay(row.startedAt)}
               </Tooltip>
@@ -247,7 +247,7 @@ export const getBuildTableColumns = (
           );
         }
         return (
-          <div className="BoslerSpan">
+          <div className="MtdSpan">
             {formatDuration(row.finishedAt - row.startedAt)}
           </div>
         );

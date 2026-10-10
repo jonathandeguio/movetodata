@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { usePath } from "Apps/explorer/explorer.hooks";
-import { GroupedColumnIcon } from "assets/icons/boslerChartIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+import { GroupedColumnIcon } from "assets/icons/mtdChartIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 
 import { KEPLER_USE_CASES } from "Apps/Kepler/chart/charts.utils";
-import { GitNewBranchIcon } from "assets/icons/boslerExternalIcons";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { GitNewBranchIcon } from "assets/icons/mtdExternalIcons";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import BranchInfo from "components/branchInfo";
 import { ErrorResponse } from "global";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
@@ -23,16 +23,16 @@ import {
   notEmpty,
   openNotification,
 } from "utils/utilities";
-import { FolderIcon } from "../../assets/icons/boslerFileIcons";
-import { InfoIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { FolderIcon } from "../../assets/icons/mtdFileIcons";
+import { InfoIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronRightIcon,
   TickIcon,
-} from "../../assets/icons/boslerNavigationIcon";
+} from "../../assets/icons/mtdNavigationIcon";
 import { openFileExplorerModal } from "../../redux/ModalSlice";
 import { addNewResource } from "../../redux/fileIndexSlice";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "../BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "../MtdComponents/InputComponent/MtdInput";
 const { Text, Title } = Typography;
 const uuid = require("uuid");
 type CreateNewChartModalProps = {
@@ -229,7 +229,7 @@ export default ({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         open={isVisible}
         onOk={onOk}
         onCancel={() => setIsVisible(false)}
@@ -250,13 +250,13 @@ export default ({
         }
         footerExtraText={getLanguageLabel("accessMessage")}
         footerButtonArea={
-          <BoslerButton intent="primary" onClick={onOk} icon={<TickIcon />}>
+          <MtdButton intent="primary" onClick={onOk} icon={<TickIcon />}>
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+        <MtdInput
           bordered
           autofocus
           onChange={(e) =>
@@ -271,8 +271,8 @@ export default ({
           placeholder={getLanguageLabel("chartName")}
           style={{ width: "20vw", minWidth: "300px" }}
         />
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
-        <BoslerInput
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
+        <MtdInput
           onChange={(e) =>
             setChartDetails({
               ...chartDetails,
@@ -300,7 +300,7 @@ export default ({
                 marginTop: "7px",
               }}
             >
-              <BoslerButton
+              <MtdButton
                 icon={<FolderIcon />}
                 onClick={() => {
                   dispatch(
@@ -323,7 +323,7 @@ export default ({
                 {selectedFolder
                   ? selectedFolder
                   : getLanguageLabel("parentFolder")}
-              </BoslerButton>
+              </MtdButton>
             </div>
           </Col>
         </Row>
@@ -380,7 +380,7 @@ export default ({
                 marginTop: "7px",
               }}
             >
-              <BoslerButton
+              <MtdButton
                 icon={<TableIcon />}
                 onClick={() => {
                   dispatch(
@@ -401,7 +401,7 @@ export default ({
                 intent={dataset ? "success" : "warning"}
               >
                 {dataset ? dataset : getLanguageLabel("dataset")}
-              </BoslerButton>
+              </MtdButton>
               {isDefined(chartDetails) && chartDetails.datasetId && (
                 <BranchInfo
                   datasetId={chartDetails?.datasetId}
@@ -413,7 +413,7 @@ export default ({
                     });
                   }}
                 >
-                  <BoslerButton
+                  <MtdButton
                     icononly={!chartDetails || !chartDetails.branch}
                     icon={<GitNewBranchIcon size={12} />}
                     minimal={chartDetails && chartDetails.branch}
@@ -424,7 +424,7 @@ export default ({
                     }
                   >
                     {chartDetails.branch}
-                  </BoslerButton>
+                  </MtdButton>
                 </BranchInfo>
               )}
             </div>
@@ -468,7 +468,7 @@ export default ({
             <></>
           )}
         </Text>
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

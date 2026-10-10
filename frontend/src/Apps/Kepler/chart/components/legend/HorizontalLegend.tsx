@@ -3,7 +3,7 @@ import { SeriesLegend } from "./getLegendData";
 import { ColorBlock } from "./SubComponents";
 import { Dimensions } from "../../ChartComponent/ParentChartComponent";
 import { getRelativeFontSize } from "../../chartOptionsFactory";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
 
 export interface Legend {
   data: SeriesLegend[];

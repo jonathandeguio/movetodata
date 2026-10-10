@@ -1,8 +1,8 @@
 import { Tooltip } from "antd";
-import { LinkIcon } from "assets/icons/boslerActionIcons";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { EmailIcon } from "assets/icons/boslerFileIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { LinkIcon } from "assets/icons/mtdActionIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { EmailIcon } from "assets/icons/mtdFileIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveReady";
 import React, { useState } from "react";
 
@@ -28,7 +28,7 @@ export const DashboardTabName = ({
         }}
       >
         <Tooltip title={getLanguageLabel("clickToRename")}>
-          <BoslerInput
+          <MtdInput
             style={{ fontSize: "22px", fontWeight: 500 }}
             editText
             className="editText"

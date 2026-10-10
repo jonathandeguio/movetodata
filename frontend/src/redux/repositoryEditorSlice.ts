@@ -4,7 +4,7 @@ import {
   IGitBlame,
   IRepositoryEditor,
 } from "components/editor/IEditor";
-import { ITabPane, TabState } from "common/components/BoslerTabs/types";
+import { ITabPane, TabState } from "common/components/MtdTabs/types";
 import { isDefined } from "utils/utilities";
 
 const initialState: IRepositoryEditor = {

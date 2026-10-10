@@ -1,6 +1,6 @@
 import { WarningState } from "assets/Illustrations/EmptyState";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -126,7 +126,7 @@ const EmbeddedChart = ({ chartId }: TProps) => {
   }, []);
 
   if (!chartData || chartDataLoading) {
-    return <BoslerLoader content={getLanguageLabel("loading...")} />;
+    return <MtdLoader content={getLanguageLabel("loading...")} />;
   }
 
   if (chartData === "ERROR") {

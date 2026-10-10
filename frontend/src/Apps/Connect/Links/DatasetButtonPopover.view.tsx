@@ -1,11 +1,11 @@
 import { Badge, Col, Popover, Row, Tooltip, Typography } from "antd";
 import { usePath } from "Apps/explorer/explorer.hooks";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
-import { BoslerTag } from "components/Tag/Tag";
-import BoslerUserPopover from "components/UserPopover/userpopover";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
+import { MtdTag } from "components/Tag/Tag";
+import MtdUserPopover from "components/UserPopover/userpopover";
 import { User } from "global";
 import { useUserHook } from "hooks/useUsers";
 import React, { useEffect, useState } from "react";
@@ -81,7 +81,7 @@ export const DatasetButtonPopover: React.FC<DatasetButtonPopoverProps> = ({
               gutter={[16, 16]}
             >
               <Col>
-                <BoslerButton
+                <MtdButton
                   onClick={() =>
                     navigate(`/portal/kitab/dataset/${dataset?.id}/master`)
                   }
@@ -90,14 +90,14 @@ export const DatasetButtonPopover: React.FC<DatasetButtonPopoverProps> = ({
                   minimal
                 >
                   {dataset.name}
-                </BoslerButton>
+                </MtdButton>
               </Col>
               <Col>
-                <BoslerTag color={"var(--SUCCESS_COLOR)"}>
+                <MtdTag color={"var(--SUCCESS_COLOR)"}>
                   {isDefined(dataset) &&
                     isDefined(dataset.subType) &&
                     capitalizeFirstLetter(dataset?.subType)}
-                </BoslerTag>
+                </MtdTag>
               </Col>
             </Row>
             <Row
@@ -204,12 +204,12 @@ export const DatasetButtonPopover: React.FC<DatasetButtonPopoverProps> = ({
               <Col>
                 {isDefined(createdBy) ? (
                   <Text>
-                    <BoslerUserPopover record={createdBy}>
+                    <MtdUserPopover record={createdBy}>
                       {createdBy?.name}
-                    </BoslerUserPopover>
+                    </MtdUserPopover>
                   </Text>
                 ) : (
-                  <BoslerLoader />
+                  <MtdLoader />
                 )}
               </Col>
             </Row>
@@ -242,12 +242,12 @@ export const DatasetButtonPopover: React.FC<DatasetButtonPopoverProps> = ({
               <Col>
                 {isDefined(updatedBy) ? (
                   <Text>
-                    <BoslerUserPopover record={updatedBy}>
+                    <MtdUserPopover record={updatedBy}>
                       {updatedBy?.name}
-                    </BoslerUserPopover>
+                    </MtdUserPopover>
                   </Text>
                 ) : (
-                  <BoslerLoader />
+                  <MtdLoader />
                 )}
               </Col>
             </Row>{" "}

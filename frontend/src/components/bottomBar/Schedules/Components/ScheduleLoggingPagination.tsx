@@ -1,8 +1,8 @@
-import { CrossIcon, SyncIcon } from "assets/icons/boslerActionIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BoslerInfiniteScroll } from "components/BoslerInfiniteScroll/BoslerInfiniteScroll.view";
-import BoslerLoader from "components/boslerLoader";
+import { CrossIcon, SyncIcon } from "assets/icons/mtdActionIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { MtdInfiniteScroll } from "components/MtdInfiniteScroll/MtdInfiniteScroll.view";
+import MtdLoader from "components/mtdLoader";
 import React, { useCallback, useEffect, useState } from "react";
 import { formatDuration, isDefined } from "utils/utilities";
 import { IScheduleLog, JobExecutionStatusEnum } from "../SchedulesModal.types";
@@ -66,18 +66,18 @@ const ScheduleLoggingPagination = ({
         height: "65vh",
       }}
     >
-      <BoslerInfiniteScroll
+      <MtdInfiniteScroll
         pageSize={PAGE_SIZE}
         isLoading={isLoading}
         next={resurfaceSchedulesLogs}
         hasMore={hasMoreDataToShow}
-        loader={<BoslerLoader />}
+        loader={<MtdLoader />}
         scrollableTarget="schedulesLogsDiv"
       >
         <div className="--flex-col-center --flex-gap10">
           {scheduleLogs.map((log: IScheduleLog) => {
             return (
-              <BoslerButton
+              <MtdButton
                 icon={getJobExecutionStatusIcon(log.jobExecutionStatus)}
                 onClick={() => {
                   setCurrentLog(log);
@@ -99,11 +99,11 @@ const ScheduleLoggingPagination = ({
                 // textTransform="uppercase"
               >
                 {log.id.slice(-5)}
-              </BoslerButton>
+              </MtdButton>
             );
           })}
         </div>
-      </BoslerInfiniteScroll>
+      </MtdInfiniteScroll>
     </div>
   );
 };

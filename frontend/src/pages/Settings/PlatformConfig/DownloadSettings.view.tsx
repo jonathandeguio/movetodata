@@ -10,11 +10,11 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import { SaveIcon } from "assets/icons/boslerActionIcons";
+import { SaveIcon } from "assets/icons/mtdActionIcons";
 import axios from "axios";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "components/UserPopover/userpopover";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "components/UserPopover/userpopover";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -80,13 +80,13 @@ export const DownloadSettings = () => {
       key: "downloadedBy",
       render: (text: any, record: any) => (
         <>
-          <BoslerUserPopover record={(downloadedByUserMap as any)[text]}>
+          <MtdUserPopover record={(downloadedByUserMap as any)[text]}>
             <Link to={`/portal/settings/user/${text}`}>
               <span className="pop-over-item">
                 {(downloadedByUserMap as any)[text]?.name}
               </span>
             </Link>
-          </BoslerUserPopover>
+          </MtdUserPopover>
         </>
       ),
     },
@@ -206,7 +206,7 @@ export const DownloadSettings = () => {
               <Row>
                 <Col span={6}></Col>
                 <Col>
-                  <BoslerButton
+                  <MtdButton
                     icon={<SaveIcon />}
                     intent="primary"
                     onClick={() => {
@@ -222,7 +222,7 @@ export const DownloadSettings = () => {
                   >
                     {" "}
                     {getLanguageLabel("update")}{" "}
-                  </BoslerButton>
+                  </MtdButton>
                 </Col>
               </Row>{" "}
             </>
@@ -273,7 +273,7 @@ export const DownloadSettings = () => {
   return (
     <div className="settings-center-block">
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           <Row>

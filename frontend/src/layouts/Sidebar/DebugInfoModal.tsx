@@ -1,11 +1,11 @@
 import { Col, Row, Typography } from "antd";
-import { DuplicateIcon } from "assets/icons/boslerActionIcons";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
+import { DuplicateIcon } from "assets/icons/mtdActionIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
 import axios from "axios";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -79,7 +79,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
   return (
     <>
       {isOpen && (
-        <BoslerModal
+        <MtdModal
           headingIcon={<DuplicateIcon />}
           afterOpenChange={() => copyDebugInfo()}
           heading={
@@ -92,12 +92,12 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
           onCancel={() => setIsOpen(false)}
           width={600}
           extraActionHeading={
-            <BoslerButton
+            <MtdButton
               icon={<CopyIcon />}
               onClick={() => debugInfoText && copyToClipboard(debugInfoText)}
               minimal
               icononly
-            ></BoslerButton>
+            ></MtdButton>
           }
         >
           {debugInfo ? (
@@ -133,7 +133,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
                   border: "1px solid var(--movetodata-border-color-default)",
                 }}
               > */}
-                <BoslerCollapse
+                <MtdCollapse
                   key="Versions"
                   collapsible={"HEADER"}
                   header={
@@ -155,7 +155,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
                         </Text>
                       </Col>
                       <Col>
-                        <BoslerButton
+                        <MtdButton
                           icon={<CopyIcon />}
                           onClick={() =>
                             debugInfo &&
@@ -197,7 +197,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
                         </Row>
                       ))}
                   </>
-                </BoslerCollapse>
+                </MtdCollapse>
                 {/* <br />
               </div> */}
               <br />
@@ -217,7 +217,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
                 <Col>
                   <span className="text-and-icon-center">
                     <Text strong>{debugInfo.userId}</Text>
-                    <BoslerButton
+                    <MtdButton
                       icon={<CopyIcon />}
                       onClick={() =>
                         debugInfo && copyToClipboard(debugInfo.userId)
@@ -246,7 +246,7 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
                     <Text style={{ fontSize: "0.5rem" }} strong>
                       {debugInfo.location}
                     </Text>
-                    <BoslerButton
+                    <MtdButton
                       icon={<CopyIcon />}
                       onClick={() =>
                         debugInfo && copyToClipboard(debugInfo.location)
@@ -260,11 +260,11 @@ const DebugInfoModal = ({ isOpen, setIsOpen }: Props) => {
               </Row>
             </>
           ) : (
-            <BoslerLoader />
+            <MtdLoader />
           )}
 
           <br />
-        </BoslerModal>
+        </MtdModal>
       )}
     </>
   );

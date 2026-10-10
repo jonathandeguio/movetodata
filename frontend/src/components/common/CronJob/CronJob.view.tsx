@@ -1,5 +1,5 @@
 import { Alert, Divider, Tooltip } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useState } from "react";
 import Cron, { CronError } from "react-js-cron";
 import { getUser, getUserLanguage } from "utils/utilities";
@@ -10,9 +10,9 @@ import {
   FRENCH_LOCALE,
 } from "./CronJob.constants";
 
-import { ScheduledRunIcon } from "assets/icons/boslerInterfaceIcons";
-import { InfoIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerHeader from "components/CommonUI/Header/BoslerHeader";
+import { ScheduledRunIcon } from "assets/icons/mtdInterfaceIcons";
+import { InfoIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdHeader from "components/CommonUI/Header/MtdHeader";
 import "./CronJob.scss";
 import { getExpressionString } from "./CronJob.services";
 
@@ -32,7 +32,7 @@ const CronJobInput = ({
     <>
       {showGeneralCronExplanations && (
         <>
-          <BoslerHeader
+          <MtdHeader
             heading="Schedule by Time"
             description="Schedule a dataset by time. To do so, either select time from selector
         below or write a cron expression. The scheduler will run everytime at
@@ -83,11 +83,11 @@ const CronJobInput = ({
             setCronExpression(DEFAULT_CRON_JOB);
           }}
         >
-          {/* <BoslerButton intent="dangerous" icononly icon={<CrossIcon />} /> */}
+          {/* <MtdButton intent="dangerous" icononly icon={<CrossIcon />} /> */}
         </div>
       </div>
       <Divider>{DIVIDER_TEXT}</Divider>
-      <BoslerInput
+      <MtdInput
         value={cronExpression}
         onChange={(event) => {
           setCronExpression(event.target.value);

@@ -1,5 +1,5 @@
-import { ArrowTopRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { ArrowTopRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React from "react";
 import { useParams } from "react-router";
 import { getLanguageLabel, isDefined } from "utils/utilities";
@@ -13,7 +13,7 @@ const PushBtn = ({ trackingStatus, pushCode }: TProps) => {
   const { detached } = useParams();
 
   return (
-    <BoslerButton
+    <MtdButton
       icononly
       icon={<ArrowTopRightIcon />}
       intent={
@@ -29,7 +29,7 @@ const PushBtn = ({ trackingStatus, pushCode }: TProps) => {
       onClick={() => pushCode()}
     >
       <span className="icon-text">{getLanguageLabel("push")}</span>
-    </BoslerButton>
+    </MtdButton>
   );
 };
 

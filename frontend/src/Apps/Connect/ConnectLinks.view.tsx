@@ -2,10 +2,10 @@ import { Col, Divider, Row, Typography } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
-import { AddIcon, LinkIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { AddIcon, LinkIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -64,13 +64,13 @@ const ConnectLinks = () => {
               <Col span={8}>
                 <Row justify="end">
                   <Col>
-                    <BoslerButton
+                    <MtdButton
                       icon={<AddIcon />}
                       onClick={() => setIsNewLinkModalOpen(true)}
                       intent="action"
                     >
                       {getLanguageLabel("new")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Col>
                 </Row>
               </Col>
@@ -87,7 +87,7 @@ const ConnectLinks = () => {
           />
         </React.Fragment>
       ) : (
-        <BoslerLoader />
+        <MtdLoader />
       )}
     </>
   );

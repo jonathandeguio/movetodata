@@ -69,7 +69,7 @@ const DataHealthConfiguredChecks = () => {
 
   return (
     <div>
-      <div className="BoslerHeader1">Configured Checks</div>
+      <div className="MtdHeader1">Configured Checks</div>
       <div className="--m10">
         {dataHealthChecks.length == 0 ? (
           <div className={styles.emptyCheck}>

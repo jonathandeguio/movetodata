@@ -1,6 +1,6 @@
 import { Collapse } from "antd";
 import React from "react";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
 
 interface MultipleQueryItemProps {
   isMultiple?: boolean;

@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { StarIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { StarIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 
 import {
   capitalizeFirstLetter,

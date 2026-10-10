@@ -3,14 +3,14 @@ import {
   BottomAlignIcon,
   MiddleAlignIcon,
   TopAlignIcon,
-} from "assets/icons/boslerActionIcons";
+} from "assets/icons/mtdActionIcons";
 import {
   CenterAlignIcon,
   LeftAlignIcon,
   RightAlignIcon,
-} from "assets/icons/boslerFileIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdFileIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -29,7 +29,7 @@ export const BigNumberCustomizer: React.FC<IBigNumberCustomizer> = ({}) => {
 
   return (
     <div className="radioButtonPadding">
-      <BoslerCollapse
+      <MtdCollapse
         defaultCollpased={false}
         collapsible="HEADER"
         header={
@@ -113,8 +113,8 @@ export const BigNumberCustomizer: React.FC<IBigNumberCustomizer> = ({}) => {
             </Form.Item>
           )}
         </>
-      </BoslerCollapse>
-      <BoslerCollapse
+      </MtdCollapse>
+      <MtdCollapse
         defaultCollpased={false}
         collapsible="HEADER"
         header={
@@ -126,7 +126,7 @@ export const BigNumberCustomizer: React.FC<IBigNumberCustomizer> = ({}) => {
       >
         <>
           <Form.Item name="subHeader" label={getLanguageLabel("text")}>
-            <BoslerInput placeholder={getLanguageLabel("addSubheader")} />
+            <MtdInput placeholder={getLanguageLabel("addSubheader")} />
           </Form.Item>
           <FontCustomizer name={"subHeader"} />
 
@@ -166,7 +166,7 @@ export const BigNumberCustomizer: React.FC<IBigNumberCustomizer> = ({}) => {
             </Radio.Group>
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
       <NumberCustomizer name="bigNumber" />
     </div>
   );

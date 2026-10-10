@@ -11,7 +11,7 @@ import {
   timeConverter,
 } from "utils/utilities";
 import { getNodeIcon, getSparkles, globalComparator } from "../explorer.utils";
-import { BoslerTypography } from "components/CommonUI/BoslerTypography";
+import { MtdTypography } from "components/CommonUI/MtdTypography";
 const { Text } = Typography;
 
 interface Props {
@@ -93,7 +93,7 @@ export const FolderGrid: React.FC<Props> = ({
                 <div className="sparkles">{getSparkles(data.createdAt)}</div>
               </div>
               <div className="folder-grid__text">
-                <BoslerTypography>{data.name}</BoslerTypography>
+                <MtdTypography>{data.name}</MtdTypography>
               </div>
               <Tooltip title={timeConverter(data?.createdAt)}>
                 <Text type="secondary" style={{ fontSize: "12px" }}>

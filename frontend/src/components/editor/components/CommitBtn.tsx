@@ -1,7 +1,7 @@
 import { Col, Popover, Row, Typography } from "antd";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useParams } from "react-router";
@@ -48,7 +48,7 @@ const CommitBtn = ({ trackingStatus, saveCommit }: TProps) => {
           {trackingStatus.gitStatus.clean ? (
             <p>{getLanguageLabel("noChangesToBeCommitted")}</p>
           ) : (
-            <BoslerInput
+            <MtdInput
               placeholder={"Commit At " + new Date()}
               defaultValue={commitMessage}
               onChange={(e) => setCommitMessage(e.target.value)}
@@ -58,7 +58,7 @@ const CommitBtn = ({ trackingStatus, saveCommit }: TProps) => {
         </>
       }
     >
-      <BoslerButton
+      <MtdButton
         icon={<TickIcon />}
         icononly
         intent={
@@ -70,7 +70,7 @@ const CommitBtn = ({ trackingStatus, saveCommit }: TProps) => {
         onClick={() => saveCommit(commitMessage)}
       >
         <span className="icon-text">{getLanguageLabel("commit")}</span>
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   );
 };

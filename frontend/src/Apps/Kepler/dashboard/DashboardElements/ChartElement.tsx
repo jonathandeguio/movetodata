@@ -4,7 +4,7 @@ import FilterConfirmationPopup, {
   TFilterAddOperator,
   TPopupResultObj,
 } from "components/Filters/FilterConfirmationPopup";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -193,7 +193,7 @@ export const ChartElement: React.FC<Props> = (props) => {
   }, [reloadDashboardElement]);
 
   if (!chartData || chartDataLoading) {
-    return <BoslerLoader content={getLanguageLabel("loading...")} />;
+    return <MtdLoader content={getLanguageLabel("loading...")} />;
   }
   if (chartData === "ERROR" || isDefined(chartData?.error)) {
     throw "ERROR in chart";

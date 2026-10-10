@@ -1,5 +1,5 @@
 import { Popconfirm, Table } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 
 const data: $TSFixMe = [];
@@ -15,7 +15,7 @@ for (let i = 0; i < 5; i++) {
 const EditableCell = ({ editable, value, onChange }: $TSFixMe) => (
   <div>
     {editable ? (
-      <BoslerInput
+      <MtdInput
         style={{ margin: "-5px 0" }}
         value={value}
         onChange={(e) => onChange(e.target.value)}

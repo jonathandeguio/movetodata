@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ConfirmDeleteModal from "../../components/Modals/ConfirmDeleteModal";
-import BoslerLoader from "../../components/boslerLoader";
+import MtdLoader from "../../components/mtdLoader";
 
 import { getDatasetDetailsAPI } from "Apps/Connect/Connect.api";
 import { ResourceSubType, ResourceType } from "Apps/explorer/explorer.utils";
@@ -79,7 +79,7 @@ export default function DatasetDetail() {
   }, [id, branch]);
 
   if (!id || !branch || isLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   } else if (isDefined(datasetDetails) && !datasetDetails?.transactionId) {
     return <DatasetUpload id={id} branch={branch} />;
   } else if (datasetDetails)

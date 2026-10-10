@@ -11,17 +11,17 @@ import { useNavigate } from "react-router-dom";
 import {
   favIconLoading,
   getDefaultFavicon,
-} from "components/boslerLoader/FavIconLoader";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "components/mtdLoader/FavIconLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   getLanguageLabel,
   getSocketClient,
   isDefined,
   openNotification,
 } from "utils/utilities";
-import { CrossIcon, SyncIcon } from "../../../assets/icons/boslerActionIcons";
-import BoslerButton from "../../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../../boslerLoader";
+import { CrossIcon, SyncIcon } from "../../../assets/icons/mtdActionIcons";
+import MtdButton from "../../MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../../mtdLoader";
 import DatasetSync from "./Sync.view";
 
 const { Text } = Typography;
@@ -241,25 +241,25 @@ export default function Sync({ id, branch, view }: TSync) {
     };
   }, [loading]);
 
-  if (loading === true && !refreshData) return <BoslerLoader />;
+  if (loading === true && !refreshData) return <MtdLoader />;
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<SyncIcon />}
         heading={getLanguageLabel("datasetSynchronistionStatus")}
         open={visible}
         onCancel={handleCancel}
         // className="dataset-sync"
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<CrossIcon />}
             intent="none"
             key="back"
             onClick={() => handleCancel()}
           >
             {getLanguageLabel("close")}{" "}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <DatasetSync datasetId={id} branch={branch} />
@@ -274,7 +274,7 @@ export default function Sync({ id, branch, view }: TSync) {
             </div>
             <div className="dataset-sync-row1-create">
               <div className="dataset-sync-row1-create-table">
-                <BoslerInput
+                <MtdInput
                   placeholder={getLanguageLabel("enterTableName")}
                   prefix={<TableIcon />}
                   suffix={
@@ -293,7 +293,7 @@ export default function Sync({ id, branch, view }: TSync) {
               <div className="dataset-sync-row1-create-index">
                 <h4>{getLanguageLabel("indexing")} &nbsp;</h4>
                 <Tooltip title={getLanguageLabel("addIndexing")}>
-                  <BoslerButton
+                  <MtdButton
                     icononly
                     size="small"
                     // shape="circle"
@@ -303,7 +303,7 @@ export default function Sync({ id, branch, view }: TSync) {
                 </Tooltip>
                 &nbsp;
                 <Tooltip title={getLanguageLabel("removeIndexing")}>
-                  <BoslerButton
+                  <MtdButton
                     icononly
                     size="small"
                     icon={<CrossIcon />}
@@ -355,13 +355,13 @@ export default function Sync({ id, branch, view }: TSync) {
                 {syncStatus === "active" ? (
                   <Text type="secondary">
                     <div className="text-and-icon-center">
-                      <BoslerLoader size="small" />
+                      <MtdLoader size="small" />
                       {getLanguageLabel("datasetSynchronisationInProgess")}
                     </div>
                   </Text>
                 ) : (
                   <>
-                    <BoslerButton
+                    <MtdButton
                       icon={datasetSync ? <RefreshIcon /> : <AddIcon />}
                       intent="action"
                       onClick={() => syncNow()}
@@ -369,17 +369,17 @@ export default function Sync({ id, branch, view }: TSync) {
                       {datasetSync
                         ? getLanguageLabel("syncNow")
                         : getLanguageLabel("createSync")}
-                    </BoslerButton>
+                    </MtdButton>
                     &nbsp;
                     {datasetSync ? (
-                      <BoslerButton
+                      <MtdButton
                         icon={<TrashIcon />}
                         intent="dangerous"
                         onClick={() => deleteSyncFunc()}
                       >
                         {" "}
                         {getLanguageLabel("deleteSync")}{" "}
-                      </BoslerButton>
+                      </MtdButton>
                     ) : (
                       ""
                     )}
@@ -489,7 +489,7 @@ export default function Sync({ id, branch, view }: TSync) {
             )}
           </Panel>
         </Collapse> */}
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 }

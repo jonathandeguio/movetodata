@@ -39,7 +39,7 @@
   }
 }
 
-.BoslerHeader1 {
+.MtdHeader1 {
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -55,29 +55,29 @@
   white-space: nowrap;
 }
 
-.BoslerSubHeader1 {
+.MtdSubHeader1 {
   color: var(--movetodata-font-color-muted);
   font-size: 12px;
   text-transform: capitalize;
 }
-.BoslerNormalHeader {
+.MtdNormalHeader {
   color: var(--color);
   font-size: 14px;
   font-weight: 500;
 }
 
-.BoslerSpan {
+.MtdSpan {
   color: var(--movetodata-font-color-muted);
   font-size: 14px;
 }
-.boslerFormLabel {
+.mtdFormLabel {
   color: var(--color);
   font-size: 14px;
   font-weight: 400;
   text-transform: capitalize;
 }
 
-.BoslerBtnHeading {
+.MtdBtnHeading {
   display: flex;
   justify-content: center;
   align-items: center;

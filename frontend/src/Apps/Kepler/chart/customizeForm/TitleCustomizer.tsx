@@ -3,14 +3,14 @@ import {
   CenterAlignIcon,
   LeftAlignIcon,
   RightAlignIcon,
-} from "assets/icons/boslerFileIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+} from "assets/icons/mtdFileIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
 import { getLanguageLabel } from "utils/utilities";
 import { FontCustomizer } from "./FontCustomizer";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 interface ITitleCustomizer {
   skeleton: any;
@@ -22,7 +22,7 @@ export const TitleCustomizer: React.FC<ITitleCustomizer> = ({ skeleton }) => {
   );
   return (
     <div className="titleCustomizer radioButtonPadding">
-      <BoslerCollapse
+      <MtdCollapse
         collapsible={defaultCustomize.titleToggle ? "HEADER" : "DISABLED"}
         key="chartTitleCollapse"
         header={
@@ -40,7 +40,7 @@ export const TitleCustomizer: React.FC<ITitleCustomizer> = ({ skeleton }) => {
       >
         <>
           <Form.Item label={getLanguageLabel("title")} name="title">
-            <BoslerInput
+            <MtdInput
               maxLength={250}
               showCount={{
                 formatter: (args) => <>{250 - args.value.length}</>,
@@ -79,8 +79,8 @@ export const TitleCustomizer: React.FC<ITitleCustomizer> = ({ skeleton }) => {
             </Radio.Group>
           </Form.Item>
         </>
-      </BoslerCollapse>
-      <BoslerCollapse
+      </MtdCollapse>
+      <MtdCollapse
         collapsible={defaultCustomize.subTitleToggle ? "HEADER" : "DISABLED"}
         key="chartSubTitleCollapse"
         header={
@@ -98,7 +98,7 @@ export const TitleCustomizer: React.FC<ITitleCustomizer> = ({ skeleton }) => {
       >
         <>
           <Form.Item label={getLanguageLabel("subtitle")} name="subTitle">
-            <BoslerInput
+            <MtdInput
               maxLength={250}
               showCount={{
                 formatter: (args) => <>{250 - args.value.length}</>,
@@ -137,7 +137,7 @@ export const TitleCustomizer: React.FC<ITitleCustomizer> = ({ skeleton }) => {
             </Radio.Group>
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import DatasetUpload from "Apps/Dataset/DatasetUpload";
-import { UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -17,7 +17,7 @@ const DatasetUploadModal = ({
   setIsVisible,
 }: TProps) => {
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<UploadIcon />}
       heading={getLanguageLabel("upload") + getLanguageLabel("dataset")}
       open={isVisible}
@@ -27,7 +27,7 @@ const DatasetUploadModal = ({
       //   footerExtraText={FOOTER_TEXT}
     >
       <DatasetUpload id={id} branch={branch} />
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

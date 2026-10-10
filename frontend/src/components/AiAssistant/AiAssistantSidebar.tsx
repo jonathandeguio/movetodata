@@ -22,7 +22,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Alert, Button, Divider, Drawer, Input, Space, Spin, Tag, Tooltip, Typography } from "antd";
-import { BOSLER_TOKEN } from "Authentication/constants";
+import { MTD_TOKEN } from "Authentication/constants";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAiAssistantContext } from "./AiAssistantContext";
 
@@ -62,7 +62,7 @@ function generateUuid(): string {
 
 /** Read the JWT from localStorage. */
 function getToken(): string {
-  return localStorage.getItem(BOSLER_TOKEN) ?? "";
+  return localStorage.getItem(MTD_TOKEN) ?? "";
 }
 
 /** Base URL for API calls (matches axios interceptors base). */

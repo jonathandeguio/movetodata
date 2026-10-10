@@ -1,8 +1,8 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import { CommentState } from "assets/Illustrations/EmptyState";
-import { WarningIcon } from "assets/icons/boslerActionIcons";
+import { WarningIcon } from "assets/icons/mtdActionIcons";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { getLanguageLabel, isDefined } from "utils/utilities";
 
@@ -54,9 +54,9 @@ const PreviewLink = ({ data, loading }: TProps) => {
         }}
       >
         {loading ? (
-          <BoslerLoader />
+          <MtdLoader />
         ) : isDefined(previewData) && previewData?.status == "SUCCESS" ? (
-          <BoslerTable
+          <MtdTable
             isTableFromBottomBar={true}
             offlineData={{
               rows:
@@ -68,7 +68,7 @@ const PreviewLink = ({ data, loading }: TProps) => {
           />
         ) : previewData && previewData?.status == "FAILED" ? (
           <>
-            <div className="BoslerHeader1">
+            <div className="MtdHeader1">
               <WarningIcon color={"var(--movetodata-intent-danger)"} />{" "}
               {previewData?.status} | There was an error running preview{" "}
             </div>

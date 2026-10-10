@@ -16,7 +16,7 @@ import {
   Typography,
 } from "antd";
 import axios from "axios";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,16 +26,16 @@ import {
   CrossIcon,
   SaveIcon,
   SearchIcon,
-} from "../../assets/icons/boslerActionIcons";
-import { ScatterIcon } from "../../assets/icons/boslerChartIcons";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+} from "../../assets/icons/mtdActionIcons";
+import { ScatterIcon } from "../../assets/icons/mtdChartIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 import {
   SingleChevronDownIcon,
   SingleChevronLeftIcon,
-} from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerUserPopover from "../../components/UserPopover/userpopover";
-import BoslerLoader from "../../components/boslerLoader";
+} from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../components/MtdComponents/ButtonComponent/MtdButton";
+import MtdUserPopover from "../../components/UserPopover/userpopover";
+import MtdLoader from "../../components/mtdLoader";
 import GlobalSearch from "../../helpers/GlobalSearch";
 import { useUserHook } from "hooks/useUsers";
 import { User } from "global";
@@ -460,7 +460,7 @@ const Tags = () => {
     <>
       {categoriesList == undefined || categoryLoading || tagLoading ? (
         <div className="settings-center-block">
-          <BoslerLoader />
+          <MtdLoader />
         </div>
       ) : (
         <div className="settings-center-block">
@@ -474,7 +474,7 @@ const Tags = () => {
             <Divider />
           </p>
 
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("searchCategories")}
             allowClear
             onChange={(e) => {
@@ -511,14 +511,14 @@ const Tags = () => {
               >
                 <br />
 
-                <BoslerButton
+                <MtdButton
                   icon={<AddIcon />}
                   intent="action"
                   onClick={handleNewCategory}
                 >
                   {" "}
                   {getLanguageLabel("newCategory")}{" "}
-                </BoslerButton>
+                </MtdButton>
               </div>
               <div
                 style={{
@@ -575,7 +575,7 @@ const Tags = () => {
                   >
                     {selectedCategory === "new" ? (
                       <Space style={{ padding: "2em", marginTop: "-3em" }}>
-                        <BoslerInput
+                        <MtdInput
                           onChange={(e) => setCategoryName(e.target.value)}
                           placeholder={getLanguageLabel("enterCategoryName")}
                           required
@@ -621,7 +621,7 @@ const Tags = () => {
                           <th>{getLanguageLabel("description")}</th>
                           <td>
                             {selectedCategory === "new" ? (
-                              <BoslerInput
+                              <MtdInput
                                 onChange={(e) =>
                                   setCategoryDescription(e.target.value)
                                 }
@@ -661,11 +661,11 @@ const Tags = () => {
                               <th>{getLanguageLabel("createdBy")}</th>
                               <td>
                                 {categoryCreateUser == undefined ? (
-                                  <BoslerLoader size="small" />
+                                  <MtdLoader size="small" />
                                 ) : categoryCreateUser === "-" ? (
                                   categoryCreateUser
                                 ) : (
-                                  <BoslerUserPopover
+                                  <MtdUserPopover
                                     id={categoryCreateUser.id}
                                     record={categoryCreateUser}
                                   >
@@ -686,7 +686,7 @@ const Tags = () => {
                                         {categoryCreateUser.name}{" "}
                                       </div>
                                     </div>
-                                  </BoslerUserPopover>
+                                  </MtdUserPopover>
                                 )}
                               </td>
                             </tr>
@@ -694,11 +694,11 @@ const Tags = () => {
                               <th>{getLanguageLabel("updatedBy")}</th>
                               <td>
                                 {categoryUpdateUser == undefined ? (
-                                  <BoslerLoader size="small" />
+                                  <MtdLoader size="small" />
                                 ) : categoryUpdateUser === "-" ? (
                                   categoryUpdateUser
                                 ) : (
-                                  <BoslerUserPopover
+                                  <MtdUserPopover
                                     id={categoryUpdateUser.id}
                                     record={categoryUpdateUser}
                                   >
@@ -719,7 +719,7 @@ const Tags = () => {
                                         {categoryUpdateUser.name}{" "}
                                       </div>
                                     </div>
-                                  </BoslerUserPopover>
+                                  </MtdUserPopover>
                                 )}
                               </td>
                             </tr>
@@ -732,7 +732,7 @@ const Tags = () => {
                         display: "flex",
                       }}
                     >
-                      <BoslerButton
+                      <MtdButton
                         intent="dangerous"
                         onClick={handleCategoryDeleteOrCancel}
                         icon={
@@ -747,9 +747,9 @@ const Tags = () => {
                         {selectedCategory === "new"
                           ? getLanguageLabel("cancel")
                           : getLanguageLabel("delete")}
-                      </BoslerButton>
+                      </MtdButton>
                       &nbsp;
-                      <BoslerButton
+                      <MtdButton
                         icon={<SaveIcon />}
                         intent="action"
                         key="submit"
@@ -758,7 +758,7 @@ const Tags = () => {
                         {selectedCategory === "new"
                           ? getLanguageLabel("create")
                           : getLanguageLabel("save")}
-                      </BoslerButton>
+                      </MtdButton>
                     </div>
                   </div>
                 ) : (
@@ -851,7 +851,7 @@ const Tags = () => {
                   >
                     {selectedTag === "new" ? (
                       <Space style={{ padding: "2em" }}>
-                        <BoslerInput
+                        <MtdInput
                           onChange={(e) => setTagName(e.target.value)}
                           placeholder={getLanguageLabel("enterTagName")}
                           required
@@ -880,7 +880,7 @@ const Tags = () => {
                           <th>{getLanguageLabel("description")}</th>
                           <td>
                             {selectedTag === "new" ? (
-                              <BoslerInput
+                              <MtdInput
                                 onChange={(e) =>
                                   setTagDescription(e.target.value)
                                 }
@@ -923,7 +923,7 @@ const Tags = () => {
                                   )}
                                   <Divider style={{ margin: 0 }} />
                                   <Space style={{ padding: 8 }}>
-                                    <BoslerInput
+                                    <MtdInput
                                       onChange={(e: any) =>
                                         setCustomTagColor("#" + e.target.value)
                                       }
@@ -970,11 +970,11 @@ const Tags = () => {
                               <th>{getLanguageLabel("createdBy")}</th>
                               <td>
                                 {tagCreateUser == undefined ? (
-                                  <BoslerLoader size="small" />
+                                  <MtdLoader size="small" />
                                 ) : tagCreateUser === "-" ? (
                                   tagCreateUser
                                 ) : (
-                                  <BoslerUserPopover
+                                  <MtdUserPopover
                                     id={tagCreateUser.id}
                                     record={tagCreateUser}
                                   >
@@ -995,7 +995,7 @@ const Tags = () => {
                                         {tagCreateUser.name}{" "}
                                       </div>
                                     </div>
-                                  </BoslerUserPopover>
+                                  </MtdUserPopover>
                                 )}
                               </td>
                             </tr>
@@ -1003,11 +1003,11 @@ const Tags = () => {
                               <th>{getLanguageLabel("updatedBy")}</th>
                               <td>
                                 {tagUpdateUser == undefined ? (
-                                  <BoslerLoader size="small" />
+                                  <MtdLoader size="small" />
                                 ) : tagUpdateUser === "-" ? (
                                   tagUpdateUser
                                 ) : (
-                                  <BoslerUserPopover
+                                  <MtdUserPopover
                                     id={tagUpdateUser.id}
                                     record={tagUpdateUser}
                                   >
@@ -1028,7 +1028,7 @@ const Tags = () => {
                                         {tagUpdateUser.name}{" "}
                                       </div>
                                     </div>
-                                  </BoslerUserPopover>
+                                  </MtdUserPopover>
                                 )}
                               </td>
                             </tr>
@@ -1043,7 +1043,7 @@ const Tags = () => {
                         display: "flex",
                       }}
                     >
-                      <BoslerButton
+                      <MtdButton
                         icon={
                           selectedTag === "new" ? <CrossIcon /> : <TrashIcon />
                         }
@@ -1054,9 +1054,9 @@ const Tags = () => {
                         {selectedTag === "new"
                           ? getLanguageLabel("cancel")
                           : getLanguageLabel("delete")}
-                      </BoslerButton>
+                      </MtdButton>
                       &nbsp;
-                      <BoslerButton
+                      <MtdButton
                         icon={<SaveIcon />}
                         intent="action"
                         onClick={handleTagUpdateOrCreate}
@@ -1064,7 +1064,7 @@ const Tags = () => {
                         {selectedTag === "new"
                           ? getLanguageLabel("create")
                           : getLanguageLabel("save")}
-                      </BoslerButton>
+                      </MtdButton>
                     </div>
                   </div>
                 ) : (

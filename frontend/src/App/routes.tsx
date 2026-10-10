@@ -21,7 +21,7 @@ import HomeOutlet from "../Apps/HomeV2/Outlet/HomeOutlet";
 import Builds from "components/Builds/BuildsHistory/Builds.view";
 import Favs from "components/UserActivityVault/Favs.view";
 import RecentlyViewed from "components/UserActivityVault/RecentlyViewed.view";
-import BoslerUIComponents from "pages/Portal/BoslerUIComponents";
+import MtdUIComponents from "pages/Portal/MtdUIComponents";
 import NoDataComponents from "pages/Portal/NoDataComponents";
 import TestingArea from "pages/Portal/TestingArea";
 import Typhography from "pages/Portal/Typhography";
@@ -51,7 +51,7 @@ import BuildDetails from "../components/Builds/BuildDetails.view";
 import CreatedByYou from "../components/UserActivityVault/CreatedByYou.view";
 import UpdatedByYou from "../components/UserActivityVault/UpdatedByYou.view";
 import DeveloperHome from "../pages/Developer/DeveloperHome";
-import BoslerComponents from "../pages/Portal/BoslerComponents";
+import MtdComponents from "../pages/Portal/MtdComponents";
 import IconList from "../pages/Portal/iconsList";
 import ChangePassword from "../pages/Settings/ChangePassword";
 import Security from "../pages/Settings/Security/Security.view";
@@ -146,12 +146,12 @@ const useRouter = () => {
                         <Route path="icons" element={<IconList />} />
                         <Route
                           path="components"
-                          element={<BoslerComponents />}
+                          element={<MtdComponents />}
                         />
                         <Route path="typography" element={<Typhography />} />
                         <Route
                           path="uicomponents"
-                          element={<BoslerUIComponents />}
+                          element={<MtdUIComponents />}
                         />
                         <Route path="nodata" element={<NoDataComponents />} />
                         <Route path="testingarea" element={<TestingArea />} />

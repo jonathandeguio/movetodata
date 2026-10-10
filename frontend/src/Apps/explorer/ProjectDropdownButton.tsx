@@ -3,11 +3,11 @@ import {
   AddIcon,
   RefreshIcon,
   SearchIcon,
-} from "assets/icons/boslerActionIcons";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
-import { SingleChevronDownIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdActionIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
+import { SingleChevronDownIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import ProjectButton from "components/buttons/ProjectButton";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,7 +71,7 @@ export const ProjectDropdownButton: React.FC<ProjectDropdownButtonProps> = ({
           key: "acd",
           label: (
             <div className="flex" style={{ gap: "10px" }}>
-              <BoslerInput
+              <MtdInput
                 onClick={(e) => {
                   e?.stopPropagation();
                 }}
@@ -80,8 +80,8 @@ export const ProjectDropdownButton: React.FC<ProjectDropdownButtonProps> = ({
                 }}
                 placeholder={getLanguageLabel("search")}
                 suffix={<SearchIcon />}
-              ></BoslerInput>
-              <BoslerButton
+              ></MtdInput>
+              <MtdButton
                 onClick={(e: any) => {
                   e.preventDefault();
 
@@ -95,7 +95,7 @@ export const ProjectDropdownButton: React.FC<ProjectDropdownButtonProps> = ({
                 size="middle"
               >
                 {getLanguageLabel("reloadProjects")}
-              </BoslerButton>
+              </MtdButton>
             </div>
           ),
         },
@@ -189,7 +189,7 @@ export const ProjectDropdownButton: React.FC<ProjectDropdownButtonProps> = ({
             overflowY: "auto",
           }}
         >
-          <BoslerButton minimal>
+          <MtdButton minimal>
             <div
               style={{
                 display: "flex",
@@ -203,7 +203,7 @@ export const ProjectDropdownButton: React.FC<ProjectDropdownButtonProps> = ({
                 <SingleChevronDownIcon />
               </div>
             </div>
-          </BoslerButton>
+          </MtdButton>
         </Dropdown>
       )}
     </div>

@@ -1,4 +1,4 @@
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,7 +13,7 @@ import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpda
 import {
   EmptyChartIcon,
   TrashIcon,
-} from "../../../assets/icons/boslerMiscellaneousIcons";
+} from "../../../assets/icons/mtdMiscellaneousIcons";
 import {
   isChartAdded,
   isDashboardChanged,
@@ -512,7 +512,7 @@ const DashboardGrid = ({ editable, tabId, dashboardId, gridRef }: IProps) => {
   }, [tabId]);
 
   if (originalLayout === undefined) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   if (!editable && originalLayout.length == 0)

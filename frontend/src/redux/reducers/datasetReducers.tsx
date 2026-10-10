@@ -1,4 +1,4 @@
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
 import React from "react";
 import {
   CLEAR_STATS_PANE_STATE,
@@ -419,7 +419,7 @@ export const columnStatsPaneReducer = (
       {
         name: "Dataset",
         title: "Dataset",
-        content: <BoslerTable />,
+        content: <MtdTable />,
         key: "1",
         closable: false,
         data: undefined,
@@ -539,7 +539,7 @@ export const columnStatsPaneReducer = (
           {
             name: "Dataset",
             title: "Dataset",
-            content: <BoslerTable />,
+            content: <MtdTable />,
             key: "1",
             closable: false,
             data: undefined,

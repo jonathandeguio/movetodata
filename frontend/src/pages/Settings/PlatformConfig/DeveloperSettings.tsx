@@ -2,12 +2,12 @@ import { Card, Col, Divider, Row, Tooltip, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SparklesIcon } from "../../../assets/icons/boslerActionIcons";
+import { SparklesIcon } from "../../../assets/icons/mtdActionIcons";
 
 import { getSSODetails } from "../../../redux/actions/authActions";
 
 import { openNotification } from "utils/utilities";
-import BoslerButton from "../../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../../../components/MtdComponents/ButtonComponent/MtdButton";
 import { ThunkAppDispatch } from "../../../redux/types/store";
 const { Text, Title } = Typography;
 
@@ -70,14 +70,14 @@ const DeveloperSettings = () => {
                   >
                     <div>
                       <div className="text-and-icon-center">
-                        <BoslerButton
+                        <MtdButton
                           dashed
                           intent="dangerous"
                           onClick={() => createSampleData("development")}
                           icon={<SparklesIcon />}
                         >
                           Development Sample Data
-                        </BoslerButton>
+                        </MtdButton>
                       </div>
                     </div>
                   </Tooltip>
@@ -106,14 +106,14 @@ const DeveloperSettings = () => {
                   >
                     <div>
                       <div className="text-and-icon-center">
-                        <BoslerButton
+                        <MtdButton
                           dashed
                           intent="dangerous"
                           onClick={() => createSampleData("demo")}
                           icon={<SparklesIcon color={"#ffffff"} />}
                         >
                           Demo Sample Data
-                        </BoslerButton>
+                        </MtdButton>
                       </div>
                     </div>
                   </Tooltip>

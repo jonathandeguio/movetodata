@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import { Typography } from "antd";
 import { getLanguageLabel } from "utils/utilities";
 
-import { DownloadIcon } from "../../assets/icons/boslerInterfaceIcons";
+import { DownloadIcon } from "../../assets/icons/mtdInterfaceIcons";
 import Avatars from "../Avatars/Avatars";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import Comments from "../Comments/Comments.view";
 
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
 import { downloadBlobFile } from "./BlobViewer.utils";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 
 const { Text } = Typography;
 
@@ -20,10 +20,10 @@ const BlobHeader = ({ file, fileDetails }: any) => {
     <div className="blob-container-header">
       <CustomBreadCrumb />
       <div className="blob-container-header-btns">
-        <BoslerInfoPopover id={fileDetails.id} type={fileDetails.type} />
+        <MtdInfoPopover id={fileDetails.id} type={fileDetails.type} />
         <Comments id={fileDetails.id} />
         <Avatars link={`/topic/${fileDetails.id}`} />
-        <BoslerButton
+        <MtdButton
           intent="action"
           icon={<DownloadIcon />}
           onClick={() =>
@@ -31,7 +31,7 @@ const BlobHeader = ({ file, fileDetails }: any) => {
           }
         >
           {getLanguageLabel("download")}
-        </BoslerButton>
+        </MtdButton>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Col, Form, Row, Switch, Typography } from "antd";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
 import axios from "axios";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,13 +9,13 @@ import {
   getUserLanguage,
   openNotification,
 } from "utils/utilities";
-import { LightBulbIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import { LightBulbIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { listProjects } from "../../redux/actions/projectActions";
 import store from "../../redux/store";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "../BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "../MtdComponents/InputComponent/MtdInput";
 
 const { Text } = Typography;
 
@@ -106,7 +106,7 @@ const ProjectButton = ({ children, successCallback = () => {} }: any) => {
           );
         }}
       >
-        <BoslerModal
+        <MtdModal
           headingIcon={<ProjectIcon />}
           heading={getLanguageLabel("project")}
           onCancel={handleCancel}
@@ -126,17 +126,17 @@ const ProjectButton = ({ children, successCallback = () => {} }: any) => {
           footerExtraText={getLanguageLabel("createProjectPermissionMessage")}
           footerButtonArea={
             <Form.Item>
-              <BoslerButton
+              <MtdButton
                 intent="primary"
                 icon={<TickIcon />}
                 onClick={() => form.submit()}
               >
                 {getLanguageLabel("create")}
-              </BoslerButton>
+              </MtdButton>
             </Form.Item>
           }
         >
-          <div className="BoslerHeader1">{getLanguageLabel("projectName")}</div>
+          <div className="MtdHeader1">{getLanguageLabel("projectName")}</div>
           <Form.Item
             name="name"
             rules={[
@@ -145,16 +145,16 @@ const ProjectButton = ({ children, successCallback = () => {} }: any) => {
               },
             ]}
           >
-            <BoslerInput
+            <MtdInput
               autofocus
               variant="borderless"
               placeholder={getLanguageLabel("projectName")}
               style={{ width: "20vw", minWidth: "300px" }}
             />
           </Form.Item>
-          <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
+          <div className="MtdHeader1">{getLanguageLabel("description")}</div>
           <Form.Item name="description">
-            <BoslerInput
+            <MtdInput
               variant="borderless"
               placeholder={getLanguageLabel("descriptionOpt")}
               style={{ width: "20vw", minWidth: "300px" }}
@@ -192,7 +192,7 @@ const ProjectButton = ({ children, successCallback = () => {} }: any) => {
           <Text type="secondary" style={{ fontSize: "11px" }}>
             {getLanguageLabel("newProjectMessage")}
           </Text>
-        </BoslerModal>
+        </MtdModal>
       </Form>
     </>
   );

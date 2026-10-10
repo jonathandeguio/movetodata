@@ -1,8 +1,8 @@
 import { Tooltip, Typography } from "antd";
-import { ProjectIcon } from "assets/icons/boslerDataIcons";
-import { StarIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { SingleChevronRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { ProjectIcon } from "assets/icons/mtdDataIcons";
+import { StarIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { SingleChevronRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import {
   default as React,
@@ -201,7 +201,7 @@ export const Breadcrumb: React.FC<Props> = ({ id, onClick }) => {
                 </div>
                 <Text>
                   <Tooltip title={getLanguageLabel("clickToRename")}>
-                    <BoslerInput
+                    <MtdInput
                       dynamicWidth
                       style={{ fontSize: "22px", fontWeight: 500 }}
                       editText
@@ -282,7 +282,7 @@ export const Breadcrumb: React.FC<Props> = ({ id, onClick }) => {
                   </div>
                   <Text>
                     <Tooltip title={getLanguageLabel("clickToRename")}>
-                      <BoslerInput
+                      <MtdInput
                         style={{ fontSize: "22px", fontWeight: 500 }}
                         editText
                         dynamicWidth

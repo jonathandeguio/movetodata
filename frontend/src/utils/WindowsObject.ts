@@ -10,7 +10,7 @@ export const registerOneTimeWindowsFunctions = () => {
     const button = document.getElementById(id);
     if (button) {
       // For color
-      button.classList.add("boslerButton-tempsuccess");
+      button.classList.add("mtdButton-tempsuccess");
       // For Tick Icon
       const tickIcon = document.createElement("span");
       tickIcon.className = "movetodata-icons";
@@ -38,7 +38,7 @@ export const registerOneTimeWindowsFunctions = () => {
       button.appendChild(tickIcon);
 
       setTimeout(() => {
-        button.classList.remove("boslerButton-tempsuccess");
+        button.classList.remove("mtdButton-tempsuccess");
         if (tickIcon.parentNode === button) {
           button.removeChild(tickIcon);
         }
@@ -57,7 +57,7 @@ export const registerOneTimeWindowsFunctions = () => {
     const button = document.getElementById(id);
     if (button) {
       // For color
-      button.classList.add("boslerButton-tempfailure");
+      button.classList.add("mtdButton-tempfailure");
       // For Cross Icon
       const crossIcon = document.createElement("span");
       crossIcon.className = "movetodata-icons";
@@ -85,7 +85,7 @@ export const registerOneTimeWindowsFunctions = () => {
       button.appendChild(crossIcon);
 
       setTimeout(() => {
-        button.classList.remove("boslerButton-tempfailure");
+        button.classList.remove("mtdButton-tempfailure");
         if (crossIcon.parentNode === button) {
           button.removeChild(crossIcon);
         }

@@ -3,30 +3,30 @@ import { Table, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { LinkIcon, SearchIcon } from "../../assets/icons/boslerActionIcons";
-import { GroupedColumnIcon } from "../../assets/icons/boslerChartIcons";
+import { LinkIcon, SearchIcon } from "../../assets/icons/mtdActionIcons";
+import { GroupedColumnIcon } from "../../assets/icons/mtdChartIcons";
 import {
   DataAgentsIcon,
   DatabaseIcon,
   ProjectIcon,
-} from "../../assets/icons/boslerDataIcons";
+} from "../../assets/icons/mtdDataIcons";
 
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   getLanguageLabel,
   getTimeDisplay,
   openNotification,
 } from "utils/utilities";
-import { FolderIcon } from "../../assets/icons/boslerFileIcons";
+import { FolderIcon } from "../../assets/icons/mtdFileIcons";
 import {
   HelpIcon,
   MonitorIcon,
   TrashIcon,
-} from "../../assets/icons/boslerMiscellaneousIcons";
-import { UndoIcon } from "../../assets/icons/boslerNavigationIcon";
-import { TableIcon } from "../../assets/icons/boslerTableIcons";
+} from "../../assets/icons/mtdMiscellaneousIcons";
+import { UndoIcon } from "../../assets/icons/mtdNavigationIcon";
+import { TableIcon } from "../../assets/icons/mtdTableIcons";
 import GlobalSearch from "../../helpers/GlobalSearch";
 import {
   listFolderDetails,
@@ -38,7 +38,7 @@ import {
   restoreFromTrash,
 } from "../../redux/actions/trashBinActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const { Title } = Typography;
 
@@ -197,7 +197,7 @@ const TrashBinModal = ({
   }, [trashBinItems]);
 
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<TrashIcon color="var(--DANGEROUS_COLOR)" />}
       heading={getLanguageLabel("trashBin")}
       open={showTrashModal}
@@ -207,7 +207,7 @@ const TrashBinModal = ({
       }}
       footerButtonArea={
         <>
-          <BoslerButton
+          <MtdButton
             icon={<UndoIcon />}
             intent={selectedTrashItems ? "primary" : "none"}
             disabled={selectedTrashItems ? false : true}
@@ -235,8 +235,8 @@ const TrashBinModal = ({
             }}
           >
             {getLanguageLabel("restore")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<TrashIcon />}
             intent={selectedTrashItems ? "dangerous" : "none"}
             disabled={selectedTrashItems ? false : true}
@@ -258,11 +258,11 @@ const TrashBinModal = ({
             }}
           >
             {getLanguageLabel("permanentDelete")}
-          </BoslerButton>
+          </MtdButton>
         </>
       }
     >
-      <BoslerInput
+      <MtdInput
         placeholder={`${getLanguageLabel("search")} ${
           title.name !== undefined ? title.name + " Trash" : ""
         }`}
@@ -285,7 +285,7 @@ const TrashBinModal = ({
         // @ts-expect-error TS(2322): Type '{ type: string; onChange: (selectedRowKeys: ... Remove this comment to see the full error message
         rowSelection={rowSelection}
       />
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

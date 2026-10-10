@@ -1,14 +1,14 @@
 import LinkModal from "Apps/Connect/Links/LinkModal.view";
 import { ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { CopyIcon } from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { ChangeLogIcon } from "assets/icons/boslerInterfaceIcons";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
-import { SortAscIcon, SortDescIcon } from "assets/icons/boslerSortIcons";
+import { CopyIcon } from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { ChangeLogIcon } from "assets/icons/mtdInterfaceIcons";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
+import { SortAscIcon, SortDescIcon } from "assets/icons/mtdSortIcons";
 import { ContextMenu, MenuItem } from "common/components/ContextMenu";
 import { ContextMenuStore } from "common/components/ContextMenu/store";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import CreateNewChartModal from "components/Modals/CreateNewChartModal";
 import CreateNewDatasetModal from "components/Modals/CreateNewDatasetModal";
 import React, { useMemo, useRef, useState } from "react";
@@ -115,7 +115,7 @@ export const SimpleTreeNodeContextMenu: React.FC<
       label: getLanguageLabel("open"),
       onClick: () => {},
       extra: (
-        <BoslerButton
+        <MtdButton
           icon={<PopOutIcon />}
           minimal
           icononly
@@ -197,7 +197,7 @@ export const SimpleTreeNodeContextMenu: React.FC<
       <div ref={contextMenuRef}>
         <ContextMenu items={getContextMenuItems(node, page)} {...store} />
       </div>
-      <BoslerModal destroyOnClose onCancel={cancelHandler} {...modalProps} />
+      <MtdModal destroyOnClose onCancel={cancelHandler} {...modalProps} />
       <CreateNewChartModal
         defaultParent={contextMenuId}
         isVisible={value == "chart"}

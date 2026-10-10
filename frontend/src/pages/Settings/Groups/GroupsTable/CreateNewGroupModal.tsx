@@ -1,8 +1,8 @@
-import { AddUserIcon } from "assets/icons/boslerInterfaceIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { AddUserIcon } from "assets/icons/mtdInterfaceIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { Dispatch, SetStateAction } from "react";
 import { getLanguageLabel } from "utils/utilities";
 import { Form } from "antd";
@@ -39,23 +39,23 @@ export const CreateNewGroupModal = ({ isOpen, setIsOpen }: IProps) => {
         }
       }}
     >
-      <BoslerModal
+      <MtdModal
         headingIcon={<AddUserIcon />}
         heading={getLanguageLabel("createNewGroup")}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             intent="action"
             htmlType="submit"
             onClick={handleCreate}
           >
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
-        <div className="BoslerHeader1">{getLanguageLabel("groupName")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("groupName")}</div>
         <Item
           name="name"
           rules={[
@@ -64,13 +64,13 @@ export const CreateNewGroupModal = ({ isOpen, setIsOpen }: IProps) => {
             },
           ]}
         >
-          <BoslerInput required />
+          <MtdInput required />
         </Item>
-        <div className="BoslerHeader1">{getLanguageLabel("description")}</div>
+        <div className="MtdHeader1">{getLanguageLabel("description")}</div>
         <Item name="description">
           <TextArea />
         </Item>
-      </BoslerModal>
+      </MtdModal>
     </Form>
   );
 };

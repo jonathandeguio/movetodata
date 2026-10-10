@@ -1,11 +1,11 @@
 import { ConnectBuildAPI, existsDatasetLink } from "Apps/Connect/Connect.api";
 import { Popover } from "antd";
-import { BuildIcon, StopIcon } from "assets/icons/boslerActionIcons";
+import { BuildIcon, StopIcon } from "assets/icons/mtdActionIcons";
 import axios from "axios";
-import { updateBottomBarItemState } from "common/components/BoslerLayout/bottomBarSlice";
-import BoslerButton, {
-  TBoslerButtonIntent,
-} from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { updateBottomBarItemState } from "common/components/MtdLayout/bottomBarSlice";
+import MtdButton, {
+  TMtdButtonIntent,
+} from "components/MtdComponents/ButtonComponent/MtdButton";
 import { abortBuildAPI } from "components/Builds/Builds.api";
 import { DATASET } from "components/Builds/Builds.constants";
 import { TBuildLog } from "components/Builds/Builds.types";
@@ -44,7 +44,7 @@ const BuildBtn = ({
   const [buildActive, setBuildActive] = useState<boolean>(false);
   const [buildId, setBuildId] = useState<string>();
   const [connectLink, setConnectLink] = useState<any>();
-  const [intent, setIntent] = useState<TBoslerButtonIntent>("action");
+  const [intent, setIntent] = useState<TMtdButtonIntent>("action");
 
   const onBuild = async () => {
     if (linkId || (connectLink && connectLink.status)) {
@@ -119,14 +119,14 @@ const BuildBtn = ({
     if (buildId && buildActive) {
       return (
         <>
-          <BoslerButton
+          <MtdButton
             intent="dangerous"
             onClick={() => onAbort(buildId)}
             icon={<StopIcon />}
             fill
           >
             {getLanguageLabel("abort")}
-          </BoslerButton>
+          </MtdButton>
           <Link to={`/portal/builds/${buildId}`}>View Build Details</Link>
         </>
       );
@@ -189,7 +189,7 @@ const BuildBtn = ({
 
   return (
     <Popover title={getTitle()} placement="bottom">
-      <BoslerButton
+      <MtdButton
         onClick={() => onBuild()}
         intent={intent}
         loading={buildActive}
@@ -197,7 +197,7 @@ const BuildBtn = ({
         disabled={disabled}
       >
         {getLanguageLabel("build")}
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   );
 };

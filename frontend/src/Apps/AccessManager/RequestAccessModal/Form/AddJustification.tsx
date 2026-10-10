@@ -1,6 +1,6 @@
 import { IRequestAccessReview } from "Apps/AccessManager/AccessManager";
 import { Form } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { Dispatch, SetStateAction } from "react";
 
 const { Item } = Form;
@@ -17,7 +17,7 @@ export const AddJustification = ({
   return (
     <>
       <Item label="Title" required>
-        <BoslerInput
+        <MtdInput
           value={accessRequest.title}
           onChange={(e) =>
             setAccessRequest({ ...accessRequest, title: e.target.value })
@@ -27,7 +27,7 @@ export const AddJustification = ({
       </Item>
 
       <Item label="Explanation" required>
-        <BoslerInput
+        <MtdInput
           value={accessRequest.description}
           onChange={(e) =>
             setAccessRequest({ ...accessRequest, description: e.target.value })

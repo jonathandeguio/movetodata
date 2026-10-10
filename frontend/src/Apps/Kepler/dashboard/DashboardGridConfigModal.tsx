@@ -26,7 +26,7 @@ const DashboardGridConfigModal = () => {
         dispatch(updateGridConfig(values));
       }}
     >
-      <div className="BoslerHeader1" style={{ marginBottom: "-10px" }}>
+      <div className="MtdHeader1" style={{ marginBottom: "-10px" }}>
         {getLanguageLabel("canvas")}
       </div>
 
@@ -99,12 +99,12 @@ const DashboardGridConfigModal = () => {
         </div>
       </div>
 
-      <div className="BoslerHeader1" style={{ marginBottom: "-10px" }}>
+      <div className="MtdHeader1" style={{ marginBottom: "-10px" }}>
         general
       </div>
       <Form.Item
         name="preventCollision"
-        label={<div className="boslerFormLabel">Prevent Collision</div>}
+        label={<div className="mtdFormLabel">Prevent Collision</div>}
         labelCol={labelCol}
         wrapperCol={wrapperCol}
         colon={false}
@@ -121,7 +121,7 @@ const DashboardGridConfigModal = () => {
 
       <Form.Item
         name="allowOverlap"
-        label={<div className="boslerFormLabel">Allow Overlap</div>}
+        label={<div className="mtdFormLabel">Allow Overlap</div>}
         labelCol={labelCol}
         wrapperCol={wrapperCol}
         colon={false}

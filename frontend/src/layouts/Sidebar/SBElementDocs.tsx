@@ -1,4 +1,4 @@
-import { DocumentationIcon } from "assets/icons/boslerFileIcons";
+import { DocumentationIcon } from "assets/icons/mtdFileIcons";
 import React from "react";
 import { getLanguageLabel, getUserDocsLanguage } from "utils/utilities";
 import SBElement from "./SBElement";

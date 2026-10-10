@@ -40,20 +40,20 @@ import {
   userOSkey,
 } from "utils/utilities";
 
-import { CrossIcon, DuplicateIcon } from "assets/icons/boslerActionIcons";
-import { DownloadIcon, UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import { FilterLinesIcon } from "assets/icons/boslerTableIcons";
+import { CrossIcon, DuplicateIcon } from "assets/icons/mtdActionIcons";
+import { DownloadIcon, UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import { FilterLinesIcon } from "assets/icons/mtdTableIcons";
 
-import { HelpIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+import { HelpIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import {
   ContextMenu,
   MenuItem,
   useContextMenuState,
 } from "common/components/ContextMenu";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 import Filters from "components/Filters";
 import { TFilterAddOperator } from "components/Filters/FilterConfirmationPopup";
 import DatasetUploadModal from "components/Modals/DatasetUploadModal";
@@ -66,7 +66,7 @@ import { addFiltersFromDataset } from "../../../redux/actions/filtersAction";
 import { fetchSchema } from "../../../redux/actions/pipelineActions";
 import ColumnSelection from "../Column";
 import DatasetStats from "../Stats/DatasetStats.view";
-import { getDatasetTypeAPI } from "./BoslerTable.api";
+import { getDatasetTypeAPI } from "./MtdTable.api";
 import {
   displayFormattedCell,
   getCellIdsInsideGrid,
@@ -74,8 +74,8 @@ import {
   getSelectedCells,
   isSameColumn,
   isSingleCell,
-} from "./BoslerTable.utils";
-import { DraggableColumnHeader } from "./BoslerTableHeader.view";
+} from "./MtdTable.utils";
+import { DraggableColumnHeader } from "./MtdTableHeader.view";
 
 const { Title } = Typography;
 
@@ -91,7 +91,7 @@ interface TProps {
   isViewer?: boolean;
 }
 
-function BoslerTable({
+function MtdTable({
   onDataLoad = () => {},
   isTableFromBottomBar = false,
   id,
@@ -449,8 +449,8 @@ function BoslerTable({
         style={{ height: "100%" }}
       >
         {!isTableFromBottomBar && (
-          <div className="boslertable-topbar">
-            <div className="boslertable-topbar-left">
+          <div className="mtdtable-topbar">
+            <div className="mtdtable-topbar-left">
               <Filters
                 columns={filterColumns}
                 borderWidth="0px"
@@ -459,7 +459,7 @@ function BoslerTable({
                 branch={branch as string}
               />
             </div>
-            <div className="boslertable-topbar-right">
+            <div className="mtdtable-topbar-right">
               <Space>
                 <div>
                   {data && (
@@ -495,7 +495,7 @@ function BoslerTable({
                       }
                     >
                       <span>
-                        <BoslerButton
+                        <MtdButton
                           icon={<DownloadIcon />}
                           intent="none"
                           // outlined={true}
@@ -511,7 +511,7 @@ function BoslerTable({
                         >
                           {" "}
                           {getLanguageLabel("download")}{" "}
-                        </BoslerButton>
+                        </MtdButton>
                       </span>
                     </Popover>
                   )}
@@ -574,7 +574,7 @@ function BoslerTable({
                         }
                       >
                         <span>
-                          <BoslerButton
+                          <MtdButton
                             size="small"
                             icon={<UploadIcon />}
                             intent="none"
@@ -586,7 +586,7 @@ function BoslerTable({
                           >
                             {" "}
                             {getLanguageLabel("re-Upload")}{" "}
-                          </BoslerButton>
+                          </MtdButton>
                         </span>
                       </Popover>
                     </Popconfirm>
@@ -645,8 +645,8 @@ function BoslerTable({
                   placement="bottom"
                   content={getLanguageLabel("searchTable")}
                 >
-                  <div className="boslertable-topbar-right-search">
-                    <BoslerInput
+                  <div className="mtdtable-topbar-right-search">
+                    <MtdInput
                       placeholder={getLanguageLabel("search")}
                       debounceInterval={1000}
                       value={globalFilter}
@@ -661,10 +661,10 @@ function BoslerTable({
           </div>
         )}
         {loadingTable ? (
-          <BoslerLoader />
+          <MtdLoader />
         ) : (
           <div
-            className={"boslertable-wrapper"}
+            className={"mtdtable-wrapper"}
             style={{
               height: isTableFromBottomBar ? "100%" : "calc(100% - 37px)",
             }}
@@ -675,7 +675,7 @@ function BoslerTable({
                 columns={filteredColumns}
               />
             )}
-            <div className={"boslertable-container"}>
+            <div className={"mtdtable-container"}>
               {noDataAvailable ? (
                 <Row
                   style={{ height: "100%" }}
@@ -686,16 +686,16 @@ function BoslerTable({
                 </Row>
               ) : (
                 <table
-                  className="boslertable"
+                  className="mtdtable"
                   style={{ width: table.getTotalSize() }}
                 >
-                  <thead className="boslertable-header">
+                  <thead className="mtdtable-header">
                     {table.getHeaderGroups().map((headerGroup) => (
                       <tr
                         key={headerGroup.id}
-                        className="boslertable-header-row"
+                        className="mtdtable-header-row"
                       >
-                        <th className="boslertable-header-row-blankth"></th>
+                        <th className="mtdtable-header-row-blankth"></th>
                         {headerGroup.headers.map((header) => (
                           <DraggableColumnHeader
                             key={header.id}
@@ -717,7 +717,7 @@ function BoslerTable({
                   </thead>
                   <tbody
                     ref={bodyRef}
-                    className="boslertable-body"
+                    className="mtdtable-body"
                     style={{ position: "relative" }}
                     onContextMenu={(e: React.MouseEvent<HTMLDivElement>) => {
                       e.preventDefault();
@@ -726,8 +726,8 @@ function BoslerTable({
                   >
                     {table.getRowModel().rows.map((row) => {
                       return (
-                        <tr key={row.id} className={"boslertable-body-tr "}>
-                          <td key={0} className={"boslertable-body-tr-blanktd"}>
+                        <tr key={row.id} className={"mtdtable-body-tr "}>
+                          <td key={0} className={"mtdtable-body-tr-blanktd"}>
                             {Number(row.id) + 1}
                           </td>
                           {row.getVisibleCells().map((cell: any) => {
@@ -805,7 +805,7 @@ function BoslerTable({
                                   }
                                 }}
                                 style={{ width: cell.column.getSize() }}
-                                className={"boslertable-body-tr-td ".concat(
+                                className={"mtdtable-body-tr-td ".concat(
                                   selectedCellIds.has(cell.id) ? "selected" : ""
                                 )}
                               >
@@ -843,4 +843,4 @@ function BoslerTable({
   );
 }
 
-export default React.memo(BoslerTable);
+export default React.memo(MtdTable);

@@ -1,6 +1,6 @@
 import BlobRender from "components/BlobViewer/BlobRender";
 import React from "react";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
 import styles from "./DashboardElements.module.scss";
 interface Props {
   dashboardId: string;

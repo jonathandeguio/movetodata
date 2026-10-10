@@ -1,13 +1,13 @@
 import { Col, notification, Progress, Row, Tooltip } from "antd";
 import { getDatasetMappingAPI } from "Apps/Dataset/Dataset.api";
 import { TDatasetMapping, TTransaction } from "Apps/Dataset/Dataset.contants";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import axios from "axios";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import { COMPLETED } from "components/Builds/Transaction.constants";
 import React from "react";
 import { NULL_UUID } from "utils/Common.constants";
@@ -539,7 +539,7 @@ export const importDataset =
                     <Row justify={"space-between"}>
                       <Col span={4}>
                         <div className="text-and-icon-center">
-                          <BoslerLoader size="small" />
+                          <MtdLoader size="small" />
                         </div>
                       </Col>
                       <Col span={20}>
@@ -568,7 +568,7 @@ export const importDataset =
                     <TickIcon color="#ffffff" />
                   </div>
                 ) : (
-                  <BoslerLoader size="small" />
+                  <MtdLoader size="small" />
                 )}
               </>
             ),
@@ -613,7 +613,7 @@ export const importDataset =
               <Col>
                 <Tooltip title="Go to folder">
                   <a href={`/portal/kitab/folder/${id}`}>
-                    <BoslerButton
+                    <MtdButton
                       minimal
                       icononly
                       trimicononlypadding

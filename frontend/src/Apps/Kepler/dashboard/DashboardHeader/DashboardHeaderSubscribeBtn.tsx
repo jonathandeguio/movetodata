@@ -1,7 +1,7 @@
 import { Popover } from "antd";
-import { AddUserIcon } from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import { AddUserIcon } from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -17,10 +17,10 @@ const DashboardHeaderSubscribeBtn = ({ id }: TProps) => {
     (state) => (state as $TSFixMe).resourcePermission[id]
   );
 
-  if (!resourcePermission) return <BoslerLoader size="tiny" />;
+  if (!resourcePermission) return <MtdLoader size="tiny" />;
   return resourcePermission.mode == EDIT_MODE ? (
     <Popover content="Click here to subscribe to the dashboard and receive email updates.">
-      <BoslerButton
+      <MtdButton
         icon={<AddUserIcon size={18} />}
         onClick={() => {
           dispatch(openSubscribeMenuDashboard());
@@ -31,7 +31,7 @@ const DashboardHeaderSubscribeBtn = ({ id }: TProps) => {
         minimal
       >
         {getLanguageLabel("subscribe")}
-      </BoslerButton>
+      </MtdButton>
     </Popover>
   ) : (
     <></>

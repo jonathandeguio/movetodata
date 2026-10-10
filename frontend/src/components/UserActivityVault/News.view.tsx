@@ -1,12 +1,12 @@
 import { getSparkles } from "Apps/explorer/explorer.utils";
 import { Card, Col, Form, List, Row, Select, Tooltip, Typography } from "antd";
-import { AddIcon, CrossIcon } from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { PulseIcon, TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { AddIcon, CrossIcon } from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { PulseIcon, TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkAppDispatch } from "redux/types/store";
@@ -41,10 +41,10 @@ export const News = () => {
     return (
       <>
         <Form.Item name="title">
-          <BoslerInput placeholder="Title" />
+          <MtdInput placeholder="Title" />
         </Form.Item>
         <Form.Item name="description">
-          <BoslerInput placeholder="Description" />
+          <MtdInput placeholder="Description" />
         </Form.Item>
         <Form.Item name="priority">
           <Select
@@ -63,7 +63,7 @@ export const News = () => {
           />
         </Form.Item>
         <Form.Item name="expiration">
-          <BoslerDatePicker placeholder="Auto Removal Date" />
+          <MtdDatePicker placeholder="Auto Removal Date" />
         </Form.Item>
       </>
     );
@@ -86,7 +86,7 @@ export const News = () => {
           <Col>
             <Tooltip title={getLanguageLabel("newAnnoucements")}>
               <Title level={3}>
-                <BoslerButton
+                <MtdButton
                   onClick={() => setIsAddNewsButtonActive(true)}
                   icon={<AddIcon size={22} />}
                   icononly
@@ -123,23 +123,23 @@ export const News = () => {
             {commonFormItem()}
             <Row justify={"end"} align={"middle"} gutter={[16, 16]}>
               <Col>
-                <BoslerButton
+                <MtdButton
                   intent={"dangerous"}
                   icon={<CrossIcon />}
                   onClick={() => setIsAddNewsButtonActive(false)}
                 >
                   {getLanguageLabel("cancel")}
-                </BoslerButton>
+                </MtdButton>
               </Col>
               <Col>
-                <BoslerButton
+                <MtdButton
                   htmlType="submit"
                   intent="action"
                   textTransform="none"
                   icon={<TickIcon />}
                 >
                   {getLanguageLabel("create")}
-                </BoslerButton>
+                </MtdButton>
               </Col>
             </Row>
           </Form>
@@ -171,23 +171,23 @@ export const News = () => {
                     {commonFormItem()}
                     <Row justify={"end"} align={"middle"} gutter={[16, 16]}>
                       <Col>
-                        <BoslerButton
+                        <MtdButton
                           intent={"dangerous"}
                           icon={<CrossIcon />}
                           onClick={() => setIsEditingOnFor("")}
                         >
                           {getLanguageLabel("cancel")}
-                        </BoslerButton>
+                        </MtdButton>
                       </Col>
                       <Col>
-                        <BoslerButton
+                        <MtdButton
                           htmlType="submit"
                           intent="action"
                           textTransform="none"
                           icon={<TickIcon />}
                         >
                           {getLanguageLabel("update")}
-                        </BoslerButton>
+                        </MtdButton>
                       </Col>
                     </Row>
                   </Form>
@@ -196,7 +196,7 @@ export const News = () => {
                     extra={
                       <Row align="middle" gutter={[16, 16]}>
                         <Tooltip title={getLanguageLabel("edit")}>
-                          <BoslerButton
+                          <MtdButton
                             onClick={() => {
                               editForm.setFieldsValue(news);
                               setIsEditingOnFor(news.id);
@@ -219,7 +219,7 @@ export const News = () => {
                             )
                           }
                         >
-                          <BoslerButton
+                          <MtdButton
                             onClick={() => {
                               updateLatestNewsAPI({
                                 ...news,

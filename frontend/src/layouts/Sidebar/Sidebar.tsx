@@ -3,18 +3,18 @@ import { Divider } from "antd";
 import {
   BuildIcon,
   HistoryIcon
-} from "assets/icons/boslerActionIcons";
-import { BooleanIcon } from "assets/icons/boslerDataIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
+} from "assets/icons/mtdActionIcons";
+import { BooleanIcon } from "assets/icons/mtdDataIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
 import {
   AppIcon,
   HomeIcon,
   ScheduledRunIcon
-} from "assets/icons/boslerInterfaceIcons";
-import { LibraryIcon, StarIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdInterfaceIcons";
+import { LibraryIcon, StarIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { getIsConnectAdmin } from "common/common.api";
 import { AiAssistantButton } from "components/AiAssistant";
-import BoslerCommandPalette from "components/CommandPalette/CommandPalette.view";
+import MtdCommandPalette from "components/CommandPalette/CommandPalette.view";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -291,7 +291,7 @@ const Sidebar = () => {
               marginBottom: "10px",
             }}
           />
-          <BoslerCommandPalette
+          <MtdCommandPalette
             iconSize={sidebarAttributes.iconSize}
             showText={sidebarAttributes.showText}
           />

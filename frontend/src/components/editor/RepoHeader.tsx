@@ -16,21 +16,21 @@ import {
   openNotification,
 } from "utils/utilities";
 
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 
 import { abortBuildAPI, fetchBuildLogsAPI } from "components/Builds/Builds.api";
 import { ACTIVE } from "components/Builds/Builds.constants";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
-import { useFaviconLoader } from "components/boslerLoader/useFavIconLoader";
-import { AddIcon, SettingsIcon } from "../../assets/icons/boslerActionIcons";
-import { EditIcon } from "../../assets/icons/boslerEditorIcons";
-import { GitNewBranchIcon } from "../../assets/icons/boslerExternalIcons";
-import { TrashIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
+import { useFaviconLoader } from "components/mtdLoader/useFavIconLoader";
+import { AddIcon, SettingsIcon } from "../../assets/icons/mtdActionIcons";
+import { EditIcon } from "../../assets/icons/mtdEditorIcons";
+import { GitNewBranchIcon } from "../../assets/icons/mtdExternalIcons";
+import { TrashIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 import {
   DoubleChevronRightIcon,
   UndoIcon,
-} from "../../assets/icons/boslerNavigationIcon";
+} from "../../assets/icons/mtdNavigationIcon";
 import {
   closeRepositoryEditorPane,
   createOrUpdateRepositoryEditorPane,
@@ -39,7 +39,7 @@ import {
 } from "../../redux/repositoryEditorSlice";
 import { RootState, ThunkAppDispatch } from "../../redux/types/store";
 import Avatars from "../Avatars/Avatars";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import Comments from "../Comments/Comments.view";
 import BuildBtn from "./components/BuildBtn";
 import CommitBtn from "./components/CommitBtn";
@@ -244,7 +244,7 @@ function RepoHeader({
       key: "message",
       render: (text: any, record: any) => {
         return (
-          <BoslerButton
+          <MtdButton
             onClick={() => {
               if (notEmpty(repoId)) {
                 setModalProps({
@@ -254,7 +254,7 @@ function RepoHeader({
                   headingIcon: <TrashIcon />,
 
                   footerButtonArea: (
-                    <BoslerButton
+                    <MtdButton
                       intent="dangerous"
                       onClick={() => {
                         checkout(repoId, branch, record.id)
@@ -285,7 +285,7 @@ function RepoHeader({
                       }}
                     >
                       Reset
-                    </BoslerButton>
+                    </MtdButton>
                   ),
                   children: (
                     <>
@@ -300,7 +300,7 @@ function RepoHeader({
             intent="dangerous"
           >
             Reset
-          </BoslerButton>
+          </MtdButton>
         );
       },
     },
@@ -417,7 +417,7 @@ function RepoHeader({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<SettingsIcon />}
         heading={getLanguageLabel("settings")}
         open={settingsModal}
@@ -502,20 +502,20 @@ function RepoHeader({
                     justifyContent: "space-between",
                   }}
                 >
-                  <BoslerButton
+                  <MtdButton
                     icon={<AddIcon />}
                     onClick={() => setMergeBranchModal(true)}
                   >
                     {getLanguageLabel("mergeBranches")}{" "}
-                  </BoslerButton>
-                  <BoslerButton
+                  </MtdButton>
+                  <MtdButton
                     icon={<GitNewBranchIcon />}
                     onClick={() => setCreateBranchModal(true)}
                     intent="action"
                   >
                     {" "}
                     {getLanguageLabel("createNewBranch")}{" "}
-                  </BoslerButton>
+                  </MtdButton>
                 </div>
               }
             />
@@ -538,7 +538,7 @@ function RepoHeader({
             <PreviewSpecs id={id} branch={branch} />
           </TabPane>
         </Tabs>
-      </BoslerModal>
+      </MtdModal>
       <div
         className="kepler-container-header"
         onMouseEnter={() => setShowPanel(true)}
@@ -571,7 +571,7 @@ function RepoHeader({
           <CommitBtn trackingStatus={trackingStatus} saveCommit={saveCommit} />
           <PushBtn trackingStatus={trackingStatus} pushCode={pushCode} />
           <Tooltip placement="top" title={getLanguageLabel("settings")}>
-            <BoslerButton
+            <MtdButton
               icon={<SettingsIcon />}
               icononly={true}
               onClick={() => setSettingsModal(true)}
@@ -579,7 +579,7 @@ function RepoHeader({
           </Tooltip>
         </div>
       </div>
-      <BoslerModal
+      <MtdModal
         onCancel={() =>
           setModalProps({
             open: false,

@@ -2,7 +2,7 @@ import { KeplerConfig } from "Apps/Kepler/chart/charts.config";
 import { ColorPicker } from "antd";
 import React, { useState } from "react";
 import { getLanguageLabel } from "utils/utilities";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
 import styles from "./DashboardElements.module.scss";
 interface Props {
   dashboardId: string;

@@ -13,15 +13,15 @@ import {
 import {
   AddUserIcon,
   UploadIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+} from "../../assets/icons/mtdInterfaceIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { getAllUserDetails } from "../../redux/actions/userActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
 
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { ErrorResponse } from "global";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -133,7 +133,7 @@ const UserButton = ({ title }: $TSFixMe) => {
   return (
     <>
       <Tooltip placement="right" title={title}>
-        <BoslerButton
+        <MtdButton
           icon={<AddUserIcon />}
           intent="action"
           onClick={() => {
@@ -142,25 +142,25 @@ const UserButton = ({ title }: $TSFixMe) => {
         >
           {" "}
           {getLanguageLabel("newUser")}{" "}
-        </BoslerButton>
+        </MtdButton>
       </Tooltip>
 
       {/* ---------------------------MODAL for New user ---------------------------------- */}
-      <BoslerModal
+      <MtdModal
         headingIcon={<AddUserIcon />}
         heading={getLanguageLabel("addNewUserDetails")}
         open={view}
         onCancel={handleCancel}
         onOk={handleOk}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             intent="action"
             key="submit"
             onClick={handleOk}
           >
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         }
         width={600}
       >
@@ -170,8 +170,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             overflow: "scoll",
           }}
         >
-          <div className="BoslerHeader1">{getLanguageLabel("userName")}</div>
-          <BoslerInput
+          <div className="MtdHeader1">{getLanguageLabel("userName")}</div>
+          <MtdInput
             autofocus
             onChange={(e) =>
               setNewUserDetails({
@@ -183,7 +183,7 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="username"
             required
           />
-          <div className="BoslerHeader1">{getLanguageLabel("password")}</div>
+          <div className="MtdHeader1">{getLanguageLabel("password")}</div>
           <Input.Password
             onChange={(e) =>
               setNewUserDetails({
@@ -195,8 +195,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="password"
             required
           />
-          <div className="BoslerHeader1">{getLanguageLabel("givenName")}</div>
-          <BoslerInput
+          <div className="MtdHeader1">{getLanguageLabel("givenName")}</div>
+          <MtdInput
             onChange={(e) =>
               setNewUserDetails({
                 ...newUserDetails,
@@ -207,8 +207,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="fname"
             required
           />
-          <div className="BoslerHeader1">{getLanguageLabel("familyName")}</div>
-          <BoslerInput
+          <div className="MtdHeader1">{getLanguageLabel("familyName")}</div>
+          <MtdInput
             onChange={(e) =>
               setNewUserDetails({
                 ...newUserDetails,
@@ -219,8 +219,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="lname"
             required
           />
-          {/* <div className="BoslerHeader1">{getLanguageLabel("name")}</div>
-          <BoslerInput
+          {/* <div className="MtdHeader1">{getLanguageLabel("name")}</div>
+          <MtdInput
             bordered
             onChange={(e) =>
               setNewUserDetails({
@@ -232,8 +232,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="Uname"
             required
           /> */}
-          <div className="BoslerHeader1">{getLanguageLabel("location")}</div>
-          <BoslerInput
+          <div className="MtdHeader1">{getLanguageLabel("location")}</div>
+          <MtdInput
             onChange={(e) =>
               setNewUserDetails({
                 ...newUserDetails,
@@ -244,8 +244,8 @@ const UserButton = ({ title }: $TSFixMe) => {
             name="loc"
             required
           />
-          <div className="BoslerHeader1">{getLanguageLabel("email")}</div>
-          <BoslerInput
+          <div className="MtdHeader1">{getLanguageLabel("email")}</div>
+          <MtdInput
             onChange={(e) =>
               setNewUserDetails({
                 ...newUserDetails,
@@ -257,7 +257,7 @@ const UserButton = ({ title }: $TSFixMe) => {
             required
           />
 
-          <div className="BoslerHeader1">
+          <div className="MtdHeader1">
             {getLanguageLabel("languagePreference")}
           </div>
 
@@ -305,7 +305,7 @@ const UserButton = ({ title }: $TSFixMe) => {
           </Select>
 
           <div>
-            <div className="BoslerHeader1">
+            <div className="MtdHeader1">
               {getLanguageLabel("themePreference")}
             </div>
             <Radio.Group
@@ -333,13 +333,13 @@ const UserButton = ({ title }: $TSFixMe) => {
 
           <br />
           <Upload {...props}>
-            <BoslerButton icon={<UploadIcon />}>
+            <MtdButton icon={<UploadIcon />}>
               {getLanguageLabel("uploadProfilePicture")}
-            </BoslerButton>
+            </MtdButton>
           </Upload>
           {isUploaded && <TickIcon color="green" />}
         </div>
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

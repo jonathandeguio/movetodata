@@ -786,7 +786,7 @@ const myLanguages = {
   creatingDatasetDetail: {
     en: "This step entails creating schema, metadata, branchs, stats and other movetodata specific details.",
     fr: "Cette étape implique la création d'un schéma, de métadonnées, de branches, de statistiques et d'autres détails spécifiques au movetodata.",
-    de: "Dieser Schritt beinhaltet das Erstellen von Schemas, Metadaten, Zweigen, Statistiken und anderen boslerspezifischen Details.",
+    de: "Dieser Schritt beinhaltet das Erstellen von Schemas, Metadaten, Zweigen, Statistiken und anderen plattformspezifischen Details.",
     es: "This step entails creating schema, metadata, branchs, stats and other movetodata specific details.",
     hi: "इस चरण में स्कीमा, मेटाडेटा, शाखाएँ, आँकड़े और अन्य बॉस्लर विशिष्ट विवरण बनाना शामिल है।",
     nl: "In deze stap wordt het schema, metadata, takken, statistieken en andere movetodata-specifieke details gemaakt.",

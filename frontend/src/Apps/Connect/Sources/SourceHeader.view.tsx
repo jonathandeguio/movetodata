@@ -1,8 +1,8 @@
 import { Dropdown, Modal, Popover, Typography } from "antd";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 
 import DeleteModal from "components/Modals/DeleteModal";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
@@ -12,11 +12,11 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 import { getLanguageLabel, isDefined } from "utils/utilities";
-import { MoreMenuIcon } from "../../../assets/icons/boslerActionIcons";
-import { GraphIcon } from "../../../assets/icons/boslerChartIcons";
-import { EditIcon } from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
-import { PopOutIcon } from "../../../assets/icons/boslerNavigationIcon";
+import { MoreMenuIcon } from "../../../assets/icons/mtdActionIcons";
+import { GraphIcon } from "../../../assets/icons/mtdChartIcons";
+import { EditIcon } from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
+import { PopOutIcon } from "../../../assets/icons/mtdNavigationIcon";
 import SourcesTargets from "../../../helpers/SourcesTargets";
 import {
     deleteSource,
@@ -96,7 +96,7 @@ const SourceHeader = ({
       <CustomBreadCrumb />
 
       <div className="connect-container-header-btns">
-        <BoslerInfoPopover id={sourceDetails.id} type={sourceDetails.type} />
+        <MtdInfoPopover id={sourceDetails.id} type={sourceDetails.type} />
         <Comments id={sourceDetails.id} />
         <Avatars link={`/topic/${sourceDetails.id}`} />
 
@@ -126,12 +126,12 @@ const SourceHeader = ({
           // trigger={"click"}
         >
           <Link to={`/portal/bezier/${sourceDetails.id}/master`}>
-            <BoslerButton
+            <MtdButton
               icon={<GraphIcon />}
               icononly={true}
               minimal
               trimicononlypadding
-            ></BoslerButton>
+            ></MtdButton>
           </Link>
         </Popover>
         {/* Need a button here */}

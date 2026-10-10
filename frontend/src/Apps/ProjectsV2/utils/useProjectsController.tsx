@@ -13,10 +13,10 @@ import {
 import { IProject, Resource } from "Apps/explorer/explorer";
 import { useNavigateHelper } from "Apps/explorer/explorer.hooks";
 import { Tooltip } from "antd";
-import { CopyIcon, EditIcon } from "assets/icons/boslerEditorIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { CardIcon, TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
+import { CopyIcon, EditIcon } from "assets/icons/mtdEditorIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { CardIcon, TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
 import useEffectOnlyOnDependencyUpdate from "hooks/useEffectOnlyOnDependencyUpdate";
 import useInfiniteScroll from "hooks/useInfiniteScroll";
 import React from "react";

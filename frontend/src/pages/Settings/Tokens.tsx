@@ -1,12 +1,12 @@
 import { Switch, Table } from "antd";
-import { SearchIcon } from "assets/icons/boslerActionIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import { SearchIcon } from "assets/icons/mtdActionIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { getLanguageLabel } from "utils/utilities";
-import BoslerLoader from "../../components/boslerLoader/BoslerLoader";
+import MtdLoader from "../../components/mtdLoader/MtdLoader";
 import TokenButton from "../../components/buttons/TokenButton";
 import GlobalSearch from "../../helpers/GlobalSearch";
 import { listTokens } from "../../redux/actions/tokenActions";
@@ -98,12 +98,12 @@ const Tokens = () => {
 
   return tokens === "" ? (
     <div className="settings-center-block">
-      <BoslerLoader />
+      <MtdLoader />
     </div>
   ) : (
     <div className="settings-center-block">
       <TokenButton />
-      <BoslerInput
+      <MtdInput
         placeholder={getLanguageLabel("searchTokenTable")}
         allowClear
         onChange={(e) => {

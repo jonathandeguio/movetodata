@@ -19,10 +19,10 @@ import {
   listAgentSources,
 } from "../../../redux/actions/agentActions";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams } from "react-router-dom";
@@ -32,18 +32,18 @@ import {
   getTimeDisplay,
   timeConverter,
 } from "utils/utilities";
-import { LinkIcon, RemoveIcon } from "../../../assets/icons/boslerActionIcons";
-import { DatabaseIcon } from "../../../assets/icons/boslerDataIcons";
+import { LinkIcon, RemoveIcon } from "../../../assets/icons/mtdActionIcons";
+import { DatabaseIcon } from "../../../assets/icons/mtdDataIcons";
 import {
   CodeCellIcon,
   CopyIcon,
   EditIcon,
-} from "../../../assets/icons/boslerEditorIcons";
-import { FolderIcon } from "../../../assets/icons/boslerFileIcons";
-import { TickSmallIcon } from "../../../assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "../../../assets/icons/boslerTableIcons";
-import BoslerButton from "../../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import { CollapserHandler } from "../../../components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+} from "../../../assets/icons/mtdEditorIcons";
+import { FolderIcon } from "../../../assets/icons/mtdFileIcons";
+import { TickSmallIcon } from "../../../assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "../../../assets/icons/mtdTableIcons";
+import MtdButton from "../../../components/MtdComponents/ButtonComponent/MtdButton";
+import { CollapserHandler } from "../../../components/MtdComponents/ResizablePane/ResizablePaneUtil";
 import { ThunkAppDispatch } from "../../../redux/types/store";
 import {
   getAgentStatsAPI,
@@ -203,13 +203,13 @@ const AgentDetails = () => {
                   </Col>
 
                   <Col>
-                    <BoslerButton
+                    <MtdButton
                       icon={<EditIcon />}
                       intent="primary"
                       onClick={() => setIsUpdateAgentModalOpen(true)}
                     >
                       {getLanguageLabel("edit")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Col>
                 </Row>
 
@@ -250,7 +250,7 @@ const AgentDetails = () => {
                     <Text>{getLanguageLabel("descriptionOpt")}</Text>
                   </Col>
                   <Col span={16}>
-                    <BoslerButton
+                    <MtdButton
                       intent="none"
                       icon={<FolderIcon />}
                       onClick={() =>
@@ -261,7 +261,7 @@ const AgentDetails = () => {
                       fill
                     >
                       {parent.name}
-                    </BoslerButton>
+                    </MtdButton>
                     <br />
                     <Text
                       type="secondary"
@@ -283,7 +283,7 @@ const AgentDetails = () => {
                     <Text>{getLanguageLabel("agentID")}</Text>
                   </Col>
                   <Col span={16}>
-                    <BoslerInput
+                    <MtdInput
                       value={(agent as $TSFixMe)?.id}
                       readOnly
                       suffix={
@@ -395,7 +395,7 @@ const AgentDetails = () => {
                   </>
                 )}
 
-                <BoslerModal
+                <MtdModal
                   headingIcon={<CodeCellIcon />}
                   heading={getLanguageLabel("agentDetails")}
                   open={oneTimeCode.modalView}
@@ -408,7 +408,7 @@ const AgentDetails = () => {
                   okButtonProps={{ icon: <TickSmallIcon /> }}
                   cancelButtonProps={{ icon: <RemoveIcon /> }}
                   footerButtonArea={
-                    <BoslerButton
+                    <MtdButton
                       icon={<CopyCellIcon />}
                       onClick={() =>
                         copyToClipboard(
@@ -418,7 +418,7 @@ const AgentDetails = () => {
                       minimal
                     >
                       {getLanguageLabel("code")}
-                    </BoslerButton>
+                    </MtdButton>
                   }
                 >
                   <Text>{getLanguageLabel("agentMsg")}</Text>
@@ -427,7 +427,7 @@ const AgentDetails = () => {
                     <Text strong>
                       {`bash < (/ usr/ bin/ curl -k -s ${PUBLIC_URL}/ api/ connect/ agent/ install/ ${oneTimeCode.code})`}
                       <Tooltip title={"Click to copy agent secret id"}>
-                        <BoslerButton
+                        <MtdButton
                           icon={<CopyCellIcon />}
                           onClick={() =>
                             copyToClipboard(
@@ -440,7 +440,7 @@ const AgentDetails = () => {
                       </Tooltip>
                     </Text>
                   </Card>
-                </BoslerModal>
+                </MtdModal>
               </div>
             </Panel>
             <PanelResizeHandle className="resizablePane-collapser">
@@ -466,7 +466,7 @@ const AgentDetails = () => {
           />
         </div>
       ) : (
-        <BoslerLoader />
+        <MtdLoader />
       )}
     </>
   );

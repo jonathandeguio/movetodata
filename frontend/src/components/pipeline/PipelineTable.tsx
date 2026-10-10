@@ -1,7 +1,7 @@
 import { Resizable } from "re-resizable";
 import React from "react";
 
-import BoslerTable from "../../Apps/Dataset/Table/BoslerTable";
+import MtdTable from "../../Apps/Dataset/Table/MtdTable";
 
 const PipelineTable = ({ id, branch }: $TSFixMe) => {
   return (
@@ -39,7 +39,7 @@ const PipelineTable = ({ id, branch }: $TSFixMe) => {
             width: "100%",
           }}
         >
-          <BoslerTable isTableFromBottomBar={true} id={id} branch={branch} />
+          <MtdTable isTableFromBottomBar={true} id={id} branch={branch} />
         </div>
       </Resizable>
     </>

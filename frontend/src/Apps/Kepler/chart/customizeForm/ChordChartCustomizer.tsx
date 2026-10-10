@@ -1,4 +1,4 @@
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
@@ -10,7 +10,7 @@ import { getLanguageLabel } from "utils/utilities";
 export const ChordChartCustomizer = () => {
   return (
     <div className="customizer-subHeader">
-      <BoslerCollapse
+      <MtdCollapse
         key="chordSettings"
         collapsible="HEADER"
         header={
@@ -23,7 +23,7 @@ export const ChordChartCustomizer = () => {
           {getLanguageLabel("chordChartDisabled") ??
             "Chord chart requires ECharts 6. Upgrade echarts to enable this chart type."}
         </span>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

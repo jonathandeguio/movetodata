@@ -1,4 +1,4 @@
-import { BottomBarLayout } from "common/components/BoslerLayout/BottomBarLayout";
+import { BottomBarLayout } from "common/components/MtdLayout/BottomBarLayout";
 import React from "react";
 import { useSelector } from "react-redux";
 import { FractalRestricted } from "./FractalRestricted.view";

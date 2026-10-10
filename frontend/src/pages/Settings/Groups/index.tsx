@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGroups } from "../../../redux/actions/authActions";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
-import BoslerLoader from "components/boslerLoader";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
+import MtdLoader from "components/mtdLoader";
 
 import React from "react";
 
@@ -31,10 +31,10 @@ const Groups = () => {
     dispatch(getAllGroups());
   }, []);
 
-  if (loading) return <BoslerLoader />;
+  if (loading) return <MtdLoader />;
 
   return (
-    <BoslerSwitch
+    <MtdSwitch
       items={[
         {
           label: `${GROUP_TYPE_NAME.RESOURCE} ${getLanguageLabel("groups")}`,

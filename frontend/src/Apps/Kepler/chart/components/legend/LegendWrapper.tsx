@@ -10,7 +10,7 @@ import {
   SingleChevronLeftIcon,
   SingleChevronRightIcon,
   SingleChevronUpIcon,
-} from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdNavigationIcon";
 interface ILegendWrapper {
   // position: "top" | "right" | "bottom" | "left";
   children: JSX.Element;

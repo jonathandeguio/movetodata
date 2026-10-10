@@ -1,6 +1,6 @@
 import { MenuProps } from "antd";
-import { RefreshIcon, RunIcon, StopIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { RefreshIcon, RunIcon, StopIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -99,7 +99,7 @@ const DashboardRefreshBtn: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <BoslerButton
+      <MtdButton
         // icon={refreshConfig.isPlaying ? <StopIcon /> : <RunIcon />}
         // onClick={handlePlayPause}
         menuItems={DASHBOARD_REFRESH_CONFIG}
@@ -107,8 +107,8 @@ const DashboardRefreshBtn: React.FC = () => {
         textTransform={"none"}
       >
         {getBtnText(refreshConfig.refreshInterval)}
-      </BoslerButton>
-      <BoslerButton
+      </MtdButton>
+      <MtdButton
         onClick={handleRefreshNow}
         icon={<RefreshIcon />}
         icononly={true}

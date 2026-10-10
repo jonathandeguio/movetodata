@@ -3,12 +3,12 @@ import { Editor } from "@monaco-editor/react";
 import { getBuildSpecAPI } from "Apps/explorer/explorer.api";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
 import { Tabs } from "antd";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { TBuildSpec } from "components/Builds/Builds.types";
 import { getRepoLinkUsingBuildSpec } from "components/Builds/Builds.utils";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { getFileContentAPI } from "components/editor/editor.api";
 import {
     getFileNameFromScriptPath,
@@ -66,7 +66,7 @@ export const ReadOnlyCodePanel = ({ id, branch, transactionId }: IProps) => {
     }
   }, [datasetBuildSpec]);
 
-  if (loading) return <BoslerLoader />;
+  if (loading) return <MtdLoader />;
 
   return (
     <div
@@ -80,7 +80,7 @@ export const ReadOnlyCodePanel = ({ id, branch, transactionId }: IProps) => {
       ) : (
         <Tabs
           tabBarExtraContent={
-            <BoslerButton
+            <MtdButton
               actionIcon={<PopOutIcon />}
               intent="action"
               onClick={() =>
@@ -91,7 +91,7 @@ export const ReadOnlyCodePanel = ({ id, branch, transactionId }: IProps) => {
               }
             >
               {getLanguageLabel("openCodeRepository")}
-            </BoslerButton>
+            </MtdButton>
           }
         >
           <TabPane

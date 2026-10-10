@@ -1,17 +1,17 @@
 import { Col, Popover, Row, Tooltip } from "antd";
-import { SearchIcon } from "assets/icons/boslerActionIcons";
+import { SearchIcon } from "assets/icons/mtdActionIcons";
 import {
   CollectionIcon,
   SidePanelIcon,
   UnorderedListIcon,
-} from "assets/icons/boslerInterfaceIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+} from "assets/icons/mtdInterfaceIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { updateUserDataAPI } from "components/CommandPalette/CommandPalette.api";
 import Comments from "components/Comments/Comments.view";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import NewButton from "components/buttons/NewButton";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import React, { useState } from "react";
@@ -73,7 +73,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
         <Row gutter={16} align="middle">
           <Col>
             {activeId == "RECYCLE_BIN" && (
-              <BoslerButton
+              <MtdButton
                 icon={<TrashIcon />}
                 onClick={() => {
                   if (notEmpty(id)) {
@@ -83,13 +83,13 @@ export const FolderDetailHeader: React.FC<Props> = ({
                 intent="dangerous"
               >
                 {getLanguageLabel("empty")}
-              </BoslerButton>
+              </MtdButton>
             )}
           </Col>
           <Col>
             <Popover
               content={
-                <BoslerInput
+                <MtdInput
                   size="small"
                   placeholder={getLanguageLabel("searchInFolder")}
                   allowClear
@@ -111,7 +111,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
                 }
                 placement="bottom"
               >
-                <BoslerButton
+                <MtdButton
                   onClick={() =>
                     setListView((state: boolean) => {
                       updateUserDataAPI({
@@ -133,7 +133,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
                   icononly
                   trimicononlypadding
                   minimal
-                ></BoslerButton>
+                ></MtdButton>
               </Tooltip>
             )}
           </Col>
@@ -159,7 +159,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
           <Col>
             {isEditable && setIsSidePanelOpen && (
               <Tooltip title={getLanguageLabel("details")} placement="bottom">
-                <BoslerButton
+                <MtdButton
                   onClick={() =>
                     setIsSidePanelOpen((state: boolean) => {
                       updateUserDataAPI({
@@ -181,7 +181,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
           </Col>
         </Row>
       </div>
-      <BoslerModal
+      <MtdModal
         destroyOnClose
         open={trashModal}
         onCancel={() => {
@@ -190,7 +190,7 @@ export const FolderDetailHeader: React.FC<Props> = ({
         heading={getLanguageLabel("permanentDelete")}
         headingIcon={<TrashIcon />}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent="dangerous"
             onClick={() => {
               if (notEmpty(id)) {
@@ -225,11 +225,11 @@ export const FolderDetailHeader: React.FC<Props> = ({
             disabled={true}
           >
             {getLanguageLabel("empty")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         {getLanguageLabel("areYouSureYouWantToDeleteThis?")}
-      </BoslerModal>
+      </MtdModal>
     </div>
   );
 };

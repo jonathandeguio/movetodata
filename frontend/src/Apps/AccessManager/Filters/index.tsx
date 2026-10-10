@@ -1,6 +1,6 @@
 import React from "react";
 import { IAccessManagerFilters } from "../AccessManager";
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import { REQUEST_ACCESS_TYPE } from "../RequestAccessModal/RequestAccessModal.utils";
 import {
   ACCESS_FILTERS_MENU,
@@ -17,8 +17,8 @@ import {
   MenuProps,
   Typography,
 } from "antd";
-import BoslerDatePicker from "components/BoslerComponents/BoslerDatePicker";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdDatePicker from "components/MtdComponents/MtdDatePicker";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import { getLanguageLabel } from "utils/utilities";
 import styles from "./AccessManagerFilters.module.scss";
 
@@ -65,7 +65,7 @@ export const AccessManagerFilters = ({ filters, updateFilters }: IProps) => {
       <Row gutter={[8, 8]}>
         <Col span={24}>Request ID</Col>
         <Col span={24}>
-          <BoslerInput
+          <MtdInput
             placeholder={getLanguageLabel("search")}
             value={filters.searchText}
             onChange={(e) =>
@@ -80,7 +80,7 @@ export const AccessManagerFilters = ({ filters, updateFilters }: IProps) => {
       <Row gutter={[8, 8]}>
         <Col span={24}>{getLanguageLabel("type")}</Col>
         <Col span={24}>
-          <BoslerSwitch
+          <MtdSwitch
             items={[
               {
                 label: REQUEST_ACCESS_TYPE.PROJECT,
@@ -105,7 +105,7 @@ export const AccessManagerFilters = ({ filters, updateFilters }: IProps) => {
         <Col span={24}>{getLanguageLabel("createdAt")}</Col>
         <Col span={12}>
           {getLanguageLabel("from")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeFrom}
             onChange={(date: number) =>
               updateFilters(
@@ -117,7 +117,7 @@ export const AccessManagerFilters = ({ filters, updateFilters }: IProps) => {
         </Col>
         <Col span={12}>
           {getLanguageLabel("to")}:
-          <BoslerDatePicker
+          <MtdDatePicker
             value={filters.rangeTo}
             onChange={(date: number) =>
               updateFilters(

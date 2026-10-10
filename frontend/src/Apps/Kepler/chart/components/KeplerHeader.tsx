@@ -21,22 +21,22 @@ import {
   HistoryIcon,
   LinkIcon,
   RefreshIcon,
-} from "assets/icons/boslerActionIcons";
-import { GraphIcon } from "assets/icons/boslerChartIcons";
-import { FolderIcon } from "assets/icons/boslerFileIcons";
-import { KeyIcon } from "assets/icons/boslerInterfaceIcons";
-import { MonitorIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { PopOutIcon, TickIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
+} from "assets/icons/mtdActionIcons";
+import { GraphIcon } from "assets/icons/mtdChartIcons";
+import { FolderIcon } from "assets/icons/mtdFileIcons";
+import { KeyIcon } from "assets/icons/mtdInterfaceIcons";
+import { MonitorIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { PopOutIcon, TickIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
 import { PlatformPagesEnum } from "common/enums";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import DatasetHistoryCalenderPopover from "components/DatasetHistory/Calender/DatasetHistoryCalenderPopover";
 import EmbedModal from "components/Modals/EmbedModal";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import SourcesTargets from "helpers/SourcesTargets";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -217,7 +217,7 @@ function KeplerHeader({
     })),
   ];
 
-  if (!isDefined(chart) && !isDefined(resource)) return <BoslerLoader />;
+  if (!isDefined(chart) && !isDefined(resource)) return <MtdLoader />;
   return (
     <div
       className="kepler-container-header"
@@ -239,7 +239,7 @@ function KeplerHeader({
           {showDialog ? (
             <Tooltip title={"Saving..."} placement="bottom">
               <div className="text-and-icon-center">
-                <BoslerButton
+                <MtdButton
                   icon={<RefreshIcon />}
                   loading={showDialog}
                   minimal
@@ -250,7 +250,7 @@ function KeplerHeader({
             </Tooltip>
           ) : (
             <Tooltip title={getLanguageLabel("autoSaved")} placement="bottom">
-              <BoslerButton
+              <MtdButton
                 icon={<TickIcon />}
                 iconColor="var(--SUCCESS_COLOR)"
                 minimal
@@ -260,14 +260,14 @@ function KeplerHeader({
             </Tooltip>
           )}
         </div>
-        <BoslerInfoPopover id={CHART_ID} type={"CHART"} />
+        <MtdInfoPopover id={CHART_ID} type={"CHART"} />
         <Popover
           title={
             <>
               <Row justify="space-between" align="middle">
                 <Col>
                   <div className="text-and-icon-center">
-                    <BoslerButton
+                    <MtdButton
                       icon={<HistoryIcon size={20} />}
                       minimal
                       onClick={() => {
@@ -275,7 +275,7 @@ function KeplerHeader({
                       }}
                     >
                       {getLanguageLabel("version")}
-                    </BoslerButton>
+                    </MtdButton>
                   </div>
                 </Col>
                 <Col className="key-binding">
@@ -286,7 +286,7 @@ function KeplerHeader({
           }
           content={getLanguageLabel("chartChangeHistoryAndVersions")}
         >
-          <BoslerButton
+          <MtdButton
             icononly
             icon={<HistoryIcon size={20} />}
             minimal
@@ -297,7 +297,7 @@ function KeplerHeader({
           />
         </Popover>
         <Popover content={<>Embed {getLanguageLabel("dataLink")}</>}>
-          <BoslerButton
+          <MtdButton
             onClick={() => {
               setOpenEmbedModal(true);
             }}
@@ -305,7 +305,7 @@ function KeplerHeader({
             minimal
             icononly
             trimicononlypadding
-          ></BoslerButton>
+          ></MtdButton>
         </Popover>
         <EmbedModal
           openEmbedModal={openEmbedModal}
@@ -338,12 +338,12 @@ function KeplerHeader({
             // trigger={"click"}
           >
             <Link to={`/portal/bezier/${chart?.id}/master`}>
-              <BoslerButton
+              <MtdButton
                 icon={<GraphIcon />}
                 icononly={true}
                 minimal
                 trimicononlypadding
-              ></BoslerButton>
+              ></MtdButton>
             </Link>
           </Popover>
         </div>
@@ -356,7 +356,7 @@ function KeplerHeader({
             content={
               <>
                 <Row align="middle" style={{ marginBottom: 8 }}>
-                  <BoslerButton
+                  <MtdButton
                     icon={<HistoryIcon />}
                     minimal
                     iconColor={(datasetDetails as any).color}
@@ -387,7 +387,7 @@ function KeplerHeader({
                     }}
                   >
                     {getLanguageLabel("viewHistoricalData")}
-                  </BoslerButton>
+                  </MtdButton>
                 </Row>
                 <Divider style={{ margin: "8px 0" }} />
                 <Link
@@ -426,7 +426,7 @@ function KeplerHeader({
             }
             placement="bottom"
           >
-            <BoslerButton
+            <MtdButton
               icon={(datasetDetails as any)?.icon}
               icononly
               minimal
@@ -448,7 +448,7 @@ function KeplerHeader({
             offset={[-5, 3]}
             size="small"
           >
-            <BoslerButton
+            <MtdButton
               icon={<MonitorIcon />}
               intent="primary"
               menuItems={items}
@@ -458,7 +458,7 @@ function KeplerHeader({
               }
             >
               {getLanguageLabel("dashboard")}
-            </BoslerButton>
+            </MtdButton>
           </Badge>
         )}
 

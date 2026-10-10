@@ -1,4 +1,4 @@
-import { BASE_URL, BOSLER_TOKEN, USERNAME } from "Authentication/constants";
+import { BASE_URL, MTD_TOKEN, USERNAME } from "Authentication/constants";
 import { notification } from "antd";
 import axios from "axios";
 import { getLanguageLabel, isDefined, isEmpty } from "./utilities";
@@ -13,7 +13,7 @@ export const addInterceptors = () => {
       }
 
       config.headers["Authorization"] = `Bearer ${localStorage.getItem(
-        BOSLER_TOKEN
+        MTD_TOKEN
       )}`;
       config.headers["Username"] = localStorage.getItem(USERNAME);
 

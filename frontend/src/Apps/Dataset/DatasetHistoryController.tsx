@@ -1,5 +1,5 @@
 import DatasetHistory from "components/DatasetHistory";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Panel } from "react-resizable-panels";
@@ -35,7 +35,7 @@ const DatasetHistoryController = ({ id, branch, datasetMapping }: TProps) => {
       }}
     >
       {!resourcePermission ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <DatasetHistory
           datasetId={id}

@@ -1,8 +1,8 @@
 import { Alert } from "antd";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton, {
-  TBoslerButtonIntent,
-} from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton, {
+  TMtdButtonIntent,
+} from "components/MtdComponents/ButtonComponent/MtdButton";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { ThunkAppDispatch } from "redux/types/store";
@@ -41,7 +41,7 @@ const ApplySchemaBtn = ({
 }: IProps) => {
   const dispatch = useDispatch<ThunkAppDispatch>();
   const [schemaChangeLoading, setSchemaChangeLoading] = useState(false);
-  const [intent, setIntent] = useState<TBoslerButtonIntent>("action");
+  const [intent, setIntent] = useState<TMtdButtonIntent>("action");
 
   const handleApply = async () => {
     console.log("HANDLE APPLY CALLED ");
@@ -96,7 +96,7 @@ const ApplySchemaBtn = ({
           showIcon
         />
       )}
-      <BoslerButton
+      <MtdButton
         icon={<TickIcon />}
         loading={schemaChangeLoading}
         intent={intent}
@@ -104,7 +104,7 @@ const ApplySchemaBtn = ({
         disabled={disabled}
       >
         {getLanguageLabel("apply")}
-      </BoslerButton>
+      </MtdButton>
     </div>
   );
 };

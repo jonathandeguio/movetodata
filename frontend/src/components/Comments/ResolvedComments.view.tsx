@@ -10,10 +10,10 @@ import {
   Typography,
 } from "antd";
 
-import { MoreMenuIcon } from "assets/icons/boslerActionIcons";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { MoreMenuIcon } from "assets/icons/mtdActionIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 
 import {
   getLanguageLabel,
@@ -27,7 +27,7 @@ import {
   openAndResolveCommentAPI,
 } from "./Comments.api";
 
-import { OpenIcon } from "assets/icons/boslerNavigationIcon";
+import { OpenIcon } from "assets/icons/mtdNavigationIcon";
 import { User } from "global";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -254,7 +254,7 @@ const ResolvedComments = ({
                   </Form.Item>
 
                   <Row justify="end">
-                    <BoslerButton
+                    <MtdButton
                       intent="dangerous"
                       size="small"
                       onClick={(e: any) => {
@@ -266,9 +266,9 @@ const ResolvedComments = ({
                       minimal
                     >
                       {getLanguageLabel("cancel")}
-                    </BoslerButton>
+                    </MtdButton>
                     &nbsp;
-                    <BoslerButton
+                    <MtdButton
                       intent="primary"
                       size="small"
                       htmlType="submit"
@@ -276,7 +276,7 @@ const ResolvedComments = ({
                       minimal
                     >
                       {getLanguageLabel("save")}
-                    </BoslerButton>
+                    </MtdButton>
                   </Row>
                 </Form>
               ) : (
@@ -480,7 +480,7 @@ const ResolvedComments = ({
                             </Form.Item>
 
                             <Row justify="end">
-                              <BoslerButton
+                              <MtdButton
                                 intent="dangerous"
                                 size="small"
                                 onClick={(e: any) => {
@@ -492,9 +492,9 @@ const ResolvedComments = ({
                                 minimal
                               >
                                 {getLanguageLabel("cancel")}
-                              </BoslerButton>
+                              </MtdButton>
                               &nbsp;
-                              <BoslerButton
+                              <MtdButton
                                 intent="primary"
                                 size="small"
                                 htmlType="submit"
@@ -502,7 +502,7 @@ const ResolvedComments = ({
                                 minimal
                               >
                                 {getLanguageLabel("save")}
-                              </BoslerButton>
+                              </MtdButton>
                             </Row>
                           </Form>
                         ) : (

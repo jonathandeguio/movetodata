@@ -2,10 +2,10 @@ import { Col, Divider, Row, Typography } from "antd";
 import React from "react";
 
 import { Form } from "antd";
-import BoslerInput from "../../../components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "../../../components/MtdComponents/InputComponent/MtdInput";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePlatformConfig } from "../../../redux/actions/platformSettingsActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
@@ -55,22 +55,22 @@ const BranchSettings = () => {
 
               <Col>
                 <Form.Item name="defaultBranch">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
             <Row justify="end">
               <Col>
                 <Form.Item>
-                  <BoslerButton intent="primary" htmlType="submit">
+                  <MtdButton intent="primary" htmlType="submit">
                     Update Branch
-                  </BoslerButton>
+                  </MtdButton>
                 </Form.Item>
               </Col>
             </Row>
           </Form>
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </p>
     </div>

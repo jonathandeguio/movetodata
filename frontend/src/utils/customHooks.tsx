@@ -1,7 +1,7 @@
 import store from "redux/store";
 
 const myLanguages = {
-  welcomeToBosler: {
+  welcomeToMtd: {
     en: "Welcome to MoveToData",
     fr: "Bienvenue sur MoveToData",
     de: "Willkommen bei MoveToData",
@@ -9,7 +9,7 @@ const myLanguages = {
     hi: "MoveToData में आपका स्वागत है",
     nl: "Welkom bij MoveToData",
   },
-  welcomeToBoslerSubTitle: {
+  welcomeToMtdSubTitle: {
     en: "Your all-in-one data platform — store, manage, orchestrate and visualize your data from a single place.",
     fr: "Votre plateforme data tout-en-un — stockez, gérez, orchestrez et visualisez vos données depuis un seul endroit.",
     de: "Ihre All-in-One-Datenplattform — speichern, verwalten, orchestrieren und visualisieren Sie Ihre Daten an einem Ort.",

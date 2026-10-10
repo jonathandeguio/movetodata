@@ -4,10 +4,10 @@ import React from "react";
 import type { RcFile } from "antd/es/upload/interface";
 import { isDefined, openNotification } from "utils/utilities";
 
-import { EditIcon } from "assets/icons/boslerEditorIcons";
-import { UploadIcon } from "assets/icons/boslerInterfaceIcons";
-import { BoslerIcon, TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
+import { UploadIcon } from "assets/icons/mtdInterfaceIcons";
+import { MtdIcon, TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePlatformConfig } from "../../redux/actions/platformSettingsActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
@@ -58,7 +58,7 @@ const UploadLogoButton = () => {
           isDefined(config) && isDefined(config.logo) ? (
             config.logo
           ) : (
-            <BoslerIcon size={190} />
+            <MtdIcon size={190} />
           )
         }
         size={200}
@@ -105,9 +105,9 @@ const UploadLogoButton = () => {
             ],
           }}
         >
-          <BoslerButton icon={<EditIcon />} intent="primary">
+          <MtdButton icon={<EditIcon />} intent="primary">
             Edit
-          </BoslerButton>
+          </MtdButton>
         </Dropdown>
       </div>
     </div>

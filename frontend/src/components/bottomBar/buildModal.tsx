@@ -6,23 +6,23 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTransactions } from "../../redux/actions/datasetActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerUserPopover from "../UserPopover/userpopover";
+import MtdUserPopover from "../UserPopover/userpopover";
 
 import { DATASET } from "components/Builds/Builds.constants";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import {
   favIconLoading,
   getDefaultFavicon,
-} from "components/boslerLoader/FavIconLoader";
+} from "components/mtdLoader/FavIconLoader";
 import {
   getLanguageLabel,
   isDefined,
   openNotification,
   timeConverter,
 } from "utils/utilities";
-import { BuildIcon } from "../../assets/icons/boslerActionIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "../boslerLoader";
+import { BuildIcon } from "../../assets/icons/mtdActionIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "../mtdLoader";
 
 const BuildModal = ({ id, branch, view }: $TSFixMe) => {
   const [visible, setVisible] = useState(view);
@@ -110,25 +110,25 @@ const BuildModal = ({ id, branch, view }: $TSFixMe) => {
   };
 
   if (!datasetMapping) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         heading={getLanguageLabel("buildService")}
         open={visible}
         onCancel={handleCancel}
         onOk={onBuild}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<BuildIcon />}
             intent="action"
             key="submit"
             onClick={onBuild}
           >
             {getLanguageLabel("build")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <>
@@ -162,9 +162,9 @@ const BuildModal = ({ id, branch, view }: $TSFixMe) => {
                     </Tooltip>
                     {" by "}
                     {createuserBuild === "" ? (
-                      <BoslerLoader size="small" />
+                      <MtdLoader size="small" />
                     ) : (
-                      <BoslerUserPopover record={createuserBuild}>
+                      <MtdUserPopover record={createuserBuild}>
                         <div
                           style={{
                             display: "inline-block",
@@ -173,7 +173,7 @@ const BuildModal = ({ id, branch, view }: $TSFixMe) => {
                         >
                           {(createuserBuild as $TSFixMe).name}
                         </div>
-                      </BoslerUserPopover>
+                      </MtdUserPopover>
                     )}
                   </td>
                 </tr>
@@ -183,7 +183,7 @@ const BuildModal = ({ id, branch, view }: $TSFixMe) => {
             )}
           </div>
         </>
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

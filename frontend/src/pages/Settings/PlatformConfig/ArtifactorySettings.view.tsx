@@ -2,10 +2,10 @@ import { Col, Divider, Row, Switch, Typography } from "antd";
 import React from "react";
 
 import { Form } from "antd";
-import BoslerButton from "../../../components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "../../../components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "../../../components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "../../../components/MtdComponents/InputComponent/MtdInput";
 
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { isDefined } from "utils/utilities";
 import { updatePlatformConfig } from "../../../redux/actions/platformSettingsActions";
@@ -83,7 +83,7 @@ const ArtifactorySettings = () => {
                   <Col span={8}>
                     <Text type="secondary">Python Artifactory URL</Text>
                     <Form.Item name="artifactoryUrl">
-                      <BoslerInput />
+                      <MtdInput />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -91,7 +91,7 @@ const ArtifactorySettings = () => {
                 <Row justify="space-between">
                   <Col span={16}>
                     <div
-                      className="BoslerSubHeader1 text-and-icon-center"
+                      className="MtdSubHeader1 text-and-icon-center"
                       style={{ marginRight: "0.5rem" }}
                     >
                       Only platform administrators can view or edit this
@@ -100,9 +100,9 @@ const ArtifactorySettings = () => {
                   </Col>
                   <Col span={8}>
                     <Form.Item style={{ marginBottom: 0, marginLeft: "auto" }}>
-                      <BoslerButton htmlType="submit" intent="primary">
+                      <MtdButton htmlType="submit" intent="primary">
                         Update Configuration
-                      </BoslerButton>
+                      </MtdButton>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -110,7 +110,7 @@ const ArtifactorySettings = () => {
             )}
           </Form>
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </p>
     </div>

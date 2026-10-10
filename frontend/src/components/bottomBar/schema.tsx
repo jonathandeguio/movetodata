@@ -11,8 +11,8 @@ import {
   tableData,
 } from "../../redux/actions/datasetActions";
 
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
-import BoslerLoader from "components/boslerLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
+import MtdLoader from "components/mtdLoader";
 import React from "react";
 import {
   getLanguageLabel,
@@ -20,11 +20,11 @@ import {
   isDefined,
   openNotification,
 } from "utils/utilities";
-import { CrossIcon } from "../../assets/icons/boslerActionIcons";
-import { TreeIcon } from "../../assets/icons/boslerDataIcons";
-import { HelpIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import { CrossIcon } from "../../assets/icons/mtdActionIcons";
+import { TreeIcon } from "../../assets/icons/mtdDataIcons";
+import { HelpIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 const { Text } = Typography;
 
 export default function Schema({ id, branch, view, isBuildDataset }: $TSFixMe) {
@@ -409,34 +409,34 @@ export default function Schema({ id, branch, view, isBuildDataset }: $TSFixMe) {
   // }, []);
 
   if (!datasetMapping) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<TreeIcon />}
         heading={getLanguageLabel("schemaStatus")}
         open={visible}
         onCancel={handleCancel}
         footerButtonArea={
           <>
-            <BoslerButton
+            <MtdButton
               icon={<CrossIcon />}
               intent="none"
               key="back"
               onClick={handleCancel}
             >
               {getLanguageLabel("close")}
-            </BoslerButton>
-            <BoslerButton
+            </MtdButton>
+            <MtdButton
               icon={<TickIcon />}
               intent={btn ? "none" : "action"}
               onClick={handleApply}
               disabled={btn}
             >
               {getLanguageLabel("apply")}
-            </BoslerButton>
+            </MtdButton>
           </>
         }
         width={800}
@@ -481,7 +481,7 @@ export default function Schema({ id, branch, view, isBuildDataset }: $TSFixMe) {
             </div>
           </Panel>
         </Collapse> */}
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 }

@@ -1,8 +1,8 @@
 import { Col, Divider, Form, InputNumber, Row, Switch, Typography } from "antd";
-import { SaveIcon } from "assets/icons/boslerActionIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import { SaveIcon } from "assets/icons/mtdActionIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { getLanguageLabel, isDefined, openNotification } from "utils/utilities";
 import { CacheConfig } from "./Cache";
@@ -28,7 +28,7 @@ export const CacheSettings = () => {
   return (
     <div className="settings-center-block">
       {loading || !isDefined(cacheConfig) ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           <p>
@@ -111,7 +111,7 @@ export const CacheSettings = () => {
 
                   <Col>
                     <Form.Item name="redisUrl">
-                      <BoslerInput />
+                      <MtdInput />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -122,14 +122,14 @@ export const CacheSettings = () => {
                   <Col span={6}></Col>
                   <Col>
                     <Form.Item>
-                      <BoslerButton
+                      <MtdButton
                         icon={<SaveIcon />}
                         intent="primary"
                         htmlType={"sumbit"}
                         textTransform="none"
                       >
                         {getLanguageLabel("update")}
-                      </BoslerButton>
+                      </MtdButton>
                     </Form.Item>
                   </Col>
                 </Row>

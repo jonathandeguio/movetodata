@@ -1,10 +1,10 @@
-import { DocsIcon } from "assets/icons/boslerFileIcons";
+import { DocsIcon } from "assets/icons/mtdFileIcons";
 import {
   CollectionIcon,
   DownloadIcon,
-} from "assets/icons/boslerInterfaceIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdInterfaceIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { getLanguageLabel } from "utils/utilities";
@@ -33,7 +33,7 @@ const DashboardExportModal = ({
   };
 
   return (
-    <BoslerModal
+    <MtdModal
       open={openExportModal}
       onCancel={() => setOpenExportModal(false)}
       headingIcon={<DownloadIcon />}
@@ -63,7 +63,7 @@ const DashboardExportModal = ({
             gap: "10px",
           }}
         >
-          <div className="BoslerHeader1">
+          <div className="MtdHeader1">
             <CollectionIcon />
             Image
           </div>
@@ -74,9 +74,9 @@ const DashboardExportModal = ({
           >
             {getLanguageLabel("getParticularTab")} Image
           </div>
-          <BoslerButton icon={<DownloadIcon />} onClick={handleImageExport}>
+          <MtdButton icon={<DownloadIcon />} onClick={handleImageExport}>
             {getLanguageLabel("download")} Image
-          </BoslerButton>
+          </MtdButton>
         </div>
         <div
           style={{
@@ -93,7 +93,7 @@ const DashboardExportModal = ({
             gap: "10px",
           }}
         >
-          <div className="BoslerHeader1">
+          <div className="MtdHeader1">
             <DocsIcon />
             PDF
           </div>
@@ -104,12 +104,12 @@ const DashboardExportModal = ({
           >
             {getLanguageLabel("getParticularTab")} PDF
           </div>
-          <BoslerButton icon={<DownloadIcon />} onClick={handlePDFExport}>
+          <MtdButton icon={<DownloadIcon />} onClick={handlePDFExport}>
             {getLanguageLabel("download")} PDF
-          </BoslerButton>
+          </MtdButton>
         </div>
       </div>
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

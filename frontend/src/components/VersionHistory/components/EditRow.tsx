@@ -1,10 +1,10 @@
 import { Typography } from "antd";
-import { EditIcon } from "assets/icons/boslerEditorIcons";
+import { EditIcon } from "assets/icons/mtdEditorIcons";
 import UserInfo from "common/components/UserInfo";
 import {
   BTHInternal,
   BTText,
-} from "components/CommonUI/BoslerTypography/index";
+} from "components/CommonUI/MtdTypography/index";
 import React from "react";
 import { getLanguageLabel, getTimeDisplay } from "utils/utilities";
 import styles from "../VersionHistory.module.scss";

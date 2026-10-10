@@ -1,10 +1,10 @@
 import { Col, Popover, Row, Typography } from "antd";
-import { HistoryIcon } from "assets/icons/boslerActionIcons";
-import { EyeOpenIcon } from "assets/icons/boslerInterfaceIcons";
-import { UndoIcon } from "assets/icons/boslerNavigationIcon";
+import { HistoryIcon } from "assets/icons/mtdActionIcons";
+import { EyeOpenIcon } from "assets/icons/mtdInterfaceIcons";
+import { UndoIcon } from "assets/icons/mtdNavigationIcon";
 import UserInfo from "common/components/UserInfo";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, ThunkAppDispatch } from "redux/types/store";
@@ -97,11 +97,11 @@ const VersionNameAction = ({ version, pageType, resourceId }: TProps) => {
     <Popover
       title={
         <>
-          {/* <div className="BoslerHeader1">{getLanguageLabel("version")}</div> */}
+          {/* <div className="MtdHeader1">{getLanguageLabel("version")}</div> */}
           <div className="text-and-icon-center">
             <HistoryIcon />
 
-            <BoslerInput
+            <MtdInput
               editText
               value={vName}
               onChange={makeDebounceFunction((e: any) => {
@@ -135,7 +135,7 @@ const VersionNameAction = ({ version, pageType, resourceId }: TProps) => {
           <br />
           <Row justify={"space-between"} style={{ width: "13rem" }}>
             <Col>
-              <BoslerButton
+              <MtdButton
                 icon={<UndoIcon />}
                 size="small"
                 disabled={resourcePermission.permission == VIEWER_PERMISSION}
@@ -143,10 +143,10 @@ const VersionNameAction = ({ version, pageType, resourceId }: TProps) => {
                 textTransform="capitalize"
               >
                 Restore
-              </BoslerButton>
+              </MtdButton>
             </Col>
             <Col>
-              <BoslerButton
+              <MtdButton
                 icon={<EyeOpenIcon />}
                 borderless
                 size="small"
@@ -154,7 +154,7 @@ const VersionNameAction = ({ version, pageType, resourceId }: TProps) => {
                 textTransform="capitalize"
               >
                 View
-              </BoslerButton>
+              </MtdButton>
             </Col>
           </Row>
         </>

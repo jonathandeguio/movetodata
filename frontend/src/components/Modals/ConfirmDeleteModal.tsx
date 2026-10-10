@@ -1,15 +1,15 @@
 import React from "react";
 
 import { getLanguageLabel } from "utils/utilities";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 
-import { reUploadDatasetAPI } from "Apps/Dataset/Table/BoslerTable.api";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { reUploadDatasetAPI } from "Apps/Dataset/Table/MtdTable.api";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
-import { CrossIcon } from "../../assets/icons/boslerActionIcons";
-import { TickIcon } from "../../assets/icons/boslerNavigationIcon";
+import { CrossIcon } from "../../assets/icons/mtdActionIcons";
+import { TickIcon } from "../../assets/icons/mtdNavigationIcon";
 import { ThunkAppDispatch } from "../../redux/types/store";
 
 export default ({ isVisible, setIsVisible }: any) => {
@@ -25,31 +25,31 @@ export default ({ isVisible, setIsVisible }: any) => {
   };
 
   return (
-    <BoslerModal
+    <MtdModal
       open={isVisible}
       onCancel={() => setIsVisible(false)}
       headingIcon={<TableIcon />}
       heading="Re-upload"
       footerButtonArea={
         <>
-          <BoslerButton
+          <MtdButton
             icon={<TickIcon />}
             intent="dangerous"
             onClick={handleOk}
           >
             {getLanguageLabel("re-Upload")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             icon={<CrossIcon />}
             intent="primary"
             onClick={() => setIsVisible(false)}
           >
             {getLanguageLabel("cancel")}
-          </BoslerButton>
+          </MtdButton>
         </>
       }
     >
       Are you sure you want to Re-Upload?
-    </BoslerModal>
+    </MtdModal>
   );
 };

@@ -1,10 +1,10 @@
 import { Card, Dropdown, Modal, Tooltip, Typography } from "antd";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
 import DeleteModal from "components/Modals/DeleteModal";
 
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
@@ -13,19 +13,19 @@ import { copyToClipboard, getLanguageLabel } from "utils/utilities";
 import {
   MoreMenuIcon,
   RemoveIcon,
-} from "../../../assets/icons/boslerActionIcons";
+} from "../../../assets/icons/mtdActionIcons";
 import {
   CodeCellIcon,
   EditIcon,
-} from "../../../assets/icons/boslerEditorIcons";
-import { TrashIcon } from "../../../assets/icons/boslerMiscellaneousIcons";
-import { TickSmallIcon } from "../../../assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "../../../assets/icons/boslerTableIcons";
+} from "../../../assets/icons/mtdEditorIcons";
+import { TrashIcon } from "../../../assets/icons/mtdMiscellaneousIcons";
+import { TickSmallIcon } from "../../../assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "../../../assets/icons/mtdTableIcons";
 import { deleteAgent, listAgents } from "../../../redux/actions/agentActions";
 import { ThunkAppDispatch } from "../../../redux/types/store";
 import { regenerateAgentCodeAPI } from "../Connect.api";
 
-import { BoslerInfoPopover } from "components/CommonUI/BoslerInfoPopover/BoslerInfoPopover.view";
+import { MtdInfoPopover } from "components/CommonUI/MtdInfoPopover/MtdInfoPopover.view";
 import CustomBreadCrumb from "components/Nav/Manage/breadCrumb";
 import AgentModal from "./AgentModal.view";
 
@@ -79,16 +79,16 @@ const AgentHeader = ({
       <CustomBreadCrumb />
 
       <div className="connect-container-header-btns">
-        <BoslerInfoPopover id={agentDetails.id} type={agentDetails.type} />
+        <MtdInfoPopover id={agentDetails.id} type={agentDetails.type} />
         <Comments id={agentDetails.id} />
         <Avatars link={`/topic/${agentDetails.id}`} />
-        <BoslerButton
+        <MtdButton
           intent="primary"
           icon={<CodeCellIcon />}
           onClick={generateNewCode}
         >
           {getLanguageLabel("generateNewCode")}
-        </BoslerButton>
+        </MtdButton>
         <Dropdown
           menu={{
             items: [
@@ -147,7 +147,7 @@ const AgentHeader = ({
           </div>
         </Dropdown>
       </div>
-      <BoslerModal
+      <MtdModal
         headingIcon={<CodeCellIcon />}
         heading={getLanguageLabel("agentDetails")}
         open={oneTimeCode.modalView}
@@ -156,7 +156,7 @@ const AgentHeader = ({
         okButtonProps={{ icon: <TickSmallIcon /> }}
         cancelButtonProps={{ icon: <RemoveIcon /> }}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             icon={<CopyCellIcon />}
             onClick={() =>
               copyToClipboard(
@@ -166,7 +166,7 @@ const AgentHeader = ({
             minimal
           >
             {getLanguageLabel("code")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
         <Text>{getLanguageLabel("agentMsg")}</Text>
@@ -175,7 +175,7 @@ const AgentHeader = ({
           <Text strong>
             {`bash < (/ usr/ bin/ curl -k -s ${PUBLIC_URL}/ api/ connect/ agent/ install/ ${oneTimeCode.code})`}
             <Tooltip title={getLanguageLabel("clickToCopyIntoClipboard")}>
-              <BoslerButton
+              <MtdButton
                 icon={<CopyCellIcon />}
                 onClick={() =>
                   copyToClipboard(
@@ -188,7 +188,7 @@ const AgentHeader = ({
             </Tooltip>
           </Text>
         </Card>
-      </BoslerModal>
+      </MtdModal>
 
       <AgentModal
         isVisible={isUpdateAgentModalOpen}

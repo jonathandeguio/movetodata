@@ -7,11 +7,11 @@ import {
   isDefined,
   isUseCaseBasedOptionActivate,
 } from "utils/utilities";
-import { AddIcon, LinkIcon } from "../../assets/icons/boslerActionIcons";
-import { GroupedColumnIcon } from "../../assets/icons/boslerChartIcons";
-import { FolderIcon } from "../../assets/icons/boslerFileIcons";
-import { MonitorIcon } from "../../assets/icons/boslerMiscellaneousIcons";
-import { TableIcon } from "../../assets/icons/boslerTableIcons";
+import { AddIcon, LinkIcon } from "../../assets/icons/mtdActionIcons";
+import { GroupedColumnIcon } from "../../assets/icons/mtdChartIcons";
+import { FolderIcon } from "../../assets/icons/mtdFileIcons";
+import { MonitorIcon } from "../../assets/icons/mtdMiscellaneousIcons";
+import { TableIcon } from "../../assets/icons/mtdTableIcons";
 import CreateNewChartModal from "../Modals/CreateNewChartModal";
 
 import AgentModal from "Apps/Connect/Agents/AgentModal.view";
@@ -19,16 +19,16 @@ import LinkModal from "Apps/Connect/Links/LinkModal.view";
 import SourceModal from "Apps/Connect/Sources/SourceModal.view";
 import { KEPLER_USE_CASES } from "Apps/Kepler/chart/charts.utils";
 import { ResourceType, ResourceTypeEnum } from "Apps/explorer/explorer.utils";
-import { CodeCellIcon } from "assets/icons/boslerEditorIcons";
-import { KeyIcon, UploadIcon } from "assets/icons/boslerInterfaceIcons";
+import { CodeCellIcon } from "assets/icons/mtdEditorIcons";
+import { KeyIcon, UploadIcon } from "assets/icons/mtdInterfaceIcons";
 import { FRACTAL_USE_CASES } from "components/editor/editor.constants";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import {
   DataAgentsIcon,
   DatabaseIcon,
-} from "../../assets/icons/boslerDataIcons";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+} from "../../assets/icons/mtdDataIcons";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import CreateNewDatasetModal from "../Modals/CreateNewDatasetModal";
 import CreateNewFolderModal from "../Modals/CreateNewFolderModal";
 import CreateNewRepositoryModal from "../Modals/CreateNewRepositoryModal";
@@ -299,9 +299,9 @@ const NewButton: React.FC<Props> = ({ parent, type }) => {
           menu={{ items: connectAdmin ? items.concat(connectItems) : items }}
           trigger={["click"]}
         >
-          <BoslerButton icon={<AddIcon />} intent="action">
+          <MtdButton icon={<AddIcon />} intent="action">
             {getLanguageLabel("new")}
-          </BoslerButton>
+          </MtdButton>
         </Dropdown>
         {value == "chart" && view && id != undefined && (
           <CreateNewChartModal

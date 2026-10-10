@@ -1,7 +1,7 @@
 import { Badge, Card, Descriptions, Tabs, Tooltip } from "antd";
 import axios from "axios";
-import { BuildIcon } from "../../assets/icons/boslerActionIcons";
-import { DocsIcon } from "../../assets/icons/boslerFileIcons";
+import { BuildIcon } from "../../assets/icons/mtdActionIcons";
+import { DocsIcon } from "../../assets/icons/mtdFileIcons";
 
 import { Resizable } from "re-resizable";
 import React, { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import {
   getTransactions,
 } from "../../redux/actions/datasetActions";
 import { ThunkAppDispatch } from "../../redux/types/store";
-import BoslerUserPopover from "../UserPopover/userpopover";
+import MtdUserPopover from "../UserPopover/userpopover";
 
 import {
   copyToClipboard,
@@ -21,15 +21,15 @@ import {
   openNotification,
   timeConverter,
 } from "utils/utilities";
-import { InfoIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { InfoIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 
 import BuildDetailsHelper from "components/Builds/BuildDetailsTable.view";
 import { SUCCESS } from "components/Builds/Builds.constants";
 import {
   favIconLoading,
   getDefaultFavicon,
-} from "components/boslerLoader/FavIconLoader";
-import BoslerLoader from "../boslerLoader";
+} from "components/mtdLoader/FavIconLoader";
+import MtdLoader from "../mtdLoader";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -411,9 +411,9 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                           label={getLanguageLabel("startedBy")}
                                         >
                                           {createuserBuild === "" ? (
-                                            <BoslerLoader size="small" />
+                                            <MtdLoader size="small" />
                                           ) : (
-                                            <BoslerUserPopover
+                                            <MtdUserPopover
                                               record={createuserBuild}
                                             >
                                               <div
@@ -427,7 +427,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                     .name
                                                 }
                                               </div>
-                                            </BoslerUserPopover>
+                                            </MtdUserPopover>
                                           )}
                                         </Descriptions.Item>
                                       </Descriptions>
@@ -561,9 +561,9 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                         label={getLanguageLabel("createdBy")}
                                       >
                                         {createuserTrans === "" ? (
-                                          <BoslerLoader size="small" />
+                                          <MtdLoader size="small" />
                                         ) : (
-                                          <BoslerUserPopover
+                                          <MtdUserPopover
                                             record={createuserTrans}
                                           >
                                             <div
@@ -577,7 +577,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                   .name
                                               }
                                             </div>
-                                          </BoslerUserPopover>
+                                          </MtdUserPopover>
                                         )}
                                       </Descriptions.Item>
                                       {transaction.updatedby ? (
@@ -588,9 +588,9 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                             )}
                                           >
                                             {updateuserTrans === "" ? (
-                                              <BoslerLoader size="small" />
+                                              <MtdLoader size="small" />
                                             ) : (
-                                              <BoslerUserPopover
+                                              <MtdUserPopover
                                                 record={updateuserTrans}
                                               >
                                                 <div
@@ -605,7 +605,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                     ).name
                                                   }
                                                 </div>
-                                              </BoslerUserPopover>
+                                              </MtdUserPopover>
                                             )}
                                           </Descriptions.Item>
                                           <Descriptions.Item
@@ -821,9 +821,9 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                             )}
                                           >
                                             {createuserBuildSpec === "" ? (
-                                              <BoslerLoader size="small" />
+                                              <MtdLoader size="small" />
                                             ) : (
-                                              <BoslerUserPopover
+                                              <MtdUserPopover
                                                 record={createuserBuildSpec}
                                               >
                                                 <div
@@ -838,7 +838,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                     ).name
                                                   }
                                                 </div>
-                                              </BoslerUserPopover>
+                                              </MtdUserPopover>
                                             )}
                                           </Descriptions.Item>
                                           {dataBuildSpec.updatedBy ? (
@@ -849,9 +849,9 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                 )}
                                               >
                                                 {updateuserBuildSpec === "" ? (
-                                                  <BoslerLoader size="small" />
+                                                  <MtdLoader size="small" />
                                                 ) : (
-                                                  <BoslerUserPopover
+                                                  <MtdUserPopover
                                                     record={updateuserBuildSpec}
                                                   >
                                                     <div
@@ -866,7 +866,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                                                         ).name
                                                       }
                                                     </div>
-                                                  </BoslerUserPopover>
+                                                  </MtdUserPopover>
                                                 )}
                                               </Descriptions.Item>
                                               <Descriptions.Item
@@ -912,7 +912,7 @@ const History = ({ page, id, branch, visible }: $TSFixMe) => {
                   </Tabs>
                 )
               ) : (
-                <BoslerLoader />
+                <MtdLoader />
               )}
             </div>
           </div>

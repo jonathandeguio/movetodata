@@ -1,10 +1,10 @@
 import { Col, Divider, Row, Tabs, Tooltip, Typography } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
-import { BuildIcon } from "assets/icons/boslerActionIcons";
-import { PopOutIcon } from "assets/icons/boslerNavigationIcon";
-import { TableIcon } from "assets/icons/boslerTableIcons";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { CollapserHandler } from "components/BoslerComponents/ResizablePane/ResizablePaneUtil";
+import { BuildIcon } from "assets/icons/mtdActionIcons";
+import { PopOutIcon } from "assets/icons/mtdNavigationIcon";
+import { TableIcon } from "assets/icons/mtdTableIcons";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { CollapserHandler } from "components/MtdComponents/ResizablePane/ResizablePaneUtil";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +17,7 @@ import { getBuildLog } from "../../redux/actions/datasetActions";
 import { SearchEmptyState } from "assets/Illustrations/EmptyState";
 import axios from "axios";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import { TPlatformPage } from "global";
 import { RootState } from "redux/types/store";
 import {
@@ -215,7 +215,7 @@ const BuildDetailsTable = ({
       />
     );
 
-  if (!datasetBuildLog) return <BoslerLoader />;
+  if (!datasetBuildLog) return <MtdLoader />;
 
   return (
     <div
@@ -294,7 +294,7 @@ const BuildDetailsTable = ({
                   }}
                 >
                   {buildSpec && buildSpec.length > 0 && (
-                    <BoslerButton
+                    <MtdButton
                       icon={<BuildIcon />}
                       onClick={() => {
                         onBuild(buildSpec[0].buildId, "DEFAULT");
@@ -302,7 +302,7 @@ const BuildDetailsTable = ({
                       intent={"primary"}
                     >
                       {getLanguageLabel("rebuild")}
-                    </BoslerButton>
+                    </MtdButton>
                   )}
                 </div>
               }
@@ -325,7 +325,7 @@ const BuildDetailsTable = ({
                 >
                   {datasetBuildLog.stage != FINISHED &&
                   buildType == "PREVIEW" ? (
-                    <BoslerLoader
+                    <MtdLoader
                       content={getLanguageLabel("previewIsRunning")}
                     />
                   ) : (

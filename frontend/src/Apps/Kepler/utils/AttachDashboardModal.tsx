@@ -1,14 +1,14 @@
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
 import { Select, Typography } from "antd";
-import { ApplicationIcon } from "assets/icons/boslerInterfaceIcons";
-import { MonitorIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { ApplicationIcon } from "assets/icons/mtdInterfaceIcons";
+import { MonitorIcon } from "assets/icons/mtdMiscellaneousIcons";
 import {
   ArrowRightIcon,
   SingleChevronRightIcon,
   TickIcon,
-} from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+} from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -168,14 +168,14 @@ export default ({
 
   return (
     <>
-      <BoslerModal
+      <MtdModal
         headingIcon={<ApplicationIcon />}
         heading={getLanguageLabel("attachToADashboard")}
         open={attachDashboardModal}
         onOk={onOk}
         onCancel={() => setAttachDashboardModal(false)}
         footerButtonArea={
-          <BoslerButton
+          <MtdButton
             intent={isEmpty(selectedDashboardId) ? "none" : "success"}
             // className="Button--primary"
             key="submit"
@@ -187,10 +187,10 @@ export default ({
             disabled={isEmpty(selectedDashboardId) ? true : false}
           >
             {getLanguageLabel("attach")}
-          </BoslerButton>
+          </MtdButton>
         }
       >
-        <BoslerButton
+        <MtdButton
           intent={isEmpty(selectedDashboardId) ? "action" : "success"}
           onClick={() => {
             dispatch(
@@ -213,7 +213,7 @@ export default ({
           {isEmpty(selectedDashboardId)
             ? `${getLanguageLabel("selectDashboard")}`
             : selectedDashboardName}
-        </BoslerButton>
+        </MtdButton>
         {notEmpty(dashboardPath) && (
           <Text
             type="secondary"
@@ -268,7 +268,7 @@ export default ({
             />
           </>
         )}
-      </BoslerModal>
+      </MtdModal>
     </>
   );
 };

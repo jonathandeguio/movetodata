@@ -1,4 +1,4 @@
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useRef } from "react";
 import { ParticleApp } from "utils/ParticleApp";
 import { getLanguageLabel, isIpPlatform } from "utils/utilities";
@@ -54,7 +54,7 @@ const Loading = () => {
           </div>
           <div className="login-icon">
             {!isIpPlatform() && (
-              <BoslerLoader content={getLanguageLabel("loading...")} />
+              <MtdLoader content={getLanguageLabel("loading...")} />
             )}
           </div>
         </div>

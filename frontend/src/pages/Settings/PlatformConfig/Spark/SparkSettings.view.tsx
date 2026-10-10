@@ -1,7 +1,7 @@
 import { Col, Divider, Form, Row, Skeleton, Typography } from "antd";
-import { SparklesIcon } from "assets/icons/boslerActionIcons";
+import { SparklesIcon } from "assets/icons/mtdActionIcons";
 
-import BoslerSwitch from "components/CommonUI/BoslerSwitch/BoslerSwitch";
+import MtdSwitch from "components/CommonUI/MtdSwitch/MtdSwitch";
 import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ export const SparkSettings = () => {
     isDisabled: boolean;
   }) => {
     return (
-      <BoslerSwitch
+      <MtdSwitch
         isDisabled={sparkSwitchInput.isDisabled}
         items={[
           {
@@ -70,7 +70,7 @@ export const SparkSettings = () => {
             <Col span={8}>
               <Text type="secondary"></Text>
               <Item name="master">
-                <BoslerInput />
+                <MtdInput />
               </Item>
             </Col>
           </Row> */}
@@ -114,7 +114,7 @@ export const SparkSettings = () => {
         {/* <Row justify="space-between">
             <Col span={16}>
               <div
-                className="BoslerSubHeader1 text-and-icon-center"
+                className="MtdSubHeader1 text-and-icon-center"
                 style={{ marginRight: "0.5rem" }}
               >
                 Only platform administrators can view or edit this
@@ -123,13 +123,13 @@ export const SparkSettings = () => {
             </Col>
             <Col span={8}>
               <Item style={{ marginBottom: 0, marginLeft: "auto" }}>
-                <BoslerButton
+                <MtdButton
                   htmlType="submit"
                   intent={isUpdateButtonDisabled ? "none" : "primary"}
                   disabled={isUpdateButtonDisabled}
                 >
                   Update Configuration
-                </BoslerButton>
+                </MtdButton>
               </Item>
             </Col>
           </Row> */}

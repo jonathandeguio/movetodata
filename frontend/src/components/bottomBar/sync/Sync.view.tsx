@@ -14,13 +14,13 @@ import { initialLinkDetails } from "Apps/Connect/Links/Link.constants";
 import { SourceButtonPopover } from "Apps/Connect/Links/SourceButtonPopover";
 import { ColumnSelectLabel } from "Apps/Kepler/chart/QueryForm/ColumnSelect";
 import { getDatasetColumns } from "Apps/Kepler/dashboard/Dashboard.api";
-import { AddIcon, RemoveIcon, SyncIcon } from "assets/icons/boslerActionIcons";
-import { SourceIcon } from "assets/icons/boslerDataIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { AddIcon, RemoveIcon, SyncIcon } from "assets/icons/mtdActionIcons";
+import { SourceIcon } from "assets/icons/mtdDataIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { WarningState } from "assets/Illustrations/EmptyState";
 import UserInfo from "common/components/UserInfo";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import NoData from "components/CommonUI/NoData";
 import { TDatasetColumn } from "components/Filters/Filters.view";
 import React, { useEffect, useState } from "react";
@@ -42,7 +42,7 @@ import {
   putSyncAPI,
 } from "./Sync.apis";
 import styles from "./Sync.module.scss";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 
 export interface TSync {
   datasetId: string;
@@ -95,7 +95,7 @@ const SyncNowBtn = ({ datasetSync }: { datasetSync: TDatasetSync }) => {
       });
   };
   return (
-    <BoslerButton
+    <MtdButton
       icon={<SyncIcon />}
       loading={loading}
       onClick={onClickSync}
@@ -103,7 +103,7 @@ const SyncNowBtn = ({ datasetSync }: { datasetSync: TDatasetSync }) => {
       disabled={!datasetSync.id}
     >
       Sync
-    </BoslerButton>
+    </MtdButton>
   );
 };
 
@@ -134,7 +134,7 @@ const DeleteSyncBtn = ({
       });
   };
   return (
-    <BoslerButton
+    <MtdButton
       icon={<TrashIcon />}
       loading={loading}
       onClick={onClickDeleteSync}
@@ -251,7 +251,7 @@ const SyncBody = ({
     );
     const _columns: any = [];
     data.map((column: any) => {
-      // sync these with BoslerTable and DashboardGridFetcher
+      // sync these with MtdTable and DashboardGridFetcher
       const columnObj = {
         name: column.headerName,
         value: column.headerName,
@@ -325,7 +325,7 @@ const SyncBody = ({
             >
               {source ? (
                 <SourceButtonPopover source={selectedSource}>
-                  <BoslerButton
+                  <MtdButton
                     icon={
                       selectedSource ? (
                         getSourceIcon(
@@ -352,10 +352,10 @@ const SyncBody = ({
                     {notEmpty(selectedSource)
                       ? (selectedSource as any)?.name
                       : "Select Source"}
-                  </BoslerButton>
+                  </MtdButton>
                 </SourceButtonPopover>
               ) : (
-                <BoslerButton
+                <MtdButton
                   onClick={() => {
                     dispatch(
                       openFileExplorerModal({
@@ -372,7 +372,7 @@ const SyncBody = ({
                   icon={<SourceIcon />}
                 >
                   {sourceName}
-                </BoslerButton>
+                </MtdButton>
               )}
             </Form.Item>
           </Col>
@@ -384,7 +384,7 @@ const SyncBody = ({
                 { required: true, message: "Please input your table name!" },
               ]}
             >
-              <BoslerInput />
+              <MtdInput />
             </Form.Item>
           </Col>
         </Row>
@@ -415,7 +415,7 @@ const SyncBody = ({
                   </Select.Option>
                 ))}
               </Select>
-              <BoslerButton
+              <MtdButton
                 intent="dangerous"
                 onClick={() => handleDeleteIndex(_key)}
                 icon={<RemoveIcon />}
@@ -423,20 +423,20 @@ const SyncBody = ({
                 minimal
               >
                 DELETE
-              </BoslerButton>
+              </MtdButton>
             </div>
           );
         })}
 
         <div className={styles.syncBodyBottomBtns}>
-          <BoslerButton
+          <MtdButton
             icon={<AddIcon />}
             onClick={handleAddIndex}
             size={"small"}
             minimal
           >
             {getLanguageLabel("addIndex")}
-          </BoslerButton>
+          </MtdButton>
         </div>
 
         <br />
@@ -449,14 +449,14 @@ const SyncBody = ({
               width: "fit-content",
             }}
           >
-            <BoslerButton
+            <MtdButton
               htmlType="submit"
               icon={<SyncIcon />}
               intent={intent}
               loading={loading}
             >
               {datasetSync.id ? "update & sync" : "create & sync"}
-            </BoslerButton>
+            </MtdButton>
           </Form.Item>
         </div>
       </Form>
@@ -500,9 +500,9 @@ const CreateSyncBtn = ({
       type="info"
       showIcon
       action={
-        <BoslerButton onClick={() => createNewSync()} icon={<AddIcon />}>
+        <MtdButton onClick={() => createNewSync()} icon={<AddIcon />}>
           {getLanguageLabel("create")}
-        </BoslerButton>
+        </MtdButton>
       }
     />
   );
@@ -530,7 +530,7 @@ const DatasetSync = ({ datasetId, branch }: TSync) => {
   }, [datasetId, branch]);
 
   if (loading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (

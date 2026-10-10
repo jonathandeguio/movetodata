@@ -3,27 +3,27 @@ import {
   AddIcon,
   CrossIcon,
   HistoryIcon,
-} from "assets/icons/boslerActionIcons";
-import { AllProjectsIcon, DatabaseIcon } from "assets/icons/boslerDataIcons";
+} from "assets/icons/mtdActionIcons";
+import { AllProjectsIcon, DatabaseIcon } from "assets/icons/mtdDataIcons";
 import {
   CodeCellIcon,
   EditIcon,
   TextIcon,
-} from "assets/icons/boslerEditorIcons";
+} from "assets/icons/mtdEditorIcons";
 import {
   JupyterIcon,
   MarkDownIcon,
   PythonIcon,
-} from "assets/icons/boslerExternalIcons";
-import { DocsIcon, FolderIcon } from "assets/icons/boslerFileIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { CopyCellIcon } from "assets/icons/boslerTableIcons";
-import { openBottomBarItem } from "common/components/BoslerLayout/bottomBarSlice";
+} from "assets/icons/mtdExternalIcons";
+import { DocsIcon, FolderIcon } from "assets/icons/mtdFileIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { CopyCellIcon } from "assets/icons/mtdTableIcons";
+import { openBottomBarItem } from "common/components/MtdLayout/bottomBarSlice";
 import { ContextMenu, MenuItem } from "common/components/ContextMenu";
 import { ContextMenuStore } from "common/components/ContextMenu/store";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -191,7 +191,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                     ]}
                     style={{ margin: 0 }}
                   >
-                    <BoslerInput
+                    <MtdInput
                       name="folderName"
                       onChange={(e) => onFormNameEnter(e, newFolderForm)}
                     />
@@ -199,7 +199,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                 </Form>
               ),
               footerButtonArea: (
-                <BoslerButton
+                <MtdButton
                   intent="action"
                   icon={<AddIcon />}
                   onClick={() => {
@@ -207,7 +207,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                   }}
                 >
                   {getLanguageLabel("create")}
-                </BoslerButton>
+                </MtdButton>
               ),
             });
           },
@@ -420,7 +420,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                   ]}
                   style={{ margin: 0 }}
                 >
-                  <BoslerInput
+                  <MtdInput
                     name="fileName"
                     onChange={(e) => onFormNameEnter(e, renameForm)}
                   />
@@ -428,7 +428,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
               </Form>
             ),
             footerButtonArea: (
-              <BoslerButton
+              <MtdButton
                 intent="action"
                 icon={<EditIcon />}
                 onClick={() => {
@@ -436,7 +436,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                 }}
               >
                 {getLanguageLabel("rename")}
-              </BoslerButton>
+              </MtdButton>
             ),
           });
         }
@@ -458,7 +458,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
 
             children: <>{getLanguageLabel("file") + ": " + node.path}</>,
             footerButtonArea: (
-              <BoslerButton
+              <MtdButton
                 icon={<TrashIcon />}
                 intent="dangerous"
                 onClick={() => {
@@ -488,7 +488,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
                 }}
               >
                 {getLanguageLabel("delete")}
-              </BoslerButton>
+              </MtdButton>
             ),
           });
         }
@@ -531,7 +531,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
             ]}
             style={{ margin: 0 }}
           >
-            <BoslerInput
+            <MtdInput
               name="fileName"
               onChange={(e) => onFormNameEnter(e, newFileForm)}
               placeholder={getLanguageLabel("newFile")}
@@ -602,7 +602,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
       ),
       footerButtonArea: (
         <>
-          <BoslerButton
+          <MtdButton
             intent="none"
             icon={<CrossIcon />}
             onClick={() => {
@@ -610,8 +610,8 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
             }}
           >
             {getLanguageLabel("cancel")}
-          </BoslerButton>
-          <BoslerButton
+          </MtdButton>
+          <MtdButton
             intent="action"
             icon={<AddIcon />}
             onClick={() => {
@@ -619,7 +619,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
             }}
           >
             {getLanguageLabel("create")}
-          </BoslerButton>
+          </MtdButton>
         </>
       ),
     });
@@ -677,7 +677,7 @@ export const EditorTreeContextMenu: React.FC<EditorTreeContextMenuProps> = ({
   return (
     <>
       <ContextMenu items={contextMenuItems} {...store} />
-      <BoslerModal onCancel={cancelHandler} {...modalProps} />
+      <MtdModal onCancel={cancelHandler} {...modalProps} />
     </>
   );
 };

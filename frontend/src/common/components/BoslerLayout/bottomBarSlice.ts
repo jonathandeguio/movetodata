@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isDefined } from "utils/utilities";
-import { ITabPane, TabState } from "../BoslerTabs/types";
-import { BottomBarState, IBoslerBottomBarItem } from "./type";
+import { ITabPane, TabState } from "../MtdTabs/types";
+import { BottomBarState, IMtdBottomBarItem } from "./type";
 
 const initialState: BottomBarState = {
   leftItems: [],
@@ -18,8 +18,8 @@ const bottomBarSlice = createSlice({
     initBottomBar: (
       state: BottomBarState,
       action: PayloadAction<{
-        leftItems: IBoslerBottomBarItem[];
-        rightItems?: IBoslerBottomBarItem[];
+        leftItems: IMtdBottomBarItem[];
+        rightItems?: IMtdBottomBarItem[];
       }>
     ) => {
       state.activeItem = null;

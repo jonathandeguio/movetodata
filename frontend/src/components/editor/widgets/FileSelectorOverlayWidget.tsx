@@ -6,10 +6,10 @@ import {
   ChangeLogIcon,
   EnterKeyIcon,
   EscapeIcon,
-} from "assets/icons/boslerInterfaceIcons";
-import { SingleChevronLeftIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdInterfaceIcons";
+import { SingleChevronLeftIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import NoData from "components/CommonUI/NoData";
 import { useResourceHook } from "hooks/useFileExplorerService";
 import { useOutsideClickHandler } from "hooks/useOutsideClickHandler";
@@ -338,7 +338,7 @@ export const FileSelectorOverlayWidget = ({
 
   return (
     <div ref={widgetRef} className="file_selector__container">
-      <BoslerInput
+      <MtdInput
         onKeyDown={(event) => {
           if (event.key === "Home" || event.key === "ArrowUp") {
             event.preventDefault(); // Prevent cursor from moving to the start
@@ -417,17 +417,17 @@ export const FileSelectorOverlayWidget = ({
                 }}
               >
                 {isDefined(activeId) && activeId !== PROJECTS_ID && (
-                  <BoslerButton
+                  <MtdButton
                     intent="primary"
                     icon={<SingleChevronLeftIcon />}
                     onClick={goBackHandler}
                   >
                     Go back
-                  </BoslerButton>
+                  </MtdButton>
                 )}
-                <BoslerButton intent="primary" onClick={goToProjectsHandler}>
+                <MtdButton intent="primary" onClick={goToProjectsHandler}>
                   {"Go to " + getLanguageLabel(PROJECTS_ID) + " list"}
-                </BoslerButton>
+                </MtdButton>
               </div>
             }
           />

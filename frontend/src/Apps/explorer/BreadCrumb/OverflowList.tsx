@@ -1,6 +1,6 @@
-import { MoreMenuIcon } from "assets/icons/boslerActionIcons";
-import { SingleChevronRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import { MoreMenuIcon } from "assets/icons/mtdActionIcons";
+import { SingleChevronRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { useOutsideClickHandler } from "hooks/useOutsideClickHandler";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -28,7 +28,7 @@ export const OverflowList: React.FC<Props> = ({
     <>
       {overflowList.length > 0 ? (
         <div className="overflow__container" ref={containerRef}>
-          <BoslerButton
+          <MtdButton
             style={{ padding: "0" }}
             icononly
             minimal

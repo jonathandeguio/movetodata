@@ -1,12 +1,12 @@
 import { Col, Row, Tooltip, Typography } from "antd";
 import { WarningState } from "assets/Illustrations/EmptyState";
-import { ArrowLeftIcon } from "assets/icons/boslerNavigationIcon";
-import { CopyCellIcon } from "assets/icons/boslerTableIcons";
+import { ArrowLeftIcon } from "assets/icons/mtdNavigationIcon";
+import { CopyCellIcon } from "assets/icons/mtdTableIcons";
 import Avatars from "components/Avatars/Avatars";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import Comments from "components/Comments/Comments.view";
 import NoData from "components/CommonUI/NoData";
-import BoslerLoader from "components/boslerLoader";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { copyToClipboard, getLanguageLabel } from "utils/utilities";
@@ -41,7 +41,7 @@ const ScheduleDetails = () => {
   }, [id]);
 
   if (isLoading) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (
@@ -73,7 +73,7 @@ const ScheduleDetails = () => {
           </Col>
           <Col>
             <Tooltip title={tooltipTitle}>
-              <BoslerButton
+              <MtdButton
                 onClick={() => {
                   const url = window.location.href;
                   copyToClipboard(url, setTooltipTitle);
@@ -81,7 +81,7 @@ const ScheduleDetails = () => {
                 icon={<CopyCellIcon />}
               >
                 {getLanguageLabel("copy")} URL
-              </BoslerButton>
+              </MtdButton>
             </Tooltip>
           </Col>
         </Row>

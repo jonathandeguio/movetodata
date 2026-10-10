@@ -4,9 +4,9 @@ import {
   CenterAlignIcon,
   LeftAlignIcon,
   RightAlignIcon,
-} from "assets/icons/boslerFileIcons";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
+} from "assets/icons/mtdFileIcons";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/types/store";
@@ -19,7 +19,7 @@ export const TableCustomizer = () => {
   return (
     <div className="radioButtonPadding">
       <div className="customizer-subHeader">
-        <BoslerCollapse
+        <MtdCollapse
           key="additionSettings"
           collapsible={"HEADER"}
           header={
@@ -90,12 +90,12 @@ export const TableCustomizer = () => {
               />
             </Form.Item>
           </>
-        </BoslerCollapse>
+        </MtdCollapse>
       </div>
 
       <NumberCustomizer name="table" />
 
-      <BoslerCollapse
+      <MtdCollapse
         collapsible="HEADER"
         header={
           <div className="query_item__heading">
@@ -122,7 +122,7 @@ export const TableCustomizer = () => {
                     }`}</div>
                   }
                 >
-                  <BoslerInput
+                  <MtdInput
                     defaultValue={
                       series.aggregate !== "none"
                         ? `${series.aggregate}(${series.columnName})`
@@ -133,7 +133,7 @@ export const TableCustomizer = () => {
               );
           })}
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

@@ -4,8 +4,8 @@ import ChartComponentContainer from "./ChartComponentContainer";
 import KeplerHeader from "./components/KeplerHeader";
 
 import { useForm } from "antd/es/form/Form";
-import { BottomBarLayout } from "common/components/BoslerLayout/BottomBarLayout";
-import BoslerLoader from "components/boslerLoader";
+import { BottomBarLayout } from "common/components/MtdLayout/BottomBarLayout";
+import MtdLoader from "components/mtdLoader";
 import { AlertDialog } from "components/navigationPopover/NavigationPopover";
 import { useDispatch, useSelector } from "react-redux";
 import { Panel, PanelGroup } from "react-resizable-panels";
@@ -23,7 +23,7 @@ import KeplerChartFormPanel from "./components/KeplerChartFormPanel";
 import { getNodeIcon } from "Apps/explorer/explorer.utils";
 import { Tooltip } from "antd";
 import { getResourcePermissionAPI } from "common/common.api";
-import { initBottomBar } from "common/components/BoslerLayout/bottomBarSlice";
+import { initBottomBar } from "common/components/MtdLayout/bottomBarSlice";
 import NoData from "components/CommonUI/NoData";
 import { createVersionAPI } from "components/VersionHistory/VersionHistory.api";
 import { useFileExplorerService } from "hooks/useFileExplorerService";
@@ -343,7 +343,7 @@ const ChartsWrapper = () => {
     !isDefined(datasetMapping[chartState?.datasetId]) ||
     isLoading
   ) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
 
   return (

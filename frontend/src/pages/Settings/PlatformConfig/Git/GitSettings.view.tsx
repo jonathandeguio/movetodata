@@ -1,7 +1,7 @@
 import { Col, Divider, Form, Row, Typography } from "antd";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 
 import React, { useEffect, useState } from "react";
 import { getLanguageLabel } from "utils/utilities";
@@ -24,7 +24,7 @@ export const GitSettings = () => {
   return (
     <div className="settings-center-block">
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           <Form
@@ -54,7 +54,7 @@ export const GitSettings = () => {
               <Col span={8}>
                 <Text type="secondary"></Text>
                 <Form.Item name="host">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -69,7 +69,7 @@ export const GitSettings = () => {
               <Col span={8}>
                 <Text type="secondary"></Text>
                 <Form.Item name="apiPort">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
@@ -84,14 +84,14 @@ export const GitSettings = () => {
               <Col span={8}>
                 <Text type="secondary"></Text>
                 <Form.Item name="port">
-                  <BoslerInput />
+                  <MtdInput />
                 </Form.Item>
               </Col>
             </Row>
             <Row justify="space-between">
               <Col span={16}>
                 <div
-                  className="BoslerSubHeader1 text-and-icon-center"
+                  className="MtdSubHeader1 text-and-icon-center"
                   style={{ marginRight: "0.5rem" }}
                 >
                   Only platform administrators can view or edit this
@@ -100,9 +100,9 @@ export const GitSettings = () => {
               </Col>
               <Col span={8}>
                 <Form.Item style={{ marginBottom: 0, marginLeft: "auto" }}>
-                  <BoslerButton htmlType="submit" intent="primary">
+                  <MtdButton htmlType="submit" intent="primary">
                     Update Configuration
-                  </BoslerButton>
+                  </MtdButton>
                 </Form.Item>
               </Col>
             </Row>

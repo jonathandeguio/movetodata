@@ -3,7 +3,7 @@ import { useAutoSaveReady } from "components/VersionHistory/hooks/setAutoSaveRea
 import React, { useEffect, useState } from "react";
 import rehypeSanitize from "rehype-sanitize";
 import { decodeFromBase64, encodeToBase64 } from "utils/utilities";
-import { TrashIcon } from "../../../../assets/icons/boslerMiscellaneousIcons";
+import { TrashIcon } from "../../../../assets/icons/mtdMiscellaneousIcons";
 import { DEFAULT_MARKDOWN } from "../Dashboard.contants";
 import styles from "./DashboardElements.module.scss";
 interface Props {

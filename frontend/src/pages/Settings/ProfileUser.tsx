@@ -1,11 +1,11 @@
 import { Avatar, Col, Collapse, Divider, Row, Typography } from "antd";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import { getDefaultFavicon } from "components/boslerLoader/FavIconLoader";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLanguageLabel, isDefined } from "utils/utilities";
-import { ArrowLeftIcon } from "../../assets/icons/boslerNavigationIcon";
+import { ArrowLeftIcon } from "../../assets/icons/mtdNavigationIcon";
 import {
   getUserDetailByID,
   isPlatformAdmin,
@@ -118,32 +118,32 @@ const ProfileUser = () => {
               </Col>
             </Row>
             <Divider />
-            <div className="BoslerHeader1">{getLanguageLabel("givenName")}</div>
-            <BoslerInput
+            <div className="MtdHeader1">{getLanguageLabel("givenName")}</div>
+            <MtdInput
               placeholder={user.givenName}
               // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
               name={["user", "fname"]}
               disabled
             />
-            <div className="BoslerHeader1">
+            <div className="MtdHeader1">
               {getLanguageLabel("familyName")}
             </div>
-            <BoslerInput
+            <MtdInput
               // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
               name={["user", "lname"]}
               placeholder={user.familyName}
               disabled
             />
-            <div className="BoslerHeader1">{getLanguageLabel("email")}</div>
-            <BoslerInput
+            <div className="MtdHeader1">{getLanguageLabel("email")}</div>
+            <MtdInput
               placeholder={user.email}
               // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
               name={["user", "email"]}
               type="email"
               disabled
             />
-            <div className="BoslerHeader1">{getLanguageLabel("location")}</div>
-            <BoslerInput
+            <div className="MtdHeader1">{getLanguageLabel("location")}</div>
+            <MtdInput
               placeholder={user.location}
               // @ts-expect-error TS(2322): Type 'string[]' is not assignable to type 'string'... Remove this comment to see the full error message
               name={["location"]}

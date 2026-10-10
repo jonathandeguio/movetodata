@@ -1,5 +1,5 @@
 import { Alert } from "antd";
-import { PulseIcon } from "assets/icons/boslerMiscellaneousIcons";
+import { PulseIcon } from "assets/icons/mtdMiscellaneousIcons";
 import { News } from "components/UserActivityVault/UserActivity";
 import { getNewsAPI } from "components/UserActivityVault/UserActivity.api";
 import React, { useEffect, useState } from "react";

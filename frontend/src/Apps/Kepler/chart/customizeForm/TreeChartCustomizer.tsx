@@ -1,12 +1,12 @@
 import { Form, Select } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
 export const TreeChartCustomizer = () => {
   return (
     <div className="customizer-subHeader">
-      <BoslerCollapse
+      <MtdCollapse
         key="treeSettings"
         collapsible="HEADER"
         header={
@@ -50,7 +50,7 @@ export const TreeChartCustomizer = () => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
-import BoslerTable from "Apps/Dataset/Table/BoslerTable";
-import { FilterIcon } from "../../assets/icons/boslerTableIcons";
+import MtdTable from "Apps/Dataset/Table/MtdTable";
+import { FilterIcon } from "../../assets/icons/mtdTableIcons";
 import {
   changeColumnStatsPane,
   clearStatPanesState,
@@ -14,13 +14,13 @@ import {
 import { ThunkAppDispatch } from "../../redux/types/store";
 
 import { getNodeIcon, ResourceSubTypeEnum } from "Apps/explorer/explorer.utils";
-import { CrossIcon } from "assets/icons/boslerActionIcons";
-import { GitNewBranchIcon } from "assets/icons/boslerExternalIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
+import { GitNewBranchIcon } from "assets/icons/mtdExternalIcons";
 import { getResourcePermissionAPI } from "common/common.api";
-import { BottomBarLayout } from "common/components/BoslerLayout/BottomBarLayout";
-import { initBottomBar } from "common/components/BoslerLayout/bottomBarSlice";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerLoader from "components/boslerLoader";
+import { BottomBarLayout } from "common/components/MtdLayout/BottomBarLayout";
+import { initBottomBar } from "common/components/MtdLayout/bottomBarSlice";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdLoader from "components/mtdLoader";
 import BranchInfo from "components/branchInfo";
 import { useNavigate } from "react-router";
 import { NULL_UUID } from "utils/Common.constants";
@@ -113,7 +113,7 @@ export default function Dataset({ datasetDetails, id, branch }: IProps) {
               }}
             >
               <div>Viewing Historical Data in Read only Mode !</div>
-              <BoslerButton
+              <MtdButton
                 onClick={() => {
                   dispatch(
                     updateCurrentTransactionMapping(
@@ -183,7 +183,7 @@ export default function Dataset({ datasetDetails, id, branch }: IProps) {
   console.log("DATASET MAPPING : ", datasetDetails);
 
   if (!datasetMapping || !datasetMapping.datasetMapping) {
-    return <BoslerLoader />;
+    return <MtdLoader />;
   }
   return (
     <BottomBarLayout>
@@ -243,7 +243,7 @@ export default function Dataset({ datasetDetails, id, branch }: IProps) {
                     ) : pane.loading ? (
                       <span>
                         <div className="text-and-icon-center">
-                          <BoslerLoader size="tiny" color="#4C90F0" />
+                          <MtdLoader size="tiny" color="#4C90F0" />
                           {"  "}&nbsp;
                           {pane.title}
                         </div>
@@ -269,7 +269,7 @@ export default function Dataset({ datasetDetails, id, branch }: IProps) {
                       info={pane}
                     />
                   ) : (
-                    <BoslerTable
+                    <MtdTable
                       onDataLoad={onDatasetTableDataLoad}
                       id={id}
                       branch={branch}

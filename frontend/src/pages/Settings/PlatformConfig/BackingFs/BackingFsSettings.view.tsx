@@ -1,9 +1,9 @@
 import { Col, Divider, Form, Radio, Row, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
 import React, { useEffect, useState } from "react";
 
 import {
@@ -36,7 +36,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="localFs">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -52,7 +52,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="hdfs">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -68,7 +68,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="s3Bucket">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -79,7 +79,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="s3AccessKey">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -90,7 +90,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="s3SecretKey">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -106,7 +106,7 @@ export const BackingFsSettings = () => {
             <Col span={16}>
               <Text type="secondary"></Text>
               <Form.Item name="gsBucket">
-                <BoslerInput />
+                <MtdInput />
               </Form.Item>
             </Col>
           </Row>
@@ -135,7 +135,7 @@ export const BackingFsSettings = () => {
   return (
     <div className="settings-center-block">
       {loading ? (
-        <BoslerLoader />
+        <MtdLoader />
       ) : (
         <>
           <Form
@@ -209,7 +209,7 @@ export const BackingFsSettings = () => {
             <Row justify="space-between">
               <Col span={8}>
                 <div
-                  className="BoslerSubHeader1 text-and-icon-center"
+                  className="MtdSubHeader1 text-and-icon-center"
                   style={{ marginRight: "0.5rem" }}
                 >
                   Only platform administrators can view or edit this
@@ -218,13 +218,13 @@ export const BackingFsSettings = () => {
               </Col>
               <Col span={16}>
                 <Form.Item style={{ marginBottom: 0, marginLeft: "auto" }}>
-                  <BoslerButton
+                  <MtdButton
                     htmlType="submit"
                     intent="primary"
                     disabled={!isUpdateButtonEnabled}
                   >
                     Update Configuration
-                  </BoslerButton>
+                  </MtdButton>
                 </Form.Item>
               </Col>
             </Row>

@@ -1,7 +1,7 @@
 import { Typography } from "antd";
-import { ArrowRightIcon } from "assets/icons/boslerNavigationIcon";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
-import { BoslerTypography } from "components/CommonUI/BoslerTypography";
+import { ArrowRightIcon } from "assets/icons/mtdNavigationIcon";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { MtdTypography } from "components/CommonUI/MtdTypography";
 import React, { useEffect, useState } from "react";
 import { checkFolderPathAPI, testDBConnectionAPI } from "../Connect.api";
 import { ISourceConfig } from "./Source";
@@ -50,7 +50,7 @@ export const TestConnectionButton: React.FC<TestConnectionButtonProps> = ({
 
   return (
     <div className="--mt20">
-      <BoslerButton
+      <MtdButton
         icon={<ArrowRightIcon />}
         intent={
           testConnection
@@ -68,10 +68,10 @@ export const TestConnectionButton: React.FC<TestConnectionButtonProps> = ({
             ? "Re-Test Connection"
             : "Re-Test Connection"
           : "Test Connection"}
-      </BoslerButton>
-      <BoslerTypography>
+      </MtdButton>
+      <MtdTypography>
         {testConnection ? testConnection.message : <></>}
-      </BoslerTypography>
+      </MtdTypography>
     </div>
   );
 };

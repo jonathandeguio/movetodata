@@ -1,9 +1,9 @@
 import { Col, Menu, Row } from "antd";
-import { SearchIcon } from "assets/icons/boslerActionIcons";
-import { FilterIcon } from "assets/icons/boslerTableIcons";
-import BoslerInput from "components/BoslerComponents/InputComponent/BoslerInput";
-import BoslerLoader from "components/boslerLoader";
-import BoslerModal from "components/CommonUI/BoslerModalContainer";
+import { SearchIcon } from "assets/icons/mtdActionIcons";
+import { FilterIcon } from "assets/icons/mtdTableIcons";
+import MtdInput from "components/MtdComponents/InputComponent/MtdInput";
+import MtdLoader from "components/mtdLoader";
+import MtdModal from "components/CommonUI/MtdModalContainer";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +17,7 @@ import {
 } from "../../../redux/actions/datasetActions";
 import { COLUMN_STATS_PANE_OPEN_SUCCESS } from "../../../redux/constants/datasetConstants";
 import { ThunkAppDispatch } from "../../../redux/types/store";
-import { getColumnTypeIcon } from "../Table/BoslerTable.utils";
+import { getColumnTypeIcon } from "../Table/MtdTable.utils";
 const ColumnStatsModal = ({
   id,
   branch,
@@ -50,7 +50,7 @@ const ColumnStatsModal = ({
   }, [loadingTable, searchText]);
 
   return (
-    <BoslerModal
+    <MtdModal
       headingIcon={<FilterIcon />}
       heading={
         <Row justify={"space-between"} align="middle">
@@ -59,7 +59,7 @@ const ColumnStatsModal = ({
       }
       footerExtraText={getLanguageLabel("columnStatsMsg")}
       extraActionHeading={
-        <BoslerInput
+        <MtdInput
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           placeholder={getLanguageLabel("searchColumns")}
@@ -130,10 +130,10 @@ const ColumnStatsModal = ({
             );
           })
         ) : (
-          <BoslerLoader />
+          <MtdLoader />
         )}
       </Menu>
-    </BoslerModal>
+    </MtdModal>
   );
 };
 

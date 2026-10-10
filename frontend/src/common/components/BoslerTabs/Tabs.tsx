@@ -1,4 +1,4 @@
-import { CrossIcon } from "assets/icons/boslerActionIcons";
+import { CrossIcon } from "assets/icons/mtdActionIcons";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { isDefined, isEmpty, moveElement, notEmpty } from "utils/utilities";
 import {
@@ -6,7 +6,7 @@ import {
   TabContextProvider,
   initTabState,
   updateActiveKey,
-} from "./BoslerTabsContext";
+} from "./MtdTabsContext";
 import { ITab, ITabPane, TabsComponent } from "./types";
 import { DndProvider, DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -64,7 +64,7 @@ const TabPane: React.FC<ITabPane> = ({
   );
 };
 
-const BoslerTabs: React.FC<ITab> = ({
+const MtdTabs: React.FC<ITab> = ({
   defaultActiveKey,
   fallback,
   showContextMenu = false,
@@ -264,7 +264,7 @@ const BoslerTabs: React.FC<ITab> = ({
 const Tabs: TabsComponent = (props) => {
   return (
     <TabContextProvider>
-      <BoslerTabs {...props} />
+      <MtdTabs {...props} />
     </TabContextProvider>
   );
 };

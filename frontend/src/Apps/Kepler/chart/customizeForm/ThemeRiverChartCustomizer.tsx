@@ -1,12 +1,12 @@
 import { Form, Select } from "antd";
-import { BoslerCollapse } from "components/BoslerComponents/BoslerCollapse/BoslerCollapse";
+import { MtdCollapse } from "components/MtdComponents/MtdCollapse/MtdCollapse";
 import React from "react";
 import { getLanguageLabel } from "utils/utilities";
 
 export const ThemeRiverChartCustomizer = () => {
   return (
     <div className="customizer-subHeader">
-      <BoslerCollapse
+      <MtdCollapse
         key="themeRiverSettings"
         collapsible="HEADER"
         header={
@@ -33,7 +33,7 @@ export const ThemeRiverChartCustomizer = () => {
             />
           </Form.Item>
         </>
-      </BoslerCollapse>
+      </MtdCollapse>
     </div>
   );
 };

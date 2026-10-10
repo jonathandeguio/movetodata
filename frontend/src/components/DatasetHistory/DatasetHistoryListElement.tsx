@@ -4,11 +4,11 @@ import {
   BuildIcon,
   SyncIcon,
   WarningIcon,
-} from "assets/icons/boslerActionIcons";
-import { TrashIcon } from "assets/icons/boslerMiscellaneousIcons";
-import { TickIcon } from "assets/icons/boslerNavigationIcon";
+} from "assets/icons/mtdActionIcons";
+import { TrashIcon } from "assets/icons/mtdMiscellaneousIcons";
+import { TickIcon } from "assets/icons/mtdNavigationIcon";
 import UserInfo from "common/components/UserInfo";
-import BoslerButton from "components/BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
 import { BuildStatusEnum } from "components/Builds/Builds.constants";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -166,7 +166,7 @@ const DatasetHistoryListElement = ({
         </div>
         {transaction.buildStatus == BuildStatusEnum.ACTIVE && (
           <div className={styles.editRow + " --mt10"}>
-            <BoslerButton
+            <MtdButton
               onClick={() =>
                 handleDatasetTransactionAbortCase(
                   transaction.datasetId,
@@ -176,7 +176,7 @@ const DatasetHistoryListElement = ({
               id={DATASET_TRANSACTION_ABORT_BTN + transaction.id}
             >
               {getLanguageLabel("abortTransaction")}
-            </BoslerButton>
+            </MtdButton>
           </div>
         )}
       </div>
