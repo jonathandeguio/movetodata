@@ -465,6 +465,21 @@ const Setting = () => {
                     </div>
                   </Link>
                 )}
+                {notSSOUser() && (
+                  <Link to={`security`}>
+                    <div
+                      className={
+                        lastSegment == "security"
+                          ? "settingpage-layout-sidebar-menu-subHeadSelected"
+                          : "settingpage-layout-sidebar-menu-subHead"
+                      }
+                    >
+                      <div className="text-and-icon-center">
+                        <LockIcon /> Sécurité
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </div>
 
               <div className="settingpage-layout-sidebar-menu">

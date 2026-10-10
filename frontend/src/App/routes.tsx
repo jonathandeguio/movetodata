@@ -54,6 +54,7 @@ import DeveloperHome from "../pages/Developer/DeveloperHome";
 import BoslerComponents from "../pages/Portal/BoslerComponents";
 import IconList from "../pages/Portal/iconsList";
 import ChangePassword from "../pages/Settings/ChangePassword";
+import Security from "../pages/Settings/Security/Security.view";
 import Groups from "../pages/Settings/Groups";
 import LoginActivity from "../pages/Settings/LoginActivity";
 import DeveloperSettings from "../pages/Settings/PlatformConfig/DeveloperSettings";
@@ -237,6 +238,7 @@ const useRouter = () => {
                     <Route path="loginActivity" element={<LoginActivity />} />
                     <Route path="userGroups" element={<UserGroups />} />
                     <Route path="changePassword" element={<ChangePassword />} />
+                    <Route path="security" element={<Security />} />
                     <Route path="sso" element={<SSO />} />
 
                     <Route path="platform">
