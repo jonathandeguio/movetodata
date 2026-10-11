@@ -71,6 +71,8 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
     test('le nom de la source est affiché', async ({ page }) => {
       await page.goto(seed.sourceUrl);
+      // Le nom est affiché dans l'onglet "Info" (SourceInfoPanel), pas dans "Data Browser"
+      await page.getByText('Info').first().click();
       await expect(page.getByText(/Scénario Tech|SaaS/i).first()).toBeVisible({ timeout: 15_000 });
     });
 
