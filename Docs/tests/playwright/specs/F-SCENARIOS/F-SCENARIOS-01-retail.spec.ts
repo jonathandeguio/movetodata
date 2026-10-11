@@ -24,22 +24,6 @@ let seed: SeedResult;
 
 async function setupFallbackRoutes(page: import('@playwright/test').Page, s: SeedResult): Promise<void> {
   if (process.env.MOCK_AI === 'false') return;
-  // Garantir une licence DATA_VIZ pour que le dashboard Kepler s'affiche
-  await page.route('**/platform/decryptLicenseKey**', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
-      product: 'DATA_VIZ',
-      client: 'Demo',
-      baseUrl: 'https://movetodata.io',
-      displayBlockedFeatures: false,
-      maximumUsers: -1,
-      maximumBuildsPerDay: -1,
-      maximumDatasets: -1,
-      maximumDashboards: -1,
-      maximumCharts: -1,
-      maximumRepositories: -1,
-      expiresOn: '2099-01-01T00:00:00Z',
-    }) })
-  );
   await page.route(`**/api/sources/${s.sourceId}**`, (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: s.sourceId, name: `Scénario ${INDUSTRY.label}`, type: 'FILE', status: 'CONNECTED' }) })
   );
@@ -149,6 +133,23 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
   test.describe('Étape 3 : Tableau de bord KPI', () => {
     test.beforeEach(async ({ page }) => {
       await authenticate(page);
+      if (process.env.MOCK_AI !== 'false') {
+        await page.route('**/platform/decryptLicenseKey**', (route) =>
+          route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+            product: 'DATA_VIZ',
+            client: 'Demo',
+            baseUrl: 'https://movetodata.io',
+            displayBlockedFeatures: false,
+            maximumUsers: -1,
+            maximumBuildsPerDay: -1,
+            maximumDatasets: -1,
+            maximumDashboards: -1,
+            maximumCharts: -1,
+            maximumRepositories: -1,
+            expiresOn: '2099-01-01T00:00:00Z',
+          }) })
+        );
+      }
     });
 
     test('le dashboard KPI créé est accessible', async ({ page }) => {
