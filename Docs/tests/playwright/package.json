@@ -12,12 +12,18 @@
     "test:settings": "dotenv -e .env.test -- playwright test specs/F-SETTINGS/",
     "test:ai": "dotenv -e .env.test -- playwright test specs/F-AI/",
     "test:docs": "dotenv -e .env.test -- playwright test specs/F-DOCS/",
+    "test:scenarios": "dotenv -e .env.test -- playwright test specs/F-SCENARIOS/",
+    "test:scenarios:retail": "dotenv -e .env.test -- playwright test specs/F-SCENARIOS/F-SCENARIOS-01-retail.spec.ts",
+    "test:scenarios:tech": "dotenv -e .env.test -- playwright test specs/F-SCENARIOS/F-SCENARIOS-02-tech.spec.ts",
+    "test:scenarios:manufacturing": "dotenv -e .env.test -- playwright test specs/F-SCENARIOS/F-SCENARIOS-03-manufacturing.spec.ts",
+    "test:scenarios:finance": "dotenv -e .env.test -- playwright test specs/F-SCENARIOS/F-SCENARIOS-04-finance.spec.ts",
     "test:ui": "dotenv -e .env.test -- playwright test --ui",
     "report": "playwright show-report playwright-report"
   },
   "dependencies": {},
   "devDependencies": {
     "@playwright/test": "^1.48.0",
+    "@types/node": "^20.0.0",
     "dotenv-cli": "^7.4.2",
     "typescript": "^5.4.5"
   }
