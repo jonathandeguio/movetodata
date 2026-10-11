@@ -26,9 +26,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-DEPLOY_DIR="${SCRIPT_DIR}/deploy"
-SEED_DIR="${SCRIPT_DIR}/seed"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+DEPLOY_DIR="${SCRIPT_DIR}"
+SEED_DIR="${SCRIPT_DIR}/../seed"
 E2E_DIR="${REPO_ROOT}/Docs/tests/playwright"
 
 # ─── Couleurs ────────────────────────────────────────────────────────────────
