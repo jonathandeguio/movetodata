@@ -97,7 +97,7 @@ if [[ "${YES}" == "false" ]]; then
 fi
 
 # =============================================================================
-# ÉTAPE 1 — ARRÊT + SUPPRESSION DES VOLUMES
+# ÉTAPE 1 — ARRÊT + SUPPRESSION DES DONNÉES
 # =============================================================================
 section "Étape 1/3 — Wipe Docker (stack : ${STACK})"
 
@@ -105,9 +105,44 @@ if [[ ! -f "${DEPLOY_DIR}/04-stop.sh" ]]; then
   error "Script 04-stop.sh introuvable : ${DEPLOY_DIR}/04-stop.sh"
 fi
 
-step "Arrêt et suppression des volumes..."
-bash "${DEPLOY_DIR}/04-stop.sh" --stack "${STACK}" --volumes <<< "y"
-success "Volumes supprimés — base de données effacée"
+# Lire MOVETODATA_MOUNT_PATH depuis .env.movetodata
+ENV_FILE="${DEPLOY_DIR}/.env.movetodata"
+MOUNT_PATH="/movetodata"
+if [[ -f "${ENV_FILE}" ]]; then
+  _mp=$(grep -E '^MOVETODATA_MOUNT_PATH=' "${ENV_FILE}" | cut -d'=' -f2- | tr -d '"' | tr -d "'" || true)
+  [[ -n "${_mp}" ]] && MOUNT_PATH="${_mp}"
+fi
+info "Répertoire de données : ${MOUNT_PATH}"
+
+step "Arrêt des conteneurs..."
+# Note : les données sont dans des bind mounts (pas des volumes Docker nommés).
+# docker compose down -v ne supprime donc rien — on supprime les répertoires manuellement.
+bash "${DEPLOY_DIR}/04-stop.sh" --stack "${STACK}"
+success "Conteneurs arrêtés"
+
+step "Suppression des données PostgreSQL..."
+if [[ -d "${MOUNT_PATH}/postgres" ]]; then
+  rm -rf "${MOUNT_PATH}/postgres"
+  success "Données PostgreSQL supprimées (${MOUNT_PATH}/postgres)"
+else
+  warn "Répertoire PostgreSQL absent (déjà vide ?)"
+fi
+
+step "Suppression des données Redis..."
+if [[ -d "${MOUNT_PATH}/redis" ]]; then
+  rm -rf "${MOUNT_PATH}/redis"
+  success "Données Redis supprimées (${MOUNT_PATH}/redis)"
+else
+  warn "Répertoire Redis absent (déjà vide ?)"
+fi
+
+step "Suppression des fichiers uploadés..."
+if [[ -d "${MOUNT_PATH}/file" ]]; then
+  rm -rf "${MOUNT_PATH}/file"
+  success "Fichiers uploadés supprimés (${MOUNT_PATH}/file)"
+else
+  warn "Répertoire file absent (déjà vide ?)"
+fi
 
 step "Nettoyage des images orphelines..."
 docker image prune -f 2>/dev/null || true
