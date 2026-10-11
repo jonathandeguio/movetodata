@@ -45,7 +45,8 @@ export default defineConfig({
      */
     {
       name: 'setup',
-      testMatch: '**/helpers/global-setup.ts',
+      testDir: './helpers',
+      testMatch: 'global-setup.ts',
     },
 
     /**
