@@ -63,7 +63,7 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
   // Connexion unique par fichier — cookies réutilisés dans chaque beforeEach
   test.beforeAll(async ({ browser }) => {
-    const ctx = await browser.newContext();
+    const ctx = await browser.newContext({ baseURL: process.env.BASE_URL ?? 'http://localhost:8081' });
     const pg  = await ctx.newPage();
     await loginViaUI(pg, INDUSTRY.user.username, INDUSTRY.user.password);
     const state = await ctx.storageState();
