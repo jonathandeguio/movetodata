@@ -53,10 +53,10 @@ YES=false
 # ─── Parsing des arguments ────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --password) ADMIN_PASSWORD="$2"; shift 2 ;;
-    --url)      BASE_URL="$2";       shift 2 ;;
-    --admin)    ADMIN_USER="$2";     shift 2 ;;
-    --stack)    STACK="$2";          shift 2 ;;
+    --password) ADMIN_PASSWORD="${2:-}"; shift 2 ;;
+    --url)      BASE_URL="${2:-}";       shift 2 ;;
+    --admin)    ADMIN_USER="${2:-}";     shift 2 ;;
+    --stack)    STACK="${2:-}";          shift 2 ;;
     --yes|-y)   YES=true;            shift ;;
     *) warn "Argument inconnu : $1"; shift ;;
   esac

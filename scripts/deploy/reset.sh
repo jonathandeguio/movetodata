@@ -57,10 +57,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --hard)            MODE="hard";           shift ;;
     --soft)            MODE="soft";           shift ;;
-    --url)             BASE_URL="$2";         shift 2 ;;
-    --password)        ADMIN_PASSWORD="$2";   shift 2 ;;
-    --admin)           ADMIN_USER="$2";       shift 2 ;;
-    --stack)           STACK="$2";            shift 2 ;;
+    --url)             BASE_URL="${2:-}";         shift 2 ;;
+    --password)        ADMIN_PASSWORD="${2:-}";   shift 2 ;;
+    --admin)           ADMIN_USER="${2:-}";       shift 2 ;;
+    --stack)           STACK="${2:-}";            shift 2 ;;
     --skip-scenarios)  SKIP_SCENARIOS=true;   shift ;;
     --skip-demo)       SKIP_DEMO=true;        shift ;;
     --yes|-y)          YES=true;              shift ;;
