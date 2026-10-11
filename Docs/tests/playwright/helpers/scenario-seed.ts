@@ -84,9 +84,16 @@ async function analyzeFile(
   }
 }
 
+// Mirrors Utils.normalizeName from the Java backend (strips same special chars).
+function normalizeName(name: string): string {
+  return name.replace(/[/\\:;%$&^#£@?~,*+"<>|'`]/g, '').replace(/^_+|_+$/, '');
+}
+
 /**
  * Crée un projet kitab (resource racine) ou récupère son ID s'il existe déjà.
  * Idempotent : gère le 406 "same name already exists".
+ * Note : le backend normalise le nom via Utils.normalizeName (strip & etc.)
+ * donc la comparaison après 406 doit aussi comparer la version normalisée.
  */
 async function getOrCreateProject(
   request: APIRequestContext,
@@ -104,16 +111,23 @@ async function getOrCreateProject(
   }
 
   if (createRes.status() === 406) {
-    // Déjà existant — on le retrouve par nom
+    // Déjà existant — on le retrouve par nom.
+    // Le backend a normalisé le nom (strip &, #, etc.) donc on compare
+    // aussi les versions normalisées.
+    const normalized = normalizeName(name);
     const listRes = await request.get('/api/kitab/project/all', {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!listRes.ok()) throw new Error(`getProjects failed: ${listRes.status()}`);
     const projects: Array<{ id: string; name: string }> = await listRes.json();
     const found = projects.find(
-      (p) => p.name === name || p.name?.toLowerCase() === name.toLowerCase()
+      (p) =>
+        p.name === name ||
+        p.name === normalized ||
+        p.name?.toLowerCase() === name.toLowerCase() ||
+        p.name?.toLowerCase() === normalized.toLowerCase(),
     );
-    if (!found) throw new Error(`getOrCreateProject: projet "${name}" introuvable après 406`);
+    if (!found) throw new Error(`getOrCreateProject: projet "${name}" (normalisé: "${normalized}") introuvable après 406`);
     return found.id;
   }
 
@@ -157,13 +171,14 @@ async function createSource(
 }
 
 async function createDashboard(
-  request: APIRequestContext,
-  name:    string,
+  request:     APIRequestContext,
+  name:        string,
   description: string,
-  token:   string,
+  projectId:   string,
+  token:       string,
 ): Promise<string> {
   const res = await request.post('/api/kepler/dashboards/new', {
-    data:    { name, description },
+    data:    { name, description, parent: projectId },
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
   });
   if (!res.ok()) throw new Error(`createDashboard: ${res.status()} — ${await res.text()}`);
@@ -220,7 +235,7 @@ export async function seedScenario(
   // 6. Dashboard KPI
   const dashName = `KPI ${industry.label}`;
   console.log(`[seed] Création dashboard : "${dashName}"`);
-  const dashboardId = await createDashboard(request, dashName, `Tableau de bord ${industry.label}`, token);
+  const dashboardId = await createDashboard(request, dashName, `Tableau de bord ${industry.label}`, projectId, token);
   console.log(`[seed] dashboardId = ${dashboardId}`);
 
   const result: SeedResult = {
