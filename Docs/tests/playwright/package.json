@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "dotenv -e .env.test -- playwright test",
+    "test:admin": "dotenv -e .env.test -- playwright test specs/F-ADMIN/",
     "test:auth": "dotenv -e .env.test -- playwright test specs/F-AUTH/",
     "test:portal": "dotenv -e .env.test -- playwright test specs/F-PORTAL/",
     "test:connect": "dotenv -e .env.test -- playwright test specs/F-CONNECT/",

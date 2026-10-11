@@ -227,16 +227,26 @@ if [[ "${MODE}" == "hard" ]]; then
 fi
 
 if [[ "${SKIP_SCENARIOS}" == "false" ]]; then
-  [[ "${MODE}" == "hard" ]] && section "${STEP_LABEL} — Cas d'usage sectoriels (Playwright)"
+  [[ "${MODE}" == "hard" ]] && section "${STEP_LABEL} — Utilisateurs, groupes et cas d'usage (Playwright)"
 
   if [[ -d "${E2E_DIR}" ]] && [[ -f "${E2E_DIR}/package.json" ]]; then
     if command -v npm &>/dev/null; then
       step "Installation des dépendances Playwright si nécessaire..."
       ( cd "${E2E_DIR}" && npm install --silent 2>/dev/null ) || true
 
-      step "Lancement des scénarios sectoriels..."
-      # On passe l'URL à .env.test via une variable d'environnement inline
-      # BASE_URL et le mot de passe sont injectés pour que le global-setup s'authentifie
+      # ── Sous-étape A : créer utilisateurs et groupes ────────────────────────
+      step "Création des utilisateurs et groupes (F-ADMIN)..."
+      (
+        cd "${E2E_DIR}"
+        BASE_URL="${BASE_URL}" \
+        TEST_USER="${ADMIN_USER}" \
+        TEST_PASSWORD="${ADMIN_PASSWORD}" \
+        npm run test:admin 2>&1
+      ) && success "Utilisateurs et groupes créés/vérifiés" \
+        || warn "F-ADMIN : certains tests ont échoué — vérifiez les logs ci-dessus"
+
+      # ── Sous-étape B : créer les cas d'usage sectoriels ─────────────────────
+      step "Lancement des scénarios sectoriels (F-SCENARIOS)..."
       (
         cd "${E2E_DIR}"
         BASE_URL="${BASE_URL}" \
@@ -244,16 +254,17 @@ if [[ "${SKIP_SCENARIOS}" == "false" ]]; then
         TEST_PASSWORD="${ADMIN_PASSWORD}" \
         npm run test:scenarios 2>&1
       ) && success "Scénarios sectoriels créés (Retail, Tech, Manufacturing, Finance)" \
-        || warn "Certains scénarios Playwright ont échoué — la plateforme reste opérationnelle"
+        || warn "F-SCENARIOS : certains scénarios ont échoué — la plateforme reste opérationnelle"
     else
-      warn "npm introuvable — scénarios Playwright ignorés"
-      warn "  Installez Node.js puis : cd ${E2E_DIR} && npm run test:scenarios"
+      warn "npm introuvable — étapes Playwright ignorées"
+      warn "  Installez Node.js puis :"
+      warn "    cd ${E2E_DIR} && npm run test:admin && npm run test:scenarios"
     fi
   else
     warn "Dossier Playwright introuvable : ${E2E_DIR}"
   fi
 else
-  info "Scénarios Playwright ignorés (--skip-scenarios)"
+  info "Étapes Playwright ignorées (--skip-scenarios)"
 fi
 
 # =============================================================================
