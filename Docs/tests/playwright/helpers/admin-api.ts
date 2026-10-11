@@ -111,18 +111,46 @@ export const DEMO_USERS: UserSpec[] = [
 // API helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * Authentifie l'admin et retourne les headers Authorization à passer
+ * à toutes les fonctions suivantes.
+ *
+ * À appeler dans test.beforeAll() pour éviter de dépendre du storageState
+ * (qui n'existe pas encore quand F-ADMIN crée les comptes).
+ */
+export async function loginAdmin(
+  request:  APIRequestContext,
+  username: string = process.env.TEST_USER     ?? 'platform-administrator',
+  password: string = process.env.TEST_PASSWORD ?? '',
+): Promise<Record<string, string>> {
+  const res = await request.post('/api/passport/login', {
+    data:    { username, password, loginType: 'plain' },
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok()) {
+    throw new Error(`loginAdmin "${username}" failed: ${res.status()} ${await res.text()}`);
+  }
+  const body = await res.json();
+  if (!body?.accessToken) throw new Error('loginAdmin: no accessToken in response');
+  return { Authorization: `Bearer ${body.accessToken}` };
+}
+
 /** Récupère tous les utilisateurs existants. */
-export async function listUsers(request: APIRequestContext): Promise<ApiUser[]> {
-  const res = await request.get('/api/passport/users/all');
+export async function listUsers(
+  request: APIRequestContext,
+  headers: Record<string, string> = {},
+): Promise<ApiUser[]> {
+  const res = await request.get('/api/passport/users/all', { headers });
   if (!res.ok()) throw new Error(`listUsers failed: ${res.status()}`);
   return res.json();
 }
 
 /** Récupère tous les groupes (système + ressource). */
 export async function listGroups(
-  request: APIRequestContext
+  request: APIRequestContext,
+  headers: Record<string, string> = {},
 ): Promise<{ system: ApiGroup[]; resource: ApiGroup[] }> {
-  const res = await request.get('/api/passport/groups/all');
+  const res = await request.get('/api/passport/groups/all', { headers });
   if (!res.ok()) throw new Error(`listGroups failed: ${res.status()}`);
   return res.json();
 }
@@ -133,9 +161,10 @@ export async function listGroups(
  */
 export async function createUser(
   request: APIRequestContext,
-  spec:    UserSpec
+  spec:    UserSpec,
+  headers: Record<string, string> = {},
 ): Promise<ApiUser> {
-  const existing = await listUsers(request);
+  const existing = await listUsers(request, headers);
   const found = existing.find((u) => u.username === spec.username);
   if (found) return found;
 
@@ -149,7 +178,7 @@ export async function createUser(
       email:      spec.email,
       provider:   'local',
     },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...headers },
   });
 
   if (!res.ok()) {
@@ -167,7 +196,8 @@ export async function createUser(
 export async function addUserToGroup(
   request:   APIRequestContext,
   groupId:   string,
-  userId:    string
+  userId:    string,
+  headers:   Record<string, string> = {},
 ): Promise<void> {
   const res = await request.post('/api/passport/groups/manageGroups', {
     data: {
@@ -176,7 +206,7 @@ export async function addUserToGroup(
       type:    'members',
       userIds: [userId],
     },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...headers },
   });
   // 409 = déjà membre : on ignore
   if (!res.ok() && res.status() !== 409) {
@@ -193,10 +223,10 @@ export async function addUserToGroup(
 export async function verifyLogin(
   request:  APIRequestContext,
   username: string,
-  password: string
+  password: string,
 ): Promise<boolean> {
   const res = await request.post('/api/passport/login', {
-    data: { username, password, loginType: 'plain' },
+    data:    { username, password, loginType: 'plain' },
     headers: { 'Content-Type': 'application/json' },
   });
   if (!res.ok()) return false;
