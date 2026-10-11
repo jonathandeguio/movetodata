@@ -132,7 +132,6 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
   test.describe('Étape 3 : Tableau de bord KPI', () => {
     test.beforeEach(async ({ page }) => {
-      await authenticate(page);
       if (process.env.MOCK_AI !== 'false') {
         await page.route('**/platform/decryptLicenseKey**', (route) =>
           route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
@@ -150,6 +149,7 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
           }) })
         );
       }
+      await authenticate(page);
     });
 
     test('le dashboard KPI créé est accessible', async ({ page }) => {
