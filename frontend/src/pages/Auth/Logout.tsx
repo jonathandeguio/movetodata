@@ -10,7 +10,7 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(logout("manual")).finally(() => {
+    dispatch(logout("MANUAL")).finally(() => {
       navigate("/auth/login", { replace: true });
     });
   }, []);
