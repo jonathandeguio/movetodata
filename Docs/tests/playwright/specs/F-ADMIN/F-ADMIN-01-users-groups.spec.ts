@@ -70,12 +70,22 @@ test.describe('Création des utilisateurs de démo', () => {
 // BLOC 2 — Création / vérification des groupes
 // ===========================================================================
 
-const SYSTEM_GROUPS = [
-  { name: 'platform-administrators', type: 'system' as const },
-  { name: 'project-administrators',  type: 'system' as const },
+// Tous les groupes requis déduits de DEMO_USERS.groups (dédupliqués).
+const REQUIRED_GROUPS: { name: string; type: 'system' | 'resource' }[] = [
+  ...new Map(
+    DEMO_USERS.flatMap((u) =>
+      u.groups.map((name) => [
+        name,
+        {
+          name,
+          type: (name.endsWith('-administrators') ? 'system' : 'resource') as 'system' | 'resource',
+        },
+      ])
+    )
+  ).values(),
 ];
 
-test.describe('Création des groupes système', () => {
+test.describe('Création des groupes', () => {
 
   test('la liste des groupes est accessible', async ({ request }) => {
     const data = await listGroups(request, auth);
@@ -83,7 +93,7 @@ test.describe('Création des groupes système', () => {
     expect(Array.isArray(all)).toBe(true);
   });
 
-  for (const grp of SYSTEM_GROUPS) {
+  for (const grp of REQUIRED_GROUPS) {
     test(`créer ou vérifier le groupe "${grp.name}"`, async ({ request }) => {
       const group = await createGroup(request, grp.name, grp.type, auth);
       expect(group.name).toBe(grp.name);
@@ -91,10 +101,10 @@ test.describe('Création des groupes système', () => {
     });
   }
 
-  test('les groupes système sont présents après création', async ({ request }) => {
+  test('tous les groupes requis sont présents après création', async ({ request }) => {
     const data = await listGroups(request, auth);
     const all  = [...(data.system ?? []), ...(data.resource ?? [])];
-    for (const grp of SYSTEM_GROUPS) {
+    for (const grp of REQUIRED_GROUPS) {
       expect(
         all.find((g) => g.name === grp.name),
         `Groupe "${grp.name}" absent`
@@ -109,39 +119,26 @@ test.describe('Création des groupes système', () => {
 
 test.describe('Attribution des groupes', () => {
 
-  test('assigner "admin" au groupe "platform-administrators"', async ({ request }) => {
-    const [users, groupsData] = await Promise.all([
-      listUsers(request, auth),
-      listGroups(request, auth),
-    ]);
-    const allG = [...(groupsData.system ?? []), ...(groupsData.resource ?? [])];
+  for (const spec of DEMO_USERS.filter((u) => u.groups.length > 0)) {
+    for (const groupName of spec.groups) {
+      test(`assigner "${spec.username}" au groupe "${groupName}"`, async ({ request }) => {
+        const [users, groupsData] = await Promise.all([
+          listUsers(request, auth),
+          listGroups(request, auth),
+        ]);
+        const allG = [...(groupsData.system ?? []), ...(groupsData.resource ?? [])];
 
-    const user  = users.find((u) => u.username === 'admin');
-    const group = allG.find((g) => g.name === 'platform-administrators');
+        const user  = users.find((u) => u.username === spec.username);
+        const group = allG.find((g) => g.name === groupName);
 
-    if (!user || !group) {
-      test.skip(true, 'Utilisateur ou groupe manquant — voir les blocs précédents');
-      return;
+        if (!user || !group) {
+          test.skip(true, 'Utilisateur ou groupe manquant — voir les blocs précédents');
+          return;
+        }
+        await addUserToGroup(request, group.id, user.id, auth);
+      });
     }
-    await addUserToGroup(request, group.id, user.id, auth);
-  });
-
-  test('assigner "dataops" au groupe "project-administrators"', async ({ request }) => {
-    const [users, groupsData] = await Promise.all([
-      listUsers(request, auth),
-      listGroups(request, auth),
-    ]);
-    const allG = [...(groupsData.system ?? []), ...(groupsData.resource ?? [])];
-
-    const user  = users.find((u) => u.username === 'dataops');
-    const group = allG.find((g) => g.name === 'project-administrators');
-
-    if (!user || !group) {
-      test.skip(true, 'Utilisateur ou groupe manquant — voir les blocs précédents');
-      return;
-    }
-    await addUserToGroup(request, group.id, user.id, auth);
-  });
+  }
 });
 
 // ===========================================================================
