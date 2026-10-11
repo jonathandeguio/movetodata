@@ -136,7 +136,7 @@ const AiAssistantSidebar: React.FC = () => {
       abortControllerRef.current = controller;
 
       try {
-        const response = await fetch(`${API_BASE}/api/ai/chat`, {
+        const response = await fetch(`${API_BASE}/ai/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -248,7 +248,7 @@ const AiAssistantSidebar: React.FC = () => {
 
     // Soft-delete current session on server (fire-and-forget)
     const oldSessionId = sessionIdRef.current;
-    fetch(`${API_BASE}/api/ai/chat/session/${oldSessionId}`, {
+    fetch(`${API_BASE}/ai/chat/session/${oldSessionId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     }).catch(() => {/* graceful — don't surface deletion errors */});
