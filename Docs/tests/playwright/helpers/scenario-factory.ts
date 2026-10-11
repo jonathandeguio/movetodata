@@ -13,9 +13,18 @@ export interface Kpi {
   unit: string;
 }
 
+export interface ScenarioUser {
+  username: string;
+  password: string;
+  /** Rôle métier affiché dans les logs */
+  role:     string;
+}
+
 export interface ScenarioIndustry {
   id:          string;
   label:       string;
+  /** Utilisateur qui joue ce scénario sur la plateforme */
+  user:        ScenarioUser;
   csvFile:     string;
   csvColumns:  string[];
   kpis:        Kpi[];
@@ -32,6 +41,7 @@ export interface ScenarioIndustry {
 const retail: ScenarioIndustry = {
   id:    'retail',
   label: 'Retail & Commerce',
+  user:  { username: 'dataviz', password: 'Dataviz2024!', role: 'DataViz Analyst' },
   csvFile: 'fixtures/retail.csv',
   csvColumns: ['date','store_id','product_id','category','units_sold','revenue_eur','margin_pct','stock_level','customer_count','basket_size_eur'],
   kpis: [
@@ -95,6 +105,7 @@ const retail: ScenarioIndustry = {
 const tech: ScenarioIndustry = {
   id:    'tech',
   label: 'Tech & SaaS',
+  user:  { username: 'dataops', password: 'Dataops2024!', role: 'DataOps Engineer' },
   csvFile: 'fixtures/tech.csv',
   csvColumns: ['date','plan','mrr_eur','new_customers','churned_customers','dau','mau','nps_score','feature_adoption_pct','support_tickets'],
   kpis: [
@@ -159,6 +170,7 @@ const tech: ScenarioIndustry = {
 const manufacturing: ScenarioIndustry = {
   id:    'manufacturing',
   label: 'Industrie & Manufacturing',
+  user:  { username: 'expl.rennes', password: 'Rennes2024!', role: 'Explorateur Rennes' },
   csvFile: 'fixtures/manufacturing.csv',
   csvColumns: ['date','line_id','product_ref','units_produced','defects','downtime_min','oee_pct','energy_kwh','operator_id','shift'],
   kpis: [
@@ -223,6 +235,7 @@ const manufacturing: ScenarioIndustry = {
 const finance: ScenarioIndustry = {
   id:    'finance',
   label: 'Finance & Gestion',
+  user:  { username: 'codir', password: 'Codir2024!', role: 'Comité de Direction' },
   csvFile: 'fixtures/finance.csv',
   csvColumns: ['date','department','revenue_eur','expenses_eur','ebitda_eur','headcount','cac_eur','ltv_eur','burn_rate_eur','runway_months'],
   kpis: [
