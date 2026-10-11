@@ -24,10 +24,10 @@ RUN mkdir -p $SPARK_HOME/  && \
     tar -zxf /$SPARK_PACKAGE --strip-components 1  -C $SPARK_HOME  && \
     rm -f $SPARK_PACKAGE
 
-FROM --platform=linux/amd64 gradle:7.6.1-jdk11
+FROM --platform=linux/amd64 gradle:8.1-jdk11
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN chmod +x gradlew && ./gradlew build --no-daemon -x test
+RUN gradle build --no-daemon -x test
 
 RUN mkdir -p /app/
 RUN mv /home/gradle/src/build/libs/*.jar /app/
