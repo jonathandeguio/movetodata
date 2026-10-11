@@ -7,7 +7,7 @@
  *   Étape 2 : Analyse Smart Connector (score qualité + suggestions graphiques)
  *   Étape 3 : Tableau de bord KPI Kepler
  *
- * Authentification : loginViaUI avec le compte "codir" (Codir2024!)
+ * Authentification : loginViaUI dans chaque beforeEach — même contexte que le test
  * Mocks backend   : page.route() — MOCK_AI=false pour tester le backend réel
  */
 
@@ -25,8 +25,6 @@ const DATASET_URL = `/portal/connect/source/${SOURCE_ID}`;
 const ANALYZE_URL = `/portal/connect/source/${SOURCE_ID}/analyze`;
 const CSV_PATH    = path.join(__dirname, '../../helpers/fixtures/finance.csv');
 const useMockAI   = process.env.MOCK_AI !== 'false';
-
-let authCookies: any[] = [];
 
 async function setupRoutes(page: import('@playwright/test').Page): Promise<void> {
   if (!useMockAI) return;
@@ -54,29 +52,24 @@ async function setupRoutes(page: import('@playwright/test').Page): Promise<void>
   );
 }
 
+async function authenticate(page: import('@playwright/test').Page): Promise<void> {
+  await setupRoutes(page);
+  await loginViaUI(page, INDUSTRY.user.username, INDUSTRY.user.password);
+}
+
 // ===========================================================================
 // Suite
 // ===========================================================================
 
 test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
-  test.beforeAll(async ({ browser }) => {
-    const ctx = await browser.newContext({ baseURL: process.env.BASE_URL ?? 'http://localhost:8081' });
-    const pg  = await ctx.newPage();
-    await loginViaUI(pg, INDUSTRY.user.username, INDUSTRY.user.password);
-    const state = await ctx.storageState();
-    authCookies = state.cookies;
-    await ctx.close();
-  });
-
   // ---------------------------------------------------------------------------
   // Étape 1 — Import du jeu de données
   // ---------------------------------------------------------------------------
 
   test.describe('Étape 1 : Import du jeu de données', () => {
-    test.beforeEach(async ({ page, context }) => {
-      await context.addCookies(authCookies);
-      await setupRoutes(page);
+    test.beforeEach(async ({ page }) => {
+      await authenticate(page);
     });
 
     test("le bouton d'import est visible", async ({ page }) => {
@@ -119,9 +112,8 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
   // ---------------------------------------------------------------------------
 
   test.describe('Étape 2 : Analyse Smart Connector', () => {
-    test.beforeEach(async ({ page, context }) => {
-      await context.addCookies(authCookies);
-      await setupRoutes(page);
+    test.beforeEach(async ({ page }) => {
+      await authenticate(page);
     });
 
     test('le score qualité global est affiché (≥ 75)', async ({ page }) => {
@@ -152,9 +144,8 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
   // ---------------------------------------------------------------------------
 
   test.describe('Étape 3 : Tableau de bord KPI', () => {
-    test.beforeEach(async ({ page, context }) => {
-      await context.addCookies(authCookies);
-      await setupRoutes(page);
+    test.beforeEach(async ({ page }) => {
+      await authenticate(page);
     });
 
     test('le dashboard secteur se charge', async ({ page }) => {
