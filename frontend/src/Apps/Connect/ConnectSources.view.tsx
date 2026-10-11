@@ -1,4 +1,4 @@
-import { Col, Divider, Row, Typography } from "antd";
+import { Col, Divider, Modal, Row, Typography } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,7 +6,9 @@ import MtdLoader from "components/mtdLoader";
 
 import { AddIcon } from "assets/icons/mtdActionIcons";
 import { DatabaseIcon } from "assets/icons/mtdDataIcons";
+import { UploadIcon } from "assets/icons/mtdInterfaceIcons";
 import MtdButton from "components/MtdComponents/ButtonComponent/MtdButton";
+import { FileDropZone } from "components/FileImport";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLanguageLabel, openNotification } from "utils/utilities";
@@ -25,6 +27,7 @@ const ConnectSources = () => {
   );
 
   const [isNewSourceModalOpen, setIsNewSourceModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const dispatch = useDispatch<ThunkAppDispatch>();
 
@@ -64,7 +67,16 @@ const ConnectSources = () => {
               </Col>
               <Col span={8}></Col>
               <Col span={8}>
-                <Row justify="end">
+                <Row justify="end" gutter={8}>
+                  <Col>
+                    <MtdButton
+                      icon={<UploadIcon />}
+                      onClick={() => setIsUploadModalOpen(true)}
+                      intent="secondary"
+                    >
+                      Importer un fichier
+                    </MtdButton>
+                  </Col>
                   <Col>
                     <MtdButton
                       icon={<AddIcon />}
@@ -86,6 +98,22 @@ const ConnectSources = () => {
             isVisible={isNewSourceModalOpen}
             setIsVisible={setIsNewSourceModalOpen}
           />
+          <Modal
+            open={isUploadModalOpen}
+            onCancel={() => setIsUploadModalOpen(false)}
+            footer={null}
+            title="Importer un fichier"
+            width={640}
+            destroyOnClose
+          >
+            <FileDropZone
+              onComplete={(sourceId) => {
+                setIsUploadModalOpen(false);
+                dispatch(listSources());
+                navigate(`/portal/connect/source/${sourceId}`);
+              }}
+            />
+          </Modal>
         </React.Fragment>
       ) : (
         <MtdLoader />

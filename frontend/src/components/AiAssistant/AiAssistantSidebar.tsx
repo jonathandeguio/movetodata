@@ -301,8 +301,6 @@ const AiAssistantSidebar: React.FC = () => {
       open={open}
       onClose={closeSidebar}
       mask={false}
-      getContainer={false}
-      style={{ position: "fixed" }}
       styles={{ body: { padding: 0, display: "flex", flexDirection: "column", height: "100%" } }}
       extra={
         <Tooltip title="Nouvelle conversation">
@@ -378,7 +376,7 @@ const AiAssistantSidebar: React.FC = () => {
                 width: 28,
                 height: 28,
                 borderRadius: "50%",
-                background: msg.role === "user" ? "#1890ff" : "#f0f0f0",
+                background: msg.role === "user" ? "#1890ff" : "var(--ant-color-fill-secondary, rgba(0,0,0,0.08))",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -388,7 +386,7 @@ const AiAssistantSidebar: React.FC = () => {
               {msg.role === "user" ? (
                 <UserOutlined style={{ fontSize: 13, color: "#fff" }} />
               ) : (
-                <RobotOutlined style={{ fontSize: 13, color: "#595959" }} />
+                <RobotOutlined style={{ fontSize: 13 }} />
               )}
             </div>
 
@@ -398,7 +396,7 @@ const AiAssistantSidebar: React.FC = () => {
                 maxWidth: "80%",
                 padding: "8px 12px",
                 borderRadius: msg.role === "user" ? "12px 2px 12px 12px" : "2px 12px 12px 12px",
-                background: msg.role === "user" ? "#1890ff" : "#f5f5f5",
+                background: msg.role === "user" ? "#1890ff" : "var(--ant-color-fill-tertiary, rgba(0,0,0,0.04))",
                 color: msg.role === "user" ? "#fff" : "inherit",
                 fontSize: 13,
                 lineHeight: 1.5,
@@ -413,7 +411,7 @@ const AiAssistantSidebar: React.FC = () => {
                     display: "inline-block",
                     width: 2,
                     height: 14,
-                    background: "#595959",
+                    background: "currentColor",
                     marginLeft: 2,
                     verticalAlign: "middle",
                     animation: "blink 1s step-end infinite",
