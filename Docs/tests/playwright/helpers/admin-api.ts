@@ -190,6 +190,31 @@ export async function createUser(
 }
 
 /**
+ * Crée un groupe. Idempotent : retourne le groupe existant si le nom
+ * est déjà pris.
+ */
+export async function createGroup(
+  request: APIRequestContext,
+  name:    string,
+  type:    'system' | 'resource' = 'resource',
+  headers: Record<string, string> = {},
+): Promise<ApiGroup> {
+  const data = await listGroups(request, headers);
+  const all  = [...(data.system ?? []), ...(data.resource ?? [])];
+  const found = all.find((g) => g.name === name);
+  if (found) return found;
+
+  const res = await request.post('/api/passport/groups/add', {
+    data:    { name, type },
+    headers: { 'Content-Type': 'application/json', ...headers },
+  });
+  if (!res.ok()) {
+    throw new Error(`createGroup "${name}" failed: ${res.status()} ${await res.text()}`);
+  }
+  return res.json();
+}
+
+/**
  * Ajoute un utilisateur dans un groupe.
  * Idempotent : ignore l'erreur si l'utilisateur est déjà membre.
  */

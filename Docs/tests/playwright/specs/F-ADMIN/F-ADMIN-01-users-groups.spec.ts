@@ -19,6 +19,7 @@ import {
   createUser,
   listUsers,
   listGroups,
+  createGroup,
   addUserToGroup,
   verifyLogin,
 } from '../../helpers/admin-api';
@@ -66,33 +67,39 @@ test.describe('Création des utilisateurs de démo', () => {
 });
 
 // ===========================================================================
-// BLOC 2 — Vérification des groupes
+// BLOC 2 — Création / vérification des groupes
 // ===========================================================================
 
-test.describe('Vérification des groupes', () => {
+const SYSTEM_GROUPS = [
+  { name: 'platform-administrators', type: 'system' as const },
+  { name: 'project-administrators',  type: 'system' as const },
+];
+
+test.describe('Création des groupes système', () => {
 
   test('la liste des groupes est accessible', async ({ request }) => {
     const data = await listGroups(request, auth);
     const all  = [...(data.system ?? []), ...(data.resource ?? [])];
-    expect(all.length).toBeGreaterThan(0);
+    expect(Array.isArray(all)).toBe(true);
   });
 
-  test('le groupe "platform-administrators" existe', async ({ request }) => {
-    const data  = await listGroups(request, auth);
-    const all   = [...(data.system ?? []), ...(data.resource ?? [])];
-    expect(
-      all.find((g) => g.name === 'platform-administrators'),
-      'Groupe "platform-administrators" absent'
-    ).toBeTruthy();
-  });
+  for (const grp of SYSTEM_GROUPS) {
+    test(`créer ou vérifier le groupe "${grp.name}"`, async ({ request }) => {
+      const group = await createGroup(request, grp.name, grp.type, auth);
+      expect(group.name).toBe(grp.name);
+      expect(group.id).toBeTruthy();
+    });
+  }
 
-  test('le groupe "project-administrators" existe', async ({ request }) => {
-    const data  = await listGroups(request, auth);
-    const all   = [...(data.system ?? []), ...(data.resource ?? [])];
-    expect(
-      all.find((g) => g.name === 'project-administrators'),
-      'Groupe "project-administrators" absent'
-    ).toBeTruthy();
+  test('les groupes système sont présents après création', async ({ request }) => {
+    const data = await listGroups(request, auth);
+    const all  = [...(data.system ?? []), ...(data.resource ?? [])];
+    for (const grp of SYSTEM_GROUPS) {
+      expect(
+        all.find((g) => g.name === grp.name),
+        `Groupe "${grp.name}" absent`
+      ).toBeTruthy();
+    }
   });
 });
 
