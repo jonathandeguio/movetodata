@@ -24,6 +24,22 @@ let seed: SeedResult;
 
 async function setupFallbackRoutes(page: import('@playwright/test').Page, s: SeedResult): Promise<void> {
   if (process.env.MOCK_AI === 'false') return;
+  // Garantir une licence DATA_VIZ pour que le dashboard Kepler s'affiche
+  await page.route('**/platform/decryptLicenseKey**', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      product: 'DATA_VIZ',
+      client: 'Demo',
+      baseUrl: 'https://movetodata.io',
+      displayBlockedFeatures: false,
+      maximumUsers: -1,
+      maximumBuildsPerDay: -1,
+      maximumDatasets: -1,
+      maximumDashboards: -1,
+      maximumCharts: -1,
+      maximumRepositories: -1,
+      expiresOn: '2099-01-01T00:00:00Z',
+    }) })
+  );
   await page.route(`**/api/sources/${s.sourceId}**`, (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: s.sourceId, name: `Scénario ${INDUSTRY.label}`, type: 'FILE', status: 'CONNECTED' }) })
   );
@@ -36,8 +52,30 @@ async function setupFallbackRoutes(page: import('@playwright/test').Page, s: See
   await page.route('**/api/ai/smart-connector/analyze**', (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(INDUSTRY.mockSmartConnector) })
   );
-  await page.route(`**/api/kepler/dashboards/${s.dashboardId}**`, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(INDUSTRY.mockDashboard) })
+  await page.route(`**/kepler/dashboards/getById/${s.dashboardId}**`, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      id: s.dashboardId,
+      name: `KPI ${INDUSTRY.label}`,
+      type: 'DASHBOARD',
+      lastVersionedDate: null,
+      versionId: null,
+      createdBy: null,
+      updatedBy: null,
+    }) })
+  );
+  await page.route(`**/kitab/${s.dashboardId}/getPath**`, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([
+      { id: s.dashboardId, type: 'LINK', name: `KPI ${INDUSTRY.label}` },
+    ]) })
+  );
+  await page.route(`**/kitab/explorer/resource/${s.dashboardId}**`, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      id: s.dashboardId,
+      name: `KPI ${INDUSTRY.label}`,
+      type: 'LINK',
+      subType: 'DASHBOARD',
+      favourite: false,
+    }) })
   );
 }
 
