@@ -4,9 +4,9 @@ import { Circle, MapContainer, Popup, TileLayer } from "react-leaflet";
 import { HeatmapLayer } from "react-leaflet-heatmap-layer-v3";
 import { useDispatch } from "react-redux";
 import { getTheme, isDefined, isEmpty } from "utils/utilities";
-import { PinIcon } from "../../../../assets/icons/boslerActionIcons";
-import { ZoomToFitIcon } from "../../../../assets/icons/boslerNavigationIcon";
-import BoslerButton from "../../../../components/BoslerComponents/ButtonComponent/BoslerButton";
+import { PinIcon } from "../../../../assets/icons/mtdActionIcons";
+import { ZoomToFitIcon } from "../../../../assets/icons/mtdNavigationIcon";
+import MtdButton from "../../../../components/MtdComponents/ButtonComponent/MtdButton";
 import { silentUpdateQuery } from "../../../../redux/actions/keplerActions";
 
 const KeplerMapChart = ({ chartData, chartCustomization, query }) => {
@@ -96,13 +96,13 @@ const KeplerMapChart = ({ chartData, chartCustomization, query }) => {
             flexDirection: "column",
           }}
         >
-          <BoslerButton
+          <MtdButton
             intent="primary"
             icononly
             onClick={() => toggleZoomToFullScreen()}
             icon={<ZoomToFitIcon />}
           />
-          <BoslerButton
+          <MtdButton
             intent="primary"
             icononly
             onClick={() => {

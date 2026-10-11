@@ -10,7 +10,7 @@ import PipelineContextMenu, {
 import { Dropdown, Menu, Popover, Select, Skeleton } from "antd";
 import dagre from "dagre";
 import { getLanguageLabel } from "utils/utilities";
-import { AddIcon } from "../../assets/icons/boslerActionIcons";
+import { AddIcon } from "../../assets/icons/mtdActionIcons";
 import {
   DataAgentsIcon,
   DataCellsIcon,
@@ -18,26 +18,26 @@ import {
   DatabaseViewIcon,
   ProjectIcon,
   SingleValueIcon,
-} from "../../assets/icons/boslerDataIcons";
+} from "../../assets/icons/mtdDataIcons";
 
-import { ChartIcon, GraphIcon } from "../../assets/icons/boslerChartIcons";
+import { ChartIcon, GraphIcon } from "../../assets/icons/mtdChartIcons";
 import {
   MapLegendIcon,
   PanIcon,
-} from "../../assets/icons/boslerInterfaceIcons";
+} from "../../assets/icons/mtdInterfaceIcons";
 
-import { BuildIcon, SharedIcon } from "../../assets/icons/boslerActionIcons";
-import { CodeCellIcon } from "../../assets/icons/boslerEditorIcons";
-import { DocsIcon, FolderIcon } from "../../assets/icons/boslerFileIcons";
-import { AppIcon, UploadIcon } from "../../assets/icons/boslerInterfaceIcons";
-import { MonitorIcon } from "../../assets/icons/boslerMiscellaneousIcons";
+import { BuildIcon, SharedIcon } from "../../assets/icons/mtdActionIcons";
+import { CodeCellIcon } from "../../assets/icons/mtdEditorIcons";
+import { DocsIcon, FolderIcon } from "../../assets/icons/mtdFileIcons";
+import { AppIcon, UploadIcon } from "../../assets/icons/mtdInterfaceIcons";
+import { MonitorIcon } from "../../assets/icons/mtdMiscellaneousIcons";
 import {
   ZoomInIcon,
   ZoomOutIcon,
   ZoomToFitIcon,
-} from "../../assets/icons/boslerNavigationIcon";
-import { SortDescIcon } from "../../assets/icons/boslerSortIcons";
-import { FilterIcon } from "../../assets/icons/boslerTableIcons";
+} from "../../assets/icons/mtdNavigationIcon";
+import { SortDescIcon } from "../../assets/icons/mtdSortIcons";
+import { FilterIcon } from "../../assets/icons/mtdTableIcons";
 
 import { ResourceTypeEnum } from "Apps/explorer/explorer.utils";
 import {
@@ -48,7 +48,7 @@ import {
 } from "components/Builds/Builds.constants";
 import { autoFormatter } from "utils/AutoFormatter";
 import Avatars from "../Avatars/Avatars";
-import BoslerButton from "../BoslerComponents/ButtonComponent/BoslerButton";
+import MtdButton from "../MtdComponents/ButtonComponent/MtdButton";
 import {
   BEZIER_CHARTS_SVG_ICONS,
   BEZIER_ICONS,
@@ -4652,7 +4652,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
               placement="bottom"
               content={getLanguageLabel("autoLayout")}
             >
-              <BoslerButton
+              <MtdButton
                 className="bezier-tools-top-left-btn"
                 onClick={() =>
                   setPipelineData({
@@ -4671,7 +4671,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                 icon={<GraphIcon />}
                 outlined
                 icononly
-              ></BoslerButton>
+              ></MtdButton>
             </Popover>
             {getLanguageLabel("layout")}
           </div>
@@ -4680,7 +4680,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
               placement="bottom"
               content={getLanguageLabel("animateFlow")}
             >
-              <BoslerButton
+              <MtdButton
                 className="bezier-tools-top-left-btn"
                 onClick={() =>
                   setPipelineData({
@@ -4700,7 +4700,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                 icon={<SharedIcon />}
                 outlined
                 icononly
-              ></BoslerButton>
+              ></MtdButton>
             </Popover>
             {getLanguageLabel("flow")}
           </div>
@@ -4711,14 +4711,14 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                 placement="bottom"
                 content={getLanguageLabel("zoomToSelectedNode")}
               >
-                <BoslerButton
+                <MtdButton
                   className="bezier-tools-top-left-btn"
                   // size="small"
                   id="focus_selected_node"
                   icon={<AddIcon />}
                   outlined
                   icononly
-                ></BoslerButton>
+                ></MtdButton>
               </Popover>
               {getLanguageLabel("focus")}
             </div>
@@ -4728,13 +4728,13 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                 placement="bottom"
                 content={getLanguageLabel("nodeSelection")}
               >
-                <BoslerButton
+                <MtdButton
                   className="bezier-tools-top-left-btn"
                   id="focus_selected_node"
                   icon={<AddIcon />}
                   outlined
                   icononly
-                ></BoslerButton>
+                ></MtdButton>
               </Popover>
               {getLanguageLabel("focus")}
             </div>
@@ -4786,7 +4786,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                   </Menu>
                 }
               >
-                <BoslerButton
+                <MtdButton
                   className="bezier-tools-top-left-btn"
                   icon={<PanIcon />}
                   outlined
@@ -4805,7 +4805,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
             </div>
             <div className="bezier-tools-top-right-color">
               {/* <Popover placement="bottom" content={pipelineData.colorLegend ? 'Close Legend' : 'Open Legend'}> */}
-              <BoslerButton
+              <MtdButton
                 className="bezier-tools-top-left-btn"
                 onClick={() =>
                   setPipelineData({
@@ -4831,7 +4831,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
                 }
                 outlined
                 icononly
-              ></BoslerButton>
+              ></MtdButton>
               {/* </Popover> */}
               {getLanguageLabel("legend")}
             </div>
@@ -5803,7 +5803,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
         </div>
         <div className="bezier-tools-bottom-right">
           <Popover placement="left" content={getLanguageLabel("fitToScreen")}>
-            <BoslerButton
+            <MtdButton
               className="bezier-tools-bottom-right-btn"
               onClick={() =>
                 setPipelineData({
@@ -5823,11 +5823,11 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
               icon={<ZoomToFitIcon />}
               outlined
               icononly
-            ></BoslerButton>
+            ></MtdButton>
           </Popover>
 
           <Popover placement="left" content={getLanguageLabel("zoomIn")}>
-            <BoslerButton
+            <MtdButton
               className="bezier-tools-bottom-right-btn"
               onClick={() =>
                 setPipelineData({
@@ -5847,11 +5847,11 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
               icon={<ZoomInIcon />}
               minimal
               icononly
-            ></BoslerButton>
+            ></MtdButton>
           </Popover>
 
           <Popover placement="left" content={getLanguageLabel("zoomOut")}>
-            <BoslerButton
+            <MtdButton
               className="bezier-tools-bottom-right-btn"
               onClick={() =>
                 setPipelineData({
@@ -5871,7 +5871,7 @@ export default function BezierD3({ pipeline, id, branch, buildexist, name }) {
               icon={<ZoomOutIcon />}
               icononly
               minimal
-            ></BoslerButton>
+            ></MtdButton>
           </Popover>
         </div>
       </div>
