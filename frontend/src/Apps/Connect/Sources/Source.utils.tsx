@@ -107,6 +107,15 @@ export const isSourceConfigValid = (source: ISourceConfig) => {
         source.password
       );
     }
+    // Google BigQuery: project ID (server) + service account JSON key (token).
+    if (source.dbmsType === SourceTypeEnum.BIGQUERY) {
+      return (
+        source.name &&
+        source.parent &&
+        source.server &&
+        source.token
+      );
+    }
     if (source.authType == SourceAuthTypeEnum.KEYPAIR) {
       return (
         source.name &&
@@ -131,6 +140,25 @@ export const isSourceConfigValid = (source: ISourceConfig) => {
     }
   } else if (source.type === "FOLDER") {
     return isDefined(source.path);
+  } else if (source.type === "rest") {
+    return isDefined(source.url) && isDefined(source.method);
+  } else if (source.type === "s3") {
+    return (
+      source.name &&
+      source.parent &&
+      source.database &&  // bucket
+      source.schema &&    // region
+      source.username &&  // access key ID
+      source.password     // secret key
+    );
+  } else if (source.type === "salesforce") {
+    return (
+      source.name &&
+      source.parent &&
+      source.username &&
+      source.password &&
+      source.token
+    );
   }
 };
 

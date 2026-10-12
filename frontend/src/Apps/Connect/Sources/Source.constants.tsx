@@ -728,4 +728,55 @@ export const connectors: IConnector[] = [
       </>
     ),
   },
+  {
+    id: "BigQuery",
+    icon: <DatabaseIcon />,
+    type: "jdbc",
+    subType: SourceTypeEnum.BIGQUERY,
+    status: "disponible",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <AddIcon />
+          <DatabaseIcon size={18} />
+          &nbsp;Google BigQuery
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "S3",
+    icon: <UploadIcon />,
+    type: "s3",
+    subType: "S3",
+    status: "disponible",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <AddIcon />
+          <UploadIcon />
+          &nbsp;Amazon S3 / MinIO
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "Salesforce",
+    icon: <DatabaseIcon />,
+    type: "salesforce",
+    subType: "SALESFORCE",
+    status: "disponible",
+    label: (
+      <>
+        <br />
+        <div className="text-and-icon-align">
+          <AddIcon />
+          <DatabaseIcon size={18} />
+          &nbsp;Salesforce
+        </div>
+      </>
+    ),
+  },
 ];

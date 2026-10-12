@@ -22,6 +22,7 @@ export const enum SourceTypeEnum {
   SAPHANA = "SAPHANA",
   ALLOYDB = "ALLOYDB",
   ATHENA = "ATHENA",
+  BIGQUERY = "BIGQUERY",
   // Roadmap connectors (not yet available)
   SPARKSQL = "SPARKSQL",
   FILESYSTEM = "FILESYSTEM",

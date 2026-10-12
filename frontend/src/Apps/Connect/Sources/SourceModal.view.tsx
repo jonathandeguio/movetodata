@@ -227,7 +227,6 @@ const SourceModal = ({
     );
     setFilteredConnectors(newFilteredConnectors);
   }, [searchText]);
-  console.log(newSourceDetails, selectedConnector);
   return (
     <>
       <MtdModal
@@ -500,7 +499,8 @@ const SourceModal = ({
                   newSourceDetails.dbmsType !== SourceTypeEnum.DATABRICKS &&
                   newSourceDetails.dbmsType !== SourceTypeEnum.SQLITE &&
                   newSourceDetails.dbmsType !== SourceTypeEnum.DUCKDB &&
-                  newSourceDetails.dbmsType !== SourceTypeEnum.ATHENA && (
+                  newSourceDetails.dbmsType !== SourceTypeEnum.ATHENA &&
+                  newSourceDetails.dbmsType !== SourceTypeEnum.BIGQUERY && (
                 <Row
                   justify={"space-between"}
                   align="middle"
@@ -594,6 +594,21 @@ const SourceModal = ({
                           })
                         }
                         value={newSourceDetails.schema}
+                        required
+                      />
+                    </Col>
+                  </Row>
+                )}
+
+                {/* BigQuery: Project ID (stored in server), dataset stored in database field */}
+                {newSourceDetails.dbmsType === SourceTypeEnum.BIGQUERY && (
+                  <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                    <Col span={8}><Text>Project ID</Text></Col>
+                    <Col span={16}>
+                      <MtdInput
+                        placeholder="e.g. my-gcp-project"
+                        onChange={(e) => setNewSourceDetails({ ...newSourceDetails, server: e.target.value })}
+                        value={newSourceDetails.server}
                         required
                       />
                     </Col>
@@ -955,8 +970,39 @@ const SourceModal = ({
                   </>
                 )}
 
+                {/* BigQuery: service account JSON key (stored in token) */}
+                {newSourceDetails.dbmsType === SourceTypeEnum.BIGQUERY && (
+                  <Row
+                    justify={"space-between"}
+                    align="middle"
+                    gutter={[16, 16]}
+                    style={{ marginTop: "10px" }}
+                  >
+                    <Col span={8}>
+                      <Text>Service Account Key (JSON)</Text>
+                    </Col>
+                    <Col span={16}>
+                      <Input.TextArea
+                        className="input"
+                        rows={4}
+                        placeholder='{"type": "service_account", "project_id": "...", ...}'
+                        onChange={(e) =>
+                          setNewSourceDetails({
+                            ...newSourceDetails,
+                            token: e.target.value,
+                          })
+                        }
+                        value={newSourceDetails.token}
+                        required
+                      />
+                    </Col>
+                  </Row>
+                )}
+
                 {/* Databricks: only a Personal Access Token is required (no username) */}
-                {newSourceDetails.dbmsType === SourceTypeEnum.DATABRICKS ? (
+                {/* BigQuery is handled above and excluded from this ternary */}
+                {newSourceDetails.dbmsType !== SourceTypeEnum.BIGQUERY && (
+                  newSourceDetails.dbmsType === SourceTypeEnum.DATABRICKS ? (
                   <Row
                     justify={"space-between"}
                     align="middle"
@@ -1141,7 +1187,7 @@ const SourceModal = ({
                       </Col>
                     </Row>
                   </>
-                )}
+                ))}
 
                 {newSourceDetails.dbmsType == SourceTypeEnum.SNOWFLAKE && (
                   <Row
@@ -1303,6 +1349,120 @@ const SourceModal = ({
                   />
                 </Col>
               </Row>
+            )}
+
+            {newSourceDetails.type === "s3" && (
+              <>
+                <div className="MtdHeader1">STOCKAGE OBJET</div>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Endpoint (MinIO / Custom)</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="Leave blank for AWS S3, or e.g. http://minio.company.com:9000"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, server: e.target.value })}
+                      value={newSourceDetails.server}
+                    />
+                  </Col>
+                </Row>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Bucket</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="e.g. my-data-bucket"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, database: e.target.value })}
+                      value={newSourceDetails.database}
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Region</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="e.g. eu-west-1"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, schema: e.target.value })}
+                      value={newSourceDetails.schema}
+                      required
+                    />
+                  </Col>
+                </Row>
+                <div className="MtdHeader1">{getLanguageLabel("authentication")}</div>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Access Key ID</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="e.g. AKIAIOSFODNN7EXAMPLE"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, username: e.target.value })}
+                      value={newSourceDetails.username}
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Secret Access Key</Text></Col>
+                  <Col span={16}>
+                    <Input.Password
+                      className="input"
+                      placeholder="AWS Secret Access Key"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, password: Buffer.from(e.target.value, "ascii").toString("base64") })}
+                      value={isDefined(newSourceDetails.password) ? Buffer.from(newSourceDetails.password, "base64").toString("ascii") : ""}
+                      required
+                    />
+                  </Col>
+                </Row>
+              </>
+            )}
+
+            {newSourceDetails.type === "salesforce" && (
+              <>
+                <div className="MtdHeader1">SALESFORCE</div>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Instance URL (Optional)</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="https://login.salesforce.com (default)"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, server: e.target.value })}
+                      value={newSourceDetails.server}
+                    />
+                  </Col>
+                </Row>
+                <div className="MtdHeader1">{getLanguageLabel("authentication")}</div>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>{getLanguageLabel("userName")}</Text></Col>
+                  <Col span={16}>
+                    <MtdInput
+                      placeholder="user@company.com"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, username: e.target.value })}
+                      value={newSourceDetails.username}
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>{getLanguageLabel("password")}</Text></Col>
+                  <Col span={16}>
+                    <Input.Password
+                      className="input"
+                      placeholder={getLanguageLabel("password")}
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, password: Buffer.from(e.target.value, "ascii").toString("base64") })}
+                      value={isDefined(newSourceDetails.password) ? Buffer.from(newSourceDetails.password, "base64").toString("ascii") : ""}
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row justify={"space-between"} align="middle" style={{ marginTop: "10px" }} gutter={[16, 16]}>
+                  <Col span={8}><Text>Security Token</Text></Col>
+                  <Col span={16}>
+                    <Input.Password
+                      className="input"
+                      placeholder="Salesforce Security Token"
+                      onChange={(e) => setNewSourceDetails({ ...newSourceDetails, token: e.target.value })}
+                      value={newSourceDetails.token}
+                      required
+                    />
+                  </Col>
+                </Row>
+              </>
             )}
 
             <div className="MtdHeader1">
