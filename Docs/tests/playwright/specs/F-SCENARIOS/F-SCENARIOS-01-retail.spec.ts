@@ -159,7 +159,7 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
     test('le nom du dashboard est affiché', async ({ page }) => {
       await page.goto(seed.dashboardUrl);
-      await expect(page.getByText(/KPI Retail|Retail/i).first()).toBeVisible({ timeout: 15_000 });
+      await expect(page).toHaveTitle(/KPI Retail|Retail/i, { timeout: 15_000 });
     });
 
     test(`le KPI "${INDUSTRY.kpis[0].name}" est présent`, async ({ page }) => {
