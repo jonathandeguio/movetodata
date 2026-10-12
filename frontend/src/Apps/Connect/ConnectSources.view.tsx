@@ -72,7 +72,7 @@ const ConnectSources = () => {
                     <MtdButton
                       icon={<UploadIcon />}
                       onClick={() => setIsUploadModalOpen(true)}
-                      intent="secondary"
+                      intent="none"
                     >
                       Importer un fichier
                     </MtdButton>
