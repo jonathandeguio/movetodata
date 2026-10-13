@@ -136,11 +136,10 @@ export const MtdInfoPopover: React.FC<Props> = ({
               <Col>
                 <MtdTag color={"var(--SUCCESS_COLOR)"}>
                   {isDefined(resourceDetails.type) &&
-                    capitalizeFirstLetter(
-                      type == ResourceTypeEnum.FILE
-                        ? resourceDetails.subType
-                        : resourceDetails.type
-                    )}
+                    (type == ResourceTypeEnum.FILE
+                      ? isDefined(resourceDetails.subType) &&
+                        capitalizeFirstLetter(resourceDetails.subType)
+                      : capitalizeFirstLetter(resourceDetails.type))}
                 </MtdTag>
               </Col>
             </Row>
