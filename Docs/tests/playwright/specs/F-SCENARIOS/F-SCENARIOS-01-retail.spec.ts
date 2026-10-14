@@ -10,6 +10,7 @@
 import { test, expect } from '@playwright/test';
 import { loginViaUI } from '../../helpers/auth';
 import { seedScenario, type SeedResult } from '../../helpers/scenario-seed';
+import { attachApiLogger } from '../../helpers/api-logger';
 import * as path from 'path';
 import { INDUSTRIES } from '../../helpers/scenario-factory';
 
@@ -96,6 +97,7 @@ async function setupFallbackRoutes(page: import('@playwright/test').Page, s: See
       favourite: false,
     }) })
   );
+  attachApiLogger(page);
 }
 
 async function authenticate(page: import('@playwright/test').Page): Promise<void> {
