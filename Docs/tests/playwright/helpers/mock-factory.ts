@@ -373,6 +373,36 @@ export async function setupFallbackRoutes(
     })
   );
 
+  // ── Resource permission (dashboard) ──────────────────────────────────────
+  await page.route(`**/api/passport/authz/resourcePermission/${s.dashboardId}**`, (route) =>
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ permission: 'WRITE', hasPermission: true }),
+    })
+  );
+
+  // ── Dashboard auto-save version ───────────────────────────────────────────
+  await page.route(`**/kepler/dashboards/createVersion/${s.dashboardId}/**`, (route) =>
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ id: `version-${s.dashboardId}`, dashboardId: s.dashboardId }),
+    })
+  );
+
+  // ── Datasets for tab (required before chart elements render) ──────────────
+  await page.route(`**/kepler/tabs/getDatasets/${tabId}**`, (route) =>
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify([{
+        id: s.sourceId,
+        name: `Scénario ${industry.label}`,
+        type: 'FILE',
+        status: 'ACTIVE',
+        subType: '',
+      }]),
+    })
+  );
+
   // ── Tab elements (chart grid) ─────────────────────────────────────────────
   const prefix = s.dashboardId.slice(0, 8);
   const tabElements = industry.mockDashboardCharts.map((chart, i) => ({
