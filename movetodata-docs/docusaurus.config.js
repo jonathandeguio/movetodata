@@ -145,6 +145,11 @@ const config = {
             label: "Release Notes",
             position: "left",
           },
+          {
+            to: "/api-catalog",
+            label: "API",
+            position: "left",
+          },
           // {
           //   to: "/",
           //   label: "Back to MoveToData",

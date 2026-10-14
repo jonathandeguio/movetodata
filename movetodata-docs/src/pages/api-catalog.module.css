@@ -1,0 +1,78 @@
+/* API Catalog page layout */
+
+.header {
+  background-color: #24527a;
+  color: #ffffff;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+}
+
+.title {
+  font-family: Poppins, sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.subtitle {
+  font-family: Poppins, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.swaggerWrapper {
+  padding: 1.5rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.loading {
+  font-family: Poppins, sans-serif;
+  padding: 3rem;
+  text-align: center;
+  color: #24527a;
+}
+
+/* Scope Swagger UI customisations to the wrapper so they do not bleed into
+   the rest of the Docusaurus site. */
+
+.swaggerWrapper :global(.swagger-ui) {
+  font-family: Poppins, sans-serif;
+}
+
+.swaggerWrapper :global(.swagger-ui .topbar) {
+  display: none;
+}
+
+.swaggerWrapper :global(.swagger-ui .info .title) {
+  color: #24527a;
+}
+
+.swaggerWrapper :global(.swagger-ui .btn.authorize) {
+  background-color: #24527a;
+  border-color: #24527a;
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+.swaggerWrapper :global(.swagger-ui .btn.authorize:hover) {
+  background-color: #0d1117;
+  border-color: #0d1117;
+}
+
+.swaggerWrapper :global(.swagger-ui .opblock-summary-method) {
+  border-radius: 2px;
+}
+
+.swaggerWrapper :global(.swagger-ui .opblock.opblock-get .opblock-summary-method) {
+  background-color: #24527a;
+}
+
+.swaggerWrapper :global(.swagger-ui section.models) {
+  display: none;
+}
