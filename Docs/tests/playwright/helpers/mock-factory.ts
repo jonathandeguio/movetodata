@@ -34,7 +34,150 @@ function buildPosition(x: number, y: number, w = 6, h = 4): string {
   );
 }
 
+interface SeriesShape {
+  series:    unknown[];
+  xaxis:     unknown;
+  chartData: { data: unknown[][]; columns: string[] };
+}
+
+function buildSeriesForType(chartType: string): SeriesShape {
+  switch (chartType) {
+    case 'VerticalAxisChart':
+      return {
+        series: [{ name: 'Valeur', type: 'bar', data: [120, 200, 150, 80, 170, 110, 230] }],
+        xaxis:  { data: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul'] },
+        chartData: {
+          data:    [[120], [200], [150], [80], [170], [110], [230]],
+          columns: ['valeur'],
+        },
+      };
+    case 'horizontalBarChart':
+      return {
+        series: [{ name: 'Total', type: 'bar', data: [45, 82, 37] }],
+        xaxis:  { data: ['Enterprise', 'Pro', 'Starter'] },
+        chartData: { data: [[45], [82], [37]], columns: ['total'] },
+      };
+    case 'pieChart':
+      return {
+        series: [{
+          name: 'Répartition', type: 'pie',
+          data: [{ name: 'Catégorie A', value: 40 }, { name: 'Catégorie B', value: 35 }, { name: 'Catégorie C', value: 25 }],
+        }],
+        xaxis: null,
+        chartData: { data: [['Catégorie A', 40], ['Catégorie B', 35], ['Catégorie C', 25]], columns: ['categorie', 'valeur'] },
+      };
+    case 'gaugeChart':
+      return {
+        series: [{ name: 'Score', type: 'gauge', data: [{ name: 'Valeur', value: 75 }] }],
+        xaxis:  null,
+        chartData: { data: [[75]], columns: ['score'] },
+      };
+    case 'waterFallChart':
+      return {
+        series: [
+          { name: 'placeholder', type: 'bar', stack: 'Total', itemStyle: { borderColor: 'transparent', color: 'transparent' }, data: [0, 80000, 0, 20000] },
+          { name: 'Valeur',      type: 'bar', stack: 'Total', data: [200000, 50000, -80000, 0] },
+        ],
+        xaxis:  { data: ['Base', 'Q1', 'Q2', 'Total'] },
+        chartData: { data: [[200000], [50000], [-80000], [0]], columns: ['valeur'] },
+      };
+    case 'wordCloudChart':
+      return {
+        series: [{
+          type: 'wordCloud',
+          data: [
+            { name: 'Analytics', value: 100 }, { name: 'Dashboard', value: 85 },
+            { name: 'Export',    value: 70  }, { name: 'API',        value: 60 },
+            { name: 'Reports',   value: 55  },
+          ],
+        }],
+        xaxis: null,
+        chartData: { data: [['Analytics', 100], ['Dashboard', 85], ['Export', 70]], columns: ['mot', 'frequence'] },
+      };
+    case 'radarChart':
+      return {
+        series: [{ name: 'Performance', type: 'radar', data: [{ value: [80, 70, 90, 85, 75], name: 'Score' }] }],
+        xaxis:  { data: ['Qualité', 'Délai', 'Coût', 'Sécurité', 'Fiabilité'] },
+        chartData: { data: [[80, 70, 90, 85, 75]], columns: ['qualite', 'delai', 'cout', 'securite', 'fiabilite'] },
+      };
+    case 'sunBurstChart':
+      return {
+        series: [{
+          type: 'sunburst',
+          data: [
+            { name: 'Charges', children: [{ name: 'Salaires', value: 40 }, { name: 'Loyer', value: 20 }] },
+            { name: 'Revenus', children: [{ name: 'Ventes', value: 70 }, { name: 'Services', value: 30 }] },
+          ],
+        }],
+        xaxis: null,
+        chartData: { data: [['Salaires', 40], ['Loyer', 20], ['Ventes', 70], ['Services', 30]], columns: ['categorie', 'valeur'] },
+      };
+    case 'funnelChart':
+      return {
+        series: [{
+          name: 'Entonnoir', type: 'funnel',
+          data: [{ name: 'Visiteurs', value: 100 }, { name: 'Leads', value: 60 }, { name: 'Opportunités', value: 35 }, { name: 'Clients', value: 20 }],
+        }],
+        xaxis: null,
+        chartData: { data: [[100], [60], [35], [20]], columns: ['valeur'] },
+      };
+    case 'heatmapChart':
+      return {
+        series: [
+          { name: 'Lun', type: 'heatmap', data: [0, 10, 20, 30, 40] },
+          { name: 'Mar', type: 'heatmap', data: [5, 15, 25, 35, 45] },
+          { name: 'Mer', type: 'heatmap', data: [8, 18, 28, 38, 48] },
+        ],
+        xaxis:  { data: ['8h', '10h', '12h', '14h', '16h'] },
+        chartData: { data: [[0, 10, 20], [5, 15, 25], [8, 18, 28]], columns: ['lun', 'mar', 'mer'] },
+      };
+    case 'treeMapChart':
+      return {
+        series: [{
+          type: 'treemap',
+          data: [
+            { name: 'Production A', value: 500 }, { name: 'Production B', value: 300 },
+            { name: 'Production C', value: 200 }, { name: 'Production D', value: 150 },
+          ],
+        }],
+        xaxis: null,
+        chartData: { data: [['Production A', 500], ['Production B', 300]], columns: ['site', 'volume'] },
+      };
+    case 'boxplotChart':
+      return {
+        series: [{ name: 'Distribution', type: 'boxplot', data: [[2, 5, 8, 12, 18], [3, 6, 9, 14, 20]] }],
+        xaxis:  { data: ['Ligne 1', 'Ligne 2'] },
+        chartData: { data: [[2, 5, 8, 12, 18], [3, 6, 9, 14, 20]], columns: ['min', 'q1', 'median', 'q3', 'max'] },
+      };
+    case 'parallelChart':
+      return {
+        series: [{ type: 'parallel', data: [[1, 55, 9, 56], [2, 25, 11, 21], [3, 56, 7, 63]] }],
+        xaxis:  null,
+        chartData: { data: [[1, 55, 9, 56], [2, 25, 11, 21]], columns: ['dim1', 'dim2', 'dim3', 'dim4'] },
+      };
+    case 'pictorialBarChart':
+      return {
+        series: [{ name: 'Production', type: 'pictorialBar', symbol: 'circle', data: [120, 200, 150] }],
+        xaxis:  { data: ['Matin', 'Après-midi', 'Nuit'] },
+        chartData: { data: [[120], [200], [150]], columns: ['production'] },
+      };
+    case 'bigNumber':
+      return {
+        series: [],
+        xaxis:  null,
+        chartData: { data: [[42.5]], columns: ['valeur'] },
+      };
+    default:
+      return {
+        series: [{ name: 'Valeur', type: 'bar', data: [10, 20, 30] }],
+        xaxis:  { data: ['A', 'B', 'C'] },
+        chartData: { data: [[10], [20], [30]], columns: ['valeur'] },
+      };
+  }
+}
+
 function buildChartState(chart: DashboardChart, chartId: string): object {
+  const { series, xaxis, chartData } = buildSeriesForType(chart.type);
   return {
     chartState: {
       id: chartId,
@@ -48,7 +191,6 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
         chartTitleFontSize: 14,
         chartTitleFontWeight: 400,
         titleAlign: 'left',
-        // bigNumber fields (no-op for other chart types)
         bigNumberFontPrefix: '',
         bigNumberFontSuffix: '',
         bigNumberPrecision: 0,
@@ -66,10 +208,10 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
         subHeaderFontWeight: 400,
         seriesCustomize: [],
       }),
-      series: [],
-      xaxis: null,
+      series,
+      xaxis,
     },
-    chartData: { data: [], columns: [] },
+    chartData,
     error: null,
   };
 }
