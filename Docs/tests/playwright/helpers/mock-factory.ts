@@ -4,6 +4,11 @@
  * All mocks are built from the real TypeScript interfaces (Source.d.ts,
  * explorer.d.ts, Dashboard.api.ts) to guarantee shape correctness.
  *
+ * IMPORTANT — Playwright LIFO rule:
+ *   page.route() handlers are called in REVERSE registration order (last added
+ *   = first called). The catch-all logger MUST be registered FIRST so it runs
+ *   LAST and does not intercept requests intended for specific mocks.
+ *
  * Usage:
  *   import { setupFallbackRoutes } from '../../helpers/mock-factory';
  *   await setupFallbackRoutes(page, seed, INDUSTRY);
@@ -11,13 +16,65 @@
 
 import type { Page } from '@playwright/test';
 import type { SeedResult } from './scenario-seed';
+import type { DashboardChart } from './scenario-factory';
 import { attachApiLogger } from './api-logger';
 
 export interface IndustryConfig {
-  label: string;
-  mockAnalyzeFile: unknown;
-  mockSmartConnector: unknown;
+  label:               string;
+  mockAnalyzeFile:     unknown;
+  mockSmartConnector:  unknown;
+  mockDashboardCharts: DashboardChart[];
 }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function buildPosition(x: number, y: number, w = 6, h = 4): string {
+  return JSON.stringify(
+    JSON.stringify({ x, y, w, h, minH: 2, minW: 2, maxH: 20, maxW: 12, type: 'CHART' })
+  );
+}
+
+function buildChartState(chart: DashboardChart, chartId: string): object {
+  return {
+    chartState: {
+      id: chartId,
+      chartType: chart.type,
+      chartCustomize: JSON.stringify({
+        titleToggle: true,
+        title: chart.title,
+        subTitleToggle: false,
+        subTitle: '',
+        chartTitleFontColor: '#000000',
+        chartTitleFontSize: 14,
+        chartTitleFontWeight: 400,
+        titleAlign: 'left',
+        // bigNumber fields (no-op for other chart types)
+        bigNumberFontPrefix: '',
+        bigNumberFontSuffix: '',
+        bigNumberPrecision: 0,
+        bigNumberMode: 'VALUE',
+        bigNumberScale: 1,
+        bigNumberFontSize: 32,
+        bigNumberFontWeight: 700,
+        bigNumberTop: 30,
+        horizontalAlignment: 'center',
+        verticalAlignment: 'middle',
+        subHeader: '',
+        subheaderTop: 65,
+        subHeaderHorizontalAlignment: 'center',
+        subHeaderFontSize: 14,
+        subHeaderFontWeight: 400,
+        seriesCustomize: [],
+      }),
+      series: [],
+      xaxis: null,
+    },
+    chartData: { data: [], columns: [] },
+    error: null,
+  };
+}
+
+// ── Main setup ────────────────────────────────────────────────────────────────
 
 export async function setupFallbackRoutes(
   page: Page,
@@ -25,6 +82,10 @@ export async function setupFallbackRoutes(
   industry: IndustryConfig
 ): Promise<void> {
   if (process.env.MOCK_AI === 'false') return;
+
+  // ── Catch-all logger — registered FIRST so it runs LAST (LIFO) ───────────
+  // Only logs requests NOT intercepted by a specific mock below.
+  attachApiLogger(page);
 
   // ── License ──────────────────────────────────────────────────────────────
   await page.route('**/platform/decryptLicenseKey**', (route) =>
@@ -134,7 +195,7 @@ export async function setupFallbackRoutes(
     })
   );
 
-  // ── Dashboard (kepler) ────────────────────────────────────────────────────
+  // ── Dashboard header (kepler) ─────────────────────────────────────────────
   await page.route(`**/kepler/dashboards/getById/${s.dashboardId}**`, (route) =>
     route.fulfill({
       status: 200, contentType: 'application/json',
@@ -145,6 +206,66 @@ export async function setupFallbackRoutes(
       }),
     })
   );
+
+  // ── Dashboard tabs ────────────────────────────────────────────────────────
+  const tabId = `tab-${s.dashboardId}`;
+
+  await page.route(`**/kepler/tabs/getDashboardTabs/${s.dashboardId}**`, (route) =>
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify([{
+        id: tabId, dashboardId: s.dashboardId,
+        name: 'Vue principale', position: 0, uniqueId: tabId,
+      }]),
+    })
+  );
+
+  // ── Tab config (grid layout settings) ────────────────────────────────────
+  await page.route(`**/kepler/tabs/getTabConfig/${tabId}**`, (route) =>
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({
+        chartHeadingBg: null, background: null, backgroundOpacity: 1,
+        chartHeadingColor: null,
+      }),
+    })
+  );
+
+  // ── Tab elements (chart grid) ─────────────────────────────────────────────
+  const prefix = s.dashboardId.slice(0, 8);
+  const tabElements = industry.mockDashboardCharts.map((chart, i) => ({
+    id:        `elem-${i + 1}-${prefix}`,
+    type:      'CHART',
+    chartId:   `chart-${i + 1}-${prefix}`,
+    position:  buildPosition((i % 2) * 6, Math.floor(i / 2) * 4),
+    data:      null,
+    createElement: false,
+  }));
+
+  await page.route(
+    `**/kepler/tabElements/getElements/${s.dashboardId}/${tabId}**`,
+    (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify(tabElements),
+    })
+  );
+
+  // ── Chart data (per chart ID) ─────────────────────────────────────────────
+  const chartDataMap: Record<string, object> = {};
+  industry.mockDashboardCharts.forEach((chart, i) => {
+    const chartId = `chart-${i + 1}-${prefix}`;
+    chartDataMap[chartId] = buildChartState(chart, chartId);
+  });
+
+  await page.route('**/dataset/getChartDataByIds**', async (route) => {
+    const body = await route.request().postDataJSON().catch(() => null) as { chartIds?: string[] } | null;
+    const chartId = body?.chartIds?.[0];
+    const data = chartId && chartDataMap[chartId] ? [chartDataMap[chartId]] : [];
+    route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify(data),
+    });
+  });
 
   // ── AI endpoints ──────────────────────────────────────────────────────────
   await page.route('**/api/ai/analyze-file**', (route) =>
@@ -162,7 +283,4 @@ export async function setupFallbackRoutes(
       body: JSON.stringify(industry.mockSmartConnector),
     })
   );
-
-  // ── Catch-all logger — logs any API call not matched above ────────────────
-  attachApiLogger(page);
 }

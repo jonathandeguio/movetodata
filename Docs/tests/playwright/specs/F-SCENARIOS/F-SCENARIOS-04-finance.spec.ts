@@ -105,5 +105,13 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
       await page.goto(seed.dashboardUrl);
       await expect(page.getByText(new RegExp(INDUSTRY.kpis[0].name, 'i')).first()).toBeVisible({ timeout: 15_000 });
     });
+
+    for (const chart of INDUSTRY.mockDashboardCharts) {
+      if (chart.type === 'bigNumber') continue;
+      test(`le graphique "${chart.title}" [${chart.type}] est affiché`, async ({ page }) => {
+        await page.goto(seed.dashboardUrl);
+        await expect(page.getByText(new RegExp(chart.title, 'i')).first()).toBeVisible({ timeout: 15_000 });
+      });
+    }
   });
 });

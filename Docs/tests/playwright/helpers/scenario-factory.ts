@@ -20,6 +20,14 @@ export interface ScenarioUser {
   role:     string;
 }
 
+/** Un graphique dans le dashboard global — défini avec un type Kepler et un titre visible */
+export interface DashboardChart {
+  /** Type de graphique Kepler (clé dans chartConfig) */
+  type:  string;
+  /** Titre affiché dans le header HTML du graphique (titleToggle: true requis) */
+  title: string;
+}
+
 export interface ScenarioIndustry {
   id:          string;
   label:       string;
@@ -32,6 +40,8 @@ export interface ScenarioIndustry {
   mockAnalyzeFile:     object;
   mockSmartConnector:  object;
   mockDashboard:       object;
+  /** Graphiques du dashboard global — couvre les types visuels de la plateforme */
+  mockDashboardCharts: DashboardChart[];
 }
 
 // ---------------------------------------------------------------------------
@@ -106,6 +116,13 @@ const retail: ScenarioIndustry = {
       { id: 'p5', title: 'Evolution du panier moyen', type: 'line' },
     ],
   },
+  mockDashboardCharts: [
+    { type: 'VerticalAxisChart', title: 'CA Mensuel'                },
+    { type: 'pieChart',          title: 'Répartition des catégories'},
+    { type: 'funnelChart',       title: 'Entonnoir de conversion'   },
+    { type: 'heatmapChart',      title: 'Ventes par jour et magasin'},
+    { type: 'bigNumber',         title: 'Panier Moyen'              },
+  ],
 };
 
 // ---------------------------------------------------------------------------
@@ -181,6 +198,13 @@ const tech: ScenarioIndustry = {
       { id: 'p5', title: 'Courbe de churn', type: 'line' },
     ],
   },
+  mockDashboardCharts: [
+    { type: 'VerticalAxisChart',  title: 'MRR'                         },
+    { type: 'gaugeChart',         title: 'Score NPS'                   },
+    { type: 'waterFallChart',     title: 'Évolution ARR'               },
+    { type: 'wordCloudChart',     title: 'Features adoptées'           },
+    { type: 'horizontalBarChart', title: 'Support par plan'            },
+  ],
 };
 
 // ---------------------------------------------------------------------------
@@ -256,6 +280,13 @@ const manufacturing: ScenarioIndustry = {
       { id: 'p5', title: 'Défauts dans le temps',       type: 'line' },
     ],
   },
+  mockDashboardCharts: [
+    { type: 'VerticalAxisChart', title: 'OEE'                          },
+    { type: 'radarChart',        title: 'Performance multi-critères'   },
+    { type: 'boxplotChart',      title: 'Distribution des défauts'     },
+    { type: 'treeMapChart',      title: 'Carte des productions'        },
+    { type: 'pictorialBarChart', title: 'Production par équipe'        },
+  ],
 };
 
 // ---------------------------------------------------------------------------
@@ -332,6 +363,13 @@ const finance: ScenarioIndustry = {
       { id: 'p5', title: 'Burn rate dans le temps', type: 'line' },
     ],
   },
+  mockDashboardCharts: [
+    { type: 'VerticalAxisChart', title: 'EBITDA'                        },
+    { type: 'waterFallChart',    title: 'Cashflow waterfall'            },
+    { type: 'sunBurstChart',     title: 'Répartition des dépenses'      },
+    { type: 'parallelChart',     title: 'Comparaison des indicateurs'   },
+    { type: 'VerticalAxisChart', title: 'EBITDA par département'        },
+  ],
 };
 
 // ---------------------------------------------------------------------------
