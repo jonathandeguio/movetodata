@@ -90,6 +90,7 @@ async function setupFallbackRoutes(page: import('@playwright/test').Page, s: See
       id: s.sourceId,
       name: `Scénario ${INDUSTRY.label}`,
       type: 'FILE',
+      subType: '',
       children: [],
       favourite: false,
     }) })
