@@ -87,8 +87,6 @@ services:
       JWT_KEY_ID: Gb389a-9f76-gdjs-a92j-0242bk94356
       RSA_PUBLIC_KEY_FILE_PATH: ""
       RSA_PRIVATE_KEY_FILE_PATH: ""
-    volumes:
-      - ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/openmetadata/data:/opt/openmetadata
     ports:
       - "127.0.0.1:8585:8585"
     restart: unless-stopped

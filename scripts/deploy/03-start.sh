@@ -326,6 +326,10 @@ start_catalog() {
     "${MOVETODATA_MOUNT_PATH}/openmetadata/elasticsearch" \
     "${MOVETODATA_MOUNT_PATH}/openmetadata/data"
 
+  # Elasticsearch tourne avec l'UID 1000 — le répertoire de données doit lui appartenir
+  chown -R 1000:1000 "${MOVETODATA_MOUNT_PATH}/openmetadata/elasticsearch"
+  success "Permissions Elasticsearch corrigées (uid 1000)"
+
   check_firewall_port "8585/tcp" "OpenMetadata"
 
   # Arrêt propre de la stack catalog uniquement
