@@ -85,10 +85,14 @@ Règles :
 """
 
 
-def _build_system_prompt(context: Optional[ChatContext]) -> str:
+def _build_system_prompt(
+    context: Optional[ChatContext], rag_context: str = ""
+) -> str:
     if context and context.schema_info:
-        return _SYSTEM_PROMPT_WITH_SCHEMA.format(schema_info=context.schema_info)
-    return _SYSTEM_PROMPT_BASE
+        base = _SYSTEM_PROMPT_WITH_SCHEMA.format(schema_info=context.schema_info)
+    else:
+        base = _SYSTEM_PROMPT_BASE
+    return base + rag_context
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +208,34 @@ async def chat(request: ChatRequest) -> StreamingResponse:
         request.context.source_id if request.context else None,
     )
 
-    system_prompt = _build_system_prompt(request.context)
+    # RAG — enrichir avec les Data Products pertinents si la question le justifie
+    rag_context: str = ""
+    _CATALOG_KEYWORDS = {
+        "dataset", "données", "data", "catalog", "catalogue", "product",
+        "schéma", "schema", "table", "source", "bronze", "silver", "gold",
+        "lignage", "lineage", "domaine", "domain",
+    }
+    message_lower = request.message.lower()
+    if any(kw in message_lower for kw in _CATALOG_KEYWORDS):
+        try:
+            from app.services import rag_service
+            results = await rag_service.search(request.message, top_k=3)
+            if results:
+                lines = []
+                for r in results:
+                    lines.append(
+                        f"- **{r['name']}** (domaine: {r.get('domain', '?')}, "
+                        f"qualité: {r.get('qualityLevel', '?')}, accès: {r.get('accessPolicy', '?')})\n"
+                        f"  {r.get('description', '')[:200]}"
+                    )
+                rag_context = (
+                    "\n\nData Products pertinents dans le catalog :\n"
+                    + "\n".join(lines)
+                )
+        except Exception as exc:
+            logger.warning("RAG catalog unavailable: %s", exc)
+
+    system_prompt = _build_system_prompt(request.context, rag_context)
 
     # Build message list for Ollama /api/chat
     messages: List[Dict[str, str]] = [{"role": "system", "content": system_prompt}]
