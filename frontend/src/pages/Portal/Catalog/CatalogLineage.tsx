@@ -1,3 +1,5 @@
+// @ts-ignore — dagre n'a pas de types publiés dans ce projet
+import * as dagre from "dagre";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -74,10 +76,9 @@ interface LayoutEdge {
 function buildLayout(
   lineage: LineageData
 ): { nodes: LayoutNode[]; edges: LayoutEdge[]; width: number; height: number } {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const dagre = require("dagre") as DagreModule;
+  const dagreLib = dagre as unknown as DagreModule;
 
-  const g = new dagre.graphlib.Graph();
+  const g = new dagreLib.graphlib.Graph();
   g.setGraph({ rankdir: "LR", nodesep: 40, ranksep: 80 });
   g.setDefaultEdgeLabel(() => ({}));
 
@@ -120,7 +121,7 @@ function buildLayout(
     }
   });
 
-  dagre.layout(g);
+  dagreLib.layout(g);
 
   const nodes: LayoutNode[] = [];
   nodeMap.forEach((ref, id) => {
