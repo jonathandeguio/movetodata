@@ -182,8 +182,16 @@ async function createDashboard(
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
   });
   if (!res.ok()) throw new Error(`createDashboard: ${res.status()} — ${await res.text()}`);
-  const body = await res.json();
-  return (body.id ?? body.dashboardId ?? body.resourceId) as string;
+  const body = await res.json() as Record<string, unknown>;
+  const id = (body.id ?? body.dashboardId ?? body.resourceId) as string | undefined;
+  if (!id) {
+    throw new Error(
+      `createDashboard: impossible d'extraire l'ID depuis la réponse backend. ` +
+      `Clés reçues : [${Object.keys(body).join(', ')}]. ` +
+      `Corps complet : ${JSON.stringify(body)}`,
+    );
+  }
+  return id;
 }
 
 // ---------------------------------------------------------------------------

@@ -205,6 +205,11 @@ services:
     build:
       context: ../../movetodata-ai
       dockerfile: Dockerfile
+    # Sur Linux, host.docker.internal ne résout pas sans cette entrée.
+    # Elle mappe host.docker.internal → passerelle Docker (= l'hôte)
+    # ce qui permet au service IA de joindre Ollama sur le host.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       # Ollama must be reachable from within the Docker network.
       # On a bare-metal install with Ollama on the host:

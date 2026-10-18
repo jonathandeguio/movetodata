@@ -430,8 +430,24 @@ export async function setupFallbackRoutes(
   });
 
   await page.route('**/dataset/getChartDataByIds**', async (route) => {
-    const body = await route.request().postDataJSON().catch(() => null) as { chartIds?: string[] } | null;
-    const chartId = body?.chartIds?.[0];
+    let chartIds: string[] | undefined;
+
+    // Cas 1 : POST avec body JSON  { chartIds: ['chart-1-xxx', ...] }
+    const postBody = await route.request().postDataJSON().catch(() => null) as { chartIds?: string[] } | null;
+    if (postBody?.chartIds?.length) {
+      chartIds = postBody.chartIds;
+    } else {
+      // Cas 2 : GET (ou POST form-data) avec query param ?chartIds=chart-1-xxx,chart-2-xxx
+      try {
+        const url = new URL(route.request().url());
+        const param = url.searchParams.get('chartIds');
+        if (param) chartIds = param.split(',').map((s) => s.trim()).filter(Boolean);
+      } catch {
+        // URL invalide — on laisse chartIds indéfini
+      }
+    }
+
+    const chartId = chartIds?.[0];
     const data = chartId && chartDataMap[chartId] ? [chartDataMap[chartId]] : [];
     route.fulfill({
       status: 200, contentType: 'application/json',
