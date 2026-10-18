@@ -48,6 +48,19 @@ test.describe('F-DOCS-01 — Documentation', () => {
     await expect(nav).toBeVisible({ timeout: 10_000 });
   });
 
+  test('should serve the API Reference page', async ({ page }) => {
+    const response = await page.goto('/learn/apidocs/documentation');
+    expect(
+      response?.status() ?? 200,
+      '/learn/apidocs/documentation should return a 2xx or 3xx response'
+    ).toBeLessThan(400);
+
+    // Le fallback BrowserOnly ou le titre doit être visible
+    await expect(
+      page.getByText(/API Reference|Chargement de la référence/i).first()
+    ).toBeVisible({ timeout: 15_000 });
+  });
+
   test('should allow deep-linking into a documentation page', async ({ page }) => {
     // Attempt to navigate directly to a known sub-section.
     // If the page returns 404, we accept it gracefully (static site may not

@@ -7,25 +7,22 @@ sidebar_label: API Reference
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-export function SwaggerDocs() {
+export function ApiReferencePage() {
   const specUrl = useBaseUrl('/movetodata-api-docs.json');
   return (
-    <BrowserOnly fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Chargement de la référence API…</div>}>
+    <BrowserOnly
+      fallback={
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Chargement de la référence API…
+        </div>
+      }
+    >
       {() => {
-        const SwaggerUI = require('swagger-ui-react').default;
-        require('swagger-ui-react/swagger-ui.css');
-        return (
-          <SwaggerUI
-            url={specUrl}
-            docExpansion="list"
-            defaultModelsExpandDepth={-1}
-            displayRequestDuration={true}
-            tryItOutEnabled={false}
-          />
-        );
+        const SwaggerDocs = require('../../src/components/SwaggerDocs').default;
+        return <SwaggerDocs url={specUrl} />;
       }}
     </BrowserOnly>
   );
 }
 
-<SwaggerDocs />
+<ApiReferencePage />
