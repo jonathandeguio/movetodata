@@ -1,0 +1,548 @@
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Breadcrumb,
+  Button,
+  Descriptions,
+  Empty,
+  Form,
+  InputNumber,
+  Modal,
+  Select,
+  Spin,
+  Table,
+  Tabs,
+  Tag,
+  Typography,
+} from "antd";
+import { LockOutlined } from "@ant-design/icons";
+import { useNavigate, useParams } from "react-router-dom";
+import type { ColumnsType } from "antd/es/table";
+import {
+  addPiiTag,
+  getDataProduct,
+  DataProduct,
+  DataProductColumn,
+} from "../../../services/catalogService";
+
+const { Title } = Typography;
+
+// ---------------------------------------------------------------------------
+// Access policy badge
+// ---------------------------------------------------------------------------
+
+function AccessPolicyBadge({
+  policy,
+}: {
+  policy: DataProduct["accessPolicy"];
+}): JSX.Element {
+  if (policy === "PUBLIC") {
+    return <Tag color="green">PUBLIC</Tag>;
+  }
+  if (policy === "INTERNAL") {
+    return <Tag color="blue">INTERNAL</Tag>;
+  }
+  if (policy === "RESTRICTED") {
+    return (
+      <Tag color="red" icon={<LockOutlined />}>
+        RESTRICTED
+      </Tag>
+    );
+  }
+  return <span>—</span>;
+}
+
+// ---------------------------------------------------------------------------
+// Quality level badge
+// ---------------------------------------------------------------------------
+
+const QUALITY_COLORS: Record<string, string> = {
+  BRONZE: "#CD7F32",
+  SILVER: "#C0C0C0",
+  GOLD: "#FFD700",
+};
+
+function QualityLevelBadge({
+  level,
+}: {
+  level: DataProduct["qualityLevel"] | string | undefined;
+}): JSX.Element {
+  if (!level) return <span>—</span>;
+  const color = QUALITY_COLORS[level] ?? "#888";
+  return (
+    <Tag style={{ backgroundColor: color, color: "#0d1117", borderColor: color, borderRadius: 2 }}>
+      {level.charAt(0) + level.slice(1).toLowerCase()}
+    </Tag>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PII column type
+// ---------------------------------------------------------------------------
+
+interface PiiRow {
+  key: string;
+  columnName: string;
+  piiType: string;
+  retention: string;
+}
+
+function buildPiiRows(product: DataProduct): PiiRow[] {
+  const cols = product.columns ?? [];
+  const piiCols = cols.filter((c) =>
+    c.tags?.some(
+      (t) =>
+        t.tagFQN?.startsWith("PII") || t.tagFQN?.startsWith("GDPR")
+    )
+  );
+  return piiCols.map((c) => {
+    const piiTag = c.tags?.find(
+      (t) =>
+        t.tagFQN?.startsWith("PII") || t.tagFQN?.startsWith("GDPR")
+    );
+    return {
+      key: c.name,
+      columnName: c.name,
+      piiType: piiTag?.tagFQN ?? "—",
+      retention: "—",
+    };
+  });
+}
+
+const PII_TAG_OPTIONS = [
+  { label: "PII.Sensitive", value: "PII.Sensitive" },
+  { label: "GDPR.Sensitive", value: "GDPR.Sensitive" },
+  { label: "GDPR.ID", value: "GDPR.ID" },
+];
+
+interface PiiFormValues {
+  columnName: string;
+  tagFqn: string;
+  retentionDays: number;
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
+const CatalogDataProduct: React.FC = () => {
+  const { fqn: rawFqn } = useParams<{ fqn: string }>();
+  const navigate = useNavigate();
+
+  const fqn = rawFqn ? decodeURIComponent(rawFqn) : "";
+
+  const [product, setProduct] = useState<DataProduct | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
+  const [piiForm] = Form.useForm<PiiFormValues>();
+  const [piiSubmitting, setPiiSubmitting] = useState<boolean>(false);
+  const [piiError, setPiiError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!fqn) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    getDataProduct(fqn)
+      .then((data) => {
+        if (!cancelled) setProduct(data);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          const message =
+            err instanceof Error ? err.message : "Erreur inconnue";
+          setError(
+            `Impossible de charger le Data Product : ${message}. Vérifiez que REACT_APP_OPENMETADATA_URL est correctement configurée.`
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fqn]);
+
+  const handleLineage = (): void => {
+    if (product?.id) {
+      navigate(`/portal/catalog/lineage/${product.id}`);
+    }
+  };
+
+  const handleCertify = (): void => {
+    navigate(`/portal/catalog/certify/${encodeURIComponent(fqn)}`);
+  };
+
+  const handlePiiSubmit = async (values: PiiFormValues): Promise<void> => {
+    setPiiSubmitting(true);
+    setPiiError(null);
+    try {
+      await addPiiTag(fqn, values.columnName, values.tagFqn);
+      setPiiModalOpen(false);
+      piiForm.resetFields();
+      // Reload product to reflect new tag
+      const updated = await getDataProduct(fqn);
+      setProduct(updated);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      setPiiError(`Impossible d'ajouter le tag PII : ${message}`);
+    } finally {
+      setPiiSubmitting(false);
+    }
+  };
+
+  // PII table columns definition
+  const piiTableColumns: ColumnsType<PiiRow> = [
+    {
+      title: "Nom de la colonne",
+      dataIndex: "columnName",
+      key: "columnName",
+    },
+    {
+      title: "Type PII",
+      dataIndex: "piiType",
+      key: "piiType",
+      render: (value: string) => {
+        if (value === "—") return <span>—</span>;
+        const color = value.startsWith("GDPR") ? "orange" : "red";
+        return (
+          <Tag color={color} style={{ borderRadius: 2 }}>
+            {value}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Durée de rétention",
+      dataIndex: "retention",
+      key: "retention",
+    },
+  ];
+
+  // Column options for PII modal
+  const columnOptions = (product?.columns ?? []).map(
+    (c: DataProductColumn) => ({ label: c.name, value: c.name })
+  );
+
+  const piiRows = product ? buildPiiRows(product) : [];
+
+  return (
+    <div
+      className="site-card-wrapper"
+      style={{ margin: "5px 0", padding: "0 16px" }}
+    >
+      <Breadcrumb
+        style={{ marginBottom: 16 }}
+        items={[
+          {
+            title: (
+              <span
+                style={{ cursor: "pointer", color: "#24527a" }}
+                onClick={() => navigate("/portal/catalog/search")}
+              >
+                Catalogue
+              </span>
+            ),
+          },
+          {
+            title: (
+              <span
+                style={{ cursor: "pointer", color: "#24527a" }}
+                onClick={() => navigate("/portal/catalog/search")}
+              >
+                Recherche
+              </span>
+            ),
+          },
+          { title: product?.displayName ?? product?.name ?? fqn },
+        ]}
+      />
+
+      <Title level={3} style={{ marginBottom: 16 }}>
+        {product?.displayName ?? product?.name ?? "Data Product"}
+      </Title>
+
+      {error && (
+        <Alert
+          type="error"
+          message="Erreur de chargement"
+          description={error}
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
+      )}
+
+      <Spin spinning={loading}>
+        {product && (
+          <Tabs
+            defaultActiveKey="overview"
+            items={[
+              // ---------------------------------------------------------------
+              // Tab 1 — Vue d'ensemble
+              // ---------------------------------------------------------------
+              {
+                key: "overview",
+                label: "Vue d'ensemble",
+                children: (
+                  <>
+                    <Descriptions
+                      bordered
+                      column={1}
+                      size="small"
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Descriptions.Item label="Nom">
+                        {product.name}
+                      </Descriptions.Item>
+
+                      {product.displayName && (
+                        <Descriptions.Item label="Nom affiché">
+                          {product.displayName}
+                        </Descriptions.Item>
+                      )}
+
+                      <Descriptions.Item label="FQN">
+                        <code style={{ fontSize: 12 }}>{product.fqn}</code>
+                      </Descriptions.Item>
+
+                      {product.description && (
+                        <Descriptions.Item label="Description">
+                          {product.description}
+                        </Descriptions.Item>
+                      )}
+
+                      {product.dataProductType && (
+                        <Descriptions.Item label="Type">
+                          {product.dataProductType}
+                        </Descriptions.Item>
+                      )}
+
+                      {product.domain && (
+                        <Descriptions.Item label="Domaine">
+                          {product.domain.name}
+                        </Descriptions.Item>
+                      )}
+
+                      {product.owners && product.owners.length > 0 && (
+                        <Descriptions.Item label="Propriétaires">
+                          {product.owners.map((o) => o.name).join(", ")}
+                        </Descriptions.Item>
+                      )}
+
+                      {product.tags && product.tags.length > 0 && (
+                        <Descriptions.Item label="Tags">
+                          {product.tags.map((t) => (
+                            <Tag
+                              key={t.tagFQN}
+                              color="blue"
+                              style={{ borderRadius: 2 }}
+                            >
+                              {t.tagFQN}
+                            </Tag>
+                          ))}
+                        </Descriptions.Item>
+                      )}
+                    </Descriptions>
+
+                    {product.id && (
+                      <Button
+                        type="primary"
+                        style={{
+                          backgroundColor: "#24527a",
+                          borderColor: "#24527a",
+                          borderRadius: 5,
+                        }}
+                        onClick={handleLineage}
+                      >
+                        Voir le lignage
+                      </Button>
+                    )}
+                  </>
+                ),
+              },
+
+              // ---------------------------------------------------------------
+              // Tab 2 — Accès (F13.8)
+              // ---------------------------------------------------------------
+              {
+                key: "access",
+                label: "Accès",
+                children: (
+                  <>
+                    <Descriptions
+                      bordered
+                      column={1}
+                      size="small"
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Descriptions.Item label="Politique d'accès">
+                        <AccessPolicyBadge policy={product.accessPolicy} />
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Niveau de qualité">
+                        <QualityLevelBadge
+                          level={
+                            product.qualityLevel ??
+                            product.extension?.qualityLevel
+                          }
+                        />
+                      </Descriptions.Item>
+                    </Descriptions>
+
+                    <Button
+                      type="default"
+                      style={{
+                        borderColor: "#24527a",
+                        color: "#24527a",
+                        borderRadius: 5,
+                      }}
+                      onClick={handleCertify}
+                    >
+                      Modifier la certification
+                    </Button>
+                  </>
+                ),
+              },
+
+              // ---------------------------------------------------------------
+              // Tab 3 — Gouvernance RGPD (F13.9)
+              // ---------------------------------------------------------------
+              {
+                key: "gdpr",
+                label: "Gouvernance RGPD",
+                children: (
+                  <>
+                    <Alert
+                      type="info"
+                      message="Les colonnes marquées PII ne doivent pas être exposées sans anonymisation."
+                      showIcon
+                      style={{ marginBottom: 16 }}
+                    />
+
+                    <Table<PiiRow>
+                      columns={piiTableColumns}
+                      dataSource={piiRows}
+                      pagination={false}
+                      size="small"
+                      style={{ marginBottom: 16 }}
+                      locale={{
+                        emptyText: (
+                          <Empty description="Aucune colonne PII détectée" />
+                        ),
+                      }}
+                    />
+
+                    <Descriptions
+                      bordered
+                      column={1}
+                      size="small"
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Descriptions.Item label="Responsable traitement">
+                        {product.extension?.dataController ?? "—"}
+                      </Descriptions.Item>
+                    </Descriptions>
+
+                    <Button
+                      type="primary"
+                      style={{
+                        backgroundColor: "#24527a",
+                        borderColor: "#24527a",
+                        borderRadius: 5,
+                      }}
+                      onClick={() => {
+                        setPiiError(null);
+                        setPiiModalOpen(true);
+                      }}
+                    >
+                      Déclarer une colonne PII
+                    </Button>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
+      </Spin>
+
+      {/* PII declaration modal */}
+      <Modal
+        title="Déclarer une colonne PII"
+        open={piiModalOpen}
+        onCancel={() => {
+          setPiiModalOpen(false);
+          piiForm.resetFields();
+          setPiiError(null);
+        }}
+        footer={null}
+        destroyOnClose
+      >
+        {piiError && (
+          <Alert
+            type="error"
+            message={piiError}
+            showIcon
+            style={{ marginBottom: 16 }}
+          />
+        )}
+        <Form
+          form={piiForm}
+          layout="vertical"
+          onFinish={handlePiiSubmit}
+        >
+          <Form.Item
+            label="Colonne"
+            name="columnName"
+            rules={[{ required: true, message: "Veuillez sélectionner une colonne" }]}
+          >
+            <Select
+              placeholder="Sélectionner une colonne"
+              options={columnOptions}
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Type PII"
+            name="tagFqn"
+            rules={[{ required: true, message: "Veuillez sélectionner un type PII" }]}
+          >
+            <Select placeholder="Sélectionner un type PII" options={PII_TAG_OPTIONS} />
+          </Form.Item>
+
+          <Form.Item
+            label="Durée de rétention (jours)"
+            name="retentionDays"
+            rules={[{ required: true, message: "Veuillez indiquer la durée de rétention" }]}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={piiSubmitting}
+              style={{
+                backgroundColor: "#24527a",
+                borderColor: "#24527a",
+                borderRadius: 5,
+              }}
+            >
+              Valider
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default CatalogDataProduct;

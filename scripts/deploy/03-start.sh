@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =============================================================================
 # MoveToData Platform — Script 03 : Démarrage sur Ubuntu
-# Usage : bash 03-start.sh [--stack core|snap|tycho|all]
+# Usage : bash 03-start.sh [--stack core|snap|tycho|catalog|all]
 #
 # Chemins :
 #   Application : /opt/movetodata      (scripts, code source)
@@ -42,6 +42,7 @@ STACK="all"
 COMPOSE_CORE="${SCRIPT_DIR}/../compose/docker-compose.core.yml"
 COMPOSE_SNAP="${SCRIPT_DIR}/../compose/docker-compose.snap.yml"
 COMPOSE_TYCHO="${SCRIPT_DIR}/../compose/docker-compose.tycho.yml"
+COMPOSE_CATALOG="${SCRIPT_DIR}/../compose/docker-compose.openmetadata.yml"
 
 # Compatibilité Docker Compose v1 (docker-compose) et v2 (docker compose)
 if docker compose version &>/dev/null 2>&1; then
@@ -54,9 +55,10 @@ fi
 
 # Chaque stack a son propre project-name pour éviter que --remove-orphans
 # d'une stack ne détruise les containers des autres stacks.
-compose_core()  { _compose --project-name movetodata       -f "${COMPOSE_CORE}"  --env-file "${ENV_FILE}" "$@"; }
-compose_snap()  { _compose --project-name movetodata-snap  -f "${COMPOSE_SNAP}"  --env-file "${ENV_FILE}" "$@"; }
-compose_tycho() { _compose --project-name movetodata-tycho -f "${COMPOSE_TYCHO}" --env-file "${ENV_FILE}" "$@"; }
+compose_core()    { _compose --project-name movetodata         -f "${COMPOSE_CORE}"    --env-file "${ENV_FILE}" "$@"; }
+compose_snap()    { _compose --project-name movetodata-snap    -f "${COMPOSE_SNAP}"    --env-file "${ENV_FILE}" "$@"; }
+compose_tycho()   { _compose --project-name movetodata-tycho   -f "${COMPOSE_TYCHO}"   --env-file "${ENV_FILE}" "$@"; }
+compose_catalog() { _compose --project-name movetodata-catalog -f "${COMPOSE_CATALOG}" --env-file "${ENV_FILE}" "$@"; }
 
 # =============================================================================
 # Utilitaires
@@ -312,6 +314,33 @@ start_tycho() {
 }
 
 # =============================================================================
+# START CATALOG — OpenMetadata Data Catalog
+# =============================================================================
+start_catalog() {
+  section "Stack Catalog (OpenMetadata)"
+
+  ensure_network
+
+  mkdir -p \
+    "${MOVETODATA_MOUNT_PATH}/openmetadata/mysql" \
+    "${MOVETODATA_MOUNT_PATH}/openmetadata/elasticsearch" \
+    "${MOVETODATA_MOUNT_PATH}/openmetadata/data"
+
+  check_firewall_port "8585/tcp" "OpenMetadata"
+
+  # Arrêt propre de la stack catalog uniquement
+  info "Arrêt de la stack catalog existante..."
+  compose_catalog down --remove-orphans 2>/dev/null || true
+  remove_containers openmetadata-mysql openmetadata-elasticsearch openmetadata
+
+  info "Démarrage des containers Catalog..."
+  compose_catalog up -d
+
+  wait_healthy "openmetadata" 60 || true
+  success "Stack Catalog démarrée"
+}
+
+# =============================================================================
 # DISPATCH
 # =============================================================================
 echo ""
@@ -325,16 +354,18 @@ info "Base URL    : ${BASE_URL:-non définie}"
 echo ""
 
 case "${STACK}" in
-  core)  start_core  ;;
-  snap)  start_snap  ;;
-  tycho) start_tycho ;;
+  core)    start_core    ;;
+  snap)    start_snap    ;;
+  tycho)   start_tycho   ;;
+  catalog) start_catalog ;;
   all)
     start_core
     start_snap
     start_tycho
+    start_catalog
     ;;
   *)
-    error "Stack inconnue : '${STACK}'\nUsage : bash 03-start.sh [--stack core|snap|tycho|all]"
+    error "Stack inconnue : '${STACK}'\nUsage : bash 03-start.sh [--stack core|snap|tycho|catalog|all]"
     ;;
 esac
 
@@ -353,8 +384,9 @@ echo "  Frontend   : http://${SERVER_IP}:80"
 echo "  API Boson  : http://${SERVER_IP}:8080"
 echo "  Swagger    : http://${SERVER_IP}:8080/swagger-ui/index.html"
 echo "  Health     : http://${SERVER_IP}:8080/endpoints/health"
-[[ "${STACK}" == "snap"  || "${STACK}" == "all" ]] && echo "  Snap       : http://${SERVER_IP}:8082"
-[[ "${STACK}" == "tycho" || "${STACK}" == "all" ]] && echo "  Tycho      : http://${SERVER_IP}:8088"
+[[ "${STACK}" == "snap"    || "${STACK}" == "all" ]] && echo "  Snap       : http://${SERVER_IP}:8082"
+[[ "${STACK}" == "tycho"   || "${STACK}" == "all" ]] && echo "  Tycho      : http://${SERVER_IP}:8088"
+[[ "${STACK}" == "catalog" || "${STACK}" == "all" ]] && echo "  Catalog    : http://127.0.0.1:8585"
 
 echo ""
 info "État des containers :"

@@ -70,6 +70,10 @@ import CodeEditor from "../components/editor/";
 import Login from "../pages/Auth/Login";
 import Logout from "../pages/Auth/Logout";
 import Applications from "../pages/Portal/Applications";
+import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
+import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
+import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
+import CatalogCertify from "../pages/Portal/Catalog/CatalogCertify";
 
 import FileExplorer from "../Apps/explorer/";
 
@@ -212,6 +216,23 @@ const useRouter = () => {
                   <Route
                     path="/portal/connect/link/:id"
                     element={<LinkDetails />}
+                  />
+
+                  <Route
+                    path="/portal/catalog/search"
+                    element={<CatalogSearch />}
+                  />
+                  <Route
+                    path="/portal/catalog/data-product/:fqn"
+                    element={<CatalogDataProduct />}
+                  />
+                  <Route
+                    path="/portal/catalog/lineage/:id"
+                    element={<CatalogLineage />}
+                  />
+                  <Route
+                    path="/portal/catalog/certify/:fqn"
+                    element={<CatalogCertify />}
                   />
 
                   <Route

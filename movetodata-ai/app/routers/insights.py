@@ -27,6 +27,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.models.schemas import InsightsRequest, InsightsResponse
 from app.services import analytics_service
+from app.services.llm_service import CHAT_MODEL, OLLAMA_URL
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +160,7 @@ async def insights(request: InsightsRequest) -> InsightsResponse:
         return InsightsResponse(
             type="summary",
             results=[{"text": summary_text}],
-            model="qwen2.5:14b (Ollama)",
+            model=f"{CHAT_MODEL} (Ollama @ {OLLAMA_URL})",
             row_count=len(df),
             warning=warning,
         )

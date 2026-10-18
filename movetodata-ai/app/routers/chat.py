@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from typing import Any, AsyncGenerator, Dict, List, Optional
 
 import httpx
@@ -24,13 +23,11 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+from app.services.llm_service import OLLAMA_URL, CHAT_MODEL, TIMEOUT
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="", tags=["Chat"])
-
-OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
-CHAT_MODEL: str = os.getenv("CHAT_MODEL", "qwen2.5:14b")
-TIMEOUT: float = float(os.getenv("OLLAMA_TIMEOUT", "300"))
 
 # ---------------------------------------------------------------------------
 # Request / response schemas

@@ -21,7 +21,8 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import analyze_file, chat, insights, smart_connector, text_to_sql
+from app.routers import analyze_file, catalog, chat, insights, smart_connector, text_to_sql
+from app.middleware.audit_log import AuditLogMiddleware
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,6 +47,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# F13.10 — Audit log for RESTRICTED catalog asset access.
+app.add_middleware(AuditLogMiddleware)
+
 # ---------------------------------------------------------------------------
 # Routers
 # ---------------------------------------------------------------------------
@@ -55,6 +59,7 @@ app.include_router(text_to_sql.router)
 app.include_router(insights.router)
 app.include_router(chat.router)
 app.include_router(smart_connector.router)
+app.include_router(catalog.router)
 
 
 # ---------------------------------------------------------------------------

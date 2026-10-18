@@ -1,0 +1,111 @@
+# =============================================================================
+# MoveToData Platform — Stack Data Catalog (OpenMetadata)
+# Usage : docker compose -f docker-compose.openmetadata.yml --env-file .env.movetodata up -d
+# Projet : movetodata-catalog
+# =============================================================================
+
+name: movetodata-catalog
+
+services:
+
+  openmetadata-mysql:
+    image: mysql:8.0
+    container_name: openmetadata-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${OPENMETADATA_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: openmetadata_db
+      MYSQL_USER: openmetadata
+      MYSQL_PASSWORD: ${OPENMETADATA_DB_PASSWORD}
+    volumes:
+      - ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/openmetadata/mysql:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3307:3306"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${OPENMETADATA_DB_ROOT_PASSWORD} || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - movetodata-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  openmetadata-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    container_name: openmetadata-elasticsearch
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      xpack.security.enabled: "false"
+    volumes:
+      - ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/openmetadata/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - movetodata-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  openmetadata:
+    image: openmetadata/server:1.3.1
+    container_name: openmetadata
+    depends_on:
+      openmetadata-mysql:
+        condition: service_healthy
+      openmetadata-elasticsearch:
+        condition: service_healthy
+    environment:
+      DB_DRIVER_CLASS: com.mysql.cj.jdbc.Driver
+      DB_SCHEME: mysql
+      DB_HOST: openmetadata-mysql
+      DB_PORT: 3306
+      DB_USER: openmetadata
+      DB_USER_PASSWORD: ${OPENMETADATA_DB_PASSWORD}
+      OM_DATABASE: openmetadata_db
+      ELASTICSEARCH_HOST: openmetadata-elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      ELASTICSEARCH_SCHEME: http
+      SERVER_HOST_API_URL: http://openmetadata:8585/api
+      AUTHORIZER_ADMIN_PRINCIPALS: "[admin]"
+      AUTHORIZER_PRINCIPAL_DOMAIN: movetodata.io
+      JWT_ISSUER: open-metadata.org
+      JWT_KEY_ID: Gb389a-9f76-gdjs-a92j-0242bk94356
+      RSA_PUBLIC_KEY_FILE_PATH: ""
+      RSA_PRIVATE_KEY_FILE_PATH: ""
+    volumes:
+      - ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/openmetadata/data:/opt/openmetadata
+    ports:
+      - "127.0.0.1:8585:8585"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8585/api/v1/system/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    networks:
+      - movetodata-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+networks:
+  movetodata-network:
+    external: true

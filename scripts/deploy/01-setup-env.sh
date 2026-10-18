@@ -57,6 +57,12 @@ ask "Mot de passe admin Superset (TYCHO_ADMIN_PASSWORD) [défaut: généré alé
 read -r -s TYCHO_ADMIN_PASSWORD
 [[ -z "${TYCHO_ADMIN_PASSWORD}" ]] && TYCHO_ADMIN_PASSWORD=$(openssl rand -base64 24)
 
+ask "Mot de passe MySQL pour OpenMetadata [défaut: généré aléatoirement] :"
+read -r -s OPENMETADATA_DB_PASSWORD
+[[ -z "${OPENMETADATA_DB_PASSWORD}" ]] && OPENMETADATA_DB_PASSWORD=$(openssl rand -base64 24)
+
+OPENMETADATA_DB_ROOT_PASSWORD=$(openssl rand -base64 24)
+
 ask "GitHub Personal Access Token (PAT) pour Snap [optionnel, appuyer Entrée pour ignorer] :"
 read -r -s GITHUB_PAT
 [[ -z "${GITHUB_PAT}" ]] && GITHUB_PAT="CHANGEME_github_pat"
@@ -140,6 +146,14 @@ GITHUB_OAUTH_CLIENT_ID=CHANGEME_github_oauth_client_id
 GITHUB_OAUTH_CLIENT_SECRET=CHANGEME_github_oauth_client_secret
 GOOGLE_OAUTH_CLIENT_ID=CHANGEME_google_oauth_client_id
 GOOGLE_OAUTH_CLIENT_SECRET=CHANGEME_google_oauth_client_secret
+
+# --- Data Catalog (OpenMetadata) ---
+OPENMETADATA_DB_PASSWORD=${OPENMETADATA_DB_PASSWORD}
+OPENMETADATA_DB_ROOT_PASSWORD=${OPENMETADATA_DB_ROOT_PASSWORD}
+# URL interne Docker (movetodata-ai → openmetadata via le réseau Docker)
+OPENMETADATA_URL=http://openmetadata:8585
+# Token JWT OpenMetadata — à remplacer après la première connexion à l'UI (Settings > Bots > ingestion-bot)
+OPENMETADATA_AUTH_TOKEN=CHANGEME_openmetadata_jwt_token
 EOF
 
 chmod 600 "${ENV_FILE}"
@@ -162,5 +176,6 @@ echo "  - GITHUB_OAUTH_CLIENT_ID / GITHUB_OAUTH_CLIENT_SECRET"
 echo "  - GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET"
 echo "  - GITHUB_PAT (si Snap utilisé)"
 echo "  - /etc/movetodata/saml.yml (si SAML SSO activé)"
+echo "  - OPENMETADATA_AUTH_TOKEN (token JWT — récupérer dans l'UI OpenMetadata après démarrage)"
 echo ""
 info "Prochaine étape : bash 02-build.sh"
