@@ -171,9 +171,10 @@ const AiAssistantSidebar: React.FC = () => {
 
           for (const line of lines) {
             const trimmed = line.trim();
-            if (!trimmed.startsWith("data: ")) continue;
+            if (!trimmed.startsWith("data:")) continue;
 
-            const data = trimmed.slice(6);
+            // Spring SSE omits the space after "data:" — handle both "data:" and "data: "
+            const data = trimmed.startsWith("data: ") ? trimmed.slice(6) : trimmed.slice(5);
             if (!data) continue;
 
             try {
