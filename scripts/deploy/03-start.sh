@@ -141,7 +141,11 @@ start_core() {
   mkdir -p \
     "${MOVETODATA_MOUNT_PATH}/postgres/boson" \
     "${MOVETODATA_MOUNT_PATH}/redis" \
-    "${MOVETODATA_MOUNT_PATH}/frontend/build"
+    "${MOVETODATA_MOUNT_PATH}/frontend/build" \
+    "${MOVETODATA_MOUNT_PATH}/rag/catalog"
+
+  # movetodata-ai tourne en tant qu'appuser (UID 1001) — ChromaDB doit pouvoir écrire dans ce répertoire
+  chown -R 1001:1001 "${MOVETODATA_MOUNT_PATH}/rag"
 
   # --- Vérification SAML ---
   if [[ ! -f /etc/movetodata/saml.yml ]] || ! grep -q "relyingparty" /etc/movetodata/saml.yml 2>/dev/null; then
