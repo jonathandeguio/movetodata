@@ -74,6 +74,7 @@ import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
 import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
 import CatalogCertify from "../pages/Portal/Catalog/CatalogCertify";
+import CatalogRagSearch from "../pages/Portal/Catalog/CatalogRagSearch";
 
 import FileExplorer from "../Apps/explorer/";
 
@@ -233,6 +234,10 @@ const useRouter = () => {
                   <Route
                     path="/portal/catalog/certify/:fqn"
                     element={<CatalogCertify />}
+                  />
+                  <Route
+                    path="/portal/catalog/rag"
+                    element={<CatalogRagSearch />}
                   />
 
                   <Route

@@ -10,6 +10,7 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { RobotOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
   searchDataProducts,
@@ -83,6 +84,21 @@ const CatalogSearch: React.FC = () => {
       <Title level={3} style={{ marginBottom: 16 }}>
         Catalogue de Data Products
       </Title>
+
+      <Alert
+        type="info"
+        showIcon
+        icon={<RobotOutlined />}
+        message={
+          <span>
+            Essayez la{" "}
+            <a onClick={() => navigate("/portal/catalog/rag")}>recherche sémantique IA</a>
+            {" "}pour des résultats plus pertinents
+          </span>
+        }
+        style={{ marginBottom: 16 }}
+        closable
+      />
 
       <Input.Search
         placeholder="Rechercher des Data Products..."

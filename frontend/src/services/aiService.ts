@@ -329,3 +329,47 @@ export const insightsAPI = (
 ): Promise<AxiosResponse<InsightsResponse>> => {
   return axios.post("/api/ai/insights", request);
 };
+
+// ---------------------------------------------------------------------------
+// RAG Catalog (F14)
+// ---------------------------------------------------------------------------
+
+export interface RagSearchResult {
+  fqn: string;
+  name: string;
+  description: string;
+  domain: string;
+  qualityLevel: "BRONZE" | "SILVER" | "GOLD" | string;
+  accessPolicy: "PUBLIC" | "INTERNAL" | "RESTRICTED" | string;
+  score: number;
+}
+
+export interface RagSearchResponse {
+  results: RagSearchResult[];
+  count: number;
+}
+
+export interface RagStatusResponse {
+  collection: string;
+  document_count: number;
+  embedding_model: string;
+}
+
+export interface RagIndexResponse {
+  status: string;
+  indexed: number;
+  errors: number;
+  collection_count: number;
+}
+
+export const ragSearchAPI = (
+  q: string,
+  topK = 5
+): Promise<AxiosResponse<RagSearchResponse>> =>
+  axios.get("/api/ai/catalog/rag/search", { params: { q, top_k: topK } });
+
+export const ragIndexAPI = (): Promise<AxiosResponse<RagIndexResponse>> =>
+  axios.post("/api/ai/catalog/rag/index");
+
+export const ragStatusAPI = (): Promise<AxiosResponse<RagStatusResponse>> =>
+  axios.get("/api/ai/catalog/rag/status");
