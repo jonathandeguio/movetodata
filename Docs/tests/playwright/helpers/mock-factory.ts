@@ -178,40 +178,65 @@ function buildSeriesForType(chartType: string): SeriesShape {
 
 function buildChartState(chart: DashboardChart, chartId: string): object {
   const { series, xaxis, chartData } = buildSeriesForType(chart.type);
+  const customize = {
+    titleToggle: true,
+    title: chart.title,
+    subTitleToggle: false,
+    subTitle: '',
+    chartTitleFontColor: '#000000',
+    chartTitleFontSize: 14,
+    chartTitleFontWeight: 400,
+    titleAlign: 'left',
+    bigNumberFontPrefix: '',
+    bigNumberFontSuffix: '',
+    bigNumberPrecision: 0,
+    bigNumberMode: 'VALUE',
+    bigNumberScale: 1,
+    bigNumberFontSize: 32,
+    bigNumberFontWeight: 700,
+    bigNumberTop: 30,
+    horizontalAlignment: 'center',
+    verticalAlignment: 'middle',
+    subHeader: '',
+    subheaderTop: 65,
+    subHeaderHorizontalAlignment: 'center',
+    subHeaderFontSize: 14,
+    subHeaderFontWeight: 400,
+    seriesCustomize: [],
+  };
+  const queryConfig = {
+    chartType: chart.type,
+    chartUUID: chartId,
+    datasetId: '',
+    branch: '',
+    transactionId: '',
+    xAxisTimeGrain: '',
+    longitude: '',
+    latitude: '',
+    mapZoom: '',
+    mapCenter: '',
+    series: [],
+    filter: [],
+    fetchCachedData: false,
+    saveInCache: false,
+  };
   return {
     chartState: {
       id: chartId,
       chartType: chart.type,
-      chartCustomize: JSON.stringify({
-        titleToggle: true,
-        title: chart.title,
-        subTitleToggle: false,
-        subTitle: '',
-        chartTitleFontColor: '#000000',
-        chartTitleFontSize: 14,
-        chartTitleFontWeight: 400,
-        titleAlign: 'left',
-        bigNumberFontPrefix: '',
-        bigNumberFontSuffix: '',
-        bigNumberPrecision: 0,
-        bigNumberMode: 'VALUE',
-        bigNumberScale: 1,
-        bigNumberFontSize: 32,
-        bigNumberFontWeight: 700,
-        bigNumberTop: 30,
-        horizontalAlignment: 'center',
-        verticalAlignment: 'middle',
-        subHeader: '',
-        subheaderTop: 65,
-        subHeaderHorizontalAlignment: 'center',
-        subHeaderFontSize: 14,
-        subHeaderFontWeight: 400,
-        seriesCustomize: [],
-      }),
+      chartConfig: queryConfig,   // query prop in ParentChartComponent — needs chartType
+      chartCustomize: customize,  // plain object (NOT JSON.stringify'd) so spread works
       series,
       xaxis,
     },
-    chartData,
+    chartData: {
+      rows: chartData.data.length || 1,  // non-zero so isEmpty(rows) is false
+      trimmedData: false,
+      cachedData: false,
+      data: chartData.data,
+      stats: {},
+      request: { ...queryConfig, id: chartId },  // chartData.request.chartType + .id
+    },
     error: null,
   };
 }
