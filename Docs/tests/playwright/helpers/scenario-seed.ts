@@ -77,6 +77,7 @@ async function analyzeFile(
   const res = await request.post('/api/ai/analyze-file', {
     data:    { fileId },
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    timeout: 120_000, // LLM inference can take up to 2 minutes on first run
   });
   // Une erreur d'analyse ne bloque pas la suite — l'IA peut être indisponible
   if (!res.ok()) {
