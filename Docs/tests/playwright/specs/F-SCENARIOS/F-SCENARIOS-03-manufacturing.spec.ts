@@ -33,8 +33,9 @@ async function authenticate(page: import('@playwright/test').Page): Promise<void
 
 test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
-  test.beforeAll(async ({ request }) => {
-    seed = await seedScenario(request, INDUSTRY, CSV_PATH);
+  test.beforeAll(async () => {
+    const baseURL = process.env.BASE_URL ?? 'http://localhost:8081';
+    seed = await seedScenario(baseURL, INDUSTRY, CSV_PATH);
   });
 
   // ---------------------------------------------------------------------------

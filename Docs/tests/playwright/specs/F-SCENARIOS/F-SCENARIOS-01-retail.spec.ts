@@ -7,8 +7,7 @@
  * Tests              : vérifient source et dashboard créés en base
  */
 
-import { test, expect, request as playwrightRequest } from '@playwright/test';
-import type { APIRequestContext } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { loginViaUI } from '../../helpers/auth';
 import { seedScenario, type SeedResult } from '../../helpers/scenario-seed';
 import { setupFallbackRoutes } from '../../helpers/mock-factory';
@@ -23,7 +22,6 @@ const CSV_PATH = path.join(__dirname, '../../helpers/fixtures/retail.csv');
 
 // Résultats du seed — renseignés dans beforeAll
 let seed: SeedResult;
-let apiContext: APIRequestContext;
 
 async function authenticate(page: import('@playwright/test').Page): Promise<void> {
   await setupFallbackRoutes(page, seed, INDUSTRY);
@@ -38,14 +36,8 @@ test.describe(`Scénario ${INDUSTRY.label} [${INDUSTRY.user.role}]`, () => {
 
   // Seed permanent — une seule fois par spec (données conservées en base)
   test.beforeAll(async () => {
-    apiContext = await playwrightRequest.newContext({
-      baseURL: process.env.BASE_URL ?? 'http://localhost:8081',
-    });
-    seed = await seedScenario(apiContext, INDUSTRY, CSV_PATH);
-  });
-
-  test.afterAll(async () => {
-    await apiContext?.dispose();
+    const baseURL = process.env.BASE_URL ?? 'http://localhost:8081';
+    seed = await seedScenario(baseURL, INDUSTRY, CSV_PATH);
   });
 
   // ---------------------------------------------------------------------------
