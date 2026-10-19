@@ -87,7 +87,10 @@ async function analyzeFile(
 
 // Mirrors Utils.normalizeName from the Java backend (strips same special chars).
 function normalizeName(name: string): string {
-  return name.replace(/[/\\:;%$&^#£@?~,*+"<>|'`]/g, '').replace(/^_+|_+$/, '');
+  return name
+    .replace(/[/\\:;%$&^#£@?~,*+"<>|'`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /**
@@ -112,22 +115,32 @@ async function getOrCreateProject(
   }
 
   if (createRes.status() === 406) {
-    // Déjà existant — on le retrouve par nom.
-    // Le backend a normalisé le nom (strip &, #, etc.) donc on compare
-    // aussi les versions normalisées.
+    // Try to extract the existing resource ID from the 406 body first.
+    try {
+      const body = await createRes.json();
+      const id = body?.id ?? body?.resourceId ?? body?.existingId;
+      if (id) return id as string;
+    } catch { /* response may not be JSON */ }
+
+    // Fall back to listing all projects and matching by name.
+    // The backend normalizes names (strip &/#/etc. + collapse spaces),
+    // so we compare both the raw and normalized forms.
     const normalized = normalizeName(name);
     const listRes = await request.get('/api/kitab/project/all', {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!listRes.ok()) throw new Error(`getProjects failed: ${listRes.status()}`);
     const projects: Array<{ id: string; name: string }> = await listRes.json();
-    const found = projects.find(
-      (p) =>
+    const found = projects.find((p) => {
+      if (!p.name) return false;
+      const pNorm = normalizeName(p.name);
+      return (
         p.name === name ||
         p.name === normalized ||
-        p.name?.toLowerCase() === name.toLowerCase() ||
-        p.name?.toLowerCase() === normalized.toLowerCase(),
-    );
+        p.name.toLowerCase() === name.toLowerCase() ||
+        pNorm.toLowerCase() === normalized.toLowerCase()
+      );
+    });
     if (!found) throw new Error(`getOrCreateProject: projet "${name}" (normalisé: "${normalized}") introuvable après 406`);
     return found.id;
   }
