@@ -117,7 +117,7 @@ fi
 COUNT=$(echo "${PROJECT_IDS}" | wc -l | tr -d ' ')
 info "${COUNT} projet(s) trouvé(s)"
 
-# ─── Suppression définitive de chaque projet ──────────────────────────────────
+# ─── Déplacement de chaque projet vers la corbeille ──────────────────────────
 DELETED=0
 FAILED=0
 
@@ -125,12 +125,12 @@ while IFS= read -r id; do
   [[ -z "${id}" ]] && continue
 
   HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-    "${BASE_URL}/api/kitab/${id}/permanentDelete" \
+    "${BASE_URL}/api/kitab/${id}/moveToTrash" \
     -H "Authorization: Bearer ${TOKEN}" \
     2>/dev/null) || HTTP_STATUS="000"
 
   if [[ "${HTTP_STATUS}" =~ ^2 ]]; then
-    success "Supprimé : ${id}"
+    success "Supprimé (corbeille) : ${id}"
     DELETED=$(( DELETED + 1 ))
   else
     warn "Échec (HTTP ${HTTP_STATUS}) : ${id}"
