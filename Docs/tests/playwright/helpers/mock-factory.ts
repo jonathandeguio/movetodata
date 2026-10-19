@@ -433,7 +433,8 @@ export async function setupFallbackRoutes(
     let chartIds: string[] | undefined;
 
     // Cas 1 : POST avec body JSON  { chartIds: ['chart-1-xxx', ...] }
-    const postBody = await route.request().postDataJSON().catch(() => null) as { chartIds?: string[] } | null;
+    let postBody: { chartIds?: string[] } | null = null;
+    try { postBody = route.request().postDataJSON() as { chartIds?: string[] } | null; } catch { /* not JSON */ }
     if (postBody?.chartIds?.length) {
       chartIds = postBody.chartIds;
     } else {
