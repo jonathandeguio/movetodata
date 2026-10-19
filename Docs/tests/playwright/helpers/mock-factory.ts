@@ -30,7 +30,7 @@ export interface IndustryConfig {
 
 function buildPosition(x: number, y: number, w = 6, h = 4): string {
   return JSON.stringify(
-    JSON.stringify({ x, y, w, h, minH: 2, minW: 2, maxH: 20, maxW: 12, type: 'CHART' })
+    JSON.stringify({ x, y, w, h, minH: 2, minW: 2, maxH: 20, maxW: 12, type: 'chart' })
   );
 }
 
@@ -407,10 +407,10 @@ export async function setupFallbackRoutes(
   const prefix = s.dashboardId.slice(0, 8);
   const tabElements = industry.mockDashboardCharts.map((chart, i) => ({
     id:        `elem-${i + 1}-${prefix}`,
-    type:      'CHART',
+    type:      'chart',
     chartId:   `chart-${i + 1}-${prefix}`,
     position:  buildPosition((i % 2) * 6, Math.floor(i / 2) * 4),
-    data:      null,
+    data:      `chart-${i + 1}-${prefix}`,
     createElement: false,
   }));
 
