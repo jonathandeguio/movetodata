@@ -177,7 +177,12 @@ async function getOrCreateProject(
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!restoreRes.ok) {
-            console.warn(`[seed] restoreFromTrash ${project.id}: ${restoreRes.status} — ${await restoreRes.text()}`);
+            const restoreBody = await restoreRes.text();
+            throw new Error(
+              `[seed] Impossible de restaurer le projet en corbeille ${project.id} ` +
+              `(HTTP ${restoreRes.status}: ${restoreBody}). ` +
+              `Redéployez le backend (fix kitabController restoreFromTrash) et relancez les tests.`,
+            );
           }
         }
         return project.id;
