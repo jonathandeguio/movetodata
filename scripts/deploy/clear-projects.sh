@@ -100,7 +100,7 @@ success "Connecté en tant que ${ADMIN_USER}"
 info "Récupération des projets..."
 PROJECTS_HTTP_STATUS=""
 PROJECTS_RESP=$(curl -s -o /tmp/_mtd_projects_resp.json -w "%{http_code}" \
-  "${BASE_URL}/kitab/project/all" \
+  "${BASE_URL}/api/kitab/project/all" \
   -H "Authorization: Bearer ${TOKEN}" 2>/dev/null) || true
 PROJECTS_HTTP_STATUS="${PROJECTS_RESP}"
 PROJECTS_RESP=$(cat /tmp/_mtd_projects_resp.json 2>/dev/null || echo "")
@@ -124,8 +124,8 @@ FAILED=0
 while IFS= read -r id; do
   [[ -z "${id}" ]] && continue
 
-  HTTP_STATUS=$(curl -sf -o /dev/null -w "%{http_code}" -X DELETE \
-    "${BASE_URL}/kitab/${id}/permanentDelete" \
+  HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+    "${BASE_URL}/api/kitab/${id}/permanentDelete" \
     -H "Authorization: Bearer ${TOKEN}" \
     2>/dev/null) || HTTP_STATUS="000"
 
