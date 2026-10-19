@@ -6,15 +6,13 @@
 # Utile avant un re-seed complet pour repartir d'une base propre sans
 # avoir à recréer les volumes Docker.
 #
-# Usage :
-#   bash clear-projects.sh --url https://movetodata.io --password <pwd>
-#   bash clear-projects.sh --yes   # passe la confirmation (CI / non-interactif)
-#
-# Options :
-#   --url       URL de la plateforme  (défaut : http://localhost:8081)
-#   --admin     Username admin        (défaut : platform-administrator)
-#   --password  Mot de passe admin    (ou variable MTD_ADMIN_PASSWORD)
-#   --yes       Passer la confirmation de sécurité
+# ── Configuration rapide ──────────────────────────────────────────────────────
+# Modifiez ces trois lignes pour ne plus avoir à passer d'options en ligne
+# de commande. Laissez vide ("") pour forcer la saisie interactive.
+# -----------------------------------------------------------------------------
+DEFAULT_URL="http://localhost:8080"
+DEFAULT_ADMIN="platform-administrator"
+DEFAULT_PASSWORD=""          # ex: "MonMotDePasse" — laisser vide = saisie interactive
 # =============================================================================
 set -euo pipefail
 
@@ -26,10 +24,10 @@ success() { echo -e "${GREEN}[OK]${NC}     $*"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC}   $*"; }
 error()   { echo -e "${RED}[ERROR]${NC}  $*"; exit 1; }
 
-# ─── Valeurs par défaut ───────────────────────────────────────────────────────
-BASE_URL="${MTD_URL:-http://localhost:8081}"
-ADMIN_USER="${MTD_ADMIN:-platform-administrator}"
-ADMIN_PASSWORD="${MTD_ADMIN_PASSWORD:-}"
+# ─── Valeurs initiales (config > variable d'env > défaut) ─────────────────────
+BASE_URL="${MTD_URL:-${DEFAULT_URL}}"
+ADMIN_USER="${MTD_ADMIN:-${DEFAULT_ADMIN}}"
+ADMIN_PASSWORD="${MTD_ADMIN_PASSWORD:-${DEFAULT_PASSWORD}}"
 YES=false
 
 while [[ $# -gt 0 ]]; do
