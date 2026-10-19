@@ -645,9 +645,9 @@ public class kitabController {
         // physical stuff also.
         // may be initially, just mark inTrash, then cleaning service deletes it.
 
-        ResourceModel resourceModel = resourceService.getResourceModel(Id);
+        ResourceModel resourceModel = resourceService.findById(Id).orElseThrow();
         List<ResourceModel> children = resourceService.getByParent(resourceModel.getParent());
-        children.removeIf(child -> child.getStatus().equals("inTrash"));
+        children.removeIf(child -> child.getStatus() == ResourceStatus.IN_TRASH);
 
         if (children.stream().anyMatch(folder -> resourceModel.getName().equals(folder.getName()))) {
             resourceModel.setName(resourceModel.getName() + " - Recovered");
@@ -693,7 +693,7 @@ public class kitabController {
         // physical stuff also.
         // may be initially, just mark inTrash, then cleaning service deletes it.
 
-        ResourceModel resourceModel = resourceService.getResourceModel(Id);
+        ResourceModel resourceModel = resourceService.findById(Id).orElseThrow();
 
         permanentDeleteRecursive(resourceModel);
 
