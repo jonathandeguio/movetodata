@@ -72,20 +72,42 @@ fi
 
 # ─── Authentification ─────────────────────────────────────────────────────────
 info "Authentification..."
-LOGIN_RESP=$(curl -sf -X POST "${BASE_URL}/api/passport/login" \
+# Build JSON payload via jq to handle special characters in password safely.
+LOGIN_PAYLOAD=$(jq -n \
+  --arg u "${ADMIN_USER}" \
+  --arg p "${ADMIN_PASSWORD}" \
+  '{"username":$u,"password":$p,"loginType":"plain"}')
+
+LOGIN_HTTP_STATUS=""
+LOGIN_RESP=$(curl -s -o /tmp/_mtd_login_resp.json -w "%{http_code}" \
+  -X POST "${BASE_URL}/api/passport/login" \
   -H "Content-Type: application/json" \
-  -d "{\"username\":\"${ADMIN_USER}\",\"password\":\"${ADMIN_PASSWORD}\",\"loginType\":\"plain\"}" \
-  2>&1) || error "Impossible de joindre ${BASE_URL}/api/passport/login"
+  -d "${LOGIN_PAYLOAD}" 2>/dev/null) || true
+LOGIN_HTTP_STATUS="${LOGIN_RESP}"
+LOGIN_RESP=$(cat /tmp/_mtd_login_resp.json 2>/dev/null || echo "")
+rm -f /tmp/_mtd_login_resp.json
+
+if [[ "${LOGIN_HTTP_STATUS}" == "000" ]] || [[ -z "${LOGIN_HTTP_STATUS}" ]]; then
+  error "Connexion refusée — ${BASE_URL} est inaccessible (vérifiez que les conteneurs tournent ou utilisez --url)"
+fi
+if [[ "${LOGIN_HTTP_STATUS}" != 2* ]]; then
+  error "Authentification échouée (HTTP ${LOGIN_HTTP_STATUS}) — réponse : ${LOGIN_RESP}"
+fi
 
 TOKEN=$(echo "${LOGIN_RESP}" | jq -r '.accessToken // .token // empty' 2>/dev/null)
-[[ -z "${TOKEN}" ]] && error "Authentification échouée — réponse : ${LOGIN_RESP}"
+[[ -z "${TOKEN}" ]] && error "Authentification échouée — pas de token dans la réponse : ${LOGIN_RESP}"
 success "Connecté en tant que ${ADMIN_USER}"
 
 # ─── Récupération de la liste des projets ─────────────────────────────────────
 info "Récupération des projets..."
-PROJECTS_RESP=$(curl -sf "${BASE_URL}/kitab/project/all" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  2>&1) || error "Impossible de lister les projets"
+PROJECTS_HTTP_STATUS=""
+PROJECTS_RESP=$(curl -s -o /tmp/_mtd_projects_resp.json -w "%{http_code}" \
+  "${BASE_URL}/kitab/project/all" \
+  -H "Authorization: Bearer ${TOKEN}" 2>/dev/null) || true
+PROJECTS_HTTP_STATUS="${PROJECTS_RESP}"
+PROJECTS_RESP=$(cat /tmp/_mtd_projects_resp.json 2>/dev/null || echo "")
+rm -f /tmp/_mtd_projects_resp.json
+[[ "${PROJECTS_HTTP_STATUS}" != 2* ]] && error "Impossible de lister les projets (HTTP ${PROJECTS_HTTP_STATUS}) — ${PROJECTS_RESP}"
 
 PROJECT_IDS=$(echo "${PROJECTS_RESP}" | jq -r '.[].id // .[].uuid // .[].resourceId // empty' 2>/dev/null)
 
