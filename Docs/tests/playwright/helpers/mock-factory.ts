@@ -205,6 +205,18 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
     subHeaderFontWeight: 400,
     seriesCustomize: [],
   });
+  // getLegendData (getLegendData.ts:55) accède à series[0].groupBy + series[0].seriesName
+  // pour pieChart et gaugeChart (legend: true, branche spécifique). série vide → crash.
+  const dummySeries = [{
+    id: `${chartId}-s0`,
+    seriesName: chart.title,
+    groupBy: [] as string[],
+    sort: 'ASC',
+    seriesType: chart.type,
+    seriesIndex: 'left',
+    reversed: false,
+    seriesCustomize: '',
+  }];
   const queryConfig = {
     chartType: chart.type,
     chartUUID: chartId,
@@ -216,7 +228,7 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
     latitude: '',
     mapZoom: '',
     mapCenter: '',
-    series: [],
+    series: dummySeries,
     filter: [],
     fetchCachedData: false,
     saveInCache: false,
