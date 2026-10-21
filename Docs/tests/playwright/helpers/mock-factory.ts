@@ -178,7 +178,8 @@ function buildSeriesForType(chartType: string): SeriesShape {
 
 function buildChartState(chart: DashboardChart, chartId: string): object {
   const { series, xaxis, chartData } = buildSeriesForType(chart.type);
-  const customize = {
+  // chartCustomize MUST be a JSON string — getChartDataAPI calls JSON.parse() on it.
+  const chartCustomize = JSON.stringify({
     titleToggle: true,
     title: chart.title,
     subTitleToggle: false,
@@ -203,7 +204,7 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
     subHeaderFontSize: 14,
     subHeaderFontWeight: 400,
     seriesCustomize: [],
-  };
+  });
   const queryConfig = {
     chartType: chart.type,
     chartUUID: chartId,
@@ -224,8 +225,8 @@ function buildChartState(chart: DashboardChart, chartId: string): object {
     chartState: {
       id: chartId,
       chartType: chart.type,
-      chartConfig: queryConfig,   // query prop in ParentChartComponent — needs chartType
-      chartCustomize: customize,  // plain object (NOT JSON.stringify'd) so spread works
+      chartConfig: queryConfig,  // query prop in ParentChartComponent — needs chartType
+      chartCustomize,            // JSON string — getChartDataAPI parses it to plain object
       series,
       xaxis,
     },
