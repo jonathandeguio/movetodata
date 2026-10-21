@@ -242,8 +242,27 @@ async function createSource(
 }
 
 /**
+ * Cherche un enfant direct du projet par nom et type.
+ * Retourne l'ID s'il existe, undefined sinon.
+ */
+async function findProjectChild(
+  baseURL:   string,
+  projectId: string,
+  name:      string,
+  type:      string,
+  token:     string,
+): Promise<string | undefined> {
+  const res = await fetch(`${baseURL}/api/kitab/${projectId}/children`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return undefined;
+  const children = await res.json() as Array<{ id: string; name: string; type: string }>;
+  return children.find((c) => c.type === type && c.name === name)?.id;
+}
+
+/**
  * Crée un dataset kitab (resource de type DATASET) sous le projet.
- * Idempotent : gère le 406 "same name already exists".
+ * Idempotent : cherche dans les enfants du projet avant de créer.
  */
 async function createDataset(
   baseURL:   string,
@@ -251,6 +270,12 @@ async function createDataset(
   projectId: string,
   token:     string,
 ): Promise<string> {
+  const existing = await findProjectChild(baseURL, projectId, name, 'DATASET', token);
+  if (existing) {
+    console.log(`[seed] Dataset existant : ${existing}`);
+    return existing;
+  }
+
   const res = await fetch(`${baseURL}/api/kitab/dataset/create`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -263,20 +288,12 @@ async function createDataset(
   }
 
   if (res.status === 406) {
-    let body406: Record<string, unknown> = {};
-    try { body406 = await res.json() as Record<string, unknown>; } catch { /* not JSON */ }
+    // Le backend refuse le doublon mais les children n'ont pas retourné le résultat — retry
+    const retry = await findProjectChild(baseURL, projectId, name, 'DATASET', token);
+    if (retry) return retry;
+    const body406: Record<string, unknown> = await res.json().catch(() => ({}));
     const directId = body406?.id ?? body406?.resourceId ?? body406?.existingId;
     if (directId) return directId as string;
-
-    // Chercher dans les ressources enfants du projet
-    const childrenRes = await fetch(`${baseURL}/api/kitab/${projectId}/children`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (childrenRes.ok) {
-      const children = await childrenRes.json() as Array<{ id: string; name: string; type: string }>;
-      const found = children.find((c) => c.type === 'DATASET' && c.name === name);
-      if (found) return found.id;
-    }
     throw new Error(`createDataset: dataset "${name}" introuvable après 406`);
   }
 
@@ -359,6 +376,10 @@ async function buildLink(
   }
 }
 
+/**
+ * Crée un dashboard KPI sous le projet.
+ * Idempotent : cherche dans les enfants du projet avant de créer.
+ */
 async function createDashboard(
   baseURL:     string,
   name:        string,
@@ -366,6 +387,12 @@ async function createDashboard(
   projectId:   string,
   token:       string,
 ): Promise<string> {
+  const existing = await findProjectChild(baseURL, projectId, name, 'DASHBOARD', token);
+  if (existing) {
+    console.log(`[seed] Dashboard existant : ${existing}`);
+    return existing;
+  }
+
   const res = await fetch(`${baseURL}/api/kepler/dashboards/new`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
