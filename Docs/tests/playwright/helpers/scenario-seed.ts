@@ -6,7 +6,10 @@
  *   2. Analyse IA             → stats + suggestions (best effort)
  *   3. Projet kitab           → projectId  (POST /api/kitab/project/create)
  *   4. Source Connect         → sourceId   (POST /api/connect/source/create)
- *   5. Dashboard KPI          → dashboardId (POST /api/kepler/dashboards/new)
+ *   5. Dataset kitab          → datasetId  (POST /api/kitab/dataset/create)
+ *   6. Link Connect           → linkId     (POST /api/connect/link/create)
+ *   7. Build du link          → data load  (GET  /api/connect/link/Build/{linkId})
+ *   8. Dashboard KPI          → dashboardId (POST /api/kepler/dashboards/new)
  *
  * Utilise les credentials admin (TEST_USER / TEST_PASSWORD) pour la création.
  * Idempotent : les erreurs 406/409 sont gérées silencieusement.
@@ -26,9 +29,13 @@ import type { ScenarioIndustry } from './scenario-factory';
 export interface SeedResult {
   fileId:      string;
   sourceId:    string;
+  datasetId:   string;
+  linkId:      string;
   dashboardId: string;
   /** URL relative vers la page source dans le portail */
   sourceUrl:   string;
+  /** URL relative vers le dataset dans le portail */
+  datasetUrl:  string;
   /** URL relative vers le dashboard KPI */
   dashboardUrl: string;
 }
@@ -234,6 +241,124 @@ async function createSource(
   return (body.id ?? body.sourceId) as string;
 }
 
+/**
+ * Crée un dataset kitab (resource de type DATASET) sous le projet.
+ * Idempotent : gère le 406 "same name already exists".
+ */
+async function createDataset(
+  baseURL:   string,
+  name:      string,
+  projectId: string,
+  token:     string,
+): Promise<string> {
+  const res = await fetch(`${baseURL}/api/kitab/dataset/create`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body:    JSON.stringify({ name, description: name, parent: projectId, subType: 'NONE' }),
+  });
+
+  if (res.ok) {
+    const body = await res.json() as Record<string, unknown>;
+    return (body.id ?? body.resourceId) as string;
+  }
+
+  if (res.status === 406) {
+    let body406: Record<string, unknown> = {};
+    try { body406 = await res.json() as Record<string, unknown>; } catch { /* not JSON */ }
+    const directId = body406?.id ?? body406?.resourceId ?? body406?.existingId;
+    if (directId) return directId as string;
+
+    // Chercher dans les ressources enfants du projet
+    const childrenRes = await fetch(`${baseURL}/api/kitab/${projectId}/children`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (childrenRes.ok) {
+      const children = await childrenRes.json() as Array<{ id: string; name: string; type: string }>;
+      const found = children.find((c) => c.type === 'DATASET' && c.name === name);
+      if (found) return found.id;
+    }
+    throw new Error(`createDataset: dataset "${name}" introuvable après 406`);
+  }
+
+  throw new Error(`createDataset "${name}": ${res.status} — ${await res.text()}`);
+}
+
+/**
+ * Crée un Connect Link entre la source et le dataset.
+ * Idempotent : vérifie si un link existe déjà avant de créer.
+ */
+async function createLink(
+  baseURL:   string,
+  name:      string,
+  sourceId:  string,
+  datasetId: string,
+  projectId: string,
+  token:     string,
+): Promise<string> {
+  // Vérifier si un link existe déjà pour ce dataset/branch
+  const existsRes = await fetch(
+    `${baseURL}/api/connect/link/${datasetId}/master/existsDatasetLink`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (existsRes.ok) {
+    const existsBody = await existsRes.json() as Record<string, unknown>;
+    const existingId = existsBody?.id ?? existsBody?.linkId;
+    if (existingId) {
+      console.log(`[seed] Link existant trouvé pour le dataset ${datasetId}: ${existingId}`);
+      return existingId as string;
+    }
+  }
+
+  const res = await fetch(`${baseURL}/api/connect/link/create`, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body:    JSON.stringify({
+      name,
+      description:   name,
+      type:          'FOLDER',
+      sourceId,
+      datasetId,
+      branch:        'master',
+      parent:        projectId,
+      dataLiveLoad:  false,
+      saveMode:      'overwrite',
+      trigger:       'NONE',
+      cronExpression: '',
+    }),
+  });
+
+  if (res.status === 409) {
+    try {
+      const body = await res.json() as Record<string, unknown>;
+      return (body.id ?? body.linkId ?? body.existingId) as string;
+    } catch {
+      throw new Error('createLink 409 — impossible de récupérer le linkId existant');
+    }
+  }
+  if (!res.ok) throw new Error(`createLink: ${res.status} — ${await res.text()}`);
+  const body = await res.json() as Record<string, unknown>;
+  return (body.id ?? body.linkId) as string;
+}
+
+/**
+ * Déclenche le build du link (chargement des données source → dataset).
+ */
+async function buildLink(
+  baseURL: string,
+  linkId:  string,
+  token:   string,
+): Promise<void> {
+  const res = await fetch(`${baseURL}/api/connect/link/Build/${linkId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    // Un échec de build est loggué mais ne bloque pas les tests (les mocks couvrent les charts)
+    console.warn(`[seed] buildLink ${linkId}: ${res.status} — ${await res.text()}`);
+  } else {
+    console.log(`[seed] Build lancé pour le link ${linkId}`);
+  }
+}
+
 async function createDashboard(
   baseURL:     string,
   name:        string,
@@ -305,7 +430,23 @@ export async function seedScenario(
   const sourceId = await createSource(baseURL, sourceName, storagePath, projectId, token);
   console.log(`[seed] sourceId = ${sourceId}`);
 
-  // 6. Dashboard KPI
+  // 6. Dataset kitab
+  const datasetName = `Scénario ${industry.label}`;
+  console.log(`[seed] Création dataset : "${datasetName}"`);
+  const datasetId = await createDataset(baseURL, datasetName, projectId, token);
+  console.log(`[seed] datasetId = ${datasetId}`);
+
+  // 7. Connect Link source → dataset
+  const linkName = `Scénario ${industry.label}`;
+  console.log(`[seed] Création link Connect : "${linkName}"`);
+  const linkId = await createLink(baseURL, linkName, sourceId, datasetId, projectId, token);
+  console.log(`[seed] linkId = ${linkId}`);
+
+  // 8. Build du link (chargement des données)
+  console.log(`[seed] Build du link ${linkId}...`);
+  await buildLink(baseURL, linkId, token);
+
+  // 9. Dashboard KPI
   const dashName = `KPI ${industry.label}`;
   console.log(`[seed] Création dashboard : "${dashName}"`);
   const dashboardId = await createDashboard(
@@ -316,8 +457,11 @@ export async function seedScenario(
   const result: SeedResult = {
     fileId,
     sourceId,
+    datasetId,
+    linkId,
     dashboardId,
     sourceUrl:    `/portal/connect/source/${sourceId}`,
+    datasetUrl:   `/portal/dataset/${datasetId}/master`,
     dashboardUrl: `/portal/kepler/DASHBOARD/${dashboardId}`,
   };
 
