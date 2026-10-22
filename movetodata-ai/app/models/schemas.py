@@ -188,6 +188,33 @@ class InsightsRequest(BaseModel):
     )
 
 
+# ---------------------------------------------------------------------------
+# F6 — Auto-description dataset schemas
+# ---------------------------------------------------------------------------
+
+class DescribeDatasetRequest(BaseModel):
+    """
+    Payload sent by the browser (via Boson proxy) when the user uploads a file.
+    Only column names and the file name are used in the LLM prompt — sample rows
+    are received but never forwarded to the model (sovereignty contract).
+    """
+
+    file_name: str = Field(..., description="Original file name (used to suggest a dataset name).")
+    columns: List[str] = Field(..., description="Column headers extracted from the file.")
+    sample_rows: List[List[str]] = Field(
+        default_factory=list,
+        description="First rows (up to 200) as arrays of strings — used for local heuristics only.",
+    )
+
+
+class DescribeDatasetResponse(BaseModel):
+    """Response returned by the /describe-dataset endpoint."""
+
+    name: str = Field(description="Suggested human-readable dataset name.")
+    description: str = Field(description="Auto-generated French description of the dataset.")
+    tags: List[str] = Field(description='Suggested tags (e.g. "financier", "géo", "RH").')
+
+
 class InsightsResponse(BaseModel):
     """Response returned by the /insights endpoint."""
 
