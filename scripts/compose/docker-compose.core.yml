@@ -224,9 +224,14 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
       RAG_PERSIST_DIR: ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/rag/catalog
       RAG_TOP_K: ${RAG_TOP_K:-5}
+      # F15 — RAG Documentation plateforme
+      DOCS_PATH: /movetodata-docs/docs
+      DOCS_RAG_PERSIST_DIR: ${MOVETODATA_MOUNT_PATH:-/opt/movetodata/data}/rag/docs
     volumes:
-      # Shared volume — rw requis pour la persistance ChromaDB (RAG F14).
+      # Shared volume — rw requis pour la persistance ChromaDB (RAG F14 + F15).
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}:${MOVETODATA_MOUNT_PATH:-/movetodata}
+      # F15 — Documentation plateforme (lecture seule)
+      - ../../movetodata-docs/docs:/movetodata-docs/docs:ro
     ports:
       # Exposed on loopback only — Boson reaches it via the internal network.
       - "127.0.0.1:8090:8090"

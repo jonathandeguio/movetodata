@@ -21,7 +21,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import analyze_file, catalog, chat, describe_dataset, insights, rag_catalog, smart_connector, text_to_sql
+from app.routers import analyze_file, catalog, chat, describe_dataset, insights, rag_catalog, rag_docs, smart_connector, text_to_sql
 from app.middleware.audit_log import AuditLogMiddleware
 
 logging.basicConfig(
@@ -62,6 +62,7 @@ app.include_router(chat.router)
 app.include_router(smart_connector.router)
 app.include_router(catalog.router)
 app.include_router(rag_catalog.router)
+app.include_router(rag_docs.router)
 
 
 # ---------------------------------------------------------------------------

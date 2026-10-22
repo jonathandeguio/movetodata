@@ -208,14 +208,15 @@ async def chat(request: ChatRequest) -> StreamingResponse:
         request.context.source_id if request.context else None,
     )
 
-    # RAG — enrichir avec les Data Products pertinents si la question le justifie
+    message_lower = request.message.lower()
     rag_context: str = ""
+
+    # RAG Catalog — Data Products pertinents
     _CATALOG_KEYWORDS = {
         "dataset", "données", "data", "catalog", "catalogue", "product",
         "schéma", "schema", "table", "source", "bronze", "silver", "gold",
         "lignage", "lineage", "domaine", "domain",
     }
-    message_lower = request.message.lower()
     if any(kw in message_lower for kw in _CATALOG_KEYWORDS):
         try:
             from app.services import rag_service
@@ -228,12 +229,38 @@ async def chat(request: ChatRequest) -> StreamingResponse:
                         f"qualité: {r.get('qualityLevel', '?')}, accès: {r.get('accessPolicy', '?')})\n"
                         f"  {r.get('description', '')[:200]}"
                     )
-                rag_context = (
+                rag_context += (
                     "\n\nData Products pertinents dans le catalog :\n"
                     + "\n".join(lines)
                 )
         except Exception as exc:
             logger.warning("RAG catalog unavailable: %s", exc)
+
+    # RAG Docs — Documentation plateforme (questions "comment faire")
+    _DOCS_KEYWORDS = {
+        "comment", "how", "créer", "creer", "configurer", "utiliser", "ajouter",
+        "connecter", "importer", "exporter", "dashboard", "tableau de bord",
+        "graphique", "chart", "visualis", "projet", "branch", "branche",
+        "transform", "build", "pipeline", "sécurité", "securite", "rôle", "role",
+        "permiss", "utilisateur", "user", "guide", "aide", "help", "tutorial",
+        "fonctionne", "qu'est-ce", "kesako", "expliqu", "c'est quoi",
+    }
+    if any(kw in message_lower for kw in _DOCS_KEYWORDS):
+        try:
+            from app.services import rag_docs_service
+            doc_results = await rag_docs_service.search_docs(request.message, top_k=3)
+            if doc_results:
+                lines = []
+                for r in doc_results:
+                    lines.append(
+                        f"### {r['section']} ({r['file']})\n{r['text'][:400]}"
+                    )
+                rag_context += (
+                    "\n\nDocumentation plateforme pertinente :\n"
+                    + "\n\n".join(lines)
+                )
+        except Exception as exc:
+            logger.warning("RAG docs unavailable: %s", exc)
 
     system_prompt = _build_system_prompt(request.context, rag_context)
 
