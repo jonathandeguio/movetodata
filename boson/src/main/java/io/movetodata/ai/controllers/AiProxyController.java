@@ -371,7 +371,7 @@ public class AiProxyController {
      * </pre>
      */
     @Operation(summary = "Chat with the AI assistant (SSE streaming).")
-    @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/chat", produces = "text/event-stream;charset=UTF-8")
     @PreAuthorize(Auth.CONNECT_ADMIN)
     public SseEmitter chat(
             @AuthenticationPrincipal AuthUser authUser,
