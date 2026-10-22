@@ -585,9 +585,12 @@ public class AiProxyController {
     }
 
     /** Send an SSE data event, swallowing IOExceptions (client may have disconnected). */
+    private static final MediaType TEXT_PLAIN_UTF8 =
+            new MediaType("text", "plain", StandardCharsets.UTF_8);
+
     private void safeSend(SseEmitter emitter, String data) {
         try {
-            emitter.send(SseEmitter.event().data(data));
+            emitter.send(SseEmitter.event().data(data, TEXT_PLAIN_UTF8));
         } catch (IOException ignored) {
             // Client disconnected — not an error
         }
