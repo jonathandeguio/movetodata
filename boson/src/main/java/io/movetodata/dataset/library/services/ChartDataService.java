@@ -5,6 +5,7 @@ import io.movetodata.dataset.library.Keys.DatasetMappingKey;
 import io.movetodata.dataset.library.chartfactory.ChartFactory;
 import io.movetodata.dataset.library.chartfactory.IChartService;
 import io.movetodata.dataset.library.models.ChartDataByIdsRequest;
+import io.movetodata.dataset.library.models.DatasetMappingModel;
 import io.movetodata.dataset.library.repository.DatasetMappingRepository;
 import io.movetodata.dataset.requests.ChartDataRequest;
 import io.movetodata.kepler.library.models.ChartKey;
@@ -102,8 +103,12 @@ public class ChartDataService {
             ChartDataRequest chartDataRequest = null;
             if (chart.isPresent()) {
                 // Getting latest transaction id for dataset
-                UUID transactionId = datasetMappingRepository.getReferenceById(new DatasetMappingKey(chart.get().getChartConfig().getDatasetId(), chart.get().getChartConfig().getBranch())).getCurrentTransaction();
-                chartDataRequest = DatasetService.converterOne(id, chart.get().getChartConfig(), chartDataByIdsRequest.getFilters(), chartDataByIdsRequest.getSaveInCache(), transactionId);
+                Optional<DatasetMappingModel> mapping = datasetMappingRepository.findById(new DatasetMappingKey(chart.get().getChartConfig().getDatasetId(), chart.get().getChartConfig().getBranch()));
+                if (mapping.isEmpty()) {
+                    chartData.add(new JSONObject()); // dataset has no data loaded yet
+                    continue;
+                }
+                chartDataRequest = DatasetService.converterOne(id, chart.get().getChartConfig(), chartDataByIdsRequest.getFilters(), chartDataByIdsRequest.getSaveInCache(), mapping.get().getCurrentTransaction());
             }
 
             // Check if Dataset Exists
@@ -134,7 +139,11 @@ public class ChartDataService {
      */
     public Object getDataFromSparkOrCache(ChartDataRequest chartDataRequest, String locale) throws Exception {
         if (Objects.isNull(chartDataRequest.getTransactionId()) || chartDataRequest.getTransactionId().toString().compareTo("00000000-0000-0000-0000-000000000000") == 0) {
-            chartDataRequest.setTransactionId(datasetMappingRepository.getReferenceById(new DatasetMappingKey(chartDataRequest.getDatasetId(), chartDataRequest.getBranch())).getCurrentTransaction());
+            Optional<DatasetMappingModel> mapping = datasetMappingRepository.findById(new DatasetMappingKey(chartDataRequest.getDatasetId(), chartDataRequest.getBranch()));
+            if (mapping.isEmpty()) {
+                return null; // dataset has no data loaded yet — no transaction exists
+            }
+            chartDataRequest.setTransactionId(mapping.get().getCurrentTransaction());
         }
 
         // GET REDIS CACHE, if it is there ---------------------------------------------------------------------
