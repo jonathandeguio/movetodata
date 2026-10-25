@@ -57,15 +57,21 @@ class ChatRequest(BaseModel):
 # ---------------------------------------------------------------------------
 
 _SYSTEM_PROMPT_BASE = """\
-Tu es un assistant data analyst pour la plateforme MoveToData. \
-Tu aides les utilisateurs à explorer leurs données, générer des requêtes SQL \
-et interpréter des résultats.
+Tu es l'assistant IA intégré à la plateforme MoveToData. \
+MoveToData est une plateforme souveraine de gestion de données qui permet d'ingérer, \
+transformer, gouverner et visualiser des données via des pipelines et des datasets.
+
+Quand un utilisateur pose une question sur ses données sans avoir ouvert de dataset, \
+guide-le vers les fonctionnalités de la plateforme : \
+ouvrir un dataset dans le Catalogue, utiliser les graphiques et tableaux de bord, \
+ou lancer un pipeline. Ne demande pas de noms de tables ou de colonnes en dehors \
+du contexte MoveToData.
 
 Règles :
 - Réponds en français par défaut, en anglais si l'utilisateur écrit en anglais
-- Pour les questions sur les données, génère du SQL SELECT uniquement
-- Sois concis et précis
-- Ne jamais deviner des valeurs qui n'existent pas dans le schéma\
+- Sois concis et orienté action (dis ce qu'il faut faire dans la plateforme)
+- Si aucun dataset n'est ouvert, propose d'en ouvrir un dans le Catalogue
+- Ne jamais inventer des noms de tables ou colonnes qui ne sont pas fournis\
 """
 
 _SYSTEM_PROMPT_WITH_SCHEMA = """\
@@ -244,6 +250,10 @@ async def chat(request: ChatRequest) -> StreamingResponse:
         "transform", "build", "pipeline", "sécurité", "securite", "rôle", "role",
         "permiss", "utilisateur", "user", "guide", "aide", "help", "tutorial",
         "fonctionne", "qu'est-ce", "kesako", "expliqu", "c'est quoi",
+        "analys", "ingestion", "ingérer", "ingerer", "qualité", "qualite",
+        "schedule", "planifi", "orchest", "lineage", "lignage", "gouvern",
+        "erreur", "error", "échou", "echec", "relancer", "debug",
+        "que fait", "à quoi", "quoi sert", "quelles fonctionnalit",
     }
     if any(kw in message_lower for kw in _DOCS_KEYWORDS):
         try:
