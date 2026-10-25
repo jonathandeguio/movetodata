@@ -74,68 +74,111 @@ const DatasetUpload = ({ id, branch }: TProps) => {
     "text/tab-separated-values": [".tsv"],
   };
 
+  // Parse CSV/TSV text preview (header + up to 200 rows) without loading full file
+  const parseCSVPreview = (
+    text: string,
+    sep: string
+  ): { columns: string[]; sampleRows: string[][] } => {
+    const parseRow = (line: string): string[] => {
+      const result: string[] = [];
+      let cur = "";
+      let inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === sep && !inQ) { result.push(cur.trim()); cur = ""; }
+        else { cur += ch; }
+      }
+      result.push(cur.trim());
+      return result;
+    };
+    const lines = text.split(/\r?\n/).filter(Boolean);
+    if (lines.length === 0) return { columns: [], sampleRows: [] };
+    const columns = parseRow(lines[0]).map((c) => c.replace(/^"|"$/g, ""));
+    const sampleRows = lines.slice(1, 201).map(parseRow);
+    return { columns, sampleRows };
+  };
+
   const onDrop = useCallback((acceptedFiles: any) => {
     if (acceptedFiles.length == 0) {
       openNotification("File rejected", "", "error");
       return;
     }
     const file = acceptedFiles[0];
-    const reader = new FileReader();
-    setReadingFile(true);
-
-    reader.onload = (e) => {
-      // Do whatever you want with the file contents
-      const data = e.target?.result;
-      const workbook = XLSX.read(data, { type: "array" });
-
-      if (blobFileType(file.name, ResourceSubTypeEnum.XLS)) {
-        const sheetNames = workbook.SheetNames;
-        setSheetNames(sheetNames as any);
-        setSelectedSheet(sheetNames[0] as string);
-      } else {
-        setSheetNames([]);
-        setSelectedSheet("");
-      }
-
-      // Extract columns and up to 200 sample rows for AI analysis
-      try {
-        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-        if (firstSheet) {
-          const rows: string[][] = XLSX.utils.sheet_to_json(firstSheet, {
-            header: 1,
-            defval: "",
-            raw: false,
-          }) as string[][];
-
-          if (rows.length > 0) {
-            const columns = (rows[0] as string[]).map((c) =>
-              c != null ? String(c) : ""
-            );
-            const sampleRows = rows
-              .slice(1, 201)
-              .map((row) =>
-                columns.map((_, i) =>
-                  row[i] != null ? String(row[i]) : ""
-                )
-              );
-            setFileData({ columns, sampleRows });
-          } else {
-            setFileData(null);
-          }
-        } else {
-          setFileData(null);
-        }
-      } catch {
-        setFileData(null);
-      }
-
-      setReadingFile(false);
-    };
     setIsSelected(true);
     setSelectedFile(file);
     setFileData(null);
+    setReadingFile(true);
 
-    reader.readAsArrayBuffer(file);
+    const isCSV = /\.(csv|tsv)$/i.test(file.name) ||
+      file.type === "text/csv" ||
+      file.type === "text/tab-separated-values";
+
+    if (isCSV) {
+      // Read only first 100 KB — enough for header + ~200 rows, avoids OOM on large files
+      const sep = /\.tsv$/i.test(file.name) ? "\t" : ",";
+      const sliceReader = new FileReader();
+      sliceReader.onload = (e) => {
+        try {
+          const text = e.target?.result as string;
+          const { columns, sampleRows } = parseCSVPreview(text, sep);
+          setFileData(columns.length > 0 ? { columns, sampleRows } : null);
+        } catch {
+          setFileData(null);
+        }
+        setSheetNames([]);
+        setSelectedSheet("");
+        setReadingFile(false);
+      };
+      sliceReader.readAsText(file.slice(0, 100 * 1024));
+    } else {
+      // Excel — use SheetJS (xlsx files are compressed, manageable in memory)
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = e.target?.result;
+          const workbook = XLSX.read(data, { type: "array" });
+
+          if (blobFileType(file.name, ResourceSubTypeEnum.XLS)) {
+            const names = workbook.SheetNames;
+            setSheetNames(names as any);
+            setSelectedSheet(names[0] as string);
+          } else {
+            setSheetNames([]);
+            setSelectedSheet("");
+          }
+
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          if (firstSheet) {
+            const rows: string[][] = XLSX.utils.sheet_to_json(firstSheet, {
+              header: 1,
+              defval: "",
+              raw: false,
+            }) as string[][];
+
+            if (rows.length > 0) {
+              const columns = (rows[0] as string[]).map((c) =>
+                c != null ? String(c) : ""
+              );
+              const sampleRows = rows
+                .slice(1, 201)
+                .map((row) =>
+                  columns.map((_, i) => (row[i] != null ? String(row[i]) : ""))
+                );
+              setFileData({ columns, sampleRows });
+            } else {
+              setFileData(null);
+            }
+          } else {
+            setFileData(null);
+          }
+        } catch {
+          setFileData(null);
+        }
+        setReadingFile(false);
+      };
+      reader.readAsArrayBuffer(file);
+    }
   }, []);
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
