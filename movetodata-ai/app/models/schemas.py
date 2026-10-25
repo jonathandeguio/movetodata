@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 
 
 # ---------------------------------------------------------------------------
@@ -197,7 +198,11 @@ class DescribeDatasetRequest(BaseModel):
     Payload sent by the browser (via Boson proxy) when the user uploads a file.
     Only column names and the file name are used in the LLM prompt — sample rows
     are received but never forwarded to the model (sovereignty contract).
+
+    Accepts both camelCase (frontend convention) and snake_case field names.
     """
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     file_name: str = Field(..., description="Original file name (used to suggest a dataset name).")
     columns: List[str] = Field(..., description="Column headers extracted from the file.")
