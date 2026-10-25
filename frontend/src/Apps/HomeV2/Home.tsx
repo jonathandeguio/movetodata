@@ -289,7 +289,7 @@ const Home: React.FC = () => {
             {/* Catalogue (accès rapide) */}
             <Col xs={24} lg={16}>
               <Card
-                className="home-panel-card"
+                className="home-panel-card home-panel-card--stretch"
                 title={<span className="home-panel-card__title">Accès rapide</span>}
               >
                 {loading ? (
@@ -314,7 +314,7 @@ const Home: React.FC = () => {
             {/* Activité récente */}
             <Col xs={24} lg={12}>
               <Card
-                className="home-panel-card"
+                className="home-panel-card home-panel-card--stretch"
                 title={<span className="home-panel-card__title">Activité récente</span>}
                 extra={
                   <a className="home-panel-card__link" href="/portal/builds">
@@ -360,7 +360,7 @@ const Home: React.FC = () => {
             {/* Statut des pipelines */}
             <Col xs={24} lg={12}>
               <Card
-                className="home-panel-card"
+                className="home-panel-card home-panel-card--stretch"
                 title={<span className="home-panel-card__title">Statut des pipelines</span>}
                 extra={
                   <a className="home-panel-card__link" href="/portal/schedules">
