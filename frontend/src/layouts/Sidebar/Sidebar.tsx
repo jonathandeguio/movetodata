@@ -329,7 +329,6 @@ const Sidebar = () => {
                 size={sidebarAttributes.iconSize + 6}
               />
             }
-            disabled
             tooltip={getLanguageLabel("dataCatalog")}
             text={"dataCatalog"}
             showText={sidebarAttributes.showText}
@@ -337,11 +336,11 @@ const Sidebar = () => {
               if (
                 preventFilterLossOnReNavigate(
                   location.pathname,
-                  "/portal/dataCatalog"
+                  "/portal/catalog/search"
                 )
               )
                 return;
-              navigate("/portal/dataCatalog");
+              navigate("/portal/catalog/search");
               setSelectedSideBarTab("dataCatalog");
             }}
             selected={selectedSideBarTab == "dataCatalog"}
