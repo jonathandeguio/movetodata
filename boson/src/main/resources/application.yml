@@ -1,6 +1,12 @@
 spring:
   application:
     name: "boson"
+
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   config:
     import: "optional:${SAML2_SSO_CONFIG}"
 
