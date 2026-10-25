@@ -9,7 +9,7 @@
  *   const { open, toggle, setSourceId } = useAiAssistantContext();
  */
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 export interface AiAssistantContextValue {
   /** Whether the sidebar is currently open. */
@@ -28,6 +28,21 @@ export interface AiAssistantContextValue {
   openChartIds: number[];
   /** Update the open chart IDs. */
   setOpenChartIds: (ids: number[]) => void;
+  /**
+   * Free-form page context injected by the current route (e.g. "Utilisateur sur
+   * la page d'accueil. KPIs: 1248 datasets, 3 alertes."). Sent as system context
+   * with every chat message while the user is on that page.
+   */
+  pageContext: string | undefined;
+  /** Set (or clear) the page context. Call in a useEffect on mount/unmount. */
+  setPageContext: (ctx: string | undefined) => void;
+  /**
+   * Open the sidebar and immediately send `message` as if the user typed it.
+   * Used by the home AI bar and "explain" actions on error items.
+   */
+  openWithMessage: (message: string) => void;
+  /** Internal: consumed by AiAssistantSidebar to pick up the pending message. */
+  pendingMessageRef: React.MutableRefObject<string | null>;
 }
 
 const AiAssistantContext = createContext<AiAssistantContextValue | undefined>(undefined);
@@ -36,6 +51,8 @@ export const AiAssistantProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [open, setOpen] = useState(false);
   const [sourceId, setSourceId] = useState<string | undefined>(undefined);
   const [openChartIds, setOpenChartIds] = useState<number[]>([]);
+  const [pageContext, setPageContext] = useState<string | undefined>(undefined);
+  const pendingMessageRef = useRef<string | null>(null);
 
   const value: AiAssistantContextValue = {
     open,
@@ -46,6 +63,13 @@ export const AiAssistantProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setSourceId,
     openChartIds,
     setOpenChartIds,
+    pageContext,
+    setPageContext,
+    openWithMessage: (message: string) => {
+      pendingMessageRef.current = message;
+      setOpen(true);
+    },
+    pendingMessageRef,
   };
 
   return (

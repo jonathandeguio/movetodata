@@ -1,15 +1,12 @@
 import {
   ApiOutlined,
-  BarChartOutlined,
-  CodeOutlined,
   DatabaseOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
-  SafetyOutlined,
+  RobotOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import {
-  Alert,
   Badge,
   Card,
   Col,
@@ -20,6 +17,7 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { useAiAssistantContext } from "components/AiAssistant/AiAssistantContext";
 import MtdLoader from "components/mtdLoader";
 import { getDefaultFavicon } from "components/mtdLoader/FavIconLoader";
 import { ActivatePlatform } from "pages/Settings/PlatformConfig/License/ActivatePlatform.view";
@@ -27,6 +25,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { getLanguageLabel, isDefined, isLicenseKeyUsedValid } from "utils/utilities";
+import HomeAiBar from "./components/HomeAiBar";
+import FavoritesCard from "./components/FavoritesCard";
 import {
   ActivityItem,
   MOCK_ACTIVITY,
@@ -65,7 +65,7 @@ interface KpiCardProps {
 const KpiCard: React.FC<KpiCardProps> = ({ label, stat, color, icon, loading }) => (
   <Card className="home-kpi-card">
     {loading ? (
-      <Skeleton active paragraph={{ rows: 2 }} />
+      <Skeleton active paragraph={{ rows: 1 }} />
     ) : (
       <>
         <div className="home-kpi-card__header">
@@ -74,12 +74,10 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, stat, color, icon, loading }) 
         </div>
         <Statistic
           value={stat.value}
-          valueStyle={{ color, fontSize: 24, fontFamily: "Poppins", fontWeight: 600 }}
+          valueStyle={{ color, fontSize: 22, fontFamily: "Poppins", fontWeight: 600 }}
         />
         <div className="home-kpi-card__delta">
-          <span
-            className={`home-kpi-card__arrow home-kpi-card__arrow--${stat.trend}`}
-          >
+          <span className={`home-kpi-card__arrow home-kpi-card__arrow--${stat.trend}`}>
             {stat.trend === "up" ? "↑" : "↓"}
           </span>
           <Text className="home-kpi-card__delta-text">{stat.delta}</Text>
@@ -102,40 +100,25 @@ interface ModuleCardProps {
 }
 
 const ModuleCard: React.FC<ModuleCardProps> = ({
-  name,
-  description,
-  icon,
-  tagColor,
-  tagLabel,
-  route,
-  loading,
+  name, description, icon, tagColor, tagLabel, route, loading,
 }) => {
   const navigate = useNavigate();
   const disabled = route === null;
-
-  const handleClick = () => {
-    if (!disabled) navigate(route!);
-  };
-
   return (
     <Card
       className={`home-module-card${disabled ? " home-module-card--disabled" : ""}`}
-      onClick={handleClick}
+      onClick={() => { if (!disabled) navigate(route!); }}
     >
       {loading ? (
-        <Skeleton active paragraph={{ rows: 2 }} />
+        <Skeleton active paragraph={{ rows: 1 }} />
       ) : (
         <>
-          <div className="home-module-card__icon" style={{ color: "#24527a" }}>
-            {icon}
-          </div>
+          <div className="home-module-card__icon" style={{ color: "#24527a" }}>{icon}</div>
           <div className="home-module-card__name">{name}</div>
           <div className="home-module-card__desc">{description}</div>
           <div className="home-module-card__footer">
             {disabled ? (
-              <Tag color="default" className="home-module-card__tag">
-                Bientôt
-              </Tag>
+              <Tag color="default" className="home-module-card__tag">Bientôt</Tag>
             ) : (
               <Tag
                 className="home-module-card__tag"
@@ -151,7 +134,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
   );
 };
 
-// ─── Activity Badge ─────────────────────────────────────────────────────────
+// ─── Activity Badge ──────────────────────────────────────────────────────────
 
 const BADGE_COLORS: Record<ActivityItem["type"], string> = {
   success: "#29a07c",
@@ -160,7 +143,21 @@ const BADGE_COLORS: Record<ActivityItem["type"], string> = {
   error:   "#c84654",
 };
 
-// ─── Main Component ─────────────────────────────────────────────────────────
+// ─── Pipeline tag helpers ────────────────────────────────────────────────────
+
+type PipelineStatus = "ok" | "running" | "error";
+
+const PIPELINE_STYLES: Record<PipelineStatus, React.CSSProperties> = {
+  ok:      { background: "#29a07c22", color: "#29a07c", borderColor: "#29a07c55" },
+  running: { background: "#1f6feb22", color: "#1f6feb", borderColor: "#1f6feb55" },
+  error:   { background: "#c8465422", color: "#c84654", borderColor: "#c8465455" },
+};
+
+const PIPELINE_LABELS: Record<PipelineStatus, string> = {
+  ok: "OK", running: "Running", error: "Erreur",
+};
+
+// ─── Main Component ──────────────────────────────────────────────────────────
 
 const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -169,17 +166,35 @@ const Home: React.FC = () => {
   const { user }   = useSelector((state: any) => state.userDetails);
   const { info, loading: licenseLoading } = useSelector((state: any) => state.license);
 
+  const { setPageContext, openWithMessage } = useAiAssistantContext();
+
   // Simulate initial load (remove when real API is wired)
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(t);
   }, []);
 
+  // Inject page context for the AI assistant
+  useEffect(() => {
+    if (!loading) {
+      const alerts = MOCK_STATS.alerts.value;
+      const pipErrors = MOCK_PIPELINES.filter((p) => p.status === "error").length;
+      setPageContext(
+        `L'utilisateur est sur la page d'accueil MoveToData. ` +
+        `KPIs actuels : ${MOCK_STATS.datasets.value} datasets actifs, ` +
+        `${MOCK_STATS.pipelines.value} pipelines actifs, ` +
+        `${MOCK_STATS.jobs.value} jobs exécutés, ` +
+        `${alerts} alerte${alerts !== 1 ? "s" : ""} ouvertes. ` +
+        `${pipErrors} pipeline${pipErrors !== 1 ? "s" : ""} en erreur.`
+      );
+    }
+    return () => setPageContext(undefined);
+  }, [loading, setPageContext]);
+
   useEffect(() => {
     document.title = getLanguageLabel("home");
     const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
     if (favicon) favicon.href = getDefaultFavicon();
-
     return () => {
       document.title =
         isDefined(config) && isDefined(config.platformName)
@@ -191,47 +206,22 @@ const Home: React.FC = () => {
   if (licenseLoading) return <MtdLoader />;
   if (!isLicenseKeyUsedValid(info)) return <ActivatePlatform />;
 
-  const platformName =
-    isDefined(config) && isDefined(config.platformName)
-      ? config.platformName
-      : "MoveToData";
-
   const firstName: string = user?.givenName ?? user?.username ?? "";
 
-  // ─── KPIs ──────────────────────────────────────────────────────────────
+  // ─── KPIs ────────────────────────────────────────────────────────────
   const kpis = [
-    {
-      key: "datasets",
-      label: "Datasets actifs",
-      color: "#24527a",
-      icon: <DatabaseOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: "pipelines",
-      label: "Pipelines actifs",
-      color: "#1f6feb",
-      icon: <ApiOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: "jobs",
-      label: "Jobs exécutés",
-      color: "#fbb261",
-      icon: <PlayCircleOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: "alerts",
-      label: "Alertes ouvertes",
-      color: "#c84654",
-      icon: <WarningOutlined style={{ fontSize: 20 }} />,
-    },
+    { key: "datasets",  label: "Datasets actifs",   color: "#24527a", icon: <DatabaseOutlined style={{ fontSize: 18 }} /> },
+    { key: "pipelines", label: "Pipelines actifs",   color: "#1f6feb", icon: <ApiOutlined style={{ fontSize: 18 }} /> },
+    { key: "jobs",      label: "Jobs exécutés",      color: "#fbb261", icon: <PlayCircleOutlined style={{ fontSize: 18 }} /> },
+    { key: "alerts",    label: "Alertes ouvertes",   color: "#c84654", icon: <WarningOutlined style={{ fontSize: 18 }} /> },
   ];
 
-  // ─── Modules ───────────────────────────────────────────────────────────
+  // ─── Modules (3 cards) ───────────────────────────────────────────────
   const modules: ModuleCardProps[] = [
     {
       name: "Catalogue de données",
       description: "Explorez, documentez et partagez vos assets data.",
-      icon: <DatabaseOutlined style={{ fontSize: 24 }} />,
+      icon: <DatabaseOutlined style={{ fontSize: 22 }} />,
       tagColor: "#24527a",
       tagLabel: "Catalogue",
       route: "/portal/projects",
@@ -240,43 +230,16 @@ const Home: React.FC = () => {
     {
       name: "Orchestration",
       description: "Planifiez et supervisez vos pipelines de données.",
-      icon: <NodeIndexOutlined style={{ fontSize: 24 }} />,
+      icon: <NodeIndexOutlined style={{ fontSize: 22 }} />,
       tagColor: "#1f6feb",
       tagLabel: "Schedules",
       route: "/portal/schedules",
       loading,
     },
     {
-      name: "Analytics & BI",
-      description: "Créez des tableaux de bord et visualisations interactives.",
-      icon: <BarChartOutlined style={{ fontSize: 24 }} />,
-      tagColor: "#29a07c",
-      tagLabel: "BI",
-      route: null,
-      loading,
-    },
-    {
-      name: "Notebooks",
-      description: "Analysez vos données avec des notebooks collaboratifs.",
-      icon: <CodeOutlined style={{ fontSize: 24 }} />,
-      tagColor: "#fbb261",
-      tagLabel: "Notebooks",
-      route: null,
-      loading,
-    },
-    {
-      name: "Gouvernance & Qualité",
-      description: "Contrôlez la qualité, la conformité et la traçabilité.",
-      icon: <SafetyOutlined style={{ fontSize: 24 }} />,
-      tagColor: "#c84654",
-      tagLabel: "Gouvernance",
-      route: null,
-      loading,
-    },
-    {
       name: "API & Intégrations",
       description: "Connectez vos sources et systèmes externes.",
-      icon: <ApiOutlined style={{ fontSize: 24 }} />,
+      icon: <ApiOutlined style={{ fontSize: 22 }} />,
       tagColor: "#1890ff",
       tagLabel: "Connect",
       route: "/portal/connect",
@@ -286,26 +249,25 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-page">
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="home-hero">
-        <Text className="home-hero__date">{capitalize(frenchDate())}</Text>
-        <Title level={2} className="home-hero__greeting">
-          Bonjour{firstName ? `, ${firstName}` : ""} 👋
-        </Title>
-        <Title level={3} className="home-hero__title">
-          Bienvenue sur {platformName}
-        </Title>
-        <Text className="home-hero__subtitle">
-          Votre plateforme data all-in-one
-        </Text>
+      {/* ── Header compact ────────────────────────────────────────────── */}
+      <section className="home-hero home-hero--compact">
+        <div className="home-hero__left">
+          <Text className="home-hero__date">{capitalize(frenchDate())}</Text>
+          <Title level={3} className="home-hero__greeting">
+            Bonjour{firstName ? `, ${firstName}` : ""} 👋
+          </Title>
+        </div>
+        <div className="home-hero__ai-bar">
+          <HomeAiBar />
+        </div>
       </section>
 
       <div className="home-content">
-        {/* ── KPIs ───────────────────────────────────────────────────── */}
+        {/* ── KPIs ─────────────────────────────────────────────────────── */}
         <section className="home-section">
-          <Row gutter={[16, 16]}>
+          <Row gutter={[12, 12]}>
             {kpis.map((kpi) => (
-              <Col xs={24} sm={12} lg={6} key={kpi.key}>
+              <Col xs={12} sm={12} lg={6} key={kpi.key}>
                 <KpiCard
                   label={kpi.label}
                   stat={MOCK_STATS[kpi.key]}
@@ -318,21 +280,37 @@ const Home: React.FC = () => {
           </Row>
         </section>
 
-        {/* ── Modules ────────────────────────────────────────────────── */}
+        {/* ── Favoris + Catalogue + Liens ──────────────────────────────── */}
         <section className="home-section">
-          <Title level={5} className="home-section__title">
-            Accès rapide
-          </Title>
           <Row gutter={[16, 16]}>
-            {modules.map((mod) => (
-              <Col xs={24} sm={12} lg={8} key={mod.name}>
-                <ModuleCard {...mod} />
-              </Col>
-            ))}
+            {/* Favoris & Liens */}
+            <Col xs={24} lg={8}>
+              <FavoritesCard />
+            </Col>
+
+            {/* Catalogue (accès rapide) */}
+            <Col xs={24} lg={16}>
+              <Card
+                className="home-panel-card"
+                title={<span className="home-panel-card__title">Accès rapide</span>}
+              >
+                {loading ? (
+                  <Skeleton active paragraph={{ rows: 2 }} />
+                ) : (
+                  <Row gutter={[12, 12]}>
+                    {modules.map((mod) => (
+                      <Col xs={24} sm={8} key={mod.name}>
+                        <ModuleCard {...mod} />
+                      </Col>
+                    ))}
+                  </Row>
+                )}
+              </Card>
+            </Col>
           </Row>
         </section>
 
-        {/* ── Activity + Pipelines ───────────────────────────────────── */}
+        {/* ── Activity + Pipelines ─────────────────────────────────────── */}
         <section className="home-section">
           <Row gutter={[16, 16]}>
             {/* Activité récente */}
@@ -359,12 +337,20 @@ const Home: React.FC = () => {
                           className="home-activity-item__badge"
                         />
                         <div className="home-activity-item__body">
-                          <Text className="home-activity-item__text">
-                            {item.text}
-                          </Text>
-                          <Text className="home-activity-item__time">
-                            {item.time}
-                          </Text>
+                          <Text className="home-activity-item__text">{item.text}</Text>
+                          <div className="home-activity-item__footer">
+                            <Text className="home-activity-item__time">{item.time}</Text>
+                            {(item.type === "error" || item.type === "warning") && (
+                              <button
+                                className="home-activity-item__explain"
+                                onClick={() =>
+                                  openWithMessage(`Explique cette erreur et propose des actions correctives : "${item.text}"`)
+                                }
+                              >
+                                <RobotOutlined style={{ fontSize: 11 }} /> Expliquer
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </li>
                     ))}
@@ -393,23 +379,27 @@ const Home: React.FC = () => {
                     {MOCK_PIPELINES.map((p: PipelineItem) => (
                       <li key={p.id} className="home-pipeline-item">
                         <div className="home-pipeline-item__left">
-                          {p.status === "running" && (
-                            <span className="pulse-dot" />
-                          )}
-                          <Text className="home-pipeline-item__name">
-                            {p.name}
-                          </Text>
+                          {p.status === "running" && <span className="pulse-dot" />}
+                          <Text className="home-pipeline-item__name">{p.name}</Text>
                         </div>
                         <div className="home-pipeline-item__right">
                           <Tag
                             className="home-pipeline-item__tag"
-                            style={pipelineTagStyle(p.status)}
+                            style={PIPELINE_STYLES[p.status as PipelineStatus]}
                           >
-                            {pipelineTagLabel(p.status)}
+                            {PIPELINE_LABELS[p.status as PipelineStatus]}
                           </Tag>
-                          <Text className="home-pipeline-item__time">
-                            {p.lastRun}
-                          </Text>
+                          <Text className="home-pipeline-item__time">{p.lastRun}</Text>
+                          {p.status === "error" && (
+                            <button
+                              className="home-activity-item__explain"
+                              onClick={() =>
+                                openWithMessage(`Le pipeline "${p.name}" est en erreur (dernier run : ${p.lastRun}). Quelles sont les causes probables et comment le corriger ?`)
+                              }
+                            >
+                              <RobotOutlined style={{ fontSize: 11 }} /> Diagnostiquer
+                            </button>
+                          )}
                         </div>
                       </li>
                     ))}
@@ -423,27 +413,5 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
-// ─── Pipeline tag helpers ────────────────────────────────────────────────────
-
-type PipelineStatus = "ok" | "running" | "error";
-
-const PIPELINE_STYLES: Record<PipelineStatus, React.CSSProperties> = {
-  ok:      { background: "#29a07c22", color: "#29a07c", borderColor: "#29a07c55" },
-  running: { background: "#1f6feb22", color: "#1f6feb", borderColor: "#1f6feb55" },
-  error:   { background: "#c8465422", color: "#c84654", borderColor: "#c8465455" },
-};
-
-const PIPELINE_LABELS: Record<PipelineStatus, string> = {
-  ok:      "OK",
-  running: "Running",
-  error:   "Erreur",
-};
-
-const pipelineTagStyle = (status: PipelineStatus): React.CSSProperties =>
-  PIPELINE_STYLES[status];
-
-const pipelineTagLabel = (status: PipelineStatus): string =>
-  PIPELINE_LABELS[status];
 
 export default Home;

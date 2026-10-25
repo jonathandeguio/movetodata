@@ -33,6 +33,28 @@
   flex-direction: column;
   gap: 4px;
 
+  &--compact {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  &__ai-bar {
+    flex: 1;
+    max-width: 560px;
+    min-width: 260px;
+  }
+
   &__date {
     font-size: 12px;
     font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -43,28 +65,71 @@
 
   &__greeting {
     margin: 0 !important;
-    font-size: 24px !important;
+    font-size: 18px !important;
     font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
     font-weight: 600 !important;
     color: var(--movetodata-font-color-default) !important;
     line-height: 1.3 !important;
   }
+}
 
-  &__title {
-    margin: 0 !important;
-    font-size: 30px !important;
-    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
-    font-weight: 600 !important;
-    color: var(--color) !important;
-    line-height: 1.3 !important;
+// ─── AI Bar ───────────────────────────────────────────────────────────────────
+.home-ai-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  &__subtitle {
-    font-size: 16px;
+  &__robot-icon {
+    font-size: 18px;
+    color: #1f6feb;
+    flex-shrink: 0;
+  }
+
+  &__input {
     font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400;
+    font-size: 13px;
+    border-radius: 6px !important;
+
+    .ant-input {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+    }
+  }
+
+  &__send-btn {
+    color: #1f6feb;
+  }
+
+  &__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-left: 26px;
+  }
+
+  &__chip {
+    background: none;
+    border: 1px solid var(--movetodata-border-color-default);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--movetodata-font-color-muted);
-    margin-top: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: #1f6feb;
+      color: #1f6feb;
+      background: #1f6feb11;
+    }
   }
 }
 
@@ -371,23 +436,129 @@
   }
 }
 
+// ─── Favorites list ──────────────────────────────────────────────────────────
+.home-fav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home-fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px 0;
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--movetodata-hover-color);
+  }
+
+  &__label {
+    background: none;
+    border: none;
+    padding: 0 4px;
+    font-size: 13px;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 500;
+    color: #1f6feb;
+    cursor: pointer;
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &--link {
+      text-decoration: none;
+      display: block;
+    }
+  }
+
+  &__remove {
+    opacity: 0;
+    flex-shrink: 0;
+    color: var(--movetodata-font-color-muted) !important;
+  }
+
+  &:hover &__remove {
+    opacity: 1;
+  }
+}
+
+// ─── Activity explain button ──────────────────────────────────────────────────
+.home-activity-item {
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__explain {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1f6feb;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.home-activity-item:hover .home-activity-item__explain {
+  opacity: 1;
+}
+
+.home-pipeline-item:hover .home-activity-item__explain {
+  opacity: 1;
+}
+
 // ─── Responsive ──────────────────────────────────────────────────────────────
 @media (max-width: $VIEWPORT_BREAKPOINT_TABLET) {
   .home-hero {
-    padding: 20px 16px 18px;
+    padding: 14px 16px;
+
+    &--compact {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    &__ai-bar {
+      width: 100%;
+    }
   }
 
-  .home-hero__title {
-    font-size: 22px !important;
+  .home-hero__greeting {
+    font-size: 16px !important;
+  }
+
+  .home-ai-bar__suggestions {
+    padding-left: 0;
   }
 }
 
 @media (max-width: $VIEWPORT_BREAKPOINT_MOBILE) {
-  .home-hero__title {
-    font-size: 18px !important;
-  }
-
-  .home-hero__subtitle {
-    font-size: 14px;
+  .home-ai-bar__chip {
+    font-size: 11px;
+    padding: 2px 8px;
   }
 }

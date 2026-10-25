@@ -73,7 +73,7 @@ const API_BASE = process.env.REACT_APP_BASE_URL_API ?? "";
 // ---------------------------------------------------------------------------
 
 const AiAssistantSidebar: React.FC = () => {
-  const { open, closeSidebar, sourceId, openChartIds } = useAiAssistantContext();
+  const { open, closeSidebar, sourceId, openChartIds, pageContext, pendingMessageRef } = useAiAssistantContext();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -89,6 +89,18 @@ const AiAssistantSidebar: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Fire a pending message injected via openWithMessage (e.g. from the home AI bar)
+  useEffect(() => {
+    if (open && pendingMessageRef.current) {
+      const msg = pendingMessageRef.current;
+      pendingMessageRef.current = null;
+      // Defer one tick so the drawer animation starts before we begin streaming
+      setTimeout(() => sendMessage(msg), 50);
+    }
+  // sendMessage is stable via useCallback; open triggers this effect
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // ---------------------------------------------------------------------------
   // Send message
@@ -128,6 +140,7 @@ const AiAssistantSidebar: React.FC = () => {
         context: {
           sourceId: sourceId ?? null,
           openChartIds: openChartIds ?? [],
+          pageContext: pageContext ?? null,
         },
         history: historySnapshot,
       };
