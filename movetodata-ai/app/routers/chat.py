@@ -153,7 +153,7 @@ async def _stream_ollama_chat(
                     if content:
                         total_tokens += 1  # approximate — Ollama omits per-token counts
                         event_data = json.dumps(
-                            {"type": "token", "content": content}, ensure_ascii=False
+                            {"type": "token", "content": content}
                         )
                         yield f"data: {event_data}\n\n"
 
