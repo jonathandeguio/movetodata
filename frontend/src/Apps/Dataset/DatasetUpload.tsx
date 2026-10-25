@@ -108,6 +108,18 @@ const DatasetUpload = ({ id, branch }: TProps) => {
     setIsSelected(true);
     setSelectedFile(file);
     setFileData(null);
+
+    // For very large files (>50 MB) skip all client-side reading entirely:
+    // even reading a small slice can cause Chrome to scan the full file.
+    // Schema/columns will be unavailable but upload still works normally.
+    const LARGE_FILE_THRESHOLD = 50 * 1024 * 1024;
+    if (file.size > LARGE_FILE_THRESHOLD) {
+      setSheetNames([]);
+      setSelectedSheet("");
+      setReadingFile(false);
+      return;
+    }
+
     setReadingFile(true);
 
     const isCSV = /\.(csv|tsv)$/i.test(file.name) ||
@@ -115,7 +127,7 @@ const DatasetUpload = ({ id, branch }: TProps) => {
       file.type === "text/tab-separated-values";
 
     if (isCSV) {
-      // Read only first 100 KB — enough for header + ~200 rows, avoids OOM on large files
+      // Read only first 100 KB — enough for header + ~200 rows
       const sep = /\.tsv$/i.test(file.name) ? "\t" : ",";
       const sliceReader = new FileReader();
       sliceReader.onload = (e) => {

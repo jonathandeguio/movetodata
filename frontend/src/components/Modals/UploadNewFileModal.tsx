@@ -65,28 +65,28 @@ export default ({ id, isVisible, setIsVisible }: any) => {
 
   const onDrop = useCallback((acceptedFiles: any) => {
     const file = acceptedFiles[0];
-    const reader = new FileReader();
 
-    reader.onload = (e) => {
-      // Do whatever you want with the file contents
-      const data = e.target?.result;
-      if (blobFileType(file.name, ResourceSubTypeEnum.XLS)) {
-        const workbook = XLSX.read(data, { type: "binary", bookSheets: true });
-        const sheetNames = workbook.SheetNames;
-        setSheetNames(sheetNames as any);
-        form.setFieldValue("selectedSheet", sheetNames[0] as string);
-      } else {
-        setSheetNames([]);
-        form.setFieldValue("selectedSheet", sheetNames[0] as string);
-      }
-    };
     form.setFieldsValue({
       fileName: file.name.split(".")[0],
       selectedSheet: "first",
     });
-
     setUploadedFile(file);
 
+    // Only read Excel files for sheet detection — large files skip reading entirely
+    const LARGE_FILE_THRESHOLD = 50 * 1024 * 1024;
+    if (!blobFileType(file.name, ResourceSubTypeEnum.XLS) || file.size > LARGE_FILE_THRESHOLD) {
+      setSheetNames([]);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = e.target?.result;
+      const workbook = XLSX.read(data, { type: "binary", bookSheets: true });
+      const names = workbook.SheetNames;
+      setSheetNames(names as any);
+      form.setFieldValue("selectedSheet", names[0] as string);
+    };
     reader.readAsArrayBuffer(file);
   }, []);
 
