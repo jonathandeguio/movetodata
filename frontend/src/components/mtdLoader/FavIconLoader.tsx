@@ -1,5 +1,5 @@
 export const getDefaultFavicon = (): string => {
-  return "/favicons/movetodataLogo.svg";
+  return "/favicons/favicon-16.png";
 };
 
 function getFaviconByResourceId(resourceId: string) {
