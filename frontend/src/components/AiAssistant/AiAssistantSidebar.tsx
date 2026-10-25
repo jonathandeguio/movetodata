@@ -90,21 +90,6 @@ const AiAssistantSidebar: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fire a pending message injected via openWithMessage (e.g. from the home AI bar).
-  // sendMessage is intentionally omitted from deps: it's a useCallback that changes
-  // on every keystroke (messages state), and we only want this to fire on open toggle.
-  // The ref pattern ensures we always read the latest pending message.
-  const sendMessageRef = useRef(sendMessage);
-  useEffect(() => { sendMessageRef.current = sendMessage; });
-
-  useEffect(() => {
-    if (open && pendingMessageRef.current) {
-      const msg = pendingMessageRef.current;
-      pendingMessageRef.current = null;
-      setTimeout(() => sendMessageRef.current(msg), 50);
-    }
-  }, [open, pendingMessageRef]);
-
   // ---------------------------------------------------------------------------
   // Send message
   // ---------------------------------------------------------------------------
@@ -252,8 +237,22 @@ const AiAssistantSidebar: React.FC = () => {
         abortControllerRef.current = null;
       }
     },
-    [messages, streaming, sourceId, openChartIds]
+    [messages, streaming, sourceId, openChartIds, pageContext]
   );
+
+  // Fire a pending message injected via openWithMessage (e.g. from the home AI bar).
+  // Uses a ref so we always call the latest sendMessage without adding it to deps
+  // (it changes on every keystroke via messages state).
+  const sendMessageRef = useRef(sendMessage);
+  useEffect(() => { sendMessageRef.current = sendMessage; });
+
+  useEffect(() => {
+    if (open && pendingMessageRef.current) {
+      const msg = pendingMessageRef.current;
+      pendingMessageRef.current = null;
+      setTimeout(() => sendMessageRef.current(msg), 50);
+    }
+  }, [open, pendingMessageRef]);
 
   // ---------------------------------------------------------------------------
   // New conversation
