@@ -2,11 +2,6 @@ spring:
   application:
     name: "boson"
 
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
   config:
     import: "optional:${SAML2_SSO_CONFIG}"
 
@@ -138,6 +133,11 @@ logging:
 server:
   port: 8080
   max-http-header-size: 32000
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   tomcat:
     accesslog:
       enabled: true
