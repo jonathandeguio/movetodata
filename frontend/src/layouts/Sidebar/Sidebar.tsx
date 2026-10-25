@@ -347,7 +347,7 @@ const Sidebar = () => {
           />
           <SBElement
             icon={
-              <AppIcon 
+              <AppIcon
                 size={sidebarAttributes.iconSize + 6}
               />
             }
@@ -358,14 +358,13 @@ const Sidebar = () => {
               if (
                 preventFilterLossOnReNavigate(
                   location.pathname,
-                  "/portal/webApp"
+                  "/portal/applications"
                 )
               )
                 return;
-              navigate("/portal/webApp");
+              navigate("/portal/applications");
               setSelectedSideBarTab("webApp");
             }}
-            disabled
             selected={selectedSideBarTab == "webApp"}
           />
         </div>

@@ -71,6 +71,8 @@ import CodeEditor from "../components/editor/";
 import Login from "../pages/Auth/Login";
 import Logout from "../pages/Auth/Logout";
 import Applications from "../pages/Portal/Applications";
+import AppBuilderView from 'Apps/AppBuilder/AppBuilderView';
+import AppRendererView from 'Apps/AppBuilder/AppRendererView';
 import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
 import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
@@ -122,6 +124,8 @@ const useRouter = () => {
                     <Route path="projects" element={<Projects />} />
 
                     <Route path="applications" element={<Applications />} />
+                    <Route path="applications/:uuid/builder" element={<AppBuilderView />} />
+                    <Route path="applications/:uuid" element={<AppRendererView />} />
 
                     <Route path="recentlyViewed" element={<RecentlyViewed />} />
                     <Route path="favourites" element={<Favs />} />
