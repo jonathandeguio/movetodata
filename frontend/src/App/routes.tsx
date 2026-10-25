@@ -44,6 +44,7 @@ import { SparkSettings } from "pages/Settings/PlatformConfig/Spark/SparkSettings
 import { ThemeSettings } from "pages/Settings/PlatformConfig/ThemeSettings.view";
 import { TimezoneSettings } from "pages/Settings/PlatformConfig/TimezoneSettings.view";
 import { UploadSettings } from "pages/Settings/PlatformConfig/UploadSettings.view";
+import { MfaSettings } from "pages/Settings/PlatformConfig/MfaSettings.view";
 import { isLicenseKeyUsedValid, isReactAppDevelopment } from "utils/utilities";
 import ScheduleDetails from "../components/bottomBar/Schedules/Components/ScheduleDetails.view";
 import Schedules from "../components/bottomBar/Schedules/Components/Schedules";
@@ -287,6 +288,7 @@ const useRouter = () => {
                       <Route path="git" element={<GitSettings />} />
                       <Route path="spark" element={<SparkSettings />} />
 
+                      <Route path="mfa" element={<MfaSettings />} />
                       <Route
                         path="bulkUserCreation"
                         element={<BulkUserCreationSettings />}

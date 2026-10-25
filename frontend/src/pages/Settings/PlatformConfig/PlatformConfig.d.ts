@@ -14,4 +14,6 @@ export interface PlatformConfig {
   updatedBy: User;
   updatedAt: number;
   customTheme:string;
+  mfaEnabled?: boolean;
+  mfaEnforced?: boolean;
 }

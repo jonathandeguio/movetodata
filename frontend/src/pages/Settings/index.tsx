@@ -334,6 +334,19 @@ const Setting = () => {
                     </div>
                   </div>
                 </Link>
+                <Link to={`platform/mfa`}>
+                  <div
+                    className={
+                      lastSegment == "mfa"
+                        ? "settingpage-layout-sidebar-menu-subHeadSelected"
+                        : "settingpage-layout-sidebar-menu-subHead"
+                    }
+                  >
+                    <div className="text-and-icon-center">
+                      <LockIcon /> MFA / 2FA
+                    </div>
+                  </div>
+                </Link>
               </div>
               {/* {
                 // check if is platform Admin and is development
