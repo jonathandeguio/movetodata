@@ -90,17 +90,20 @@ const AiAssistantSidebar: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fire a pending message injected via openWithMessage (e.g. from the home AI bar)
+  // Fire a pending message injected via openWithMessage (e.g. from the home AI bar).
+  // sendMessage is intentionally omitted from deps: it's a useCallback that changes
+  // on every keystroke (messages state), and we only want this to fire on open toggle.
+  // The ref pattern ensures we always read the latest pending message.
+  const sendMessageRef = useRef(sendMessage);
+  useEffect(() => { sendMessageRef.current = sendMessage; });
+
   useEffect(() => {
     if (open && pendingMessageRef.current) {
       const msg = pendingMessageRef.current;
       pendingMessageRef.current = null;
-      // Defer one tick so the drawer animation starts before we begin streaming
-      setTimeout(() => sendMessage(msg), 50);
+      setTimeout(() => sendMessageRef.current(msg), 50);
     }
-  // sendMessage is stable via useCallback; open triggers this effect
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, pendingMessageRef]);
 
   // ---------------------------------------------------------------------------
   // Send message
