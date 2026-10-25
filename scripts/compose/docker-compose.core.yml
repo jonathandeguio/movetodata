@@ -222,14 +222,15 @@ services:
       OPENMETADATA_AUTH_TOKEN: ${OPENMETADATA_AUTH_TOKEN:-}
       # F14 — RAG Catalog
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
-      RAG_PERSIST_DIR: ${MOVETODATA_MOUNT_PATH:-/opt/movetodata}/data/rag/catalog
+      RAG_PERSIST_DIR: /app/rag/catalog
       RAG_TOP_K: ${RAG_TOP_K:-5}
       # F15 — RAG Documentation plateforme
       DOCS_PATH: /movetodata-docs/docs
-      DOCS_RAG_PERSIST_DIR: ${MOVETODATA_MOUNT_PATH:-/opt/movetodata}/data/rag/docs
+      DOCS_RAG_PERSIST_DIR: /app/rag/docs
     volumes:
-      # Shared volume — rw requis pour la persistance ChromaDB (RAG F14 + F15).
-      - ${MOVETODATA_MOUNT_PATH:-/opt/movetodata}:${MOVETODATA_MOUNT_PATH:-/opt/movetodata}
+      # Named volumes pour ChromaDB — Docker gère les droits (appuser UID 1001).
+      - movetodata-rag-catalog:/app/rag/catalog
+      - movetodata-rag-docs:/app/rag/docs
       # F15 — Documentation plateforme (lecture seule)
       - ../../movetodata-docs/docs:/movetodata-docs/docs:ro
     ports:
@@ -249,6 +250,12 @@ services:
       options:
         max-size: "50m"
         max-file: "5"
+
+volumes:
+  movetodata-rag-catalog:
+    name: movetodata-rag-catalog
+  movetodata-rag-docs:
+    name: movetodata-rag-docs
 
 networks:
   movetodata-net:
