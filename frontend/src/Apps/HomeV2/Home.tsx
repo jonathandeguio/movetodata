@@ -249,14 +249,12 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-page">
-      {/* ── Header compact ────────────────────────────────────────────── */}
-      <section className="home-hero home-hero--compact">
-        <div className="home-hero__left">
-          <Text className="home-hero__date">{capitalize(frenchDate())}</Text>
-          <Title level={3} className="home-hero__greeting">
-            Bonjour{firstName ? `, ${firstName}` : ""} 👋
-          </Title>
-        </div>
+      {/* ── Header ───────────────────────────────────────────────────── */}
+      <section className="home-hero">
+        <Text className="home-hero__date">{capitalize(frenchDate())}</Text>
+        <Title level={3} className="home-hero__greeting">
+          Bonjour{firstName ? `, ${firstName}` : ""} 👋
+        </Title>
         <div className="home-hero__ai-bar">
           <HomeAiBar />
         </div>

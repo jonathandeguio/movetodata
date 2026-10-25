@@ -35,6 +35,7 @@ const HomeAiBar: React.FC = () => {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onPressEnter={() => send(value)}
+          bordered={false}
           suffix={
             <Button
               type="text"
