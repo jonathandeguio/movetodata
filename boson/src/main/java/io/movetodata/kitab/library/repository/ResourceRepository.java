@@ -49,4 +49,6 @@ public interface ResourceRepository extends JpaRepository<ResourceModel, UUID>, 
     List<ResourceModel> findTop30ByUpdatedByAndStatus(UUID updatedBy, String status);
 
     List<ResourceModel> findByNameEqualsAndTypeEquals(String name, ResourceType type);
+
+    List<ResourceModel> findByNameEqualsAndTypeEqualsAndStatusNot(String name, ResourceType type, ResourceStatus status);
 }

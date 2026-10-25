@@ -830,16 +830,9 @@ public class ResourceService {
     }
 
     public Boolean doesResourceWithSameExist(String name, ResourceType type) {
-        List<ResourceModel> resources = resourceRepository.findByNameEqualsAndTypeEquals(name, type);
-        boolean doesSameNameResourceExist = false;
-        for (ResourceModel resource : resources) {
-            System.out.println(resource.getName());
-            if (resource.getName().equals(name)) {
-                doesSameNameResourceExist = true;
-                break;
-            }
-        }
-        return doesSameNameResourceExist;
+        return !resourceRepository
+                .findByNameEqualsAndTypeEqualsAndStatusNot(name, type, ResourceStatus.IN_TRASH)
+                .isEmpty();
     }
 
     public List<UUID> getProjectTeamMembers(UUID resourceId) {
