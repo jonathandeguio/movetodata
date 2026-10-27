@@ -161,6 +161,6 @@ public class AppDefinitionController {
                     log.info("App definition deleted: uuid={} by user={}", uuid, authUser.getId());
                     return ResponseEntity.<Void>noContent().build();
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.<Void>notFound().build());
     }
 }
