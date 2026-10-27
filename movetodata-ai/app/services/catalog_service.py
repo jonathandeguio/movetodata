@@ -655,6 +655,132 @@ async def suggest_quality_rules(name: str) -> List[Dict[str, Any]]:
     return created
 
 
+# ---------------------------------------------------------------------------
+# F14.1 — Glossaire → colonnes auto-mapping (Phase 6)
+# ---------------------------------------------------------------------------
+
+def _build_glossary_map_prompt(
+    name: str,
+    columns: List[Dict[str, Any]],
+    terms: List[Dict[str, Any]],
+) -> str:
+    """Prompt to match each column to the most relevant glossary term (or null)."""
+    col_list = "\n".join(
+        f"  - {c.get('columnName', '?')}"
+        for c in columns
+    )
+    term_list = "\n".join(
+        f"  - id={t.get('id', '?')} term={t.get('term', '?')}: {t.get('definition', '')[:80]}"
+        for t in terms
+    )
+    return (
+        "Tu es un expert en gouvernance des données.\n"
+        "Associe chaque colonne d'un Data Product au terme du glossaire métier le plus pertinent.\n\n"
+        "IMPÉRATIF : réponds UNIQUEMENT avec un JSON valide entre ```json et ```. "
+        "Chaque entrée a exactement deux champs : columnName et termId (null si aucun terme ne correspond).\n\n"
+        f"Data Product : {name}\n\n"
+        f"Colonnes :\n{col_list}\n\n"
+        f"Termes du glossaire :\n{term_list}\n\n"
+        "Format attendu :\n"
+        '```json\n[{"columnName": "...", "termId": "uuid-ou-null"}, ...]\n```\n\n'
+        "JSON :"
+    )
+
+
+async def map_glossary_to_columns(name: str) -> Dict[str, Any]:
+    """
+    Match each column of a DataProduct to the most relevant glossary term via LLM,
+    then PATCH each column in Boson with the resolved glossaryTermId.
+
+    Returns {"name", "mapped": [{columnName, termId}], "skipped": int}.
+    Only column names and glossary term labels are sent to the LLM.
+    """
+    headers = _boson_headers()
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        dp_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+            headers=headers,
+        )
+        if dp_resp.status_code == 404:
+            raise ValueError(f"DataProduct '{name}' not found in catalog")
+        dp_resp.raise_for_status()
+
+        col_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
+            headers=headers,
+        )
+        columns: List[Dict[str, Any]] = col_resp.json() if col_resp.status_code == 200 else []
+
+        term_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/glossary",
+            headers=headers,
+        )
+        terms: List[Dict[str, Any]] = term_resp.json() if term_resp.status_code == 200 else []
+
+    if not columns:
+        return {"name": name, "mapped": [], "skipped": 0}
+    if not terms:
+        return {"name": name, "mapped": [], "skipped": len(columns)}
+
+    prompt = _build_glossary_map_prompt(name, columns, terms)
+
+    logger.info(
+        json.dumps({
+            "event": "map_glossary_to_columns",
+            "name": name,
+            "columns_count": len(columns),
+            "terms_count": len(terms),
+        })
+    )
+
+    try:
+        parsed = await _call_llm_with_retry(prompt)
+    except Exception as exc:
+        logger.warning(json.dumps({"event": "map_glossary_failed", "name": name, "error": str(exc)}))
+        raise
+
+    # LLM may return list directly or {"mappings": [...]}
+    mappings: List[Dict[str, Any]] = []
+    if isinstance(parsed, list):
+        mappings = parsed
+    elif isinstance(parsed, dict):
+        for key in ("mappings", "columns", "result"):
+            if key in parsed and isinstance(parsed[key], list):
+                mappings = parsed[key]
+                break
+
+    mapped: List[Dict[str, Any]] = []
+    skipped = 0
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        for entry in mappings:
+            col_name = entry.get("columnName")
+            term_id = entry.get("termId")
+            if not col_name:
+                skipped += 1
+                continue
+            resp = await client.patch(
+                f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns/{col_name}",
+                json={"glossaryTermId": term_id},
+                headers=headers,
+            )
+            if resp.status_code in (200, 201):
+                mapped.append({"columnName": col_name, "termId": term_id})
+            else:
+                skipped += 1
+                logger.warning(
+                    json.dumps({
+                        "event": "glossary_map_patch_failed",
+                        "name": name,
+                        "column": col_name,
+                        "status": resp.status_code,
+                    })
+                )
+
+    return {"name": name, "mapped": mapped, "skipped": skipped}
+
+
 async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
     """
     Publish a DataProduct descriptor to the Boson native catalog with up to 4

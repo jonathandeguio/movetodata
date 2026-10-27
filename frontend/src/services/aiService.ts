@@ -447,3 +447,18 @@ export const parseLineageAPI = (
   targetDataset: string
 ): Promise<AxiosResponse<ParseLineageResponse>> =>
   axios.post("/api/ai/catalog/lineage/parse", { sql, targetDataset });
+
+// ---------------------------------------------------------------------------
+// F14.1 — Glossaire → colonnes auto-mapping (Phase 6)
+// ---------------------------------------------------------------------------
+
+export interface MapGlossaryResponse {
+  name: string;
+  mapped: Array<{ columnName: string; termId: string | null }>;
+  skipped: number;
+}
+
+export const mapGlossaryAPI = (
+  name: string
+): Promise<AxiosResponse<MapGlossaryResponse>> =>
+  axios.post(`/api/ai/catalog/glossary/map/${encodeURIComponent(name)}`);

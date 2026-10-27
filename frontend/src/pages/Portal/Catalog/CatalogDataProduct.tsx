@@ -38,7 +38,13 @@ import {
   suggestQualityRulesAPI,
   recommendDataProductsAPI,
   RecommendDataProductsResponse,
+  mapGlossaryAPI,
 } from "../../../services/aiService";
+import {
+  listGlossaryTerms,
+  CatalogGlossaryTerm,
+  exportDataProduct,
+} from "../../../services/catalogService";
 import { useAiAssistantContext } from "../../../components/AiAssistant/AiAssistantContext";
 
 const { Title } = Typography;
@@ -145,6 +151,8 @@ const CatalogDataProduct: React.FC = () => {
   const [stats, setStats] = useState<CatalogDatasetStats[]>([]);
   const [suggestingRules, setSuggestingRules] = useState<boolean>(false);
   const [recommendations, setRecommendations] = useState<RecommendDataProductsResponse["recommendations"]>([]);
+  const [glossaryTerms, setGlossaryTerms] = useState<CatalogGlossaryTerm[]>([]);
+  const [mappingGlossary, setMappingGlossary] = useState<boolean>(false);
 
   const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
   const [piiForm] = Form.useForm<PiiFormValues>();
@@ -179,7 +187,10 @@ const CatalogDataProduct: React.FC = () => {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    // Load quality rules, stats, and recommendations (non-blocking)
+    // Load quality rules, stats, recommendations, and glossary terms (non-blocking)
+    listGlossaryTerms().then((terms) => {
+      if (!cancelled) setGlossaryTerms(terms);
+    }).catch(() => {});
     getDataProduct(fqn)
       .then((data) => {
         // Record view (fire-and-forget)
@@ -277,6 +288,45 @@ const CatalogDataProduct: React.FC = () => {
       setQualityRules((prev) => prev.filter((r) => r.id !== ruleId));
     } catch {
       notification.error({ message: "Suppression échouée", duration: 4 });
+    }
+  };
+
+  const handleMapGlossary = async (): Promise<void> => {
+    if (!product) return;
+    setMappingGlossary(true);
+    try {
+      const res = await mapGlossaryAPI(product.name);
+      // Reload columns to reflect new glossaryTermId values
+      const updated = await import("../../../services/catalogService")
+        .then((m) => m.getDataProductColumns(product.name));
+      setColumns(updated);
+      notification.success({
+        message: "Glossaire mappé",
+        description: `${res.data.mapped.length} colonne(s) associée(s) à un terme. ${res.data.skipped} ignorée(s).`,
+        duration: 6,
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({ message: "Erreur mapping glossaire", description: message, duration: 8 });
+    } finally {
+      setMappingGlossary(false);
+    }
+  };
+
+  const handleExport = async (): Promise<void> => {
+    if (!product) return;
+    try {
+      const data = await exportDataProduct(product.name);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${product.name}_export.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({ message: "Export échoué", description: message, duration: 6 });
     }
   };
 
@@ -506,6 +556,13 @@ const CatalogDataProduct: React.FC = () => {
                       >
                         Enrichir avec l'IA
                       </Button>
+                      <Button
+                        type="default"
+                        style={{ borderRadius: 5 }}
+                        onClick={handleExport}
+                      >
+                        Exporter JSON
+                      </Button>
                     </div>
                   </>
                 ),
@@ -726,20 +783,52 @@ const CatalogDataProduct: React.FC = () => {
                       </Descriptions.Item>
                     </Descriptions>
 
-                    <Button
-                      type="primary"
-                      style={{
-                        backgroundColor: "#24527a",
-                        borderColor: "#24527a",
-                        borderRadius: 5,
-                      }}
-                      onClick={() => {
-                        setPiiError(null);
-                        setPiiModalOpen(true);
-                      }}
-                    >
-                      Déclarer une colonne PII
-                    </Button>
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <Button
+                        type="primary"
+                        style={{
+                          backgroundColor: "#24527a",
+                          borderColor: "#24527a",
+                          borderRadius: 5,
+                        }}
+                        onClick={() => {
+                          setPiiError(null);
+                          setPiiModalOpen(true);
+                        }}
+                      >
+                        Déclarer une colonne PII
+                      </Button>
+                      <Button
+                        icon={<ThunderboltOutlined />}
+                        loading={mappingGlossary}
+                        style={{
+                          backgroundColor: "#4b2983",
+                          borderColor: "#4b2983",
+                          color: "#fff",
+                          borderRadius: 5,
+                        }}
+                        onClick={handleMapGlossary}
+                      >
+                        Mapper le glossaire
+                      </Button>
+                    </div>
+                    {columns.some((c) => c.glossaryTermId) && (
+                      <div style={{ marginTop: 16 }}>
+                        <strong style={{ fontSize: 13 }}>Termes du glossaire associés :</strong>
+                        <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                          {columns
+                            .filter((c) => c.glossaryTermId)
+                            .map((c) => {
+                              const term = glossaryTerms.find((t) => t.id === c.glossaryTermId);
+                              return (
+                                <Tag key={c.columnName} color="geekblue" style={{ borderRadius: 2 }}>
+                                  {c.columnName} → {term?.term ?? c.glossaryTermId}
+                                </Tag>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    )}
                   </>
                 ),
               },

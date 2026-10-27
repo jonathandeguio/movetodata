@@ -454,9 +454,53 @@ public class CatalogController {
                 cm.setRetentionDays(null);
             }
         }
+        if (body.containsKey("glossaryTermId")) {
+            cm.setGlossaryTermId(
+                    body.get("glossaryTermId") != null ? body.get("glossaryTermId").toString() : null);
+        }
 
         ColumnMeta saved = columnMetaRepository.save(cm);
         log.info("Column meta updated: dataProduct={} column={} by user={}", name, col, authUser.getId());
         return ResponseEntity.ok(saved);
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/catalog/data-products/{name}/export — full snapshot export
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Export a full snapshot of a data product (columns, rules, stats, certifications).")
+    @GetMapping("/{name}/export")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Map<String, Object>> exportDataProduct(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DataProduct dp = opt.get();
+        UUID datasetId = UUID.fromString(dp.getId());
+
+        List<ColumnMeta> columns =
+                columnMetaRepository.findByDatasetIdAndBranch(datasetId, "master");
+        List<io.movetodata.catalog.library.models.CatalogQualityRule> rules =
+                qualityRuleRepository.findByDataProductIdOrderByCreatedAtAsc(dp.getId());
+        List<io.movetodata.catalog.library.models.CatalogDatasetStats> stats =
+                statsRepository.findTop10ByDataProductIdOrderByMeasuredAtDesc(dp.getId());
+        List<CertificationHistory> certifications =
+                certificationHistoryRepository.findByDataProductIdOrderByCertifiedAtDesc(dp.getId());
+
+        Map<String, Object> export = new java.util.LinkedHashMap<>();
+        export.put("dataProduct", dp);
+        export.put("columns", columns);
+        export.put("qualityRules", rules);
+        export.put("stats", stats);
+        export.put("certifications", certifications);
+        export.put("exportedAt", Instant.now().toString());
+
+        log.info("Data product exported: name={} by user={}", name, authUser.getId());
+        return ResponseEntity.ok(export);
     }
 }

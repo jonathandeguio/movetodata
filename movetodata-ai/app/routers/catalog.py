@@ -1,5 +1,5 @@
 """
-catalog.py — F13 Data Catalog router.
+catalog.py — F13 / F14 Data Catalog router.
 
 Endpoints:
   POST /catalog/webhook/dataset-created       (F13.1) — dataset-created event →
@@ -10,6 +10,7 @@ Endpoints:
   POST /catalog/suggest-quality-rules/{name}  (F13.5) — quality rules suggestion.
   GET  /catalog/recommend/{name}              (F13.6) — content-based recommendations.
   POST /catalog/lineage/parse                 (F13.7) — auto-lineage from SQL text.
+  POST /catalog/glossary/map/{name}           (F14.1) — glossary → columns auto-mapping.
 
 Sovereignty: raw dataset cell values are never accepted or forwarded.
 """
@@ -301,6 +302,34 @@ async def parse_lineage(
     except Exception as exc:
         logger.error("lineage/parse: failed — %s", exc)
         raise HTTPException(status_code=500, detail="Lineage parsing failed") from exc
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# F14.1 — Glossaire → colonnes auto-mapping (Phase 6)
+# ---------------------------------------------------------------------------
+
+@router.post("/glossary/map/{name}", tags=["Catalog"])
+async def map_glossary_to_columns(
+    name: str,
+) -> Dict[str, Any]:
+    """
+    For each column of the named DataProduct, use the LLM to find the most
+    relevant glossary term and PATCH it back to Boson.
+
+    Returns {"name", "mapped": [...], "skipped": int}.
+    Only column names and glossary term labels are sent to the LLM.
+    """
+    logger.info(json.dumps({"event": "map_glossary_request", "name": name}))
+
+    try:
+        result = await catalog_service.map_glossary_to_columns(name)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("map_glossary: failed for name=%s — %s", name, exc)
+        raise HTTPException(status_code=500, detail="Glossary mapping failed") from exc
 
     return result
 

@@ -88,6 +88,7 @@ export interface DataProductColumn {
   retentionDays?: number;
   datasetId?: string;
   branch?: string;
+  glossaryTermId?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -384,4 +385,24 @@ export async function updateGlossaryTerm(
 
 export async function deleteGlossaryTerm(id: string): Promise<void> {
   await axios.delete(`/api/catalog/glossary/${encodeURIComponent(id)}`);
+}
+
+// ---------------------------------------------------------------------------
+// Export DataProduct (Phase 6)
+// ---------------------------------------------------------------------------
+
+export interface DataProductExport {
+  dataProduct: CatalogDataProduct;
+  columns: DataProductColumn[];
+  qualityRules: unknown[];
+  stats: unknown[];
+  certifications: unknown[];
+  exportedAt: string;
+}
+
+export async function exportDataProduct(name: string): Promise<DataProductExport> {
+  const response = await axios.get<DataProductExport>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/export`
+  );
+  return response.data;
 }

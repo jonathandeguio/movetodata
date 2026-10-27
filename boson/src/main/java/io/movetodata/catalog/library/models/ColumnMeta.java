@@ -44,4 +44,8 @@ public class ColumnMeta {
 
     @Column(name = "retention_days")
     private Integer retentionDays;
+
+    /** FK to catalog_glossary_term — null if no term mapped. */
+    @Column(name = "glossary_term_id", columnDefinition = "uuid")
+    private String glossaryTermId;
 }
