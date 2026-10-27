@@ -61,8 +61,8 @@ public class DataDriftService {
         double z = (newRecordCount - mean) / std;
         boolean alert = Math.abs(z) > DRIFT_THRESHOLD;
 
-        log.info("drift: product={} count={} mean={:.0f} std={:.0f} z={:.3f} alert={}",
-                dataProductId, newRecordCount, mean, std, z, alert);
+        log.info("drift: product={} count={} mean={} std={} z={} alert={}",
+                dataProductId, newRecordCount, String.format("%.0f", mean), String.format("%.0f", std), String.format("%.3f", z), alert);
 
         return new DriftResult(
                 BigDecimal.valueOf(z).setScale(3, RoundingMode.HALF_UP),
