@@ -2,16 +2,14 @@
 catalog.py — F13 Data Catalog router.
 
 Endpoints:
-  POST /catalog/webhook/dataset-created     (F13.1) — receive dataset-created events,
-       orchestrate LLM metadata generation and Boson publication + PII auto-detection.
-  POST /catalog/generate-data-product       (F13.2) — generate a DataProduct descriptor
-       from schema information via the local LLM.
-  POST /catalog/publish-data-product        (F13.3) — push a DataProduct descriptor to
-       Boson native catalog, with idempotence handling (409 → PUT).
-  POST /catalog/enrich/{name}               (F13.4) — enrich an existing DataProduct:
-       improved description + PII detection per column, patched back to Boson.
-  POST /catalog/suggest-quality-rules/{name} (F13.5) — LLM suggests quality rules,
-       posted to Boson /quality-rules.
+  POST /catalog/webhook/dataset-created       (F13.1) — dataset-created event →
+       LLM metadata + Boson publication + PII auto-detection.
+  POST /catalog/generate-data-product         (F13.2) — generate DataProduct descriptor.
+  POST /catalog/publish-data-product          (F13.3) — push descriptor to Boson.
+  POST /catalog/enrich/{name}                 (F13.4) — description + PII enrichment.
+  POST /catalog/suggest-quality-rules/{name}  (F13.5) — quality rules suggestion.
+  GET  /catalog/recommend/{name}              (F13.6) — content-based recommendations.
+  POST /catalog/lineage/parse                 (F13.7) — auto-lineage from SQL text.
 
 Sovereignty: raw dataset cell values are never accepted or forwarded.
 """
@@ -239,6 +237,72 @@ async def suggest_quality_rules(
         raise HTTPException(status_code=500, detail="Quality rules suggestion failed") from exc
 
     return {"name": name, "rulesCreated": rules}
+
+
+# ---------------------------------------------------------------------------
+# F13.6 — Content-based DataProduct recommendations (Phase 5)
+# ---------------------------------------------------------------------------
+
+@router.get("/recommend/{name}", tags=["Catalog"])
+async def recommend_data_products(
+    name: str,
+    top_k: int = 5,
+) -> Dict[str, Any]:
+    """
+    Return up to top_k Data Products semantically similar to the named one,
+    based on ChromaDB vector similarity of their descriptions.
+    """
+    logger.info(json.dumps({"event": "recommend_request", "name": name, "top_k": top_k}))
+
+    try:
+        results = await catalog_service.recommend_data_products(name, top_k=top_k)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("recommend: failed for name=%s — %s", name, exc)
+        raise HTTPException(status_code=500, detail="Recommendation failed") from exc
+
+    return {"name": name, "recommendations": results}
+
+
+# ---------------------------------------------------------------------------
+# F13.7 — Auto-lineage: SQL parsing (Phase 5)
+# ---------------------------------------------------------------------------
+
+class LineageParseRequest(BaseModel):
+    sql: str
+    targetDataset: str
+
+
+@router.post("/lineage/parse", tags=["Catalog"])
+async def parse_lineage(
+    payload: LineageParseRequest,
+) -> Dict[str, Any]:
+    """
+    Parse a SQL query to extract source dataset references using the local LLM.
+    Returns {"sources": [...], "target": "..."}.
+    Only SQL structure is analysed — never actual data values.
+    """
+    if not payload.sql.strip():
+        raise HTTPException(status_code=400, detail="sql must not be empty")
+
+    logger.info(
+        json.dumps({
+            "event": "lineage_parse_request",
+            "target": payload.targetDataset,
+            "sql_len": len(payload.sql),
+        })
+    )
+
+    try:
+        result = await catalog_service.parse_lineage_from_sql(
+            payload.sql, payload.targetDataset
+        )
+    except Exception as exc:
+        logger.error("lineage/parse: failed — %s", exc)
+        raise HTTPException(status_code=500, detail="Lineage parsing failed") from exc
+
+    return result
 
 
 @router.post("/publish-data-product", tags=["Catalog"])

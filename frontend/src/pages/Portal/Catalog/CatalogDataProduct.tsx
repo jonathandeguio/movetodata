@@ -27,12 +27,18 @@ import {
   createQualityRule,
   deleteQualityRule,
   listDatasetStats,
+  recordProductView,
   DataProduct,
   DataProductColumn,
   CatalogQualityRule,
   CatalogDatasetStats,
 } from "../../../services/catalogService";
-import { enrichDataProductAPI, suggestQualityRulesAPI } from "../../../services/aiService";
+import {
+  enrichDataProductAPI,
+  suggestQualityRulesAPI,
+  recommendDataProductsAPI,
+  RecommendDataProductsResponse,
+} from "../../../services/aiService";
 import { useAiAssistantContext } from "../../../components/AiAssistant/AiAssistantContext";
 
 const { Title } = Typography;
@@ -138,6 +144,7 @@ const CatalogDataProduct: React.FC = () => {
   const [qualityRules, setQualityRules] = useState<CatalogQualityRule[]>([]);
   const [stats, setStats] = useState<CatalogDatasetStats[]>([]);
   const [suggestingRules, setSuggestingRules] = useState<boolean>(false);
+  const [recommendations, setRecommendations] = useState<RecommendDataProductsResponse["recommendations"]>([]);
 
   const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
   const [piiForm] = Form.useForm<PiiFormValues>();
@@ -172,16 +179,24 @@ const CatalogDataProduct: React.FC = () => {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    // Load quality rules and stats (non-blocking)
+    // Load quality rules, stats, and recommendations (non-blocking)
     getDataProduct(fqn)
-      .then((data) => Promise.all([
-        listQualityRules(data.name).catch(() => [] as CatalogQualityRule[]),
-        listDatasetStats(data.name).catch(() => [] as CatalogDatasetStats[]),
-      ]))
-      .then(([rules, statsData]) => {
+      .then((data) => {
+        // Record view (fire-and-forget)
+        recordProductView(data.name).catch(() => {});
+        return Promise.all([
+          listQualityRules(data.name).catch(() => [] as CatalogQualityRule[]),
+          listDatasetStats(data.name).catch(() => [] as CatalogDatasetStats[]),
+          recommendDataProductsAPI(data.name, 5)
+            .then((r) => r.data.recommendations)
+            .catch(() => [] as RecommendDataProductsResponse["recommendations"]),
+        ]);
+      })
+      .then(([rules, statsData, recs]) => {
         if (!cancelled) {
           setQualityRules(rules);
           setStats(statsData);
+          setRecommendations(recs);
         }
       })
       .catch(() => {});
@@ -618,7 +633,62 @@ const CatalogDataProduct: React.FC = () => {
               },
 
               // ---------------------------------------------------------------
-              // Tab 4 — Gouvernance RGPD (F13.9)
+              // Tab 4 — Recommandations similaires (Phase 5)
+              // ---------------------------------------------------------------
+              {
+                key: "recommendations",
+                label: "Similaires",
+                children: (
+                  <>
+                    {recommendations.length === 0 ? (
+                      <Empty description="Aucune recommandation disponible — indexez le catalog via RAG d'abord." />
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {recommendations.map((r) => (
+                          <div
+                            key={r.id}
+                            style={{
+                              border: "1px solid #d9d9d9",
+                              borderRadius: 6,
+                              padding: "10px 14px",
+                              cursor: "pointer",
+                              transition: "box-shadow 0.15s",
+                            }}
+                            onClick={() => navigate(`/portal/catalog/product/${encodeURIComponent(r.name)}`)}
+                            onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.12)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+                          >
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <strong>{r.name}</strong>
+                              <Tag color="purple" style={{ borderRadius: 2 }}>
+                                {(r.score * 100).toFixed(0)}% similaire
+                              </Tag>
+                            </div>
+                            {r.description && (
+                              <div style={{ color: "#666", fontSize: 13, marginTop: 4 }}>
+                                {r.description.slice(0, 160)}{r.description.length > 160 ? "…" : ""}
+                              </div>
+                            )}
+                            <div style={{ marginTop: 6, display: "flex", gap: 6 }}>
+                              {r.qualityLevel && (
+                                <Tag style={{ borderRadius: 2, fontSize: 11 }}>{r.qualityLevel}</Tag>
+                              )}
+                              {r.accessPolicy && (
+                                <Tag color={r.accessPolicy === "PUBLIC" ? "green" : r.accessPolicy === "RESTRICTED" ? "red" : "blue"} style={{ borderRadius: 2, fontSize: 11 }}>
+                                  {r.accessPolicy}
+                                </Tag>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ),
+              },
+
+              // ---------------------------------------------------------------
+              // Tab 5 — Gouvernance RGPD (F13.9)
               // ---------------------------------------------------------------
               {
                 key: "gdpr",

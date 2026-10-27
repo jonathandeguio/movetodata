@@ -3,6 +3,9 @@ package io.movetodata.catalog.controllers;
 import io.movetodata.catalog.library.models.CertificationHistory;
 import io.movetodata.catalog.library.models.ColumnMeta;
 import io.movetodata.catalog.library.models.DataProduct;
+import io.movetodata.catalog.library.repository.CatalogDatasetStatsRepository;
+import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
+import io.movetodata.catalog.library.repository.CatalogQualityRuleRepository;
 import io.movetodata.catalog.library.repository.CertificationHistoryRepository;
 import io.movetodata.catalog.library.repository.ColumnMetaRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
@@ -20,6 +23,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,9 +55,12 @@ import java.util.stream.Collectors;
 @Tag(name = "Data Catalog — Data Products", description = "Manage Data Products in the native Data Catalog.")
 public class CatalogController {
 
-    private final DataProductRepository dataProductRepository;
+    private final DataProductRepository         dataProductRepository;
     private final CertificationHistoryRepository certificationHistoryRepository;
-    private final ColumnMetaRepository columnMetaRepository;
+    private final ColumnMetaRepository           columnMetaRepository;
+    private final CatalogQualityRuleRepository   qualityRuleRepository;
+    private final CatalogDatasetStatsRepository  statsRepository;
+    private final CatalogProductViewRepository   viewRepository;
 
     // -------------------------------------------------------------------------
     // GET /api/catalog/data-products — list with optional filters
@@ -330,22 +338,48 @@ public class CatalogController {
 
         DataProduct dp = opt.get();
 
-        // documentation_score: one point per non-null/non-blank metadata field (max 4)
+        // --- Phase 5 composite Trust Score ---
+        // 20% documentation_score
         double docScore = 0.0;
         if (dp.getDescription() != null && !dp.getDescription().isBlank()) docScore += 0.25;
-        if (dp.getDomainId() != null) docScore += 0.25;
-        if (dp.getOwnerId() != null) docScore += 0.25;
+        if (dp.getDomainId()    != null) docScore += 0.25;
+        if (dp.getOwnerId()     != null) docScore += 0.25;
         if (dp.getQualityLevel() != null) docScore += 0.25;
 
-        // certification_score: derived from qualityLevel
+        // 10% certification_score
         double certScore = 0.0;
         if ("GOLD".equals(dp.getQualityLevel()))        certScore = 1.0;
         else if ("SILVER".equals(dp.getQualityLevel())) certScore = 0.6;
         else if ("BRONZE".equals(dp.getQualityLevel())) certScore = 0.3;
 
-        // trust_score = 40% doc + 30% cert + 30% fixed placeholder
-        // (quality/freshness metrics require Phase 4 integration)
-        double trustScore = 0.40 * docScore + 0.30 * certScore + 0.30 * 0.5;
+        // 30% quality_score: proxy = min(1, enabledRules / 5)
+        long enabledRules = qualityRuleRepository
+                .findByDataProductIdOrderByCreatedAtAsc(dp.getId())
+                .stream().filter(r -> r.isEnabled()).count();
+        double qualityScore = Math.min(1.0, enabledRules / 5.0);
+
+        // 25% freshness_score: based on latest stats snapshot age
+        double freshnessScore = 0.0;
+        var latestStats = statsRepository
+                .findTop10ByDataProductIdOrderByMeasuredAtDesc(dp.getId());
+        if (!latestStats.isEmpty()) {
+            Instant latest = latestStats.get(0).getMeasuredAt();
+            long daysAgo = ChronoUnit.DAYS.between(latest, Instant.now());
+            if (daysAgo <= 7)  freshnessScore = 1.0;
+            else if (daysAgo <= 30) freshnessScore = 0.5;
+        }
+
+        // 15% usage_score: views in last 30 days vs platform average
+        Instant thirtyDaysAgo = Instant.now().minus(30, ChronoUnit.DAYS);
+        long recentViews = viewRepository.countRecentViews(dp.getId(), thirtyDaysAgo);
+        double avgViews  = viewRepository.avgViewsPerProduct(thirtyDaysAgo);
+        double usageScore = avgViews > 0 ? Math.min(1.0, recentViews / avgViews) : 0.5;
+
+        double trustScore = 0.20 * docScore
+                          + 0.10 * certScore
+                          + 0.30 * qualityScore
+                          + 0.25 * freshnessScore
+                          + 0.15 * usageScore;
         dp.setTrustScore(BigDecimal.valueOf(trustScore).setScale(2, java.math.RoundingMode.HALF_UP));
         dataProductRepository.save(dp);
 

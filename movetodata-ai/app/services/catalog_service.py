@@ -485,6 +485,96 @@ def _build_quality_rules_prompt(name: str, columns: List[Dict[str, Any]]) -> str
     )
 
 
+# ---------------------------------------------------------------------------
+# F13.6 — Content-based recommendations (Phase 5)
+# ---------------------------------------------------------------------------
+
+async def recommend_data_products(name: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    """
+    Fetch the DataProduct's description, embed it, and use ChromaDB to find
+    the most similar other DataProducts (excluding the DataProduct itself).
+    """
+    headers = _boson_headers()
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        dp_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+            headers=headers,
+        )
+        if dp_resp.status_code == 404:
+            raise ValueError(f"DataProduct '{name}' not found in catalog")
+        dp_resp.raise_for_status()
+        dp: Dict[str, Any] = dp_resp.json()
+
+    description: str = dp.get("description") or dp.get("displayName") or name
+    dp_id: str = dp.get("id", "")
+
+    from app.services import rag_service  # local import avoids circularity
+    results = await rag_service.search(description, top_k=top_k + 1)
+
+    # Exclude the DataProduct itself
+    recommendations = [r for r in results if r.get("id") != dp_id][:top_k]
+
+    logger.info(
+        json.dumps({
+            "event": "recommend_data_products",
+            "name": name,
+            "candidates": len(recommendations),
+        })
+    )
+    return recommendations
+
+
+# ---------------------------------------------------------------------------
+# F13.7 — Auto-lineage: SQL parsing via LLM (Phase 5)
+# ---------------------------------------------------------------------------
+
+def _build_lineage_parse_prompt(sql_text: str, target: str) -> str:
+    """Prompt asking the LLM to extract source dataset names from SQL."""
+    return (
+        "Tu es un expert en lineage de données. "
+        "À partir du code SQL suivant, identifie toutes les tables / datasets sources.\n\n"
+        "IMPÉRATIF : réponds UNIQUEMENT avec un bloc JSON valide entre ```json et ```. "
+        "Ne fournis aucune donnée de cellule.\n\n"
+        "Format attendu :\n"
+        '{ "sources": ["table1", "table2", ...], "target": "<nom_dataset_cible>" }\n\n'
+        f"Dataset cible déclaré : {target}\n\n"
+        f"SQL à analyser :\n{sql_text[:3000]}\n\n"
+        "JSON :"
+    )
+
+
+async def parse_lineage_from_sql(sql_text: str, target_dataset: str) -> Dict[str, Any]:
+    """
+    Use the LLM to extract source dataset names from a SQL query.
+    Returns {"sources": [...], "target": "..."}.
+    Only the SQL structure (table/alias names) is extracted — never cell values.
+    """
+    prompt = _build_lineage_parse_prompt(sql_text, target_dataset)
+
+    logger.info(
+        json.dumps({
+            "event": "parse_lineage_from_sql",
+            "target": target_dataset,
+            "sql_len": len(sql_text),
+        })
+    )
+
+    try:
+        parsed = await _call_llm_with_retry(prompt)
+    except Exception as exc:
+        logger.warning(json.dumps({"event": "parse_lineage_failed", "error": str(exc)}))
+        raise
+
+    sources = parsed.get("sources", [])
+    if not isinstance(sources, list):
+        sources = []
+    return {
+        "sources": [s for s in sources if isinstance(s, str) and s],
+        "target": parsed.get("target", target_dataset),
+    }
+
+
 async def suggest_quality_rules(name: str) -> List[Dict[str, Any]]:
     """
     Fetch a DataProduct + columns from Boson, use the LLM to suggest quality

@@ -408,3 +408,42 @@ export const suggestQualityRulesAPI = (
   name: string
 ): Promise<AxiosResponse<SuggestQualityRulesResponse>> =>
   axios.post(`/api/ai/catalog/suggest-quality-rules/${encodeURIComponent(name)}`);
+
+// ---------------------------------------------------------------------------
+// F13.6 — Data Product recommendations (Phase 5)
+// ---------------------------------------------------------------------------
+
+export interface RecommendDataProductsResponse {
+  name: string;
+  recommendations: Array<{
+    id: string;
+    name: string;
+    description: string;
+    qualityLevel: string;
+    accessPolicy: string;
+    score: number;
+  }>;
+}
+
+export const recommendDataProductsAPI = (
+  name: string,
+  topK = 5
+): Promise<AxiosResponse<RecommendDataProductsResponse>> =>
+  axios.get(`/api/ai/catalog/recommend/${encodeURIComponent(name)}`, {
+    params: { top_k: topK },
+  });
+
+// ---------------------------------------------------------------------------
+// F13.7 — Auto-lineage SQL parsing (Phase 5)
+// ---------------------------------------------------------------------------
+
+export interface ParseLineageResponse {
+  sources: string[];
+  target: string;
+}
+
+export const parseLineageAPI = (
+  sql: string,
+  targetDataset: string
+): Promise<AxiosResponse<ParseLineageResponse>> =>
+  axios.post("/api/ai/catalog/lineage/parse", { sql, targetDataset });

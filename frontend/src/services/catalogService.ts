@@ -333,3 +333,55 @@ export async function recordDatasetStats(
   );
   return response.data;
 }
+
+// ---------------------------------------------------------------------------
+// View tracking (Phase 5)
+// ---------------------------------------------------------------------------
+
+export async function recordProductView(name: string): Promise<void> {
+  await axios.post(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/view`
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Glossaire métier (Phase 5)
+// ---------------------------------------------------------------------------
+
+export interface CatalogGlossaryTerm {
+  id: string;
+  term: string;
+  definition: string;
+  domain?: string;
+  synonyms?: string;
+  createdAt?: string;
+}
+
+export async function listGlossaryTerms(domain?: string): Promise<CatalogGlossaryTerm[]> {
+  const response = await axios.get<CatalogGlossaryTerm[]>("/api/catalog/glossary", {
+    params: domain ? { domain } : {},
+  });
+  return response.data;
+}
+
+export async function createGlossaryTerm(
+  payload: Pick<CatalogGlossaryTerm, "term" | "definition" | "domain" | "synonyms">
+): Promise<CatalogGlossaryTerm> {
+  const response = await axios.post<CatalogGlossaryTerm>("/api/catalog/glossary", payload);
+  return response.data;
+}
+
+export async function updateGlossaryTerm(
+  id: string,
+  payload: Partial<CatalogGlossaryTerm>
+): Promise<CatalogGlossaryTerm> {
+  const response = await axios.put<CatalogGlossaryTerm>(
+    `/api/catalog/glossary/${encodeURIComponent(id)}`,
+    payload
+  );
+  return response.data;
+}
+
+export async function deleteGlossaryTerm(id: string): Promise<void> {
+  await axios.delete(`/api/catalog/glossary/${encodeURIComponent(id)}`);
+}
