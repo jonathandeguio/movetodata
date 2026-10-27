@@ -29,4 +29,6 @@ public interface PipelineRepository
     void deleteByTargetDatasetAndTargetBranch(UUID targetDataset, String branch);
 
     PipelineModel findBySourceDatasetAndTargetDataset(UUID sourceDataset, UUID targetDataset);
+
+    List<PipelineModel> findAllByTargetDataset(UUID targetDataset);
 }

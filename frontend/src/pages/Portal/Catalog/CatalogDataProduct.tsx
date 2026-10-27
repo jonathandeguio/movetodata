@@ -21,6 +21,7 @@ import type { ColumnsType } from "antd/es/table";
 import {
   addPiiTag,
   getDataProduct,
+  getDataProductColumns,
   DataProduct,
   DataProductColumn,
 } from "../../../services/catalogService";
@@ -87,26 +88,15 @@ interface PiiRow {
   retention: string;
 }
 
-function buildPiiRows(product: DataProduct): PiiRow[] {
-  const cols = product.columns ?? [];
-  const piiCols = cols.filter((c) =>
-    c.tags?.some(
-      (t) =>
-        t.tagFQN?.startsWith("PII") || t.tagFQN?.startsWith("GDPR")
-    )
-  );
-  return piiCols.map((c) => {
-    const piiTag = c.tags?.find(
-      (t) =>
-        t.tagFQN?.startsWith("PII") || t.tagFQN?.startsWith("GDPR")
-    );
-    return {
-      key: c.name,
-      columnName: c.name,
-      piiType: piiTag?.tagFQN ?? "—",
-      retention: "—",
-    };
-  });
+function buildPiiRows(cols: DataProductColumn[]): PiiRow[] {
+  return cols
+    .filter((c) => c.piiType != null && c.piiType !== "")
+    .map((c) => ({
+      key: c.columnName,
+      columnName: c.columnName,
+      piiType: c.piiType ?? "—",
+      retention: c.retentionDays != null ? `${c.retentionDays} j` : "—",
+    }));
 }
 
 const PII_TAG_OPTIONS = [
@@ -132,6 +122,7 @@ const CatalogDataProduct: React.FC = () => {
   const fqn = rawFqn ? decodeURIComponent(rawFqn) : "";
 
   const [product, setProduct] = useState<DataProduct | null>(null);
+  const [columns, setColumns] = useState<DataProductColumn[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -147,14 +138,19 @@ const CatalogDataProduct: React.FC = () => {
     setError(null);
     getDataProduct(fqn)
       .then((data) => {
-        if (!cancelled) setProduct(data);
+        if (cancelled) return;
+        setProduct(data);
+        return getDataProductColumns(data.name);
+      })
+      .then((cols) => {
+        if (!cancelled && cols != null) setColumns(cols);
       })
       .catch((err: unknown) => {
         if (!cancelled) {
           const message =
             err instanceof Error ? err.message : "Erreur inconnue";
           setError(
-            `Impossible de charger le Data Product : ${message}. Vérifiez que REACT_APP_OPENMETADATA_URL est correctement configurée.`
+            `Impossible de charger le Data Product : ${message}.`
           );
         }
       })
@@ -183,9 +179,10 @@ const CatalogDataProduct: React.FC = () => {
       await addPiiTag(fqn, values.columnName, values.tagFqn);
       setPiiModalOpen(false);
       piiForm.resetFields();
-      // Reload product to reflect new tag
-      const updated = await getDataProduct(fqn);
-      setProduct(updated);
+      if (product) {
+        const updatedCols = await getDataProductColumns(product.name);
+        setColumns(updatedCols);
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Erreur inconnue";
       setPiiError(`Impossible d'ajouter le tag PII : ${message}`);
@@ -223,11 +220,11 @@ const CatalogDataProduct: React.FC = () => {
   ];
 
   // Column options for PII modal
-  const columnOptions = (product?.columns ?? []).map(
-    (c: DataProductColumn) => ({ label: c.name, value: c.name })
+  const columnOptions = columns.map(
+    (c: DataProductColumn) => ({ label: c.columnName, value: c.columnName })
   );
 
-  const piiRows = product ? buildPiiRows(product) : [];
+  const piiRows = buildPiiRows(columns);
 
   return (
     <div
@@ -317,6 +314,23 @@ const CatalogDataProduct: React.FC = () => {
                       {product.dataProductType && (
                         <Descriptions.Item label="Type">
                           {product.dataProductType}
+                        </Descriptions.Item>
+                      )}
+
+                      {product.trustScore !== undefined && (
+                        <Descriptions.Item label="Trust Score">
+                          <Tag
+                            color={
+                              product.trustScore >= 0.8
+                                ? "green"
+                                : product.trustScore >= 0.5
+                                ? "orange"
+                                : "red"
+                            }
+                            style={{ borderRadius: 2 }}
+                          >
+                            Score : {(product.trustScore * 100).toFixed(0)}%
+                          </Tag>
                         </Descriptions.Item>
                       )}
 

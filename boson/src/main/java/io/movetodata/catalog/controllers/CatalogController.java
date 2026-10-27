@@ -1,8 +1,10 @@
 package io.movetodata.catalog.controllers;
 
 import io.movetodata.catalog.library.models.CertificationHistory;
+import io.movetodata.catalog.library.models.ColumnMeta;
 import io.movetodata.catalog.library.models.DataProduct;
 import io.movetodata.catalog.library.repository.CertificationHistoryRepository;
+import io.movetodata.catalog.library.repository.ColumnMetaRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
 import io.movetodata.passport.library.Auth;
 import io.movetodata.passport.security.AuthUser;
@@ -50,6 +52,7 @@ public class CatalogController {
 
     private final DataProductRepository dataProductRepository;
     private final CertificationHistoryRepository certificationHistoryRepository;
+    private final ColumnMetaRepository columnMetaRepository;
 
     // -------------------------------------------------------------------------
     // GET /api/catalog/data-products — list with optional filters
@@ -307,5 +310,119 @@ public class CatalogController {
         List<CertificationHistory> history =
                 certificationHistoryRepository.findByDataProductIdOrderByCertifiedAtDesc(opt.get().getId());
         return ResponseEntity.ok(history);
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/catalog/data-products/{name}/compute-trust-score
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Compute and persist the trust score for a data product.")
+    @PostMapping("/{name}/compute-trust-score")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<DataProduct> computeTrustScore(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DataProduct dp = opt.get();
+
+        // documentation_score: one point per non-null/non-blank metadata field (max 4)
+        double docScore = 0.0;
+        if (dp.getDescription() != null && !dp.getDescription().isBlank()) docScore += 0.25;
+        if (dp.getDomainId() != null) docScore += 0.25;
+        if (dp.getOwnerId() != null) docScore += 0.25;
+        if (dp.getQualityLevel() != null) docScore += 0.25;
+
+        // certification_score: derived from qualityLevel
+        double certScore = 0.0;
+        if ("GOLD".equals(dp.getQualityLevel()))        certScore = 1.0;
+        else if ("SILVER".equals(dp.getQualityLevel())) certScore = 0.6;
+        else if ("BRONZE".equals(dp.getQualityLevel())) certScore = 0.3;
+
+        // trust_score = 40% doc + 30% cert + 30% fixed placeholder
+        // (quality/freshness metrics require Phase 4 integration)
+        double trustScore = 0.40 * docScore + 0.30 * certScore + 0.30 * 0.5;
+        dp.setTrustScore(BigDecimal.valueOf(trustScore).setScale(2, java.math.RoundingMode.HALF_UP));
+        dataProductRepository.save(dp);
+
+        log.info("Trust score computed: id={} score={} by user={}", dp.getId(), dp.getTrustScore(), authUser.getId());
+        return ResponseEntity.ok(dp);
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/catalog/data-products/{name}/columns — list column metadata
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "List column metadata for a data product.")
+    @GetMapping("/{name}/columns")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<List<ColumnMeta>> listColumns(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DataProduct dp = opt.get();
+        // Phase 2: DataProduct id is used as the dataset pivot UUID.
+        List<ColumnMeta> columns =
+                columnMetaRepository.findByDatasetIdAndBranch(UUID.fromString(dp.getId()), "master");
+        return ResponseEntity.ok(columns);
+    }
+
+    // -------------------------------------------------------------------------
+    // PATCH /api/catalog/data-products/{name}/columns/{col} — update column meta
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Update column metadata for a data product.")
+    @PatchMapping("/{name}/columns/{col}")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<ColumnMeta> updateColumn(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name,
+            @PathVariable("col") String col,
+            @RequestBody Map<String, Object> body) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DataProduct dp = opt.get();
+        UUID datasetId = UUID.fromString(dp.getId());
+
+        // Find or create the ColumnMeta row
+        ColumnMeta cm = columnMetaRepository
+                .findByDatasetIdAndBranchAndColumnName(datasetId, "master", col)
+                .orElseGet(() -> ColumnMeta.builder()
+                        .id(UUID.randomUUID().toString())
+                        .datasetId(datasetId)
+                        .branch("master")
+                        .columnName(col)
+                        .build());
+
+        if (body.containsKey("description")) {
+            cm.setDescription(body.get("description") != null ? body.get("description").toString() : null);
+        }
+        if (body.containsKey("piiType")) {
+            cm.setPiiType(body.get("piiType") != null ? body.get("piiType").toString() : null);
+        }
+        if (body.containsKey("retentionDays")) {
+            if (body.get("retentionDays") != null) {
+                cm.setRetentionDays(Integer.valueOf(body.get("retentionDays").toString()));
+            } else {
+                cm.setRetentionDays(null);
+            }
+        }
+
+        ColumnMeta saved = columnMetaRepository.save(cm);
+        log.info("Column meta updated: dataProduct={} column={} by user={}", name, col, authUser.getId());
+        return ResponseEntity.ok(saved);
     }
 }
