@@ -806,3 +806,80 @@ async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
         return await _post_to_boson(metadata, attempt_counter[0])
 
     return await _with_counter()
+
+
+# ---------------------------------------------------------------------------
+# F16.3 — Text-to-SQL depuis le Catalog (Phase 8)
+# ---------------------------------------------------------------------------
+
+def _build_catalog_sql_prompt(name: str, columns: List[Dict[str, Any]], question: str) -> str:
+    """Prompt asking the LLM to generate SQL using DataProduct columns as schema context."""
+    col_lines = "\n".join(
+        f"  - {c.get('columnName', '?')} (pii={c.get('piiType') or 'none'})"
+        for c in columns
+    )
+    return (
+        "Tu es un expert SQL. Génère une requête SQL SELECT à partir de la question posée.\n\n"
+        "IMPÉRATIF : réponds UNIQUEMENT avec un JSON valide entre ```json et ```. "
+        "Ne fournis jamais de valeurs de cellules ni de données réelles.\n\n"
+        "Format attendu :\n"
+        '```json\n{"sql": "SELECT ...", "confidence": 0.85}\n```\n\n'
+        f"Data Product : {name}\n"
+        f"Schéma des colonnes :\n{col_lines}\n\n"
+        f"Question : {question}\n\n"
+        "JSON :"
+    )
+
+
+async def catalog_text_to_sql(name: str, question: str) -> Dict[str, Any]:
+    """
+    Generate a SQL SELECT query from a natural-language question using the
+    DataProduct's column schema as context.
+
+    Returns {"sql": "...", "confidence": float, "model": str}.
+    Only column names and PII flags are sent to the LLM — never cell values.
+    """
+    headers = _boson_headers()
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        dp_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+            headers=headers,
+        )
+        if dp_resp.status_code == 404:
+            raise ValueError(f"DataProduct '{name}' not found in catalog")
+        dp_resp.raise_for_status()
+
+        col_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
+            headers=headers,
+        )
+        columns: List[Dict[str, Any]] = col_resp.json() if col_resp.status_code == 200 else []
+
+    prompt = _build_catalog_sql_prompt(name, columns, question)
+
+    logger.info(
+        json.dumps({
+            "event": "catalog_text_to_sql",
+            "name": name,
+            "columns_count": len(columns),
+            "question_len": len(question),
+            "model": CHAT_MODEL,
+        })
+    )
+
+    try:
+        parsed = await _call_llm_with_retry(prompt)
+    except Exception as exc:
+        logger.warning(json.dumps({"event": "catalog_text_to_sql_failed", "name": name, "error": str(exc)}))
+        raise
+
+    sql: str = parsed.get("sql", "") if isinstance(parsed, dict) else ""
+    confidence: float = float(parsed.get("confidence", 0.7)) if isinstance(parsed, dict) else 0.7
+    confidence = max(0.0, min(1.0, confidence))
+
+    return {
+        "sql": sql,
+        "confidence": confidence,
+        "model": CHAT_MODEL,
+    }

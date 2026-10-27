@@ -2,9 +2,11 @@ package io.movetodata.catalog.library.services;
 
 import io.movetodata.catalog.library.models.CatalogDatasetStats;
 import io.movetodata.catalog.library.models.DataProduct;
+import io.movetodata.catalog.library.models.CatalogSubscription;
 import io.movetodata.catalog.library.repository.CatalogDatasetStatsRepository;
 import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
 import io.movetodata.catalog.library.repository.CatalogQualityRuleRepository;
+import io.movetodata.catalog.library.repository.CatalogSubscriptionRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
 import io.movetodata.notifications.library.enums.NotificationType;
 import io.movetodata.notifications.library.models.Notification;
@@ -41,6 +43,7 @@ public class TrustScoreRefreshJob {
     private final CatalogDatasetStatsRepository  statsRepository;
     private final CatalogProductViewRepository   viewRepository;
     private final NotificationRepository         notificationRepository;
+    private final CatalogSubscriptionRepository  subscriptionRepository;
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void refreshAll() {
@@ -62,24 +65,37 @@ public class TrustScoreRefreshJob {
                     dataProductRepository.save(dp);
                     updated++;
                 }
+                // Build subscriber set (owner + explicit subscribers)
+                List<UUID> recipients = new java.util.ArrayList<>();
                 if (dp.getOwnerId() != null) {
+                    recipients.add(dp.getOwnerId());
+                }
+                for (CatalogSubscription sub : subscriptionRepository.findByDataProductId(dp.getId())) {
+                    if (!recipients.contains(sub.getSubscriberId())) {
+                        recipients.add(sub.getSubscriberId());
+                    }
+                }
+
+                if (!recipients.isEmpty()) {
                     // Alert on low trust score
                     if (score.doubleValue() < TRUST_LOW_THRESHOLD) {
-                        createNotification(dp.getOwnerId(), dp.getId(),
-                                NotificationType.CATALOG_TRUST_LOW,
-                                String.format("Trust Score bas (%d%%) pour le Data Product « %s ».",
-                                        (int)(score.doubleValue() * 100), dp.getName()));
+                        String msg = String.format("Trust Score bas (%d%%) pour le Data Product « %s ».",
+                                (int)(score.doubleValue() * 100), dp.getName());
+                        for (UUID uid : recipients) {
+                            createNotification(uid, dp.getId(), NotificationType.CATALOG_TRUST_LOW, msg);
+                        }
                     }
                     // Alert on active drift
                     var latestStats = statsRepository.findTop10ByDataProductIdOrderByMeasuredAtDesc(dp.getId());
                     if (!latestStats.isEmpty() && latestStats.get(0).isDriftAlert()) {
-                        createNotification(dp.getOwnerId(), dp.getId(),
-                                NotificationType.CATALOG_DRIFT,
-                                String.format("Drift détecté sur le Data Product « %s » (z-score: %s).",
-                                        dp.getName(),
-                                        latestStats.get(0).getDriftScore() != null
-                                                ? latestStats.get(0).getDriftScore().toPlainString()
-                                                : "—"));
+                        String msg = String.format("Drift détecté sur le Data Product « %s » (z-score: %s).",
+                                dp.getName(),
+                                latestStats.get(0).getDriftScore() != null
+                                        ? latestStats.get(0).getDriftScore().toPlainString()
+                                        : "—");
+                        for (UUID uid : recipients) {
+                            createNotification(uid, dp.getId(), NotificationType.CATALOG_DRIFT, msg);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -89,7 +105,7 @@ public class TrustScoreRefreshJob {
         log.info("TrustScoreRefreshJob: refreshed {}/{} data products", updated, all.size());
     }
 
-    private void createNotification(UUID ownerId, String resourceIdStr,
+    private void createNotification(UUID recipientId, String resourceIdStr,
                                     NotificationType type, String message) {
         try {
             Notification n = new Notification();
@@ -97,7 +113,7 @@ public class TrustScoreRefreshJob {
             n.setResourceId(UUID.fromString(resourceIdStr));
             n.setType(type);
             n.setMessage(message);
-            n.setSubscriber(ownerId);
+            n.setSubscriber(recipientId);
             n.setIsRead(false);
             n.setStatus("UNREAD");
             n.setTimestamp(new Date());

@@ -11,6 +11,7 @@ Endpoints:
   GET  /catalog/recommend/{name}              (F13.6) — content-based recommendations.
   POST /catalog/lineage/parse                 (F13.7) — auto-lineage from SQL text.
   POST /catalog/glossary/map/{name}           (F14.1) — glossary → columns auto-mapping.
+  POST /catalog/query/{name}                  (F16.3) — Text-to-SQL depuis le Catalog.
 
 Sovereignty: raw dataset cell values are never accepted or forwarded.
 """
@@ -330,6 +331,42 @@ async def map_glossary_to_columns(
     except Exception as exc:
         logger.error("map_glossary: failed for name=%s — %s", name, exc)
         raise HTTPException(status_code=500, detail="Glossary mapping failed") from exc
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# F16.3 — Text-to-SQL depuis le Catalog (Phase 8)
+# ---------------------------------------------------------------------------
+
+class CatalogQueryRequest(BaseModel):
+    question: str
+
+
+@router.post("/query/{name}", tags=["Catalog"])
+async def catalog_query(
+    name: str,
+    payload: CatalogQueryRequest,
+) -> Dict[str, Any]:
+    """
+    Generate a SQL SELECT query from a natural-language question using the
+    named DataProduct's column schema as context (F16.3 — Pilier 2 completion).
+
+    Returns {"sql": "...", "confidence": float, "model": str}.
+    Only column names and PII flags are sent to the LLM — never cell values.
+    """
+    if not payload.question.strip():
+        raise HTTPException(status_code=400, detail="question must not be empty")
+
+    logger.info(json.dumps({"event": "catalog_query_request", "name": name, "question_len": len(payload.question)}))
+
+    try:
+        result = await catalog_service.catalog_text_to_sql(name, payload.question)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("catalog_query: failed for name=%s — %s", name, exc)
+        raise HTTPException(status_code=500, detail="Query generation failed") from exc
 
     return result
 

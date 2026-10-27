@@ -1,11 +1,15 @@
 package io.movetodata.catalog.controllers;
 
+import io.movetodata.catalog.library.models.CatalogAuditLog;
+import io.movetodata.catalog.library.models.CatalogSubscription;
 import io.movetodata.catalog.library.models.CertificationHistory;
 import io.movetodata.catalog.library.models.ColumnMeta;
 import io.movetodata.catalog.library.models.DataProduct;
+import io.movetodata.catalog.library.repository.CatalogAuditLogRepository;
 import io.movetodata.catalog.library.repository.CatalogDatasetStatsRepository;
 import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
 import io.movetodata.catalog.library.repository.CatalogQualityRuleRepository;
+import io.movetodata.catalog.library.repository.CatalogSubscriptionRepository;
 import io.movetodata.catalog.library.repository.CertificationHistoryRepository;
 import io.movetodata.catalog.library.repository.ColumnMetaRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
@@ -61,6 +65,8 @@ public class CatalogController {
     private final CatalogQualityRuleRepository   qualityRuleRepository;
     private final CatalogDatasetStatsRepository  statsRepository;
     private final CatalogProductViewRepository   viewRepository;
+    private final CatalogAuditLogRepository      auditLogRepository;
+    private final CatalogSubscriptionRepository  subscriptionRepository;
 
     // -------------------------------------------------------------------------
     // GET /api/catalog/data-products — list with optional filters
@@ -228,6 +234,7 @@ public class CatalogController {
                     }
                     DataProduct updated = dataProductRepository.save(existing);
                     log.info("Data product updated: id={} by user={}", updated.getId(), authUser.getId());
+                    logAudit(updated.getId(), authUser.getId(), "UPDATE", null);
                     return ResponseEntity.ok(updated);
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -296,6 +303,7 @@ public class CatalogController {
         DataProduct updated = dataProductRepository.save(dp);
 
         log.info("Data product certified: id={} qualityLevel={} by user={}", dp.getId(), qualityLevel, authUser.getId());
+        logAudit(dp.getId(), authUser.getId(), "CERTIFY", "qualityLevel=" + qualityLevel);
         return ResponseEntity.ok(updated);
     }
 
@@ -461,6 +469,7 @@ public class CatalogController {
 
         ColumnMeta saved = columnMetaRepository.save(cm);
         log.info("Column meta updated: dataProduct={} column={} by user={}", name, col, authUser.getId());
+        logAudit(dp.getId(), authUser.getId(), "PATCH_COLUMN", "column=" + col);
         return ResponseEntity.ok(saved);
     }
 
@@ -502,5 +511,130 @@ public class CatalogController {
 
         log.info("Data product exported: name={} by user={}", name, authUser.getId());
         return ResponseEntity.ok(export);
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/catalog/data-products/{name}/audit — audit log (Phase 8)
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Get the audit log for a data product.")
+    @GetMapping("/{name}/audit")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<List<CatalogAuditLog>> getAuditLog(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        List<CatalogAuditLog> logs = auditLogRepository
+                .findByDataProductIdOrderByCreatedAtDesc(opt.get().getId());
+        return ResponseEntity.ok(logs);
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/catalog/data-products/{name}/subscribe — subscribe (Phase 8)
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Subscribe the current user to change alerts for a data product.")
+    @PostMapping("/{name}/subscribe")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Map<String, Object>> subscribe(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UUID userId = UUID.fromString(authUser.getId());
+        String dpId = opt.get().getId();
+        boolean alreadyExists = subscriptionRepository
+                .findByDataProductIdAndSubscriberId(dpId, userId)
+                .isPresent();
+
+        if (!alreadyExists) {
+            CatalogSubscription sub = CatalogSubscription.builder()
+                    .id(UUID.randomUUID().toString())
+                    .dataProductId(dpId)
+                    .subscriberId(userId)
+                    .build();
+            subscriptionRepository.save(sub);
+            logAudit(dpId, authUser.getId(), "SUBSCRIBE", null);
+        }
+
+        Map<String, Object> resp = new java.util.LinkedHashMap<>();
+        resp.put("subscribed", true);
+        resp.put("dataProductName", name);
+        return ResponseEntity.ok(resp);
+    }
+
+    // -------------------------------------------------------------------------
+    // DELETE /api/catalog/data-products/{name}/unsubscribe — unsubscribe (Phase 8)
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Unsubscribe the current user from a data product.")
+    @DeleteMapping("/{name}/unsubscribe")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Void> unsubscribe(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UUID userId = UUID.fromString(authUser.getId());
+        subscriptionRepository.deleteByDataProductIdAndSubscriberId(opt.get().getId(), userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/catalog/data-products/{name}/subscribed — check subscription (Phase 8)
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Check whether the current user is subscribed to a data product.")
+    @GetMapping("/{name}/subscribed")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Map<String, Object>> isSubscribed(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        Optional<DataProduct> opt = dataProductRepository.findByName(name);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UUID userId = UUID.fromString(authUser.getId());
+        boolean subscribed = subscriptionRepository
+                .findByDataProductIdAndSubscriberId(opt.get().getId(), userId)
+                .isPresent();
+
+        Map<String, Object> resp = new java.util.LinkedHashMap<>();
+        resp.put("subscribed", subscribed);
+        resp.put("dataProductName", name);
+        return ResponseEntity.ok(resp);
+    }
+
+    // -------------------------------------------------------------------------
+    // Private helper — write an audit log entry
+    // -------------------------------------------------------------------------
+
+    private void logAudit(String dataProductId, String actorId, String action, String detail) {
+        try {
+            CatalogAuditLog entry = CatalogAuditLog.builder()
+                    .id(UUID.randomUUID().toString())
+                    .dataProductId(dataProductId)
+                    .actorId(actorId)
+                    .action(action)
+                    .detail(detail)
+                    .build();
+            auditLogRepository.save(entry);
+        } catch (Exception e) {
+            log.warn("logAudit: failed action={} dpId={} — {}", action, dataProductId, e.getMessage());
+        }
     }
 }

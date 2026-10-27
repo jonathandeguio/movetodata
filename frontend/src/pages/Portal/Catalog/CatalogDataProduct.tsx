@@ -6,6 +6,7 @@ import {
   Descriptions,
   Empty,
   Form,
+  Input,
   InputNumber,
   Modal,
   notification,
@@ -14,9 +15,10 @@ import {
   Table,
   Tabs,
   Tag,
+  Tooltip,
   Typography,
 } from "antd";
-import { LockOutlined, ThunderboltOutlined } from "@ant-design/icons";
+import { BellOutlined, BellFilled, CodeOutlined, LockOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -32,6 +34,14 @@ import {
   DataProductColumn,
   CatalogQualityRule,
   CatalogDatasetStats,
+  listGlossaryTerms,
+  CatalogGlossaryTerm,
+  exportDataProduct,
+  listAuditLog,
+  CatalogAuditLog,
+  subscribeToProduct,
+  unsubscribeFromProduct,
+  isSubscribedToProduct,
 } from "../../../services/catalogService";
 import {
   enrichDataProductAPI,
@@ -39,12 +49,9 @@ import {
   recommendDataProductsAPI,
   RecommendDataProductsResponse,
   mapGlossaryAPI,
+  catalogQueryAPI,
+  CatalogQueryResponse,
 } from "../../../services/aiService";
-import {
-  listGlossaryTerms,
-  CatalogGlossaryTerm,
-  exportDataProduct,
-} from "../../../services/catalogService";
 import { useAiAssistantContext } from "../../../components/AiAssistant/AiAssistantContext";
 
 const { Title } = Typography;
@@ -153,6 +160,12 @@ const CatalogDataProduct: React.FC = () => {
   const [recommendations, setRecommendations] = useState<RecommendDataProductsResponse["recommendations"]>([]);
   const [glossaryTerms, setGlossaryTerms] = useState<CatalogGlossaryTerm[]>([]);
   const [mappingGlossary, setMappingGlossary] = useState<boolean>(false);
+  const [auditLog, setAuditLog] = useState<CatalogAuditLog[]>([]);
+  const [subscribed, setSubscribed] = useState<boolean>(false);
+  const [subscribing, setSubscribing] = useState<boolean>(false);
+  const [queryQuestion, setQueryQuestion] = useState<string>("");
+  const [queryResult, setQueryResult] = useState<CatalogQueryResponse | null>(null);
+  const [queryLoading, setQueryLoading] = useState<boolean>(false);
 
   const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
   const [piiForm] = Form.useForm<PiiFormValues>();
@@ -187,7 +200,7 @@ const CatalogDataProduct: React.FC = () => {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    // Load quality rules, stats, recommendations, and glossary terms (non-blocking)
+    // Load quality rules, stats, recommendations, glossary terms, audit log, subscription (non-blocking)
     listGlossaryTerms().then((terms) => {
       if (!cancelled) setGlossaryTerms(terms);
     }).catch(() => {});
@@ -208,6 +221,20 @@ const CatalogDataProduct: React.FC = () => {
           setQualityRules(rules);
           setStats(statsData);
           setRecommendations(recs);
+        }
+      })
+      .catch(() => {});
+    getDataProduct(fqn)
+      .then((data) =>
+        Promise.all([
+          listAuditLog(data.name).catch(() => [] as CatalogAuditLog[]),
+          isSubscribedToProduct(data.name).catch(() => false),
+        ])
+      )
+      .then(([logs, sub]) => {
+        if (!cancelled) {
+          setAuditLog(logs);
+          setSubscribed(sub);
         }
       })
       .catch(() => {});
@@ -327,6 +354,42 @@ const CatalogDataProduct: React.FC = () => {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Erreur inconnue";
       notification.error({ message: "Export échoué", description: message, duration: 6 });
+    }
+  };
+
+  const handleSubscribeToggle = async (): Promise<void> => {
+    if (!product) return;
+    setSubscribing(true);
+    try {
+      if (subscribed) {
+        await unsubscribeFromProduct(product.name);
+        setSubscribed(false);
+        notification.info({ message: "Désabonné", description: `Vous ne recevrez plus d'alertes pour « ${product.name} ».`, duration: 4 });
+      } else {
+        await subscribeToProduct(product.name);
+        setSubscribed(true);
+        notification.success({ message: "Abonné", description: `Vous recevrez les alertes drift et Trust Score pour « ${product.name} ».`, duration: 4 });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({ message: "Erreur abonnement", description: message, duration: 6 });
+    } finally {
+      setSubscribing(false);
+    }
+  };
+
+  const handleCatalogQuery = async (): Promise<void> => {
+    if (!product || !queryQuestion.trim()) return;
+    setQueryLoading(true);
+    setQueryResult(null);
+    try {
+      const res = await catalogQueryAPI(product.name, queryQuestion);
+      setQueryResult(res.data);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({ message: "Erreur Query IA", description: message, duration: 6 });
+    } finally {
+      setQueryLoading(false);
     }
   };
 
@@ -563,6 +626,61 @@ const CatalogDataProduct: React.FC = () => {
                       >
                         Exporter JSON
                       </Button>
+                      <Tooltip title={subscribed ? "Se désabonner des alertes" : "Recevoir les alertes drift et Trust Score"}>
+                        <Button
+                          icon={subscribed ? <BellFilled style={{ color: "#4b2983" }} /> : <BellOutlined />}
+                          loading={subscribing}
+                          style={{ borderRadius: 5 }}
+                          onClick={handleSubscribeToggle}
+                        >
+                          {subscribed ? "Abonné" : "S'abonner"}
+                        </Button>
+                      </Tooltip>
+                    </div>
+
+                    {/* Query IA — Text-to-SQL depuis le Catalog */}
+                    <div style={{ marginTop: 24, padding: "14px 16px", border: "1px solid #e8d9fc", borderRadius: 8, background: "#faf5ff" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <CodeOutlined style={{ color: "#4b2983", fontSize: 16 }} />
+                        <strong style={{ color: "#4b2983", fontSize: 14 }}>Query IA</strong>
+                        <Tag color="purple" style={{ borderRadius: 2, fontSize: 11 }}>Text-to-SQL</Tag>
+                      </div>
+                      <Input.Search
+                        placeholder="Ex: Quelle est la moyenne des commandes par client ?"
+                        value={queryQuestion}
+                        onChange={(e) => setQueryQuestion(e.target.value)}
+                        onSearch={handleCatalogQuery}
+                        enterButton="Générer SQL"
+                        loading={queryLoading}
+                        allowClear
+                        style={{ maxWidth: 560 }}
+                      />
+                      {queryResult && (
+                        <div style={{ marginTop: 12 }}>
+                          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
+                            <Tag
+                              color={queryResult.confidence >= 0.8 ? "green" : queryResult.confidence >= 0.6 ? "orange" : "red"}
+                              style={{ borderRadius: 2 }}
+                            >
+                              Confiance : {(queryResult.confidence * 100).toFixed(0)}%
+                            </Tag>
+                            <span style={{ color: "#888", fontSize: 11 }}>
+                              {queryResult.model}
+                            </span>
+                          </div>
+                          <pre style={{
+                            background: "#1a1a2e",
+                            color: "#e2e2e2",
+                            padding: "10px 14px",
+                            borderRadius: 6,
+                            fontSize: 12,
+                            overflowX: "auto",
+                            margin: 0,
+                          }}>
+                            {queryResult.sql}
+                          </pre>
+                        </div>
+                      )}
                     </div>
                   </>
                 ),
@@ -828,6 +946,59 @@ const CatalogDataProduct: React.FC = () => {
                             })}
                         </div>
                       </div>
+                    )}
+                  </>
+                ),
+              },
+
+              // ---------------------------------------------------------------
+              // Tab 6 — Historique des actions (Phase 8)
+              // ---------------------------------------------------------------
+              {
+                key: "history",
+                label: "Historique",
+                children: (
+                  <>
+                    {auditLog.length === 0 ? (
+                      <Empty description="Aucune action enregistrée pour ce Data Product." />
+                    ) : (
+                      <Table<CatalogAuditLog>
+                        rowKey="id"
+                        size="small"
+                        pagination={{ pageSize: 20, hideOnSinglePage: true }}
+                        dataSource={auditLog}
+                        columns={[
+                          {
+                            title: "Date",
+                            dataIndex: "createdAt",
+                            key: "createdAt",
+                            width: 180,
+                            render: (v: string) =>
+                              v ? new Date(v).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : "—",
+                          },
+                          {
+                            title: "Action",
+                            dataIndex: "action",
+                            key: "action",
+                            width: 130,
+                            render: (v: string) => {
+                              const colorMap: Record<string, string> = {
+                                CERTIFY: "gold",
+                                UPDATE: "blue",
+                                PATCH_COLUMN: "cyan",
+                                SUBSCRIBE: "purple",
+                              };
+                              return <Tag color={colorMap[v] ?? "default"} style={{ borderRadius: 2 }}>{v}</Tag>;
+                            },
+                          },
+                          {
+                            title: "Détail",
+                            dataIndex: "detail",
+                            key: "detail",
+                            render: (v: string | undefined) => v ?? <em style={{ color: "#aaa" }}>—</em>,
+                          },
+                        ]}
+                      />
                     )}
                   </>
                 ),

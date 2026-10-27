@@ -432,3 +432,42 @@ export async function getCatalogHealth(): Promise<CatalogHealthMetrics> {
   const response = await axios.get<CatalogHealthMetrics>("/api/catalog/health");
   return response.data;
 }
+
+// ---------------------------------------------------------------------------
+// Audit Log (Phase 8)
+// ---------------------------------------------------------------------------
+
+export interface CatalogAuditLog {
+  id: string;
+  dataProductId: string;
+  actorId?: string;
+  action: string;
+  detail?: string;
+  createdAt: string;
+}
+
+export async function listAuditLog(name: string): Promise<CatalogAuditLog[]> {
+  const response = await axios.get<CatalogAuditLog[]>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/audit`
+  );
+  return response.data;
+}
+
+// ---------------------------------------------------------------------------
+// Subscriptions (Phase 8)
+// ---------------------------------------------------------------------------
+
+export async function subscribeToProduct(name: string): Promise<void> {
+  await axios.post(`/api/catalog/data-products/${encodeURIComponent(name)}/subscribe`);
+}
+
+export async function unsubscribeFromProduct(name: string): Promise<void> {
+  await axios.delete(`/api/catalog/data-products/${encodeURIComponent(name)}/unsubscribe`);
+}
+
+export async function isSubscribedToProduct(name: string): Promise<boolean> {
+  const response = await axios.get<{ subscribed: boolean }>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/subscribed`
+  );
+  return response.data.subscribed;
+}

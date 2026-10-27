@@ -462,3 +462,19 @@ export const mapGlossaryAPI = (
   name: string
 ): Promise<AxiosResponse<MapGlossaryResponse>> =>
   axios.post(`/api/ai/catalog/glossary/map/${encodeURIComponent(name)}`);
+
+// ---------------------------------------------------------------------------
+// F16.3 — Text-to-SQL depuis le Catalog (Phase 8)
+// ---------------------------------------------------------------------------
+
+export interface CatalogQueryResponse {
+  sql: string;
+  confidence: number;
+  model: string;
+}
+
+export const catalogQueryAPI = (
+  name: string,
+  question: string
+): Promise<AxiosResponse<CatalogQueryResponse>> =>
+  axios.post(`/api/ai/catalog/query/${encodeURIComponent(name)}`, { question });
