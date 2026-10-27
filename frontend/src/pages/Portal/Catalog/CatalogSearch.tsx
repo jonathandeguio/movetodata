@@ -10,7 +10,7 @@ import {
   Tag,
   Typography,
 } from "antd";
-import { RobotOutlined, SearchOutlined } from "@ant-design/icons";
+import { HeartOutlined, RobotOutlined, SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
   searchDataProducts,
@@ -111,9 +111,15 @@ const CatalogSearch: React.FC = () => {
         items={[{ title: "Catalogue" }, { title: "Recherche" }]}
       />
 
-      <Title level={3} style={{ marginBottom: 16 }}>
-        Catalogue de Data Products
-      </Title>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <Title level={3} style={{ margin: 0 }}>
+          Catalogue de Data Products
+        </Title>
+        <a onClick={() => navigate("/portal/catalog/health")} style={{ fontSize: 13 }}>
+          <HeartOutlined style={{ marginRight: 4 }} />
+          Santé du catalogue
+        </a>
+      </div>
 
       {/* Mode toggle */}
       <div style={{ marginBottom: 16 }}>

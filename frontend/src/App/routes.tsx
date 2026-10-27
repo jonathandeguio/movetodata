@@ -78,6 +78,7 @@ import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
 import CatalogCertify from "../pages/Portal/Catalog/CatalogCertify";
 import CatalogRagSearch from "../pages/Portal/Catalog/CatalogRagSearch";
+import CatalogHealth from "../pages/Portal/Catalog/CatalogHealth";
 
 import FileExplorer from "../Apps/explorer/";
 
@@ -243,6 +244,10 @@ const useRouter = () => {
                   <Route
                     path="/portal/catalog/rag"
                     element={<CatalogRagSearch />}
+                  />
+                  <Route
+                    path="/portal/catalog/health"
+                    element={<CatalogHealth />}
                   />
 
                   <Route

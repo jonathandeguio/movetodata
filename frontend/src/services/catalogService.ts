@@ -406,3 +406,29 @@ export async function exportDataProduct(name: string): Promise<DataProductExport
   );
   return response.data;
 }
+
+// ---------------------------------------------------------------------------
+// Catalog Health Metrics (Phase 7)
+// ---------------------------------------------------------------------------
+
+export interface CatalogHealthMetrics {
+  totalProducts: number;
+  withDescription: number;
+  descriptionCoverage: number;
+  qualityDistribution: Record<string, number>;
+  avgTrustScore: number;
+  productsInDrift: number;
+  productsWithLowTrust: number;
+  totalColumns: number;
+  piiColumns: number;
+  piiCoverage: number;
+  glossaryMappedColumns: number;
+  glossaryCoverage: number;
+  totalQualityRules: number;
+  totalGlossaryTerms: number;
+}
+
+export async function getCatalogHealth(): Promise<CatalogHealthMetrics> {
+  const response = await axios.get<CatalogHealthMetrics>("/api/catalog/health");
+  return response.data;
+}

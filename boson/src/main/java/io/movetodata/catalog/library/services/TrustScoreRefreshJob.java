@@ -1,10 +1,14 @@
 package io.movetodata.catalog.library.services;
 
+import io.movetodata.catalog.library.models.CatalogDatasetStats;
 import io.movetodata.catalog.library.models.DataProduct;
 import io.movetodata.catalog.library.repository.CatalogDatasetStatsRepository;
 import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
 import io.movetodata.catalog.library.repository.CatalogQualityRuleRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
+import io.movetodata.notifications.library.enums.NotificationType;
+import io.movetodata.notifications.library.models.Notification;
+import io.movetodata.notifications.library.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,7 +18,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Nightly Quartz-backed job that recomputes the composite Trust Score for every
@@ -28,10 +34,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrustScoreRefreshJob {
 
+    private static final double TRUST_LOW_THRESHOLD = 0.30;
+
     private final DataProductRepository          dataProductRepository;
     private final CatalogQualityRuleRepository   qualityRuleRepository;
     private final CatalogDatasetStatsRepository  statsRepository;
     private final CatalogProductViewRepository   viewRepository;
+    private final NotificationRepository         notificationRepository;
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void refreshAll() {
@@ -47,16 +56,55 @@ public class TrustScoreRefreshJob {
         for (DataProduct dp : all) {
             try {
                 BigDecimal score = computeScore(dp, thirtyDaysAgo, avgViews);
-                if (!score.equals(dp.getTrustScore())) {
+                boolean scoreChanged = !score.equals(dp.getTrustScore());
+                if (scoreChanged) {
                     dp.setTrustScore(score);
                     dataProductRepository.save(dp);
                     updated++;
+                }
+                if (dp.getOwnerId() != null) {
+                    // Alert on low trust score
+                    if (score.doubleValue() < TRUST_LOW_THRESHOLD) {
+                        createNotification(dp.getOwnerId(), dp.getId(),
+                                NotificationType.CATALOG_TRUST_LOW,
+                                String.format("Trust Score bas (%d%%) pour le Data Product « %s ».",
+                                        (int)(score.doubleValue() * 100), dp.getName()));
+                    }
+                    // Alert on active drift
+                    var latestStats = statsRepository.findTop10ByDataProductIdOrderByMeasuredAtDesc(dp.getId());
+                    if (!latestStats.isEmpty() && latestStats.get(0).isDriftAlert()) {
+                        createNotification(dp.getOwnerId(), dp.getId(),
+                                NotificationType.CATALOG_DRIFT,
+                                String.format("Drift détecté sur le Data Product « %s » (z-score: %s).",
+                                        dp.getName(),
+                                        latestStats.get(0).getDriftScore() != null
+                                                ? latestStats.get(0).getDriftScore().toPlainString()
+                                                : "—"));
+                    }
                 }
             } catch (Exception e) {
                 log.warn("TrustScoreRefreshJob: failed for id={} — {}", dp.getId(), e.getMessage());
             }
         }
         log.info("TrustScoreRefreshJob: refreshed {}/{} data products", updated, all.size());
+    }
+
+    private void createNotification(UUID ownerId, String resourceIdStr,
+                                    NotificationType type, String message) {
+        try {
+            Notification n = new Notification();
+            n.setId(UUID.randomUUID());
+            n.setResourceId(UUID.fromString(resourceIdStr));
+            n.setType(type);
+            n.setMessage(message);
+            n.setSubscriber(ownerId);
+            n.setIsRead(false);
+            n.setStatus("UNREAD");
+            n.setTimestamp(new Date());
+            notificationRepository.save(n);
+        } catch (Exception e) {
+            log.warn("TrustScoreRefreshJob: notification failed type={} — {}", type, e.getMessage());
+        }
     }
 
     private BigDecimal computeScore(DataProduct dp, Instant thirtyDaysAgo, double avgViews) {
