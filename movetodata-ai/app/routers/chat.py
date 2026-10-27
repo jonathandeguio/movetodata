@@ -38,6 +38,12 @@ class ChatContext(BaseModel):
     source_id: Optional[str] = None
     schema_info: Optional[str] = None
     open_chart_ids: List[int] = Field(default_factory=list)
+    # Catalog context — set when the user has a DataProduct page open
+    catalog_product_name: Optional[str] = None
+    catalog_description: Optional[str] = None
+    catalog_domain: Optional[str] = None
+    catalog_quality_level: Optional[str] = None
+    catalog_columns: Optional[str] = None  # JSON string of column list
 
 
 class HistoryMessage(BaseModel):
@@ -90,11 +96,55 @@ Règles :
 - Ne jamais deviner des valeurs qui n'existent pas dans le schéma\
 """
 
+_SYSTEM_PROMPT_WITH_CATALOG = """\
+Tu es l'assistant IA intégré à la plateforme MoveToData, spécialisé en gouvernance des données. \
+L'utilisateur consulte actuellement le Data Catalog et a ouvert la fiche d'un Data Product.
+
+Data Product actif :
+  Nom        : {catalog_product_name}
+  Domaine    : {catalog_domain}
+  Qualité    : {catalog_quality_level}
+  Description: {catalog_description}
+{catalog_columns_block}
+Tu peux :
+- Expliquer le contenu et le contexte métier de ce Data Product
+- Répondre aux questions sur ses colonnes, sa qualité, son niveau de certification
+- Suggérer des cas d'usage, des transformations ou des améliorations de gouvernance
+- Détecter des risques RGPD ou PII dans les colonnes exposées
+
+Règles :
+- Réponds en français par défaut, en anglais si l'utilisateur écrit en anglais
+- Sois précis sur la gouvernance (PII, RGPD, qualité, lineage)
+- Ne jamais inventer des données qui ne sont pas dans le contexte fourni\
+"""
+
 
 def _build_system_prompt(
     context: Optional[ChatContext], rag_context: str = ""
 ) -> str:
-    if context and context.schema_info:
+    if context and context.catalog_product_name:
+        columns_block = ""
+        if context.catalog_columns:
+            try:
+                import json as _json
+                cols = _json.loads(context.catalog_columns)
+                if isinstance(cols, list) and cols:
+                    col_lines = "\n".join(
+                        f"    - {c.get('columnName', c.get('name', '?'))}"
+                        + (f" [{c.get('piiType')}]" if c.get("piiType") else "")
+                        for c in cols[:30]
+                    )
+                    columns_block = f"  Colonnes   :\n{col_lines}\n"
+            except Exception:
+                pass
+        base = _SYSTEM_PROMPT_WITH_CATALOG.format(
+            catalog_product_name=context.catalog_product_name,
+            catalog_domain=context.catalog_domain or "—",
+            catalog_quality_level=context.catalog_quality_level or "—",
+            catalog_description=context.catalog_description or "—",
+            catalog_columns_block=columns_block,
+        )
+    elif context and context.schema_info:
         base = _SYSTEM_PROMPT_WITH_SCHEMA.format(schema_info=context.schema_info)
     else:
         base = _SYSTEM_PROMPT_BASE

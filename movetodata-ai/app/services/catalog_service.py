@@ -339,6 +339,125 @@ async def _post_to_boson(
         raise _BosonServerError(str(exc)) from exc
 
 
+# ---------------------------------------------------------------------------
+# F13.4 — Enrich an existing DataProduct via LLM (Phase 3)
+# ---------------------------------------------------------------------------
+
+def _build_enrich_prompt(
+    name: str,
+    current_description: Optional[str],
+    columns: List[Dict[str, Any]],
+) -> str:
+    """Prompt to enrich a DataProduct: better description + PII detection per column."""
+    col_summary = ", ".join(
+        f"{c.get('columnName', c.get('name', '?'))} ({c.get('type', c.get('piiType', 'inconnu'))})"
+        for c in columns
+    )
+    desc_ctx = f"Description actuelle : {current_description}" if current_description else "Aucune description existante."
+    return (
+        "Tu es un expert en gouvernance des données et en conformité RGPD.\n"
+        "À partir du schéma d'un Data Product, génère une description enrichie et détecte les colonnes PII/RGPD.\n\n"
+        "IMPÉRATIF : réponds UNIQUEMENT avec un bloc JSON valide entre ```json et ```. "
+        "N'inclus aucune valeur de cellule, aucune donnée personnelle réelle.\n\n"
+        "Champs attendus dans le JSON :\n"
+        '  "description" : 3 à 4 phrases décrivant le contexte métier du Data Product\n'
+        '  "columns"     : liste d\'objets {columnName, piiType} — '
+        'piiType vaut null, "PII.Sensitive", "GDPR.Sensitive" ou "GDPR.ID"\n'
+        '  "tags"        : liste de strings (domaine, catégorie, techno)\n\n'
+        f"Data Product : {name}\n"
+        f"{desc_ctx}\n"
+        f"Colonnes : {col_summary}\n\n"
+        "JSON :"
+    )
+
+
+async def enrich_data_product(name: str) -> Dict[str, Any]:
+    """
+    Fetch a DataProduct from Boson, run LLM to enrich its description and
+    detect PII per column, then PATCH the results back to Boson.
+
+    Returns a summary dict with the updated fields.
+    Only column names are sent to the LLM — never cell values.
+    """
+    headers = _boson_headers()
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        # 1. Fetch DataProduct
+        dp_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+            headers=headers,
+        )
+        if dp_resp.status_code == 404:
+            raise ValueError(f"DataProduct '{name}' not found in catalog")
+        dp_resp.raise_for_status()
+        dp: Dict[str, Any] = dp_resp.json()
+
+        # 2. Fetch columns
+        col_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
+            headers=headers,
+        )
+        columns: List[Dict[str, Any]] = col_resp.json() if col_resp.status_code == 200 else []
+
+    # 3. Build and call LLM
+    prompt = _build_enrich_prompt(
+        name=name,
+        current_description=dp.get("description"),
+        columns=columns,
+    )
+
+    logger.info(
+        json.dumps({
+            "event": "enrich_data_product",
+            "name": name,
+            "columns_count": len(columns),
+            "model": CHAT_MODEL,
+        })
+    )
+
+    try:
+        enriched = await _call_llm_with_retry(prompt)
+    except Exception as exc:
+        logger.warning(
+            json.dumps({
+                "event": "enrich_data_product_failed",
+                "name": name,
+                "error": str(exc),
+            })
+        )
+        raise
+
+    # 4. PATCH description back to Boson
+    new_description = enriched.get("description", "")
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        if new_description:
+            await client.put(
+                f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+                json={**dp, "description": new_description},
+                headers=headers,
+            )
+
+        # 5. PATCH PII per column
+        pii_updates: List[Dict[str, Any]] = []
+        for col_enriched in enriched.get("columns", []):
+            col_name = col_enriched.get("columnName", "")
+            pii_type = col_enriched.get("piiType")
+            if col_name and pii_type is not None:
+                await client.patch(
+                    f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns/{col_name}",
+                    json={"piiType": pii_type},
+                    headers=headers,
+                )
+                pii_updates.append({"columnName": col_name, "piiType": pii_type})
+
+    return {
+        "name": name,
+        "description": new_description,
+        "tags": enriched.get("tags", []),
+        "piiUpdates": pii_updates,
+    }
+
+
 async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
     """
     Publish a DataProduct descriptor to the Boson native catalog with up to 4

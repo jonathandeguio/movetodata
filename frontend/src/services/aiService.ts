@@ -373,3 +373,19 @@ export const ragIndexAPI = (): Promise<AxiosResponse<RagIndexResponse>> =>
 
 export const ragStatusAPI = (): Promise<AxiosResponse<RagStatusResponse>> =>
   axios.get("/api/ai/catalog/rag/status");
+
+// ---------------------------------------------------------------------------
+// F13.4 — Data Product enrichment (Phase 3)
+// ---------------------------------------------------------------------------
+
+export interface EnrichDataProductResponse {
+  name: string;
+  description: string;
+  tags: string[];
+  piiUpdates: Array<{ columnName: string; piiType: string | null }>;
+}
+
+export const enrichDataProductAPI = (
+  name: string
+): Promise<AxiosResponse<EnrichDataProductResponse>> =>
+  axios.post(`/api/ai/catalog/enrich/${encodeURIComponent(name)}`);

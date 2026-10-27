@@ -8,6 +8,7 @@ import {
   Form,
   InputNumber,
   Modal,
+  notification,
   Select,
   Spin,
   Table,
@@ -15,7 +16,7 @@ import {
   Tag,
   Typography,
 } from "antd";
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, ThunderboltOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -25,6 +26,8 @@ import {
   DataProduct,
   DataProductColumn,
 } from "../../../services/catalogService";
+import { enrichDataProductAPI } from "../../../services/aiService";
+import { useAiAssistantContext } from "../../../components/AiAssistant/AiAssistantContext";
 
 const { Title } = Typography;
 
@@ -125,11 +128,14 @@ const CatalogDataProduct: React.FC = () => {
   const [columns, setColumns] = useState<DataProductColumn[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [enriching, setEnriching] = useState<boolean>(false);
 
   const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
   const [piiForm] = Form.useForm<PiiFormValues>();
   const [piiSubmitting, setPiiSubmitting] = useState<boolean>(false);
   const [piiError, setPiiError] = useState<string | null>(null);
+
+  const { setCatalogContext } = useAiAssistantContext();
 
   useEffect(() => {
     if (!fqn) return;
@@ -161,6 +167,47 @@ const CatalogDataProduct: React.FC = () => {
       cancelled = true;
     };
   }, [fqn]);
+
+  // Inject catalog context into the AI assistant sidebar while this page is open
+  useEffect(() => {
+    if (!product) return;
+    setCatalogContext({
+      productName: product.name,
+      description: product.description,
+      domain: product.domain?.name ?? product.domainId,
+      qualityLevel: product.qualityLevel ?? product.extension?.qualityLevel,
+      columns: columns.length > 0 ? JSON.stringify(columns) : undefined,
+    });
+    return () => {
+      setCatalogContext(undefined);
+    };
+  }, [product, columns, setCatalogContext]);
+
+  const handleEnrich = async (): Promise<void> => {
+    if (!product) return;
+    setEnriching(true);
+    try {
+      const res = await enrichDataProductAPI(product.name);
+      const updated = await getDataProduct(fqn);
+      setProduct(updated);
+      const updatedCols = await getDataProductColumns(updated.name);
+      setColumns(updatedCols);
+      notification.success({
+        message: "Enrichissement terminé",
+        description: `Description mise à jour. ${res.data.piiUpdates.length} colonne(s) PII détectée(s).`,
+        duration: 6,
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({
+        message: "Erreur d'enrichissement",
+        description: `Impossible d'enrichir le Data Product : ${message}`,
+        duration: 8,
+      });
+    } finally {
+      setEnriching(false);
+    }
+  };
 
   const handleLineage = (): void => {
     if (product?.id) {
@@ -361,19 +408,34 @@ const CatalogDataProduct: React.FC = () => {
                       )}
                     </Descriptions>
 
-                    {product.id && (
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {product.id && (
+                        <Button
+                          type="primary"
+                          style={{
+                            backgroundColor: "#24527a",
+                            borderColor: "#24527a",
+                            borderRadius: 5,
+                          }}
+                          onClick={handleLineage}
+                        >
+                          Voir le lignage
+                        </Button>
+                      )}
                       <Button
-                        type="primary"
+                        icon={<ThunderboltOutlined />}
+                        loading={enriching}
                         style={{
-                          backgroundColor: "#24527a",
-                          borderColor: "#24527a",
+                          backgroundColor: "#4b2983",
+                          borderColor: "#4b2983",
+                          color: "#fff",
                           borderRadius: 5,
                         }}
-                        onClick={handleLineage}
+                        onClick={handleEnrich}
                       >
-                        Voir le lignage
+                        Enrichir avec l'IA
                       </Button>
-                    )}
+                    </div>
                   </>
                 ),
               },

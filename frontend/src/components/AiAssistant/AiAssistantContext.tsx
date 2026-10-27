@@ -11,6 +11,16 @@
 
 import React, { createContext, useContext, useRef, useState } from "react";
 
+export interface CatalogContext {
+  /** Slug name of the DataProduct currently open in the catalog. */
+  productName: string;
+  description?: string;
+  domain?: string;
+  qualityLevel?: string;
+  /** JSON-serialised column list (DataProductColumn[]). */
+  columns?: string;
+}
+
 export interface AiAssistantContextValue {
   /** Whether the sidebar is currently open. */
   open: boolean;
@@ -36,6 +46,10 @@ export interface AiAssistantContextValue {
   pageContext: string | undefined;
   /** Set (or clear) the page context. Call in a useEffect on mount/unmount. */
   setPageContext: (ctx: string | undefined) => void;
+  /** Active DataProduct context when the user is on a catalog page (Phase 3). */
+  catalogContext: CatalogContext | undefined;
+  /** Set (or clear) the catalog context. Call in a useEffect on mount/unmount. */
+  setCatalogContext: (ctx: CatalogContext | undefined) => void;
   /**
    * Open the sidebar and immediately send `message` as if the user typed it.
    * Used by the home AI bar and "explain" actions on error items.
@@ -52,6 +66,7 @@ export const AiAssistantProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [sourceId, setSourceId] = useState<string | undefined>(undefined);
   const [openChartIds, setOpenChartIds] = useState<number[]>([]);
   const [pageContext, setPageContext] = useState<string | undefined>(undefined);
+  const [catalogContext, setCatalogContext] = useState<CatalogContext | undefined>(undefined);
   const pendingMessageRef = useRef<string | null>(null);
 
   const value: AiAssistantContextValue = {
@@ -65,6 +80,8 @@ export const AiAssistantProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setOpenChartIds,
     pageContext,
     setPageContext,
+    catalogContext,
+    setCatalogContext,
     openWithMessage: (message: string) => {
       pendingMessageRef.current = message;
       setOpen(true);

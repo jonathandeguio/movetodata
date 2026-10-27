@@ -3,11 +3,13 @@ catalog.py — F13 Data Catalog router.
 
 Endpoints:
   POST /catalog/webhook/dataset-created  (F13.1) — receive dataset-created events,
-       orchestrate LLM metadata generation and OpenMetadata publication.
+       orchestrate LLM metadata generation and Boson publication.
   POST /catalog/generate-data-product    (F13.2) — generate a DataProduct descriptor
        from schema information via the local LLM.
   POST /catalog/publish-data-product     (F13.3) — push a DataProduct descriptor to
-       OpenMetadata, with idempotence handling (409 → PUT).
+       Boson native catalog, with idempotence handling (409 → PUT).
+  POST /catalog/enrich/{name}            (F13.4) — enrich an existing DataProduct:
+       improved description + PII detection per column, patched back to Boson.
 
 Sovereignty: raw dataset cell values are never accepted or forwarded.
 """
@@ -159,6 +161,36 @@ class DataProductPayload(BaseModel):
     useCases: List[str] = []
     qualityLevel: Optional[str] = None
     fqn: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# F13.4 — Enrich an existing DataProduct via LLM (Phase 3)
+# ---------------------------------------------------------------------------
+
+@router.post("/enrich/{name}", tags=["Catalog"])
+async def enrich_data_product(
+    name: str,
+) -> Dict[str, Any]:
+    """
+    Enrich an existing DataProduct:
+      1. Fetch the DataProduct + columns from Boson.
+      2. Run LLM to generate an improved description and detect PII per column.
+      3. PATCH description and PII back to Boson.
+
+    Returns {"name", "description", "tags", "piiUpdates"}.
+    Only column names/types are sent to the LLM — never cell values.
+    """
+    logger.info(json.dumps({"event": "enrich_data_product_request", "name": name}))
+
+    try:
+        result = await catalog_service.enrich_data_product(name)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("enrich_data_product: failed for name=%s — %s", name, exc)
+        raise HTTPException(status_code=500, detail="Enrichment failed") from exc
+
+    return result
 
 
 @router.post("/publish-data-product", tags=["Catalog"])

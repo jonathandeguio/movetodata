@@ -399,6 +399,12 @@ public class AiProxyController {
         String sourceId = (String) contextIn.get("sourceId");
         @SuppressWarnings("unchecked")
         List<?> openChartIds = (List<?>) contextIn.getOrDefault("openChartIds", List.of());
+        // Catalog context (Phase 3) — forwarded to Python as-is
+        String catalogProductName = (String) contextIn.get("catalogProductName");
+        String catalogDescription = (String) contextIn.get("catalogDescription");
+        String catalogDomain = (String) contextIn.get("catalogDomain");
+        String catalogQualityLevel = (String) contextIn.get("catalogQualityLevel");
+        String catalogColumns = (String) contextIn.get("catalogColumns");
 
         // Resolve/create session and persist user message (synchronous — fast)
         AiChatSession session;
@@ -418,7 +424,14 @@ public class AiProxyController {
         final String sessionUuid = session.getUuid();
 
         // Build LLM context (schema DDL) — may throw, handled gracefully
-        Map<String, Object> contextForPython = aiChatService.buildContext(sourceId, openChartIds);
+        Map<String, Object> contextForPython = new java.util.HashMap<>(
+                aiChatService.buildContext(sourceId, openChartIds));
+        // Forward catalog context fields when present (Phase 3)
+        if (catalogProductName != null) contextForPython.put("catalog_product_name", catalogProductName);
+        if (catalogDescription != null) contextForPython.put("catalog_description", catalogDescription);
+        if (catalogDomain != null) contextForPython.put("catalog_domain", catalogDomain);
+        if (catalogQualityLevel != null) contextForPython.put("catalog_quality_level", catalogQualityLevel);
+        if (catalogColumns != null) contextForPython.put("catalog_columns", catalogColumns);
 
         // Convert history to [{role, content}] — last 10 messages
         List<AiChatMessage> historyMsgs = aiChatService.getHistory(sessionUuid, 10);

@@ -73,7 +73,7 @@ const API_BASE = process.env.REACT_APP_BASE_URL_API ?? "";
 // ---------------------------------------------------------------------------
 
 const AiAssistantSidebar: React.FC = () => {
-  const { open, closeSidebar, sourceId, openChartIds, pageContext, pendingMessageRef } = useAiAssistantContext();
+  const { open, closeSidebar, sourceId, openChartIds, pageContext, catalogContext, pendingMessageRef } = useAiAssistantContext();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -129,6 +129,14 @@ const AiAssistantSidebar: React.FC = () => {
           sourceId: sourceId ?? null,
           openChartIds: openChartIds ?? [],
           pageContext: pageContext ?? null,
+          // Catalog context (Phase 3)
+          ...(catalogContext && {
+            catalogProductName: catalogContext.productName,
+            catalogDescription: catalogContext.description ?? null,
+            catalogDomain: catalogContext.domain ?? null,
+            catalogQualityLevel: catalogContext.qualityLevel ?? null,
+            catalogColumns: catalogContext.columns ?? null,
+          }),
         },
         history: historySnapshot,
       };
@@ -237,7 +245,7 @@ const AiAssistantSidebar: React.FC = () => {
         abortControllerRef.current = null;
       }
     },
-    [messages, streaming, sourceId, openChartIds, pageContext]
+    [messages, streaming, sourceId, openChartIds, pageContext, catalogContext]
   );
 
   // Fire a pending message injected via openWithMessage (e.g. from the home AI bar).
