@@ -5,8 +5,9 @@ F13.2: generate_data_product_metadata — prompts the local LLM (qwen2.5:14b via
        Ollama) to produce a structured Data Product descriptor from dataset
        schema only (column names + types). Raw cell values are NEVER sent.
 
-F13.3: publish_data_product — pushes the descriptor to OpenMetadata via its
-       REST API. Credentials are read exclusively from environment variables.
+F13.3: publish_data_product — pushes the descriptor to the Boson native catalog
+       via its REST API. Credentials are read exclusively from environment
+       variables.
 
 Sovereignty: all LLM inference is local (Ollama). No data leaves the
 MoveToData infrastructure.
@@ -34,8 +35,8 @@ from app.services.llm_service import OLLAMA_URL, CHAT_MODEL, TIMEOUT
 
 logger = logging.getLogger(__name__)
 
-OPENMETADATA_URL: str = os.getenv("OPENMETADATA_URL", "http://localhost:8585")
-OPENMETADATA_AUTH_TOKEN: str = os.getenv("OPENMETADATA_AUTH_TOKEN", "")
+BOSON_CATALOG_URL: str = os.getenv("BOSON_CATALOG_URL", "http://boson:8080")
+BOSON_API_TOKEN: str = os.getenv("BOSON_API_TOKEN", "")
 
 # ---------------------------------------------------------------------------
 # Internal types
@@ -72,7 +73,7 @@ def _build_data_product_prompt(
     return (
         "Tu es un expert en gouvernance des données et en data mesh.\n"
         "À partir des informations de schéma d'un dataset, génère un objet JSON "
-        "décrivant un Data Product conforme à la nomenclature OpenMetadata.\n\n"
+        "décrivant un Data Product conforme à la nomenclature MoveToData.\n\n"
         "IMPÉRATIF : réponds UNIQUEMENT avec un bloc JSON valide entre ```json et ```. "
         "N'inclus aucune valeur de cellule, aucune donnée personnelle.\n\n"
         "Champs attendus dans le JSON (respecte exactement ces clés) :\n"
@@ -204,47 +205,80 @@ async def generate_data_product_metadata(
 
 
 # ---------------------------------------------------------------------------
-# F13.3 — Publish to OpenMetadata
+# F13.3 — Publish to Boson native catalog
 # ---------------------------------------------------------------------------
 
-class _OpenMetadataServerError(Exception):
-    """Raised on HTTP 5xx responses from OpenMetadata so tenacity can retry."""
+class _BosonServerError(Exception):
+    """Raised on HTTP 5xx responses from Boson so tenacity can retry."""
 
 
-def _om_headers() -> Dict[str, str]:
-    """Build OpenMetadata auth headers from environment variables."""
-    return {
-        "Authorization": f"Bearer {OPENMETADATA_AUTH_TOKEN}",
-        "Content-Type": "application/json",
+def _boson_headers() -> Dict[str, str]:
+    """Build Boson auth headers from environment variables.
+
+    If BOSON_API_TOKEN is set, an Authorization header is included.
+    Otherwise the request is sent without auth (Boson will enforce auth
+    when its security layer is activated).
+    """
+    headers: Dict[str, str] = {"Content-Type": "application/json"}
+    if BOSON_API_TOKEN:
+        headers["Authorization"] = f"Bearer {BOSON_API_TOKEN}"
+    return headers
+
+
+def _build_boson_payload(metadata: DataProductMetadata) -> Dict[str, Any]:
+    """Map the LLM-generated metadata to the Boson DataProduct request body.
+
+    The Boson endpoint expects: name, displayName, description,
+    dataProductType, accessPolicy, qualityLevel, domainId, useCases.
+    """
+    use_cases = metadata.get("useCases", [])
+    # useCases may be a list from the LLM — Boson stores it as a JSON string
+    if isinstance(use_cases, list):
+        use_cases = json.dumps(use_cases, ensure_ascii=False)
+
+    payload: Dict[str, Any] = {
+        "name": metadata.get("name", ""),
+        "displayName": metadata.get("displayName", ""),
+        "description": metadata.get("description", ""),
+        "dataProductType": metadata.get("dataProductType", "SOURCE_ALIGNED"),
+        "accessPolicy": metadata.get("accessPolicy", "INTERNAL"),
+        "qualityLevel": metadata.get("qualityLevel", "BRONZE"),
+        "useCases": use_cases,
     }
+    if metadata.get("domainId"):
+        payload["domainId"] = metadata["domainId"]
+    return payload
 
 
 @retry(
-    retry=retry_if_exception_type(_OpenMetadataServerError),
+    retry=retry_if_exception_type(_BosonServerError),
     stop=stop_after_attempt(4),
     wait=wait_exponential(multiplier=1, min=2, max=16),
     before=before_log(logger, logging.DEBUG),
     after=after_log(logger, logging.DEBUG),
     reraise=True,
 )
-async def _post_to_openmetadata(
+async def _post_to_boson(
     metadata: DataProductMetadata,
     attempt: int,
 ) -> Dict[str, Any]:
     """
-    POST (or PUT on 409) the DataProduct payload to OpenMetadata.
+    POST the DataProduct payload to the Boson native catalog endpoint.
 
-    Raises _OpenMetadataServerError on 5xx to allow tenacity retries.
+    On 409 (already exists), falls back to a PUT on the same resource.
+    Raises _BosonServerError on 5xx to allow tenacity retries.
     Returns the parsed JSON response body on success.
     """
-    fqn: str = metadata.get("fqn", metadata.get("name", "unknown"))
-    post_url = f"{OPENMETADATA_URL}/api/v1/dataProducts"
-    put_url = f"{OPENMETADATA_URL}/api/v1/dataProducts/{fqn}"
+    name: str = metadata.get("name", "unknown")
+    post_url = f"{BOSON_CATALOG_URL}/api/catalog/data-products"
+    put_url = f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}"
+
+    payload = _build_boson_payload(metadata)
 
     logger.info(
         json.dumps({
             "event": "publish_attempt",
-            "fqn": fqn,
+            "name": name,
             "attempt": attempt,
             "status": "started",
         })
@@ -252,19 +286,19 @@ async def _post_to_openmetadata(
 
     try:
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.post(post_url, json=metadata, headers=_om_headers())
+            response = await client.post(post_url, json=payload, headers=_boson_headers())
 
             if response.status_code == 409:
                 # Already exists — idempotent PUT
                 logger.info(
                     json.dumps({
                         "event": "publish_attempt",
-                        "fqn": fqn,
+                        "name": name,
                         "attempt": attempt,
                         "status": "conflict_put",
                     })
                 )
-                put_response = await client.put(put_url, json=metadata, headers=_om_headers())
+                put_response = await client.put(put_url, json=payload, headers=_boson_headers())
                 put_response.raise_for_status()
                 return {"_conflict": True, **put_response.json()}
 
@@ -272,20 +306,20 @@ async def _post_to_openmetadata(
                 logger.warning(
                     json.dumps({
                         "event": "publish_attempt",
-                        "fqn": fqn,
+                        "name": name,
                         "attempt": attempt,
                         "status": f"server_error_{response.status_code}",
                     })
                 )
-                raise _OpenMetadataServerError(
-                    f"OpenMetadata returned {response.status_code}"
+                raise _BosonServerError(
+                    f"Boson returned {response.status_code}"
                 )
 
             response.raise_for_status()
             logger.info(
                 json.dumps({
                     "event": "publish_attempt",
-                    "fqn": fqn,
+                    "name": name,
                     "attempt": attempt,
                     "status": "success",
                 })
@@ -296,28 +330,29 @@ async def _post_to_openmetadata(
         logger.warning(
             json.dumps({
                 "event": "publish_attempt",
-                "fqn": fqn,
+                "name": name,
                 "attempt": attempt,
                 "status": "network_error",
                 "error": str(exc),
             })
         )
-        raise _OpenMetadataServerError(str(exc)) from exc
+        raise _BosonServerError(str(exc)) from exc
 
 
 async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
     """
-    Publish a DataProduct descriptor to OpenMetadata with up to 4 retries on 5xx.
+    Publish a DataProduct descriptor to the Boson native catalog with up to 4
+    retries on 5xx.
 
-    Returns the OpenMetadata response body, augmented with "_conflict: true"
-    when the resource already existed (409 → PUT path).
+    Returns the Boson response body, augmented with "_conflict: true" when the
+    resource already existed (409 → PUT path).
     """
-    fqn: str = metadata.get("fqn", metadata.get("name", "unknown"))
+    name: str = metadata.get("name", "unknown")
     logger.info(
         json.dumps({
             "event": "publish_data_product",
-            "fqn": fqn,
-            "openmetadata_url": OPENMETADATA_URL,
+            "name": name,
+            "boson_catalog_url": BOSON_CATALOG_URL,
         })
     )
     # tenacity does not inject a call counter into async functions easily, so
@@ -326,6 +361,6 @@ async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
 
     async def _with_counter() -> Dict[str, Any]:
         attempt_counter[0] += 1
-        return await _post_to_openmetadata(metadata, attempt_counter[0])
+        return await _post_to_boson(metadata, attempt_counter[0])
 
     return await _with_counter()

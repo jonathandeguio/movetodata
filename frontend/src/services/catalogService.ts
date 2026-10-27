@@ -1,197 +1,168 @@
 /**
- * catalogService.ts — OpenMetadata API integration for the Data Catalog.
+ * catalogService.ts — Boson native Data Catalog API integration.
  *
- * This service uses a DEDICATED axios instance with REACT_APP_OPENMETADATA_URL
- * as baseURL, intentionally bypassing the global MoveToData interceptor
- * (which would inject a MoveToData Bearer token incompatible with OpenMetadata).
+ * Uses the global axios instance (configured in axiosInterceptors.ts) which
+ * injects the MoveToData Bearer token and targets REACT_APP_BASE_URL_API
+ * (Boson). No dedicated OpenMetadata client is needed.
  *
- * Sovereignty note: all calls target a self-hosted OpenMetadata instance.
+ * Sovereignty note: all calls target the self-hosted Boson service.
  * No data leaves the European infrastructure.
  */
 
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 
 // ---------------------------------------------------------------------------
-// Dedicated axios instance — does NOT inherit the global interceptors
+// Types — Boson native catalog format
 // ---------------------------------------------------------------------------
 
-const openmetadataClient: AxiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_OPENMETADATA_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export interface DataProductOwner {
-  name: string;
-}
-
-export interface DataProductTag {
-  tagFQN: string;
-}
-
-export interface DataProductDomain {
-  name: string;
-}
-
-export interface DataProductColumn {
-  name: string;
-  dataType?: string;
-  tags?: DataProductTag[];
-}
-
-export interface DataProductExtension {
-  qualityLevel?: string;
-  dataController?: string;
-  certificationComment?: string;
-}
-
-export interface DataProduct {
-  id?: string;
-  fqn: string;
-  name: string;
-  description?: string;
-  displayName?: string;
-  owners?: DataProductOwner[];
-  tags?: DataProductTag[];
-  dataProductType?: string;
-  domain?: DataProductDomain;
-  accessPolicy?: 'PUBLIC' | 'INTERNAL' | 'RESTRICTED';
-  qualityLevel?: 'BRONZE' | 'SILVER' | 'GOLD';
-  columns?: DataProductColumn[];
-  extension?: DataProductExtension;
-}
-
-export interface SearchHit {
-  _source: DataProduct;
-  _score: number;
-}
-
-export interface SearchResult {
-  hits: {
-    hits: SearchHit[];
-    total: {
-      value: number;
-    };
-  };
-}
-
-export interface LineageEntityRef {
+export interface CatalogDataProduct {
   id: string;
   name: string;
-  type: string;
+  displayName?: string;
+  description?: string;
+  /** SOURCE_ALIGNED | AGGREGATE | CONSUMER_ALIGNED */
+  dataProductType?: string;
+  /** PUBLIC | INTERNAL | RESTRICTED */
+  accessPolicy?: "PUBLIC" | "INTERNAL" | "RESTRICTED";
+  /** BRONZE | SILVER | GOLD */
+  qualityLevel?: "BRONZE" | "SILVER" | "GOLD";
+  trustScore?: number;
+  domainId?: string;
+  ownerId?: string;
+  /** JSON-encoded string of use-case descriptions */
+  useCases?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface LineageEdge {
-  fromEntity: LineageEntityRef;
-  toEntity: LineageEntityRef;
+export interface CatalogDomain {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
 }
 
-export interface LineageData {
-  entity: {
-    id: string;
-    name: string;
-  };
-  upstreamEdges?: LineageEdge[];
-  downstreamEdges?: LineageEdge[];
+export interface CatalogDataProductPage {
+  content: CatalogDataProduct[];
+  totalElements?: number;
+  totalPages?: number;
+  size?: number;
+  number?: number;
 }
+
+export interface CatalogCertifyRequest {
+  qualityLevel: "BRONZE" | "SILVER" | "GOLD";
+  comment?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Backward-compatible alias (used by existing page components)
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use CatalogDataProduct instead. Kept for page-component compatibility. */
+export type DataProduct = CatalogDataProduct & {
+  /** Alias for `name` — some page components still reference fqn. */
+  fqn?: string;
+};
 
 // ---------------------------------------------------------------------------
 // API functions
 // ---------------------------------------------------------------------------
 
 /**
- * Full-text search across Data Products.
- * GET {REACT_APP_OPENMETADATA_URL}/api/v1/search/query
+ * Full-text / keyword search across Data Products.
+ * GET /api/catalog/data-products?q={query}
  */
 export async function searchDataProducts(
   query: string,
-  from = 0,
-  size = 20
-): Promise<SearchResult> {
-  const response = await openmetadataClient.get<SearchResult>(
-    "/api/v1/search/query",
+  limit = 20,
+  offset = 0
+): Promise<CatalogDataProduct[]> {
+  const response = await axios.get<CatalogDataProduct[] | CatalogDataProductPage>(
+    "/api/catalog/data-products",
     {
-      params: {
-        q: query,
-        index: "dataProduct",
-        from,
-        size,
-      },
+      params: { q: query, limit, offset },
     }
   );
-  return response.data;
+  const data = response.data;
+  if (Array.isArray(data)) {
+    return data;
+  }
+  return (data as CatalogDataProductPage).content ?? [];
 }
 
 /**
- * Fetch a single Data Product by fully-qualified name.
- * GET {REACT_APP_OPENMETADATA_URL}/api/v1/dataProducts/name/{fqn}
+ * Fetch the paginated list of all Data Products.
+ * GET /api/catalog/data-products
  */
-export async function getDataProduct(fqn: string): Promise<DataProduct> {
-  const response = await openmetadataClient.get<DataProduct>(
-    `/api/v1/dataProducts/name/${encodeURIComponent(fqn)}`,
+export async function listDataProducts(
+  limit = 20,
+  offset = 0
+): Promise<CatalogDataProduct[]> {
+  const response = await axios.get<CatalogDataProduct[] | CatalogDataProductPage>(
+    "/api/catalog/data-products",
     {
-      params: {
-        fields: "owners,tags,domain,columns,extension",
-      },
+      params: { limit, offset },
     }
+  );
+  const data = response.data;
+  if (Array.isArray(data)) {
+    return data;
+  }
+  return (data as CatalogDataProductPage).content ?? [];
+}
+
+/**
+ * Fetch a single Data Product by its name (slug).
+ * GET /api/catalog/data-products/{name}
+ */
+export async function getDataProduct(name: string): Promise<CatalogDataProduct> {
+  const response = await axios.get<CatalogDataProduct>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}`
   );
   return response.data;
 }
 
 /**
- * Promote the certification level of a Data Product.
- * PATCH {REACT_APP_OPENMETADATA_URL}/api/v1/dataProducts/name/{fqn}
+ * Create a new Data Product.
+ * POST /api/catalog/data-products
+ */
+export async function createDataProduct(
+  payload: Omit<CatalogDataProduct, "id" | "createdAt" | "updatedAt">
+): Promise<CatalogDataProduct> {
+  const response = await axios.post<CatalogDataProduct>(
+    "/api/catalog/data-products",
+    payload
+  );
+  return response.data;
+}
+
+/**
+ * Promote the certification (quality) level of a Data Product.
+ * POST /api/catalog/data-products/{name}/certify
  */
 export async function certifyDataProduct(
-  fqn: string,
-  level: 'BRONZE' | 'SILVER' | 'GOLD',
-  comment: string
-): Promise<DataProduct> {
-  const response = await openmetadataClient.patch<DataProduct>(
-    `/api/v1/dataProducts/name/${encodeURIComponent(fqn)}`,
-    { extension: { qualityLevel: level, certificationComment: comment } }
+  name: string,
+  level: "BRONZE" | "SILVER" | "GOLD",
+  comment?: string
+): Promise<CatalogDataProduct> {
+  const body: CatalogCertifyRequest = { qualityLevel: level };
+  if (comment) {
+    body.comment = comment;
+  }
+  const response = await axios.post<CatalogDataProduct>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/certify`,
+    body
   );
   return response.data;
 }
 
 /**
- * Attach a PII/GDPR tag to a specific column of a Data Product.
- * PATCH {REACT_APP_OPENMETADATA_URL}/api/v1/dataProducts/name/{fqn}/columns/{columnName}/tags
+ * Fetch all catalog domains.
+ * GET /api/catalog/domains
  */
-export async function addPiiTag(
-  fqn: string,
-  columnName: string,
-  tagFqn: string
-): Promise<void> {
-  await openmetadataClient.patch(
-    `/api/v1/dataProducts/name/${encodeURIComponent(fqn)}/columns/${columnName}/tags`,
-    { tagFQN: tagFqn }
-  );
-}
-
-/**
- * Fetch lineage graph for an entity.
- * GET {REACT_APP_OPENMETADATA_URL}/api/v1/lineage/{entityType}/{id}
- */
-export async function getLineage(
-  id: string,
-  entityType = "dataProduct",
-  upstreamDepth = 3,
-  downstreamDepth = 3
-): Promise<LineageData> {
-  const response = await openmetadataClient.get<LineageData>(
-    `/api/v1/lineage/${entityType}/${id}`,
-    {
-      params: {
-        upstreamDepth,
-        downstreamDepth,
-      },
-    }
-  );
+export async function listDomains(): Promise<CatalogDomain[]> {
+  const response = await axios.get<CatalogDomain[]>("/api/catalog/domains");
   return response.data;
 }

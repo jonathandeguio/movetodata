@@ -1,8 +1,9 @@
 """
 rag_service.py — RAG (Retrieval-Augmented Generation) orienté Data Catalog (F14).
 
-Fournit l'indexation vectorielle des Data Products OpenMetadata et la recherche
-sémantique via ChromaDB (persistance disque) + Ollama embeddings (self-hosted).
+Fournit l'indexation vectorielle des Data Products du catalog Boson natif et la
+recherche sémantique via ChromaDB (persistance disque) + Ollama embeddings
+(self-hosted).
 
 Sovereignty contract:
   - Aucun appel réseau externe — Ollama self-hosted uniquement.
@@ -24,7 +25,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
-OPENMETADATA_URL: str = os.getenv("OPENMETADATA_URL", "http://openmetadata:8585")
+BOSON_CATALOG_URL: str = os.getenv("BOSON_CATALOG_URL", "http://boson:8080")
+BOSON_API_TOKEN: str = os.getenv("BOSON_API_TOKEN", "")
 EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
 RAG_PERSIST_DIR: str = os.getenv(
     "RAG_PERSIST_DIR", "/opt/movetodata/data/rag/catalog"
@@ -118,37 +120,52 @@ async def index_data_product(dp: dict[str, Any]) -> str:
     """
     Indexe (ou met à jour) un Data Product dans ChromaDB.
 
-    L'opération est idempotente : upsert par `fqn` (ou `id` si fqn absent).
+    Compatible avec le format Boson natif : les champs `domain` et `domainId`
+    sont des scalaires (string), il n'y a pas de `fqn` — l'identifiant est
+    `id` ou `name`.
+
+    L'opération est idempotente : upsert par `id` (ou `name` si id absent).
 
     Returns:
         L'identifiant upserted.
     """
-    # Construire le texte représentatif
-    tags_text = " ".join(
-        t.get("tagFQN", "") for t in dp.get("tags", []) if isinstance(t, dict)
-    )
-    domain_name: str = ""
-    if isinstance(dp.get("domain"), dict):
-        domain_name = dp["domain"].get("name", "")
+    # Construire le texte représentatif — les useCases peuvent être un JSON string
+    use_cases_text: str = ""
+    raw_use_cases = dp.get("useCases", "")
+    if isinstance(raw_use_cases, str) and raw_use_cases:
+        try:
+            import json as _json
+            parsed = _json.loads(raw_use_cases)
+            if isinstance(parsed, list):
+                use_cases_text = " ".join(str(u) for u in parsed)
+            else:
+                use_cases_text = raw_use_cases
+        except Exception:
+            use_cases_text = raw_use_cases
+    elif isinstance(raw_use_cases, list):
+        use_cases_text = " ".join(str(u) for u in raw_use_cases)
+
+    # domainId is a plain string in the Boson format
+    domain_id: str = dp.get("domainId", "") or ""
 
     text = (
         f"{dp.get('displayName') or dp.get('name', '')} "
         f"{dp.get('description', '')} "
-        f"{tags_text} "
-        f"{domain_name} "
-        f"{dp.get('dataProductType', '')}"
+        f"{dp.get('dataProductType', '')} "
+        f"{domain_id} "
+        f"{use_cases_text}"
     ).strip()
 
     vector = await embed(text)
 
-    doc_id: str = dp.get("fqn") or dp.get("id", "")
+    doc_id: str = dp.get("id") or dp.get("name", "")
     if not doc_id:
-        raise ValueError("Data Product sans 'fqn' ni 'id' — impossible d'indexer.")
+        raise ValueError("Data Product sans 'id' ni 'name' — impossible d'indexer.")
 
     metadata: dict[str, str] = {
-        "fqn": dp.get("fqn", ""),
+        "id": dp.get("id", ""),
         "name": dp.get("name", ""),
-        "domain": domain_name,
+        "domainId": domain_id,
         "qualityLevel": str(dp.get("qualityLevel", "")),
         "accessPolicy": str(dp.get("accessPolicy", "")),
         "description": (dp.get("description", "") or "")[:500],
@@ -162,50 +179,47 @@ async def index_data_product(dp: dict[str, Any]) -> str:
     )
 
     logger.info(
-        '{"event": "rag_index", "id": "%s", "name": "%s", "domain": "%s"}',
+        '{"event": "rag_index", "id": "%s", "name": "%s", "domainId": "%s"}',
         doc_id,
         metadata["name"],
-        metadata["domain"],
+        metadata["domainId"],
     )
     return doc_id
 
 
 async def index_all_data_products() -> dict[str, int]:
     """
-    Récupère tous les Data Products depuis OpenMetadata et les indexe dans ChromaDB.
+    Récupère tous les Data Products depuis le catalog Boson natif et les indexe
+    dans ChromaDB.
 
-    Idempotent — utilise upsert. Pagine jusqu'à 10 pages (limite=100/page).
+    Idempotent — utilise upsert. Pagine par tranches de 100 jusqu'à épuisement
+    des résultats (max 10 pages).
 
-    Raises:
-        ValueError: si OPENMETADATA_AUTH_TOKEN est absent.
+    Si BOSON_API_TOKEN est défini, l'en-tête Authorization est inclus.
 
     Returns:
         {"indexed": N, "errors": M}
     """
-    token: str | None = os.getenv("OPENMETADATA_AUTH_TOKEN")
-    if not token:
-        raise ValueError(
-            "OPENMETADATA_AUTH_TOKEN est absent — impossible d'indexer le catalog."
-        )
+    headers: dict[str, str] = {}
+    if BOSON_API_TOKEN:
+        headers["Authorization"] = f"Bearer {BOSON_API_TOKEN}"
 
-    headers = {"Authorization": f"Bearer {token}"}
     indexed = 0
     errors = 0
-    after: str | None = None
+    offset = 0
+    page_size = 100
     max_pages = 10
 
     async with httpx.AsyncClient(timeout=60.0) as client:
         for _ in range(max_pages):
             params: dict[str, Any] = {
-                "limit": 100,
-                "fields": "tags,domain,extension",
+                "limit": page_size,
+                "offset": offset,
             }
-            if after:
-                params["after"] = after
 
             try:
                 response = await client.get(
-                    f"{OPENMETADATA_URL}/api/v1/dataProducts",
+                    f"{BOSON_CATALOG_URL}/api/catalog/data-products",
                     headers=headers,
                     params=params,
                 )
@@ -218,7 +232,15 @@ async def index_all_data_products() -> dict[str, int]:
                 errors += 1
                 break
 
-            items: list[dict[str, Any]] = data.get("data", [])
+            # Boson returns either a list directly or {"content": [...]}
+            if isinstance(data, list):
+                items: list[dict[str, Any]] = data
+            else:
+                items = data.get("content", data.get("data", []))
+
+            if not items:
+                break
+
             for dp in items:
                 try:
                     await index_data_product(dp)
@@ -226,14 +248,16 @@ async def index_all_data_products() -> dict[str, int]:
                 except Exception as exc:
                     logger.error(
                         '{"event": "rag_index_error", "dp": "%s", "error": "%s"}',
-                        dp.get("fqn") or dp.get("id", "?"),
+                        dp.get("id") or dp.get("name", "?"),
                         exc,
                     )
                     errors += 1
 
-            after = data.get("paging", {}).get("after")
-            if not after:
+            if len(items) < page_size:
+                # Last page — no need to continue
                 break
+
+            offset += page_size
 
     logger.info(
         '{"event": "rag_index_complete", "indexed": %d, "errors": %d}',
@@ -269,10 +293,10 @@ async def search(query: str, top_k: int = RAG_TOP_K) -> list[dict[str, Any]]:
     for meta, dist in zip(metadatas, distances):
         output.append(
             {
-                "fqn": meta.get("fqn", ""),
+                "id": meta.get("id", ""),
                 "name": meta.get("name", ""),
                 "description": meta.get("description", ""),
-                "domain": meta.get("domain", ""),
+                "domainId": meta.get("domainId", ""),
                 "qualityLevel": meta.get("qualityLevel", ""),
                 "accessPolicy": meta.get("accessPolicy", ""),
                 "score": round(1.0 - dist, 4),
