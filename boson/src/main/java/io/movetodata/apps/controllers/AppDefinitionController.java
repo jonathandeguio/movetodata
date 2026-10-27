@@ -155,12 +155,12 @@ public class AppDefinitionController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable("uuid") String uuid) {
 
-        return appDefinitionRepository.findByUuid(uuid)
-                .map(existing -> {
-                    appDefinitionRepository.delete(existing);
-                    log.info("App definition deleted: uuid={} by user={}", uuid, authUser.getId());
-                    return ResponseEntity.<Void>noContent().build();
-                })
-                .orElse(ResponseEntity.<Void>notFound().build());
+        java.util.Optional<AppDefinition> opt = appDefinitionRepository.findByUuid(uuid);
+        if (opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        appDefinitionRepository.delete(opt.get());
+        log.info("App definition deleted: uuid={} by user={}", uuid, authUser.getId());
+        return ResponseEntity.noContent().build();
     }
 }
