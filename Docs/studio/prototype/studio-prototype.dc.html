@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Studio de Webapps Transactionnelles</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#09090B}
+a{color:#60A5FA}a:hover{color:#93C5FD}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+*:focus-visible{outline:2px solid #3B82F6;outline-offset:2px}
+.h-rail:hover{background:#18181B;color:#FAFAFA}
+.h-ghost:hover{background:#18181B;color:#FAFAFA}
+.h-primary:hover{background:#1D4ED8}
+.h-card:hover{border-color:#3F3F46}
+.h-link:hover{background:#18181B}
+.h-chip:hover{border-color:#52525B;color:#FAFAFA}
+.h-item:hover{background:#16161A;border-color:#3F3F46}
+.h-head:hover{background:#141418}
+input::placeholder,textarea::placeholder{color:#71717A}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; background: #09090B; color: #FAFAFA; font-family: 'Geist', system-ui, sans-serif; font-size: 14px; display: flex; flex-wrap: wrap; align-items: stretch">
+
+  <!-- Rail de navigation -->
+  <nav aria-label="Navigation principale" style="flex: 0 0 56px; background: #0C0C0E; border-right: 1px solid #1F1F23; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 0">
+    <div style="width: 32px; height: 32px; border-radius: 8px; background: #2563EB; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; margin-bottom: 12px">MD</div>
+    <button type="button" class="h-rail" aria-label="Accueil" title="Accueil" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></button>
+    <button type="button" class="h-rail" aria-label="Recherche" title="Recherche" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button>
+    <button type="button" class="h-rail" aria-label="Projets" title="Projets" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg></button>
+    <button type="button" class="h-rail" aria-label="Sources de données" title="Sources de données" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg></button>
+    <div style="width: 24px; height: 1px; background: #26262B; margin: 8px 0"></div>
+    <button type="button" class="h-rail" aria-label="Favoris" title="Favoris" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
+    <button type="button" class="h-rail" aria-label="Historique" title="Historique" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg></button>
+    <button type="button" class="h-rail" aria-label="Tâches" title="Tâches" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></button>
+    <button type="button" onClick="{{goApps}}" aria-label="Applications" title="Applications" style="width: 40px; height: 40px; border-radius: 8px; border: 0; background: #1E293B; color: #60A5FA; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg></button>
+  </nav>
+
+  <div style="flex: 999 1 300px; min-width: 0; display: flex; flex-direction: column">
+
+    <!-- ===================== ÉCRAN 1 : LISTE DES APPLICATIONS ===================== -->
+    <sc-if value="{{isApps}}" hint-placeholder-val="{{ true }}">
+      <main style="width: 100%; max-width: 1280px; margin: 0 auto; box-sizing: border-box; padding: 40px 32px; display: flex; flex-direction: column; gap: 28px">
+        <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h1 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em">Applications</h1>
+            <p style="margin: 0; color: #A1A1AA">Webapps transactionnelles branchées sur vos tables, générées et ajustées avec l’IA.</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+            <label for="app-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Rechercher une application</label>
+            <input id="app-search" value="{{query}}" onChange="{{onQuery}}" placeholder="Rechercher…" style="height: 36px; width: 220px; box-sizing: border-box; padding: 0 12px; background: #0F0F12; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA">
+            <button type="button" class="h-primary" onClick="{{openModal}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Nouvelle application</button>
+          </div>
+        </header>
+
+        <!-- Barre de prompt IA -->
+        <section aria-label="Créer avec l’IA" style="background: #0F0F12; border: 1px solid #26262B; border-radius: 12px; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1E1B2E; color: #A78BFA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg></div>
+          <label for="quick-prompt" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Décrire l’application à générer</label>
+          <input id="quick-prompt" value="{{quickPrompt}}" onChange="{{onQuickPrompt}}" onKeyDown="{{onQuickKey}}" placeholder="Décrivez l’application à créer : « un back-office pour valider les commandes en attente »" style="flex: 1 1 280px; min-width: 0; height: 40px; box-sizing: border-box; padding: 0 12px; background: #09090B; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA">
+          <button type="button" class="h-primary" onClick="{{quickGenerate}}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500">Générer</button>
+        </section>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px">
+          <sc-for list="{{apps}}" as="a" hint-placeholder-count="3">
+            <article class="h-card" style="background: #0F0F12; border: 1px solid #26262B; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden">
+              <div style="padding: 18px; display: flex; flex-direction: column; gap: 14px; flex: 1 1 auto">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+                  <div style="width: 40px; height: 40px; border-radius: 10px; background: #16161A; border: 1px solid #26262B; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg></div>
+                  <span style="font-size: 12px; padding: 2px 8px; border-radius: 999px; background: {{a.badgeBg}}; color: {{a.badgeFg}}">{{a.status}}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px">
+                  <h2 style="margin: 0; font-size: 15px; font-weight: 600">{{a.name}}</h2>
+                  <p style="margin: 0; font-size: 13px; color: #A1A1AA">{{a.meta}}</p>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #26262B">
+                <button type="button" class="h-link" onClick="{{a.open}}" style="height: 40px; border: 0; border-right: 1px solid #26262B; background: transparent; color: #60A5FA; font-size: 13px">Ouvrir</button>
+                <button type="button" class="h-link" onClick="{{a.configure}}" style="height: 40px; border: 0; border-right: 1px solid #26262B; background: transparent; color: #60A5FA; font-size: 13px">Configurer</button>
+                <button type="button" class="h-link" onClick="{{a.fields}}" style="height: 40px; border: 0; border-right: 1px solid #26262B; background: transparent; color: #60A5FA; font-size: 13px">Champs</button>
+                <button type="button" class="h-link" onClick="{{a.remove}}" style="height: 40px; border: 0; background: transparent; color: #F87171; font-size: 13px">Supprimer</button>
+              </div>
+            </article>
+          </sc-for>
+          <button type="button" class="h-card" onClick="{{openModal}}" style="min-height: 180px; border: 1px dashed #3F3F46; border-radius: 12px; background: transparent; color: #A1A1AA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span>Nouvelle application</span></button>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ===================== ÉCRAN 2 : STUDIO ===================== -->
+    <sc-if value="{{isStudio}}" hint-placeholder-val="{{ false }}">
+      <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #1F1F23; background: #0C0C0E">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+          <button type="button" class="h-ghost" onClick="{{goApps}}" aria-label="Retour aux applications" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #26262B; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+          <span style="color: #A1A1AA">Applications</span>
+          <span style="color: #52525B">/</span>
+          <strong style="font-weight: 600">{{app.name}}</strong>
+          <span style="font-size: 12px; padding: 2px 8px; border-radius: 999px; background: {{app.badgeBg}}; color: {{app.badgeFg}}">{{app.status}}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+          <div role="group" aria-label="Mode" style="display: flex; padding: 3px; background: #16161A; border: 1px solid #26262B; border-radius: 8px">
+            <button type="button" onClick="{{setEdit}}" aria-pressed="{{edit}}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: {{modeEdit.bg}}; color: {{modeEdit.fg}}">Édition</button>
+            <button type="button" onClick="{{setPreview}}" aria-pressed="{{preview}}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: {{modePrev.bg}}; color: {{modePrev.fg}}; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>Aperçu</button>
+          </div>
+          <button type="button" class="h-primary" onClick="{{publish}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500">Publier</button>
+        </div>
+      </header>
+
+      <div style="flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: stretch; min-height: 860px">
+
+        <!-- Panneau gauche : composants / données -->
+        <sc-if value="{{edit}}" hint-placeholder-val="{{ true }}">
+          <aside aria-label="Bibliothèque" style="flex: 1 1 240px; min-width: 0; background: #0C0C0E; border-right: 1px solid #1F1F23; display: flex; flex-direction: column">
+            <div role="tablist" style="display: flex; border-bottom: 1px solid #1F1F23; padding: 0 8px">
+              <button type="button" role="tab" aria-selected="{{lt1.on}}" onClick="{{showComponents}}" style="flex: 1 1 0; height: 44px; border: 0; background: transparent; color: {{lt1.fg}}; border-bottom: 2px solid {{lt1.line}}; font-weight: 500">Composants</button>
+              <button type="button" role="tab" aria-selected="{{lt2.on}}" onClick="{{showData}}" style="flex: 1 1 0; height: 44px; border: 0; background: transparent; color: {{lt2.fg}}; border-bottom: 2px solid {{lt2.line}}; font-weight: 500">Données</button>
+            </div>
+
+            <sc-if value="{{lt1.on}}" hint-placeholder-val="{{ true }}">
+              <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px">
+                <p style="margin: 4px 4px 4px; font-size: 12px; color: #A1A1AA">Cliquez pour ajouter au canvas · source : {{activeSource}}</p>
+                <button type="button" class="h-item" onClick="{{addTable}}" style="display: flex; gap: 12px; align-items: center; text-align: left; padding: 10px; border-radius: 10px; border: 1px solid #1F1F23; background: #0F0F12; color: #FAFAFA"><span style="width: 32px; height: 32px; border-radius: 8px; background: #16161A; color: #60A5FA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">Tableau</span><span style="font-size: 12px; color: #A1A1AA">Lignes d’une table ou requête</span></span></button>
+                <button type="button" class="h-item" onClick="{{addForm}}" style="display: flex; gap: 12px; align-items: center; text-align: left; padding: 10px; border-radius: 10px; border: 1px solid #1F1F23; background: #0F0F12; color: #FAFAFA"><span style="width: 32px; height: 32px; border-radius: 8px; background: #16161A; color: #60A5FA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 10h6"></path><path d="M7 14h10"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">Formulaire</span><span style="font-size: 12px; color: #A1A1AA">Création / mise à jour (UPDATE)</span></span></button>
+                <button type="button" class="h-item" onClick="{{addKpis}}" style="display: flex; gap: 12px; align-items: center; text-align: left; padding: 10px; border-radius: 10px; border: 1px solid #1F1F23; background: #0F0F12; color: #FAFAFA"><span style="width: 32px; height: 32px; border-radius: 8px; background: #16161A; color: #60A5FA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">Indicateurs</span><span style="font-size: 12px; color: #A1A1AA">Agrégats calculés en SQL</span></span></button>
+                <button type="button" class="h-item" onClick="{{addChart}}" style="display: flex; gap: 12px; align-items: center; text-align: left; padding: 10px; border-radius: 10px; border: 1px solid #1F1F23; background: #0F0F12; color: #FAFAFA"><span style="width: 32px; height: 32px; border-radius: 8px; background: #16161A; color: #60A5FA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">Graphique</span><span style="font-size: 12px; color: #A1A1AA">Barres groupées (GROUP BY)</span></span></button>
+                <button type="button" class="h-item" onClick="{{addButton}}" style="display: flex; gap: 12px; align-items: center; text-align: left; padding: 10px; border-radius: 10px; border: 1px solid #1F1F23; background: #0F0F12; color: #FAFAFA"><span style="width: 32px; height: 32px; border-radius: 8px; background: #16161A; color: #60A5FA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="8" rx="4"></rect><path d="M9 12h6"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">Bouton d’action</span><span style="font-size: 12px; color: #A1A1AA">Déclenche une requête transactionnelle</span></span></button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{lt2.on}}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px">
+                  <span style="font-size: 12px; color: #A1A1AA">Connexion : entrepôt_principal (données d’exemple)</span>
+                  <span style="width: 8px; height: 8px; border-radius: 999px; background: #4ADE80" aria-label="Connecté" role="img"></span>
+                </div>
+                <sc-for list="{{tables}}" as="t" hint-placeholder-count="3">
+                  <div style="border: 1px solid #1F1F23; border-radius: 10px; background: #0F0F12; overflow: hidden">
+                    <button type="button" class="h-head" onClick="{{t.toggle}}" aria-expanded="{{t.open}}" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px; border: 0; background: transparent; color: #FAFAFA; text-align: left">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M9 3v18"></path></svg>
+                      <span style="flex: 1 1 auto; font-family: 'Geist Mono', monospace; font-size: 13px">{{t.name}}</span>
+                      <span style="font-size: 12px; color: #A1A1AA">{{t.count}} lignes</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{t.rot}}deg)"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                    <sc-if value="{{t.open}}" hint-placeholder-val="{{ false }}">
+                      <div style="border-top: 1px solid #1F1F23; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px">
+                        <sc-for list="{{t.cols}}" as="col" hint-placeholder-count="4">
+                          <div style="display: flex; justify-content: space-between; font-family: 'Geist Mono', monospace; font-size: 12px"><span style="color: #E4E4E7">{{col.k}}</span><span style="color: #A1A1AA">{{col.t}}</span></div>
+                        </sc-for>
+                        <button type="button" class="h-chip" onClick="{{t.insert}}" style="margin-top: 6px; height: 32px; border-radius: 8px; border: 1px solid #26262B; background: transparent; color: #A1A1AA">Insérer comme tableau</button>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </aside>
+        </sc-if>
+
+        <!-- Canvas central -->
+        <section aria-label="Canvas de l’application" style="flex: 999 1 480px; min-width: 0; background-color: #09090B; background-image: radial-gradient(#1F1F23 1px, transparent 1px); background-size: 20px 20px; padding: 24px; box-sizing: border-box">
+          <div style="max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+            <sc-if value="{{noComps}}" hint-placeholder-val="{{ false }}">
+              <div style="border: 1px dashed #3F3F46; border-radius: 12px; padding: 48px 24px; text-align: center; color: #A1A1AA; background: #0C0C0E; display: flex; flex-direction: column; gap: 8px; align-items: center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>
+                <strong style="color: #FAFAFA; font-weight: 500">Canvas vide</strong>
+                <span>Ajoutez un composant depuis la bibliothèque ou décrivez l’écran à l’assistant IA.</span>
+              </div>
+            </sc-if>
+
+            <sc-for list="{{comps}}" as="c" hint-placeholder-count="3">
+              <section style="background: #0F0F12; border: 1px solid {{c.border}}; box-shadow: {{c.ring}}; border-radius: 12px; overflow: hidden">
+                <sc-if value="{{edit}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" class="h-head" onClick="{{c.select}}" aria-label="Sélectionner {{c.title}}" style="width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: 0; border-bottom: 1px solid #1F1F23; background: transparent; color: #A1A1AA; font-size: 12px; text-align: left">
+                    <span style="color: {{c.typeColor}}; font-weight: 500">{{c.typeLabel}}</span>
+                    <span style="font-family: 'Geist Mono', monospace; padding: 1px 6px; border-radius: 4px; background: #16161A; border: 1px solid #26262B">{{c.source}}</span>
+                    <span style="flex: 1 1 auto"></span>
+                    <span>{{c.hint}}</span>
+                  </button>
+                </sc-if>
+                <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+                  <h3 style="margin: 0; font-size: 15px; font-weight: 600">{{c.title}}</h3>
+
+                  <sc-if value="{{c.isKpis}}" hint-placeholder-val="{{ false }}">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+                      <sc-for list="{{c.kpis}}" as="k" hint-placeholder-count="3">
+                        <div style="border: 1px solid #26262B; border-radius: 10px; padding: 14px; background: #0C0C0E; display: flex; flex-direction: column; gap: 6px">
+                          <span style="font-size: 12px; color: #A1A1AA">{{k.l}}</span>
+                          <span style="font-size: 24px; font-weight: 600; letter-spacing: -0.02em">{{k.v}}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{c.isTable}}" hint-placeholder-val="{{ false }}">
+                    <div style="overflow-x: auto; border: 1px solid #26262B; border-radius: 10px">
+                      <div style="min-width: 560px">
+                        <div style="display: flex; background: #16161A; border-bottom: 1px solid #26262B">
+                          <sc-for list="{{c.cols}}" as="h" hint-placeholder-count="5">
+                            <div style="flex: 1 1 0; min-width: 0; padding: 9px 12px; font-size: 12px; color: #A1A1AA; font-family: 'Geist Mono', monospace">{{h.k}}</div>
+                          </sc-for>
+                        </div>
+                        <sc-for list="{{c.rows}}" as="r" hint-placeholder-count="5">
+                          <div style="display: flex; border-bottom: 1px solid #1F1F23">
+                            <sc-for list="{{r.cells}}" as="cell" hint-placeholder-count="5">
+                              <div style="flex: 1 1 0; min-width: 0; padding: 9px 12px; font-size: 13px; color: #E4E4E7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{cell.v}}</div>
+                            </sc-for>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{c.isForm}}" hint-placeholder-val="{{ false }}">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+                      <sc-for list="{{c.fields}}" as="f" hint-placeholder-count="4">
+                        <div style="display: flex; flex-direction: column; gap: 6px">
+                          <label for="{{f.id}}" style="font-size: 12px; color: #A1A1AA; font-family: 'Geist Mono', monospace">{{f.label}}</label>
+                          <input id="{{f.id}}" placeholder="{{f.ph}}" style="height: 36px; box-sizing: border-box; padding: 0 10px; background: #09090B; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA">
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end">
+                      <button type="button" class="h-primary" onClick="{{c.run}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500">Enregistrer</button>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{c.isChart}}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; gap: 12px; align-items: flex-end; padding-top: 8px">
+                      <sc-for list="{{c.bars}}" as="b" hint-placeholder-count="5">
+                        <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; align-items: stretch">
+                          <div style="height: 150px; display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 4px">
+                            <span style="font-size: 12px; color: #E4E4E7; text-align: center">{{b.v}}</span>
+                            <div style="height: {{b.pct}}%; min-height: 2px; background: #3B82F6; border-radius: 4px 4px 0 0"></div>
+                          </div>
+                          <span style="font-size: 12px; color: #A1A1AA; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{b.l}}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{c.isButton}}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+                      <button type="button" class="h-primary" onClick="{{c.run}}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500">{{c.label}}</button>
+                      <span style="font-size: 12px; color: #A1A1AA">Exécute une requête transactionnelle sur la ligne sélectionnée</span>
+                    </div>
+                  </sc-if>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- Panneau droit : assistant IA / propriétés -->
+        <sc-if value="{{edit}}" hint-placeholder-val="{{ true }}">
+          <aside aria-label="Assistant et propriétés" style="flex: 1 1 300px; min-width: 0; background: #0C0C0E; border-left: 1px solid #1F1F23; display: flex; flex-direction: column">
+            <div role="tablist" style="display: flex; border-bottom: 1px solid #1F1F23; padding: 0 8px">
+              <button type="button" role="tab" aria-selected="{{rt1.on}}" onClick="{{showAi}}" style="flex: 1 1 0; height: 44px; border: 0; background: transparent; color: {{rt1.fg}}; border-bottom: 2px solid {{rt1.line}}; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>Assistant IA</button>
+              <button type="button" role="tab" aria-selected="{{rt2.on}}" onClick="{{showProps}}" style="flex: 1 1 0; height: 44px; border: 0; background: transparent; color: {{rt2.fg}}; border-bottom: 2px solid {{rt2.line}}; font-weight: 500">Propriétés</button>
+            </div>
+
+            <!-- Assistant IA -->
+            <sc-if value="{{rt1.on}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0">
+                <div style="flex: 1 1 auto; max-height: 560px; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+                  <sc-for list="{{messages}}" as="m" hint-placeholder-count="2">
+                    <sc-if value="{{m.isAi}}" hint-placeholder-val="{{ true }}">
+                      <div style="display: flex; gap: 10px; align-items: flex-start">
+                        <span style="width: 26px; height: 26px; border-radius: 8px; background: #1E1B2E; color: #A78BFA; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg></span>
+                        <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 auto">
+                          <p style="margin: 0; line-height: 1.5; color: #E4E4E7">{{m.text}}</p>
+                          <sc-if value="{{m.hasSql}}" hint-placeholder-val="{{ false }}">
+                            <pre style="margin: 0; padding: 10px; border-radius: 8px; background: #09090B; border: 1px solid #26262B; color: #A5B4FC; font-family: 'Geist Mono', monospace; font-size: 12px; white-space: pre-wrap; overflow-x: auto">{{m.sql}}</pre>
+                          </sc-if>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{m.isUser}}" hint-placeholder-val="{{ false }}">
+                      <div style="align-self: flex-end; max-width: 85%; padding: 8px 12px; border-radius: 12px; background: #1E293B; color: #F1F5F9; line-height: 1.5">{{m.text}}</div>
+                    </sc-if>
+                  </sc-for>
+                  <sc-if value="{{thinking}}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; gap: 8px; align-items: center; color: #A78BFA; font-size: 13px">
+                      <span style="width: 8px; height: 8px; border-radius: 999px; background: #A78BFA"></span>
+                      Analyse du schéma et génération des requêtes…
+                    </div>
+                  </sc-if>
+                </div>
+                <div style="border-top: 1px solid #1F1F23; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                    <sc-for list="{{suggestions}}" as="s" hint-placeholder-count="4">
+                      <button type="button" class="h-chip" onClick="{{s.send}}" style="padding: 6px 10px; border-radius: 999px; border: 1px solid #26262B; background: transparent; color: #A1A1AA; font-size: 12px; text-align: left">{{s.text}}</button>
+                    </sc-for>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: flex-end; padding: 8px; border: 1px solid #26262B; border-radius: 10px; background: #09090B">
+                    <label for="ai-prompt" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Message à l’assistant IA</label>
+                    <textarea id="ai-prompt" rows="2" value="{{prompt}}" onChange="{{onPrompt}}" onKeyDown="{{onPromptKey}}" placeholder="Ex. : ajoute un formulaire pour modifier le statut d’une commande" style="flex: 1 1 auto; min-width: 0; resize: none; border: 0; background: transparent; color: #FAFAFA; line-height: 1.5; outline: none"></textarea>
+                    <button type="button" class="h-primary" onClick="{{sendPrompt}}" aria-label="Envoyer" style="width: 36px; height: 36px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex: 0 0 auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg></button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- Propriétés -->
+            <sc-if value="{{rt2.on}}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 16px; display: flex; flex-direction: column; gap: 18px">
+                <sc-if value="{{noSel}}" hint-placeholder-val="{{ false }}">
+                  <p style="margin: 0; color: #A1A1AA; line-height: 1.5">Sélectionnez un composant sur le canvas pour modifier ses propriétés et sa requête.</p>
+                </sc-if>
+                <sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; flex-direction: column; gap: 6px">
+                    <span style="font-size: 12px; color: #A1A1AA">Type</span>
+                    <span style="font-weight: 500">{{sel.typeLabel}}</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 6px">
+                    <label for="prop-title" style="font-size: 12px; color: #A1A1AA">Titre</label>
+                    <input id="prop-title" value="{{sel.title}}" onChange="{{onSelTitle}}" style="height: 36px; box-sizing: border-box; padding: 0 10px; background: #09090B; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA">
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px">
+                    <span style="font-size: 12px; color: #A1A1AA">Source de données</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                      <sc-for list="{{sourceOpts}}" as="o" hint-placeholder-count="3">
+                        <button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="padding: 6px 10px; border-radius: 8px; border: 1px solid {{o.border}}; background: {{o.bg}}; color: {{o.fg}}; font-family: 'Geist Mono', monospace; font-size: 12px">{{o.k}}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px">
+                    <span style="font-size: 12px; color: #A1A1AA">Requête générée</span>
+                    <pre style="margin: 0; padding: 10px; border-radius: 8px; background: #09090B; border: 1px solid #26262B; color: #A5B4FC; font-family: 'Geist Mono', monospace; font-size: 12px; white-space: pre-wrap">{{sel.sql}}</pre>
+                  </div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                    <button type="button" class="h-ghost" onClick="{{moveUp}}" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #26262B; background: transparent; color: #A1A1AA">Monter</button>
+                    <button type="button" class="h-ghost" onClick="{{moveDown}}" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #26262B; background: transparent; color: #A1A1AA">Descendre</button>
+                    <button type="button" class="h-ghost" onClick="{{removeSel}}" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #3F1D1D; background: transparent; color: #F87171; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Supprimer</button>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </aside>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ===================== MODALE : NOUVELLE APPLICATION ===================== -->
+  <sc-if value="{{modal}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding: 80px 16px; box-sizing: border-box">
+      <div role="dialog" aria-modal="true" aria-labelledby="modal-title" style="width: 100%; max-width: 560px; background: #0F0F12; border: 1px solid #26262B; border-radius: 14px; display: flex; flex-direction: column">
+        <div style="padding: 18px 20px; border-bottom: 1px solid #1F1F23; display: flex; align-items: center; justify-content: space-between">
+          <h2 id="modal-title" style="margin: 0; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>Nouvelle application</h2>
+          <button type="button" class="h-ghost" onClick="{{closeModal}}" aria-label="Fermer" style="width: 32px; height: 32px; border-radius: 8px; border: 0; background: transparent; color: #A1A1AA; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+        </div>
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="new-name" style="font-size: 12px; color: #A1A1AA">Nom</label>
+            <input id="new-name" value="{{newName}}" onChange="{{onNewName}}" placeholder="Ex. : Validation des commandes" style="height: 38px; box-sizing: border-box; padding: 0 12px; background: #09090B; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="new-prompt" style="font-size: 12px; color: #A1A1AA">Décrivez l’application (l’IA génère écrans, composants et requêtes)</label>
+            <textarea id="new-prompt" rows="4" value="{{newPrompt}}" onChange="{{onNewPrompt}}" placeholder="Ex. : un écran qui liste les commandes en attente, avec des indicateurs, un formulaire de mise à jour du statut et un bouton de validation" style="box-sizing: border-box; padding: 10px 12px; background: #09090B; border: 1px solid #26262B; border-radius: 8px; color: #FAFAFA; resize: vertical; line-height: 1.5"></textarea>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span style="font-size: 12px; color: #A1A1AA">Table principale</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{newSourceOpts}}" as="o" hint-placeholder-count="3">
+                <button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="padding: 6px 10px; border-radius: 8px; border: 1px solid {{o.border}}; background: {{o.bg}}; color: {{o.fg}}; font-family: 'Geist Mono', monospace; font-size: 12px">{{o.k}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span style="font-size: 12px; color: #A1A1AA">Modèles suggérés</span>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <sc-for list="{{templates}}" as="tp" hint-placeholder-count="3">
+                <button type="button" class="h-item" onClick="{{tp.use}}" style="text-align: left; padding: 10px 12px; border-radius: 8px; border: 1px solid #1F1F23; background: #0C0C0E; color: #E4E4E7; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 500">{{tp.name}}</span><span style="font-size: 12px; color: #A1A1AA">{{tp.desc}}</span></button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="padding: 14px 20px; border-top: 1px solid #1F1F23; display: flex; justify-content: flex-end; gap: 8px">
+          <button type="button" class="h-ghost" onClick="{{createEmpty}}" style="height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid #26262B; background: transparent; color: #E4E4E7">Créer vide</button>
+          <button type="button" class="h-primary" onClick="{{generate}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: #2563EB; color: #FFFFFF; font-weight: 500">{{generateLabel}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Toast -->
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; right: 24px; bottom: 24px; padding: 12px 16px; border-radius: 10px; background: #16161A; border: 1px solid #26262B; color: #FAFAFA; display: flex; align-items: center; gap: 8px">
+      <span style="width: 8px; height: 8px; border-radius: 999px; background: #4ADE80"></span>{{toast}}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+// ---- Données d'exemple (schéma simulé de la Data Platform) ----
+var SRC = {
+  commandes: {
+    cols: [{k:'id',t:'text'},{k:'client',t:'text'},{k:'montant',t:'numeric'},{k:'statut',t:'text'},{k:'date',t:'date'}],
+    rows: [
+      ['CMD-1048','Atelier Moreau',1840,'En attente','2026-10-26'],
+      ['CMD-1047','Dupont SA',1250,'Validée','2026-10-25'],
+      ['CMD-1046','Lefèvre & Fils',620,'En attente','2026-10-24'],
+      ['CMD-1045','Studio Bernard',2310,'Expédiée','2026-10-22'],
+      ['CMD-1044','Dupont SA',480,'Validée','2026-10-21'],
+      ['CMD-1043','Garnier Distribution',975,'Annulée','2026-10-20']
+    ]
+  },
+  clients: {
+    cols: [{k:'id',t:'text'},{k:'nom',t:'text'},{k:'ville',t:'text'},{k:'segment',t:'text'}],
+    rows: [
+      ['CL-201','Dupont SA','Lyon','Grand compte'],
+      ['CL-202','Atelier Moreau','Nantes','PME'],
+      ['CL-203','Lefèvre & Fils','Lille','PME'],
+      ['CL-204','Studio Bernard','Paris','TPE'],
+      ['CL-205','Garnier Distribution','Lyon','Grand compte']
+    ]
+  },
+  produits: {
+    cols: [{k:'sku',t:'text'},{k:'libelle',t:'text'},{k:'stock',t:'int'},{k:'prix',t:'numeric'}],
+    rows: [
+      ['SKU-01','Capteur IoT v2',42,89],
+      ['SKU-02','Passerelle LoRa',8,240],
+      ['SKU-03','Câble M12',310,6],
+      ['SKU-04','Boîtier IP67',0,35],
+      ['SKU-05','Licence Cloud',120,120]
+    ]
+  }
+};
+var SING = {commandes:'commande', clients:'client', produits:'produit'};
+var TYPE_LABEL = {table:'Tableau', kpis:'Indicateurs', form:'Formulaire', chart:'Graphique', button:'Bouton d’action'};
+var ACTION = {commandes:'Valider la commande', clients:'Relancer le client', produits:'Réapprovisionner'};
+var CHART_TITLE = {commandes:'Montant par client', clients:'Clients par ville', produits:'Stock par produit'};
+var SEQ = 100;
+
+function eur(n){ return n.toLocaleString('fr-FR') + ' €'; }
+function fmt(col, v){ return (col === 'montant' || col === 'prix') ? eur(v) : String(v); }
+
+// Fabrique d'un composant du canvas (le "nœud" de l'arbre)
+function mk(type, src){
+  SEQ += 1;
+  var title = type === 'table' ? 'Liste des ' + src
+    : type === 'kpis' ? 'Synthèse ' + src
+    : type === 'form' ? 'Éditer un ' + SING[src]
+    : type === 'chart' ? CHART_TITLE[src]
+    : ACTION[src];
+  return { id: 'c' + SEQ, type: type, source: src, title: title };
+}
+
+// Requête SQL générée pour un composant
+function sqlFor(c){
+  var s = c.source, cols = SRC[s].cols.map(function(x){ return x.k; });
+  if (c.type === 'table') return 'SELECT *\nFROM ' + s + '\nORDER BY 1 DESC\nLIMIT 50;';
+  if (c.type === 'kpis') {
+    if (s === 'commandes') return "SELECT COUNT(*) AS commandes,\n       SUM(montant) AS montant_total,\n       COUNT(*) FILTER (WHERE statut = 'En attente') AS en_attente\nFROM commandes;";
+    if (s === 'clients') return "SELECT COUNT(*) AS clients,\n       COUNT(DISTINCT ville) AS villes,\n       COUNT(*) FILTER (WHERE segment = 'Grand compte') AS grands_comptes\nFROM clients;";
+    return 'SELECT COUNT(*) AS references,\n       SUM(stock) AS unites,\n       COUNT(*) FILTER (WHERE stock = 0) AS ruptures\nFROM produits;';
+  }
+  if (c.type === 'form') return 'UPDATE ' + s + '\nSET ' + cols.slice(1).map(function(k){ return k + ' = :' + k; }).join(',\n    ') + '\nWHERE ' + cols[0] + ' = :selected_id;';
+  if (c.type === 'chart') {
+    if (s === 'commandes') return 'SELECT client, SUM(montant) AS total\nFROM commandes\nGROUP BY client\nORDER BY total DESC;';
+    if (s === 'clients') return 'SELECT ville, COUNT(*) AS nb\nFROM clients\nGROUP BY ville;';
+    return 'SELECT libelle, stock\nFROM produits\nORDER BY stock DESC;';
+  }
+  if (s === 'commandes') return "UPDATE commandes\nSET statut = 'Validée'\nWHERE id = :selected_id;";
+  if (s === 'clients') return 'INSERT INTO relances (client_id, date)\nVALUES (:selected_id, NOW());';
+  return 'INSERT INTO reappro (sku, quantite)\nVALUES (:selected_id, 100);';
+}
+
+function kpisFor(s){
+  var r = SRC[s].rows;
+  if (s === 'commandes') return [
+    {l:'Commandes', v: String(r.length)},
+    {l:'Montant total', v: eur(r.reduce(function(a,x){ return a + x[2]; }, 0))},
+    {l:'En attente', v: String(r.filter(function(x){ return x[3] === 'En attente'; }).length)}];
+  if (s === 'clients') {
+    var villes = {}; r.forEach(function(x){ villes[x[2]] = 1; });
+    return [{l:'Clients', v:String(r.length)}, {l:'Villes', v:String(Object.keys(villes).length)},
+      {l:'Grands comptes', v:String(r.filter(function(x){ return x[3] === 'Grand compte'; }).length)}];
+  }
+  return [{l:'Références', v:String(r.length)},
+    {l:'Unités en stock', v:String(r.reduce(function(a,x){ return a + x[2]; }, 0))},
+    {l:'En rupture', v:String(r.filter(function(x){ return x[2] === 0; }).length)}];
+}
+
+function barsFor(s){
+  var r = SRC[s].rows, g = {}, order = [];
+  function add(k, v){ if (!(k in g)) { g[k] = 0; order.push(k); } g[k] += v; }
+  r.forEach(function(x){
+    if (s === 'commandes') add(x[1], x[2]);
+    else if (s === 'clients') add(x[2], 1);
+    else add(x[1], x[2]);
+  });
+  var max = Math.max.apply(null, order.map(function(k){ return g[k]; })) || 1;
+  return order.map(function(k){
+    return { l: k, v: s === 'commandes' ? eur(g[k]) : String(g[k]), pct: Math.round(g[k] / max * 100) };
+  });
+}
+
+function welcome(){ return { role:'ai', text:'Bonjour ! Décrivez l’écran à construire : je génère les composants et les requêtes à partir du schéma de vos tables.' }; }
+
+function badge(status){ return status === 'Publiée' ? { bg:'#052E16', fg:'#4ADE80' } : { bg:'#1C1C21', fg:'#A1A1AA' }; }
+
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      screen: 'apps', query: '', quickPrompt: '',
+      apps: [
+        { id:'a0', name:'test', source:'commandes', status:'Brouillon', updated:'aujourd’hui', components:[], messages:[welcome()] },
+        { id:'a1', name:'Validation des commandes', source:'commandes', status:'Publiée', updated:'hier',
+          components:[mk('kpis','commandes'), mk('table','commandes'), mk('form','commandes'), mk('button','commandes')], messages:[welcome()] },
+        { id:'a2', name:'Annuaire clients', source:'clients', status:'Brouillon', updated:'le 21 oct.',
+          components:[mk('table','clients'), mk('chart','clients')], messages:[welcome()] }
+      ],
+      currentId: null, selectedId: null, leftTab: 'components', rightTab: 'ai', preview: false,
+      openTable: 'commandes', prompt: '', thinking: false,
+      modal: false, newName: '', newPrompt: '', newSource: 'commandes', generating: false,
+      toast: ''
+    };
+  }
+
+  // --- helpers d'état ---
+  app(){ var id = this.state.currentId; return this.state.apps.find(function(a){ return a.id === id; }); }
+  updApp(fn){ var id = this.state.currentId; this.setState({ apps: this.state.apps.map(function(a){ return a.id === id ? fn(a) : a; }) }); }
+  flash(msg){ var self = this; this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(function(){ self.setState({ toast: '' }); }, 2200); }
+  activeSource(){
+    var a = this.app(); if (!a) return 'commandes';
+    var sel = a.components.find((c) => c.id === this.state.selectedId);
+    return sel ? sel.source : a.source;
+  }
+  openApp(id, rightTab, leftTab){
+    var a = this.state.apps.find(function(x){ return x.id === id; });
+    this.setState({ screen:'studio', currentId:id, rightTab:rightTab, leftTab:leftTab, preview:false,
+      selectedId: rightTab === 'props' && a.components[0] ? a.components[0].id : null, openTable: a.source });
+  }
+  addComp(type, src){
+    var c = mk(type, src || this.activeSource());
+    this.updApp(function(a){ return Object.assign({}, a, { components: a.components.concat([c]) }); });
+    this.setState({ selectedId: c.id });
+    return c;
+  }
+
+  // --- IA simulée : interprétation du prompt → composant + SQL ---
+  interpret(text){
+    var t = text.toLowerCase();
+    var src = /client/.test(t) ? 'clients' : /produit|stock/.test(t) ? 'produits' : /commande/.test(t) ? 'commandes' : this.activeSource();
+    var type = /graph|chart|courbe|barre|répartition/.test(t) ? 'chart'
+      : /formulaire|saisie|modifier|éditer|mettre à jour/.test(t) ? 'form'
+      : /kpi|indicateur|métrique|synthèse|total/.test(t) ? 'kpis'
+      : /bouton|action|valider|relancer/.test(t) ? 'button'
+      : /tableau|table|liste/.test(t) ? 'table' : null;
+    return { type: type, src: src };
+  }
+  send(text){
+    text = (text || '').trim();
+    if (!text || this.state.thinking) return;
+    var self = this;
+    this.updApp(function(a){ return Object.assign({}, a, { messages: a.messages.concat([{ role:'user', text:text }]) }); });
+    this.setState({ prompt:'', thinking:true });
+    setTimeout(function(){
+      var r = self.interpret(text), msg;
+      if (r.type) {
+        var c = self.addComp(r.type, r.src);
+        msg = { role:'ai', text:'J’ai ajouté « ' + c.title + ' » (' + TYPE_LABEL[c.type].toLowerCase() + ') branché sur la table ' + c.source + '. Requête générée :', sql: sqlFor(c) };
+      } else {
+        msg = { role:'ai', text:'Je peux ajouter un tableau, un formulaire, des indicateurs, un graphique ou un bouton d’action sur commandes, clients ou produits. Précisez ce que l’écran doit permettre de faire.' };
+      }
+      self.updApp(function(a){ return Object.assign({}, a, { messages: a.messages.concat([msg]) }); });
+      self.setState({ thinking:false });
+    }, 900);
+  }
+
+  // --- génération d'une application depuis la modale ---
+  createApp(withAi){
+    var self = this, s = this.state;
+    var src = s.newSource, p = (s.newPrompt || '').toLowerCase();
+    var name = s.newName.trim() || (withAi && s.newPrompt.trim() ? s.newPrompt.trim().slice(0, 40) : 'Nouvelle application');
+    var comps = [];
+    if (withAi) {
+      comps = [mk('kpis', src), mk('table', src)];
+      if (/graph|répartition|évolution/.test(p)) comps.push(mk('chart', src));
+      comps.push(mk('form', src));
+      if (/bouton|valider|action|relancer|réappro/.test(p)) comps.push(mk('button', src));
+    }
+    var id = 'a' + Date.now();
+    var msgs = [welcome()];
+    if (withAi) msgs.push({ role:'ai', text:'J’ai généré « ' + name + ' » : ' + comps.length + ' composants branchés sur la table ' + src + '. Sélectionnez un composant pour l’ajuster, ou demandez-moi une modification.', sql: comps.map(sqlFor).join('\n\n') });
+    var app = { id:id, name:name, source:src, status:'Brouillon', updated:'à l’instant', components:comps, messages:msgs };
+    var go = function(){
+      self.setState({ apps: self.state.apps.concat([app]), modal:false, generating:false, newName:'', newPrompt:'',
+        screen:'studio', currentId:id, selectedId:null, rightTab:'ai', leftTab:'components', preview:false, openTable:src });
+    };
+    if (withAi) { this.setState({ generating:true }); setTimeout(go, 1100); } else go();
+  }
+
+  // --- projection d'un composant pour le template ---
+  view(c, edit){
+    var self = this, t = SRC[c.source], sel = edit && this.state.selectedId === c.id;
+    var first = t.rows[0];
+    return {
+      id: c.id, title: c.title, source: c.source, label: c.title,
+      typeLabel: TYPE_LABEL[c.type], typeColor: sel ? '#60A5FA' : '#A1A1AA',
+      hint: sel ? 'Sélectionné' : 'Cliquer pour sélectionner',
+      border: sel ? '#3B82F6' : '#26262B', ring: sel ? '0 0 0 3px rgba(59,130,246,0.25)' : 'none',
+      isTable: c.type === 'table', isKpis: c.type === 'kpis', isForm: c.type === 'form', isChart: c.type === 'chart', isButton: c.type === 'button',
+      cols: t.cols,
+      rows: t.rows.map(function(r){ return { cells: r.map(function(v, i){ return { v: fmt(t.cols[i].k, v) }; }) }; }),
+      kpis: c.type === 'kpis' ? kpisFor(c.source) : [],
+      bars: c.type === 'chart' ? barsFor(c.source) : [],
+      fields: t.cols.slice(1).map(function(col, i){ return { id: c.id + '-' + col.k, label: col.k, ph: fmt(col.k, first[i + 1]) }; }),
+      select: function(){ self.setState({ selectedId: c.id, rightTab: 'props' }); },
+      run: function(){ self.flash('Requête exécutée : ' + c.title); }
+    };
+  }
+
+  renderVals(){
+    var self = this, s = this.state;
+    var on = { fg:'#FAFAFA', line:'#3B82F6', on:true }, off = { fg:'#A1A1AA', line:'transparent', on:false };
+    var chip = function(active){ return active ? { border:'#3B82F6', bg:'#172554', fg:'#BFDBFE', on:true } : { border:'#26262B', bg:'transparent', fg:'#A1A1AA', on:false }; };
+
+    // Écran liste
+    var q = s.query.trim().toLowerCase();
+    var apps = s.apps.filter(function(a){ return !q || a.name.toLowerCase().indexOf(q) >= 0; }).map(function(a){
+      var b = badge(a.status);
+      return Object.assign({}, a, { badgeBg: b.bg, badgeFg: b.fg,
+        meta: a.components.length + ' composant' + (a.components.length > 1 ? 's' : '') + ' · ' + a.source + ' · modifiée ' + a.updated,
+        open: function(){ self.openApp(a.id, 'ai', 'components'); },
+        configure: function(){ self.openApp(a.id, 'props', 'components'); },
+        fields: function(){ self.openApp(a.id, 'ai', 'data'); },
+        remove: function(){ self.setState({ apps: self.state.apps.filter(function(x){ return x.id !== a.id; }) }); self.flash('Application « ' + a.name + ' » supprimée'); }
+      });
+    });
+
+    // Studio
+    var app = this.app() || { name:'', status:'Brouillon', components:[], messages:[], source:'commandes' };
+    var ab = badge(app.status);
+    var edit = !s.preview;
+    var comps = app.components.map(function(c){ return self.view(c, edit); });
+    var selC = app.components.find(function(c){ return c.id === s.selectedId; });
+    var selIdx = app.components.indexOf(selC);
+    var move = function(d){
+      if (!selC) return;
+      var j = selIdx + d; if (j < 0 || j >= app.components.length) return;
+      self.updApp(function(a){ var arr = a.components.slice(); var x = arr[selIdx]; arr[selIdx] = arr[j]; arr[j] = x; return Object.assign({}, a, { components: arr }); });
+    };
+    var setSel = function(patch){
+      self.updApp(function(a){ return Object.assign({}, a, { components: a.components.map(function(c){ return c.id === s.selectedId ? Object.assign({}, c, patch) : c; }) }); });
+    };
+
+    var suggestions = [
+      'Ajoute un graphique des montants par client',
+      'Ajoute un formulaire pour modifier une commande',
+      'Ajoute des indicateurs sur les produits',
+      'Ajoute un bouton pour relancer un client'
+    ].map(function(t){ return { text:t, send: function(){ self.send(t); } }; });
+
+    var templates = [
+      { name:'Validation des commandes', desc:'Commandes en attente, indicateurs, formulaire et bouton de validation', src:'commandes',
+        prompt:'Un back-office qui liste les commandes en attente avec des indicateurs, un formulaire de mise à jour du statut et un bouton valider.' },
+      { name:'Annuaire clients', desc:'Liste éditable des clients et répartition par ville en graphique', src:'clients',
+        prompt:'Un annuaire des clients avec une fiche éditable et un graphique de répartition par ville.' },
+      { name:'Suivi des stocks', desc:'Stocks par produit, ruptures et action de réapprovisionnement', src:'produits',
+        prompt:'Un suivi des stocks produits avec indicateurs de rupture, un graphique et un bouton de réapprovisionnement.' }
+    ].map(function(t){ return Object.assign({}, t, { use: function(){ self.setState({ newName:t.name, newPrompt:t.prompt, newSource:t.src }); } }); });
+
+    return {
+      // navigation
+      isApps: s.screen === 'apps', isStudio: s.screen === 'studio',
+      goApps: function(){ self.setState({ screen:'apps', selectedId:null }); },
+      // liste
+      apps: apps, query: s.query, onQuery: function(e){ self.setState({ query: e.target.value }); },
+      quickPrompt: s.quickPrompt, onQuickPrompt: function(e){ self.setState({ quickPrompt: e.target.value }); },
+      quickGenerate: function(){ self.setState({ modal:true, newPrompt: self.state.quickPrompt, quickPrompt:'' }); },
+      onQuickKey: function(e){ if (e.key === 'Enter') { e.preventDefault(); self.setState({ modal:true, newPrompt: self.state.quickPrompt, quickPrompt:'' }); } },
+      // studio : en-tête
+      app: Object.assign({}, app, { badgeBg: ab.bg, badgeFg: ab.fg }),
+      edit: edit, preview: s.preview,
+      modeEdit: edit ? { bg:'#27272A', fg:'#FAFAFA' } : { bg:'transparent', fg:'#A1A1AA' },
+      modePrev: s.preview ? { bg:'#27272A', fg:'#FAFAFA' } : { bg:'transparent', fg:'#A1A1AA' },
+      setEdit: function(){ self.setState({ preview:false }); },
+      setPreview: function(){ self.setState({ preview:true }); },
+      publish: function(){ self.updApp(function(a){ return Object.assign({}, a, { status:'Publiée', updated:'à l’instant' }); }); self.flash('Application publiée'); },
+      // panneau gauche
+      lt1: s.leftTab === 'components' ? on : off, lt2: s.leftTab === 'data' ? on : off,
+      showComponents: function(){ self.setState({ leftTab:'components' }); },
+      showData: function(){ self.setState({ leftTab:'data' }); },
+      activeSource: this.activeSource(),
+      addTable: function(){ self.addComp('table'); }, addForm: function(){ self.addComp('form'); },
+      addKpis: function(){ self.addComp('kpis'); }, addChart: function(){ self.addComp('chart'); },
+      addButton: function(){ self.addComp('button'); },
+      tables: Object.keys(SRC).map(function(k){
+        var open = s.openTable === k;
+        return { name:k, count: SRC[k].rows.length, cols: SRC[k].cols, open: open, rot: open ? 90 : 0,
+          toggle: function(){ self.setState({ openTable: open ? null : k }); },
+          insert: function(){ self.addComp('table', k); } };
+      }),
+      // canvas
+      comps: comps, noComps: comps.length === 0,
+      // panneau droit
+      rt1: s.rightTab === 'ai' ? on : off, rt2: s.rightTab === 'props' ? on : off,
+      showAi: function(){ self.setState({ rightTab:'ai' }); },
+      showProps: function(){ self.setState({ rightTab:'props' }); },
+      messages: app.messages.map(function(m){ return { text:m.text, sql:m.sql || '', hasSql: !!m.sql, isAi: m.role === 'ai', isUser: m.role === 'user' }; }),
+      thinking: s.thinking, suggestions: suggestions,
+      prompt: s.prompt, onPrompt: function(e){ self.setState({ prompt: e.target.value }); },
+      onPromptKey: function(e){ if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); self.send(self.state.prompt); } },
+      sendPrompt: function(){ self.send(self.state.prompt); },
+      hasSel: !!selC, noSel: !selC,
+      sel: selC ? { title: selC.title, typeLabel: TYPE_LABEL[selC.type], sql: sqlFor(selC) } : { title:'', typeLabel:'', sql:'' },
+      onSelTitle: function(e){ setSel({ title: e.target.value }); },
+      sourceOpts: Object.keys(SRC).map(function(k){ return Object.assign({ k:k, pick: function(){ setSel({ source:k }); } }, chip(selC && selC.source === k)); }),
+      moveUp: function(){ move(-1); }, moveDown: function(){ move(1); },
+      removeSel: function(){ self.updApp(function(a){ return Object.assign({}, a, { components: a.components.filter(function(c){ return c.id !== s.selectedId; }) }); }); self.setState({ selectedId:null }); },
+      // modale
+      modal: s.modal, openModal: function(){ self.setState({ modal:true }); }, closeModal: function(){ self.setState({ modal:false }); },
+      newName: s.newName, onNewName: function(e){ self.setState({ newName: e.target.value }); },
+      newPrompt: s.newPrompt, onNewPrompt: function(e){ self.setState({ newPrompt: e.target.value }); },
+      newSourceOpts: Object.keys(SRC).map(function(k){ return Object.assign({ k:k, pick: function(){ self.setState({ newSource:k }); } }, chip(s.newSource === k)); }),
+      templates: templates,
+      generate: function(){ if (!self.state.generating) self.createApp(true); },
+      createEmpty: function(){ self.createApp(false); },
+      generateLabel: s.generating ? 'Génération en cours…' : 'Générer avec l’IA',
+      // toast
+      hasToast: !!s.toast, toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

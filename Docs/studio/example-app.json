@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "app_validation_cmd",
+  "name": "Validation des commandes",
+  "datasourceId": "ds_main",
+  "queries": {
+    "q_list": {
+      "id": "q_list",
+      "kind": "read",
+      "sql": "SELECT id, client, montant, statut, date FROM commandes WHERE statut = 'En attente' ORDER BY date DESC LIMIT 50",
+      "params": []
+    },
+    "q_kpis": {
+      "id": "q_kpis",
+      "kind": "read",
+      "sql": "SELECT COUNT(*) AS commandes, SUM(montant) AS montant_total, COUNT(*) FILTER (WHERE statut = 'En attente') AS en_attente FROM commandes",
+      "params": []
+    },
+    "q_update": {
+      "id": "q_update",
+      "kind": "write",
+      "sql": "UPDATE commandes SET statut = :statut, montant = :montant WHERE id = :selected_id",
+      "params": ["statut", "montant", "selected_id"],
+      "onSuccess": [
+        { "action": "refetch", "query": "q_list" },
+        { "action": "refetch", "query": "q_kpis" },
+        { "action": "toast", "message": "Commande mise à jour" }
+      ]
+    },
+    "q_validate": {
+      "id": "q_validate",
+      "kind": "write",
+      "sql": "UPDATE commandes SET statut = 'Validée' WHERE id = :selected_id",
+      "params": ["selected_id"],
+      "onSuccess": [{ "action": "refetch", "query": "q_list" }]
+    }
+  },
+  "state": { "selected_id": null },
+  "pages": [
+    {
+      "id": "p_home",
+      "name": "Accueil",
+      "root": {
+        "id": "n_root",
+        "type": "stack",
+        "props": { "gap": 16 },
+        "children": [
+          {
+            "id": "n_kpis",
+            "type": "kpis",
+            "props": {
+              "title": "Synthèse",
+              "items": [
+                { "key": "commandes", "label": "Commandes", "format": "number" },
+                { "key": "montant_total", "label": "Montant total", "format": "currency" },
+                { "key": "en_attente", "label": "En attente", "format": "number" }
+              ]
+            },
+            "bind": { "query": "q_kpis" }
+          },
+          {
+            "id": "n_table",
+            "type": "table",
+            "props": { "title": "Commandes en attente", "pageSize": 50, "selectable": true },
+            "bind": { "query": "q_list" },
+            "events": {
+              "onRowClick": [{ "action": "setState", "key": "selected_id", "value": "{{row.id}}" }]
+            }
+          },
+          {
+            "id": "n_form",
+            "type": "form",
+            "props": {
+              "title": "Éditer la commande",
+              "submitLabel": "Enregistrer",
+              "fields": [
+                { "name": "statut", "label": "Statut", "widget": "select", "options": ["En attente", "Validée", "Annulée"], "required": true },
+                { "name": "montant", "label": "Montant", "widget": "number" }
+              ]
+            },
+            "bind": { "query": "q_update" },
+            "visibleIf": "{{state.selected_id != null}}"
+          },
+          {
+            "id": "n_btn",
+            "type": "button",
+            "props": { "title": "Action", "label": "Valider la commande", "variant": "primary", "confirm": "Valider cette commande ?" },
+            "events": { "onClick": [{ "action": "runQuery", "query": "q_validate" }] },
+            "visibleIf": "{{state.selected_id != null}}"
+          }
+        ]
+      }
+    }
+  ]
+}
