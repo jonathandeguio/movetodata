@@ -2,14 +2,16 @@
 catalog.py — F13 Data Catalog router.
 
 Endpoints:
-  POST /catalog/webhook/dataset-created  (F13.1) — receive dataset-created events,
-       orchestrate LLM metadata generation and Boson publication.
-  POST /catalog/generate-data-product    (F13.2) — generate a DataProduct descriptor
+  POST /catalog/webhook/dataset-created     (F13.1) — receive dataset-created events,
+       orchestrate LLM metadata generation and Boson publication + PII auto-detection.
+  POST /catalog/generate-data-product       (F13.2) — generate a DataProduct descriptor
        from schema information via the local LLM.
-  POST /catalog/publish-data-product     (F13.3) — push a DataProduct descriptor to
+  POST /catalog/publish-data-product        (F13.3) — push a DataProduct descriptor to
        Boson native catalog, with idempotence handling (409 → PUT).
-  POST /catalog/enrich/{name}            (F13.4) — enrich an existing DataProduct:
+  POST /catalog/enrich/{name}               (F13.4) — enrich an existing DataProduct:
        improved description + PII detection per column, patched back to Boson.
+  POST /catalog/suggest-quality-rules/{name} (F13.5) — LLM suggests quality rules,
+       posted to Boson /quality-rules.
 
 Sovereignty: raw dataset cell values are never accepted or forwarded.
 """
@@ -100,10 +102,28 @@ async def webhook_dataset_created(
         ) from exc
 
     already_indexed: bool = bool(om_response.get("_conflict", False))
+
+    # F13.4 — PII auto-detection (Phase 4): fire-and-forget after publication
+    if event.columns:
+        import asyncio
+        product_name: str = metadata.get("name", fqn)
+        asyncio.ensure_future(
+            _enrich_background(product_name)
+        )
+
     return {
         "status": "already_indexed" if already_indexed else "indexed",
         "dataProductFqn": fqn,
     }
+
+
+async def _enrich_background(name: str) -> None:
+    """Background PII enrichment after dataset creation — errors are swallowed."""
+    try:
+        await catalog_service.enrich_data_product(name)
+        logger.info(json.dumps({"event": "pii_auto_enrich_done", "name": name}))
+    except Exception as exc:
+        logger.warning(json.dumps({"event": "pii_auto_enrich_failed", "name": name, "error": str(exc)}))
 
 
 # ---------------------------------------------------------------------------
@@ -191,6 +211,34 @@ async def enrich_data_product(
         raise HTTPException(status_code=500, detail="Enrichment failed") from exc
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# F13.5 — Suggest quality rules for a DataProduct (Phase 4)
+# ---------------------------------------------------------------------------
+
+@router.post("/suggest-quality-rules/{name}", tags=["Catalog"])
+async def suggest_quality_rules(
+    name: str,
+) -> Dict[str, Any]:
+    """
+    Fetch the DataProduct's columns from Boson, ask the LLM to suggest
+    data quality rules (NOT_NULL, RANGE, REGEX, UNIQUENESS, CUSTOM), and
+    POST each rule to Boson.
+
+    Returns {"name", "rulesCreated": [...]} on success.
+    """
+    logger.info(json.dumps({"event": "suggest_quality_rules_request", "name": name}))
+
+    try:
+        rules = await catalog_service.suggest_quality_rules(name)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.error("suggest_quality_rules: failed for name=%s — %s", name, exc)
+        raise HTTPException(status_code=500, detail="Quality rules suggestion failed") from exc
+
+    return {"name": name, "rulesCreated": rules}
 
 
 @router.post("/publish-data-product", tags=["Catalog"])

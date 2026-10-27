@@ -255,3 +255,81 @@ export async function addPiiTag(
 ): Promise<void> {
   await updateColumnMeta(fqn, columnName, { piiType: tagFqn });
 }
+
+// ---------------------------------------------------------------------------
+// Quality rules (Phase 4)
+// ---------------------------------------------------------------------------
+
+export interface CatalogQualityRule {
+  id: string;
+  dataProductId: string;
+  columnName?: string;
+  /** NOT_NULL | RANGE | REGEX | UNIQUENESS | CUSTOM */
+  ruleType: string;
+  expression: string;
+  enabled: boolean;
+  createdAt?: string;
+}
+
+export interface CreateQualityRuleRequest {
+  ruleType: string;
+  expression: string;
+  columnName?: string;
+}
+
+export async function listQualityRules(name: string): Promise<CatalogQualityRule[]> {
+  const response = await axios.get<CatalogQualityRule[]>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/quality-rules`
+  );
+  return response.data;
+}
+
+export async function createQualityRule(
+  name: string,
+  payload: CreateQualityRuleRequest
+): Promise<CatalogQualityRule> {
+  const response = await axios.post<CatalogQualityRule>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/quality-rules`,
+    payload
+  );
+  return response.data;
+}
+
+export async function deleteQualityRule(name: string, ruleId: string): Promise<void> {
+  await axios.delete(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/quality-rules/${encodeURIComponent(ruleId)}`
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Dataset stats + drift detection (Phase 4)
+// ---------------------------------------------------------------------------
+
+export interface CatalogDatasetStats {
+  id: string;
+  dataProductId: string;
+  recordCount: number;
+  columnStats?: string;
+  driftScore?: number;
+  driftAlert: boolean;
+  measuredAt: string;
+}
+
+export async function listDatasetStats(name: string): Promise<CatalogDatasetStats[]> {
+  const response = await axios.get<CatalogDatasetStats[]>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/stats`
+  );
+  return response.data;
+}
+
+export async function recordDatasetStats(
+  name: string,
+  recordCount: number,
+  columnStats?: string
+): Promise<CatalogDatasetStats> {
+  const response = await axios.post<CatalogDatasetStats>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/stats`,
+    { recordCount, columnStats }
+  );
+  return response.data;
+}

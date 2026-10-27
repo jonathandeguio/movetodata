@@ -23,10 +23,16 @@ import {
   addPiiTag,
   getDataProduct,
   getDataProductColumns,
+  listQualityRules,
+  createQualityRule,
+  deleteQualityRule,
+  listDatasetStats,
   DataProduct,
   DataProductColumn,
+  CatalogQualityRule,
+  CatalogDatasetStats,
 } from "../../../services/catalogService";
-import { enrichDataProductAPI } from "../../../services/aiService";
+import { enrichDataProductAPI, suggestQualityRulesAPI } from "../../../services/aiService";
 import { useAiAssistantContext } from "../../../components/AiAssistant/AiAssistantContext";
 
 const { Title } = Typography;
@@ -129,6 +135,9 @@ const CatalogDataProduct: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [enriching, setEnriching] = useState<boolean>(false);
+  const [qualityRules, setQualityRules] = useState<CatalogQualityRule[]>([]);
+  const [stats, setStats] = useState<CatalogDatasetStats[]>([]);
+  const [suggestingRules, setSuggestingRules] = useState<boolean>(false);
 
   const [piiModalOpen, setPiiModalOpen] = useState<boolean>(false);
   const [piiForm] = Form.useForm<PiiFormValues>();
@@ -163,6 +172,19 @@ const CatalogDataProduct: React.FC = () => {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    // Load quality rules and stats (non-blocking)
+    getDataProduct(fqn)
+      .then((data) => Promise.all([
+        listQualityRules(data.name).catch(() => [] as CatalogQualityRule[]),
+        listDatasetStats(data.name).catch(() => [] as CatalogDatasetStats[]),
+      ]))
+      .then(([rules, statsData]) => {
+        if (!cancelled) {
+          setQualityRules(rules);
+          setStats(statsData);
+        }
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
@@ -206,6 +228,40 @@ const CatalogDataProduct: React.FC = () => {
       });
     } finally {
       setEnriching(false);
+    }
+  };
+
+  const handleSuggestRules = async (): Promise<void> => {
+    if (!product) return;
+    setSuggestingRules(true);
+    try {
+      await suggestQualityRulesAPI(product.name);
+      const updated = await listQualityRules(product.name);
+      setQualityRules(updated);
+      notification.success({
+        message: "Règles générées",
+        description: `${updated.length} règle(s) de qualité disponibles.`,
+        duration: 5,
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      notification.error({
+        message: "Erreur",
+        description: `Impossible de générer les règles : ${message}`,
+        duration: 8,
+      });
+    } finally {
+      setSuggestingRules(false);
+    }
+  };
+
+  const handleDeleteRule = async (ruleId: string): Promise<void> => {
+    if (!product) return;
+    try {
+      await deleteQualityRule(product.name, ruleId);
+      setQualityRules((prev) => prev.filter((r) => r.id !== ruleId));
+    } catch {
+      notification.error({ message: "Suppression échouée", duration: 4 });
     }
   };
 
@@ -483,7 +539,86 @@ const CatalogDataProduct: React.FC = () => {
               },
 
               // ---------------------------------------------------------------
-              // Tab 3 — Gouvernance RGPD (F13.9)
+              // Tab 3 — Qualité prédictive (Phase 4)
+              // ---------------------------------------------------------------
+              {
+                key: "quality",
+                label: "Qualité",
+                children: (
+                  <>
+                    {stats.some((s) => s.driftAlert) && (
+                      <Alert
+                        type="warning"
+                        message="Drift détecté"
+                        description={`Anomalie de volume détectée (z-score: ${stats.find((s) => s.driftAlert)?.driftScore?.toFixed(2) ?? "—"}). Vérifiez le pipeline source.`}
+                        showIcon
+                        style={{ marginBottom: 16 }}
+                      />
+                    )}
+
+                    <Table<CatalogQualityRule>
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      style={{ marginBottom: 16 }}
+                      dataSource={qualityRules}
+                      locale={{ emptyText: <Empty description="Aucune règle de qualité" /> }}
+                      columns={[
+                        {
+                          title: "Colonne",
+                          dataIndex: "columnName",
+                          key: "columnName",
+                          render: (v: string | undefined) => v ?? <em style={{ color: "#888" }}>table</em>,
+                          width: 160,
+                        },
+                        {
+                          title: "Type",
+                          dataIndex: "ruleType",
+                          key: "ruleType",
+                          render: (v: string) => <Tag color="blue" style={{ borderRadius: 2 }}>{v}</Tag>,
+                          width: 110,
+                        },
+                        {
+                          title: "Expression",
+                          dataIndex: "expression",
+                          key: "expression",
+                        },
+                        {
+                          title: "",
+                          key: "actions",
+                          width: 60,
+                          render: (_: unknown, record: CatalogQualityRule) => (
+                            <Button
+                              size="small"
+                              danger
+                              onClick={() => handleDeleteRule(record.id)}
+                            >
+                              ✕
+                            </Button>
+                          ),
+                        },
+                      ]}
+                    />
+
+                    <Button
+                      icon={<ThunderboltOutlined />}
+                      loading={suggestingRules}
+                      style={{
+                        backgroundColor: "#4b2983",
+                        borderColor: "#4b2983",
+                        color: "#fff",
+                        borderRadius: 5,
+                      }}
+                      onClick={handleSuggestRules}
+                    >
+                      Suggérer des règles IA
+                    </Button>
+                  </>
+                ),
+              },
+
+              // ---------------------------------------------------------------
+              // Tab 4 — Gouvernance RGPD (F13.9)
               // ---------------------------------------------------------------
               {
                 key: "gdpr",

@@ -389,3 +389,22 @@ export const enrichDataProductAPI = (
   name: string
 ): Promise<AxiosResponse<EnrichDataProductResponse>> =>
   axios.post(`/api/ai/catalog/enrich/${encodeURIComponent(name)}`);
+
+// ---------------------------------------------------------------------------
+// F13.5 — Quality rules suggestion (Phase 4)
+// ---------------------------------------------------------------------------
+
+export interface SuggestQualityRulesResponse {
+  name: string;
+  rulesCreated: Array<{
+    id: string;
+    ruleType: string;
+    expression: string;
+    columnName?: string;
+  }>;
+}
+
+export const suggestQualityRulesAPI = (
+  name: string
+): Promise<AxiosResponse<SuggestQualityRulesResponse>> =>
+  axios.post(`/api/ai/catalog/suggest-quality-rules/${encodeURIComponent(name)}`);

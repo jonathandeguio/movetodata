@@ -458,6 +458,113 @@ async def enrich_data_product(name: str) -> Dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# F13.5 — Suggest quality rules via LLM (Phase 4)
+# ---------------------------------------------------------------------------
+
+def _build_quality_rules_prompt(name: str, columns: List[Dict[str, Any]]) -> str:
+    """Prompt asking the LLM to suggest quality rules for the given columns."""
+    col_lines = "\n".join(
+        f"  - {c.get('columnName', c.get('name', '?'))} "
+        f"(pii={c.get('piiType') or 'none'})"
+        for c in columns
+    )
+    return (
+        "Tu es un expert en qualité des données. "
+        "Génère des règles de qualité pour un Data Product.\n\n"
+        "IMPÉRATIF : réponds UNIQUEMENT avec un bloc JSON valide entre ```json et ```. "
+        "Ne fournis aucune valeur de cellule, aucune donnée réelle.\n\n"
+        "Chaque règle doit avoir ces champs :\n"
+        '  "columnName"  : nom de la colonne (null si règle de table)\n'
+        '  "ruleType"    : NOT_NULL | RANGE | REGEX | UNIQUENESS | CUSTOM\n'
+        '  "expression"  : description lisible de la règle (max 200 caractères)\n\n'
+        "Génère 3 à 8 règles pertinentes pour le dataset suivant.\n"
+        f"Data Product : {name}\n"
+        f"Colonnes :\n{col_lines}\n\n"
+        "JSON (liste de règles) :"
+    )
+
+
+async def suggest_quality_rules(name: str) -> List[Dict[str, Any]]:
+    """
+    Fetch a DataProduct + columns from Boson, use the LLM to suggest quality
+    rules, POST each rule to Boson, and return the created rules list.
+    """
+    headers = _boson_headers()
+
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        dp_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+            headers=headers,
+        )
+        if dp_resp.status_code == 404:
+            raise ValueError(f"DataProduct '{name}' not found in catalog")
+        dp_resp.raise_for_status()
+        dp: Dict[str, Any] = dp_resp.json()
+
+        col_resp = await client.get(
+            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
+            headers=headers,
+        )
+        columns: List[Dict[str, Any]] = col_resp.json() if col_resp.status_code == 200 else []
+
+    prompt = _build_quality_rules_prompt(name, columns)
+
+    logger.info(
+        json.dumps({
+            "event": "suggest_quality_rules",
+            "name": name,
+            "columns_count": len(columns),
+        })
+    )
+
+    try:
+        parsed = await _call_llm_with_retry(prompt)
+    except Exception as exc:
+        logger.warning(json.dumps({"event": "suggest_quality_rules_failed", "name": name, "error": str(exc)}))
+        raise
+
+    # The LLM may return {"rules": [...]} or directly a list
+    rules_raw: List[Dict[str, Any]] = []
+    if isinstance(parsed, list):
+        rules_raw = parsed
+    elif isinstance(parsed, dict):
+        for key in ("rules", "qualityRules", "quality_rules"):
+            if key in parsed and isinstance(parsed[key], list):
+                rules_raw = parsed[key]
+                break
+
+    # POST each rule to Boson
+    created: List[Dict[str, Any]] = []
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        for rule in rules_raw:
+            payload = {
+                "ruleType":   rule.get("ruleType", "CUSTOM"),
+                "expression": rule.get("expression", ""),
+                "columnName": rule.get("columnName"),
+            }
+            if not payload["expression"]:
+                continue
+            resp = await client.post(
+                f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/quality-rules",
+                json=payload,
+                headers=headers,
+            )
+            if resp.status_code in (200, 201):
+                created.append(resp.json())
+            else:
+                logger.warning(
+                    json.dumps({
+                        "event": "quality_rule_post_failed",
+                        "name": name,
+                        "status": resp.status_code,
+                        "rule": payload,
+                    })
+                )
+
+    return created
+
+
 async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
     """
     Publish a DataProduct descriptor to the Boson native catalog with up to 4
