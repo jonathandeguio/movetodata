@@ -164,14 +164,14 @@ public class CatalogQualityController {
                 .dataProductId(dp.get().getId())
                 .recordCount(recordCount)
                 .columnStats(columnStats)
-                .driftScore(drift.score())
-                .driftAlert(drift.alert())
+                .driftScore(drift.score)
+                .driftAlert(drift.alert)
                 .measuredAt(Instant.now())
                 .build();
 
         CatalogDatasetStats saved = statsRepository.save(snapshot);
-        if (drift.alert()) {
-            log.warn("drift-alert: product={} recordCount={} z={}", name, recordCount, drift.score());
+        if (drift.alert) {
+            log.warn("drift-alert: product={} recordCount={} z={}", name, recordCount, drift.score);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

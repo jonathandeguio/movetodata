@@ -234,7 +234,7 @@ public class CatalogController {
                     }
                     DataProduct updated = dataProductRepository.save(existing);
                     log.info("Data product updated: id={} by user={}", updated.getId(), authUser.getId());
-                    logAudit(updated.getId(), authUser.getId(), "UPDATE", null);
+                    logAudit(updated.getId(), authUser.getId().toString(), "UPDATE", null);
                     return ResponseEntity.ok(updated);
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -303,7 +303,7 @@ public class CatalogController {
         DataProduct updated = dataProductRepository.save(dp);
 
         log.info("Data product certified: id={} qualityLevel={} by user={}", dp.getId(), qualityLevel, authUser.getId());
-        logAudit(dp.getId(), authUser.getId(), "CERTIFY", "qualityLevel=" + qualityLevel);
+        logAudit(dp.getId(), authUser.getId().toString(), "CERTIFY", "qualityLevel=" + qualityLevel);
         return ResponseEntity.ok(updated);
     }
 
@@ -469,7 +469,7 @@ public class CatalogController {
 
         ColumnMeta saved = columnMetaRepository.save(cm);
         log.info("Column meta updated: dataProduct={} column={} by user={}", name, col, authUser.getId());
-        logAudit(dp.getId(), authUser.getId(), "PATCH_COLUMN", "column=" + col);
+        logAudit(dp.getId(), authUser.getId().toString(), "PATCH_COLUMN", "column=" + col);
         return ResponseEntity.ok(saved);
     }
 
@@ -549,7 +549,7 @@ public class CatalogController {
             return ResponseEntity.notFound().build();
         }
 
-        UUID userId = UUID.fromString(authUser.getId());
+        UUID userId = authUser.getId();
         String dpId = opt.get().getId();
         boolean alreadyExists = subscriptionRepository
                 .findByDataProductIdAndSubscriberId(dpId, userId)
@@ -562,7 +562,7 @@ public class CatalogController {
                     .subscriberId(userId)
                     .build();
             subscriptionRepository.save(sub);
-            logAudit(dpId, authUser.getId(), "SUBSCRIBE", null);
+            logAudit(dpId, authUser.getId().toString(), "SUBSCRIBE", null);
         }
 
         Map<String, Object> resp = new java.util.LinkedHashMap<>();
@@ -587,7 +587,7 @@ public class CatalogController {
             return ResponseEntity.notFound().build();
         }
 
-        UUID userId = UUID.fromString(authUser.getId());
+        UUID userId = authUser.getId();
         subscriptionRepository.deleteByDataProductIdAndSubscriberId(opt.get().getId(), userId);
         return ResponseEntity.noContent().build();
     }
@@ -608,7 +608,7 @@ public class CatalogController {
             return ResponseEntity.notFound().build();
         }
 
-        UUID userId = UUID.fromString(authUser.getId());
+        UUID userId = authUser.getId();
         boolean subscribed = subscriptionRepository
                 .findByDataProductIdAndSubscriberId(opt.get().getId(), userId)
                 .isPresent();

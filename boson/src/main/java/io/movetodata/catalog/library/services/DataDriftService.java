@@ -84,5 +84,13 @@ public class DataDriftService {
         return Math.sqrt(variance / values.length);
     }
 
-    public record DriftResult(BigDecimal score, boolean alert) {}
+    public static final class DriftResult {
+        public final BigDecimal score;
+        public final boolean    alert;
+
+        public DriftResult(BigDecimal score, boolean alert) {
+            this.score = score;
+            this.alert = alert;
+        }
+    }
 }
