@@ -18,6 +18,8 @@ export interface StudioState {
   past: AppDefinition[];
   future: AppDefinition[];
   appState: Record<string, unknown>;
+  /** Compteurs de rafraîchissement par queryId — useAppQuery surveille ces tokens. */
+  queryRefreshTokens: Record<string, number>;
 }
 
 // ---------------------------------------------------------------------------
@@ -31,6 +33,7 @@ const initialState: StudioState = {
   past: [],
   future: [],
   appState: {},
+  queryRefreshTokens: {},
 };
 
 // ---------------------------------------------------------------------------
@@ -132,6 +135,15 @@ const studioSlice = createSlice({
     resetAppState(state: StudioState) {
       state.appState = {};
     },
+
+    /**
+     * Demande le rafraîchissement d'une requête liée (incrémente son token).
+     * useAppQuery surveille ce token et relance la requête quand il change.
+     */
+    requestRefetch(state: StudioState, action: PayloadAction<string>) {
+      const qid = action.payload;
+      state.queryRefreshTokens[qid] = (state.queryRefreshTokens[qid] ?? 0) + 1;
+    },
   },
 });
 
@@ -144,6 +156,7 @@ export const {
   setMode,
   setAppState,
   resetAppState,
+  requestRefetch,
 } = studioSlice.actions;
 
 export default studioSlice.reducer;

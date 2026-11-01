@@ -17,6 +17,8 @@ import ButtonWidget from './widgets/ButtonWidget';
 export interface NodeRendererProps {
   node: AppNode;
   mode: 'edit' | 'preview' | 'published';
+  /** UUID de l'application — requis pour exécuter les requêtes en Phase 5. */
+  appId?: string;
   /** Surcharge optionnelle de la sélection (sans Redux, ex. tests) */
   selectedNodeId?: string;
   /** Surcharge optionnelle du callback de sélection */
@@ -30,6 +32,7 @@ const EDIT_BORDER_HOVER = '1px dashed #24527a55';
 const NodeRenderer: React.FC<NodeRendererProps> = ({
   node,
   mode,
+  appId,
   selectedNodeId: selectedNodeIdProp,
   onSelect: onSelectProp,
 }) => {
@@ -50,7 +53,7 @@ const NodeRenderer: React.FC<NodeRendererProps> = ({
   );
 
   // Toujours appeler useAppQuery (règle des hooks) — queryId peut être undefined
-  const { data } = useAppQuery(node.bind?.query);
+  const { data, loading, error, run } = useAppQuery(appId ?? '', node.bind?.query, mode);
 
   const selectedNodeId = selectedNodeIdProp ?? storeSelectedNodeId;
   const handleSelect = onSelectProp ?? ((id: string) => dispatch(selectNode(id)));
@@ -65,12 +68,12 @@ const NodeRenderer: React.FC<NodeRendererProps> = ({
     }
   }
 
-  const widgetProps = { node, mode, data };
+  const widgetProps = { node, mode, data, loading, error, appId, run };
 
   const renderWidget = (): React.ReactNode => {
     switch (node.type) {
       case 'stack':
-        return <StackWidget node={node} mode={mode} />;
+        return <StackWidget node={node} mode={mode} appId={appId} />;
       case 'table':
         return <TableWidget {...widgetProps} />;
       case 'form':

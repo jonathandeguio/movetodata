@@ -55,3 +55,26 @@ export const saveDraft = (
 
 export const listSources = (): Promise<SourceItem[]> =>
   axios.get<SourceItem[]>('/connect/source/Getall').then((r) => r.data);
+
+export interface QueryRunResponse {
+  rows: unknown[];
+  rowsAffected: number;
+  durationMs: number;
+}
+
+/**
+ * Exécute une requête d'une application Studio côté serveur.
+ * Le front n'envoie JAMAIS de SQL — seulement queryId + params (SPEC §6).
+ */
+export const runQuery = (
+  appId: string,
+  queryId: string,
+  params: Record<string, unknown>,
+  mode: 'draft' | 'published',
+): Promise<QueryRunResponse> =>
+  axios
+    .post<QueryRunResponse>(`/api/studio/apps/${appId}/queries/${queryId}/run`, {
+      params,
+      mode,
+    })
+    .then((r) => r.data);

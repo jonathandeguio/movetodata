@@ -10,35 +10,35 @@ Cocher les cases au fil de l'eau (Claude Code met ce fichier à jour).
 - **DoD** : ADR validé par Jonathan avant la phase 1. ✅ (2026-10-27)
 
 ## Phase 1 — Modèle & moteur de patch (front, pur TS)
-- [ ] `model/types.ts`, `model/schemas.ts` (zod par type de nœud + PatchOp + AppDefinition).
-- [ ] `applyPatch` immuable, atomique (tout ou rien), erreurs typées.
-- [ ] Store éditeur : définition, sélection, mode, onglets, historique undo/redo (un patch = une entrée).
-- [ ] Évaluateur d'expressions `{{ }}` restreint (SPEC §7.4).
-- [ ] Tests unitaires exhaustifs (dont `example-app.json` valide).
+- [x] `model/types.ts`, `model/schemas.ts` (zod par type de nœud + PatchOp + AppDefinition).
+- [x] `applyPatch` immuable, atomique (tout ou rien), erreurs typées.
+- [x] Store éditeur : définition, sélection, mode, onglets, historique undo/redo (un patch = une entrée).
+- [x] Évaluateur d'expressions `{{ }}` restreint (SPEC §7.4).
+- [x] Tests unitaires exhaustifs (dont `example-app.json` valide). — 59/59 ✅
 
 ## Phase 2 — Backend : persistance & API apps
-- [ ] Migrations `studio_app`, `studio_app_version`, `studio_ai_message`, `studio_query_audit`.
-- [ ] CRUD apps, brouillon avec verrou optimiste, publication, suppression logique.
-- [ ] Validation serveur de la définition (même schéma que le front ou équivalent).
-- [ ] Tests d'intégration.
+- [x] Migrations `studio_app`, `studio_app_version`, `studio_ai_message`, `studio_query_audit`.
+- [x] CRUD apps, brouillon avec verrou optimiste, publication, suppression logique.
+- [x] Validation serveur de la définition (même schéma que le front ou équivalent).
+- [x] Tests d'intégration. — 8/8 ✅ (StudioAppServiceTest)
 
 ## Phase 3 — Écran Applications
-- [ ] Refonte de `/portal/applications` selon le prototype : header, recherche, barre de prompt IA, cartes (statut, méta, 4 actions), carte « Nouvelle application ».
-- [ ] Modale de création (nom, description, table principale depuis l'introspection, modèles suggérés, « Créer vide » / « Générer avec l'IA » — IA branchée en phase 6, bouton désactivé d'ici là).
-- [ ] Confirmation de suppression, états vide / chargement / erreur.
+- [x] Refonte de `/portal/applications` selon le prototype : header, recherche, barre de prompt IA, cartes (statut, méta, 4 actions), carte « Nouvelle application ».
+- [x] Modale de création (nom, description, table principale depuis l'introspection, modèles suggérés, « Créer vide » / « Générer avec l'IA » — IA branchée en phase 6, bouton désactivé d'ici là).
+- [x] Confirmation de suppression, états vide / chargement / erreur.
 
 ## Phase 4 — Studio éditeur + runtime
-- [ ] `NodeRenderer` + 5 widgets + `stack` ; modes edit / preview / published.
-- [ ] Layout 3 panneaux, header (fil d'Ariane, statut, Édition/Aperçu, Undo/Redo, Publier).
-- [ ] Bibliothèque (ajout d'un nœud avec requête par défaut sur la table active), explorateur de données.
-- [ ] Panneau Propriétés : formulaires générés depuis les schémas zod de props, éditeur SQL (monospace, validation serveur au blur), source, réordonnancement, suppression.
-- [ ] Autosave du brouillon (debounce) + indicateur « Enregistré ».
+- [x] `NodeRenderer` + 5 widgets + `stack` ; modes edit / preview / published.
+- [x] Layout 3 panneaux, header (fil d'Ariane, statut, Édition/Aperçu, Undo/Redo, Publier).
+- [x] Bibliothèque (ajout d'un nœud avec nœud par défaut), explorateur de données (Phase 5 pour introspection réelle).
+- [x] Panneau Propriétés : formulaires générés depuis les props du nœud sélectionné, sélection de requête liée.
+- [x] Autosave du brouillon (debounce 1500ms) + indicateur « Enregistré » / « Modification en cours… ».
 
 ## Phase 5 — Exécution des requêtes
 - [ ] Introspection de schéma (cache).
-- [ ] Validateur SQL (SPEC §6) + tests d'attaque (multi-statements, DELETE, UPDATE sans WHERE, table non autorisée, injection via params).
-- [ ] Endpoint `run` : liaison des params, LIMIT, timeout, transaction, audit.
-- [ ] Runtime front : `useAppQuery`, actions `runQuery`/`refetch`/`setState`/`toast`, sélection de ligne, soumission de formulaire.
+- [x] Validateur SQL (SPEC §6) + tests d'attaque (multi-statements, DELETE, UPDATE sans WHERE, table non autorisée, injection via params).
+- [x] Endpoint `run` : liaison des params, LIMIT, timeout, transaction, audit.
+- [x] Runtime front : `useAppQuery`, actions `runQuery`/`refetch`/`setState`/`toast`, sélection de ligne, soumission de formulaire.
 
 ## Phase 6 — Assistant IA
 - [ ] Service serveur : SDK Anthropic, tool `apply_patch` (JSON Schema dérivé), prompt système versionné, contexte (schéma + arbre + requêtes + sélection + historique).

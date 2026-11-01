@@ -6,15 +6,16 @@ import NodeRenderer from '../NodeRenderer';
 interface StackWidgetProps {
   node: AppNode;
   mode: 'edit' | 'preview' | 'published';
+  appId?: string;
 }
 
-const StackWidget: React.FC<StackWidgetProps> = ({ node, mode }) => {
+const StackWidget: React.FC<StackWidgetProps> = ({ node, mode, appId }) => {
   const gap = typeof node.props.gap === 'number' ? node.props.gap : 16;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap }}>
       {(node.children ?? []).map((child) => (
-        <NodeRenderer key={child.id} node={child} mode={mode} />
+        <NodeRenderer key={child.id} node={child} mode={mode} appId={appId} />
       ))}
     </div>
   );

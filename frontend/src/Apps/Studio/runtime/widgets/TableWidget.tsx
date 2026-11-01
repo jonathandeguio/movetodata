@@ -1,6 +1,6 @@
 // src/Apps/Studio/runtime/widgets/TableWidget.tsx
 import React from 'react';
-import { Table, Typography } from 'antd';
+import { Alert, Spin, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useDispatch } from 'react-redux';
 import type { AppNode } from '../../model/types';
@@ -10,9 +10,19 @@ interface TableWidgetProps {
   node: AppNode;
   mode: 'edit' | 'preview' | 'published';
   data: unknown[];
+  loading?: boolean;
+  error?: string | null;
+  appId?: string;
+  run?: (params?: Record<string, unknown>) => void;
 }
 
-const TableWidget: React.FC<TableWidgetProps> = ({ node, mode, data }) => {
+const TableWidget: React.FC<TableWidgetProps> = ({
+  node,
+  mode,
+  data,
+  loading,
+  error,
+}) => {
   const dispatch = useDispatch();
 
   const props = node.props as {
@@ -74,20 +84,31 @@ const TableWidget: React.FC<TableWidgetProps> = ({ node, mode, data }) => {
           {props.title}
         </Typography.Title>
       )}
-      <Table
-        size="small"
-        dataSource={dataSource}
-        columns={columns}
-        pagination={{ pageSize: props.pageSize ?? 50, hideOnSinglePage: true }}
-        rowSelection={rowSelection}
-        onRow={
-          mode !== 'edit'
-            ? (record) => ({ onClick: () => handleRowClick(record) })
-            : undefined
-        }
-        scroll={{ x: 'max-content' }}
-        bordered={false}
-      />
+      {error && (
+        <Alert
+          type="error"
+          message="Erreur de chargement"
+          description={error}
+          style={{ marginBottom: 8 }}
+          showIcon
+        />
+      )}
+      <Spin spinning={loading ?? false}>
+        <Table
+          size="small"
+          dataSource={dataSource}
+          columns={columns}
+          pagination={{ pageSize: props.pageSize ?? 50, hideOnSinglePage: true }}
+          rowSelection={rowSelection}
+          onRow={
+            mode !== 'edit'
+              ? (record) => ({ onClick: () => handleRowClick(record) })
+              : undefined
+          }
+          scroll={{ x: 'max-content' }}
+          bordered={false}
+        />
+      </Spin>
     </div>
   );
 };

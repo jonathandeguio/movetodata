@@ -8,6 +8,10 @@ interface ChartWidgetProps {
   node: AppNode;
   mode: 'edit' | 'preview' | 'published';
   data: unknown[];
+  loading?: boolean;
+  error?: string | null;
+  appId?: string;
+  run?: (params?: Record<string, unknown>) => void;
 }
 
 const BAR_COLOR = '#24527a';

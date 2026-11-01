@@ -5,8 +5,13 @@ import io.movetodata.passport.security.AuthUser;
 import io.movetodata.studio.library.dto.AppListItem;
 import io.movetodata.studio.library.dto.CreateAppRequest;
 import io.movetodata.studio.library.dto.DraftResponse;
+import io.movetodata.studio.library.dto.QueryRunRequest;
+import io.movetodata.studio.library.dto.QueryRunResponse;
 import io.movetodata.studio.library.dto.SaveDraftRequest;
+import io.movetodata.studio.library.exceptions.QueryExecutionException;
+import io.movetodata.studio.library.exceptions.SqlValidationException;
 import io.movetodata.studio.library.services.StudioAppService;
+import io.movetodata.studio.library.services.StudioQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +53,8 @@ import java.util.UUID;
 @Tag(name = "Studio — Applications", description = "Gestion des webapps transactionnelles du Studio IA.")
 public class StudioController {
 
-    private final StudioAppService studioAppService;
+    private final StudioAppService   studioAppService;
+    private final StudioQueryService studioQueryService;
 
     // -------------------------------------------------------------------------
     // GET /api/studio/apps?q=
@@ -181,6 +187,43 @@ public class StudioController {
 
         try {
             return ResponseEntity.ok(studioAppService.getPublished(id));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/studio/apps/{id}/queries/{queryId}/run
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Exécuter une requête d'une application Studio (lecture ou écriture sécurisée).")
+    @PostMapping("/apps/{id}/queries/{queryId}/run")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<?> runQuery(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("id") UUID id,
+            @PathVariable("queryId") String queryId,
+            @RequestBody QueryRunRequest req) {
+
+        try {
+            Map<String, Object> params = req.getParams() != null ? req.getParams() : Map.of();
+            String mode = req.getMode() != null ? req.getMode() : "draft";
+
+            QueryRunResponse resp = studioQueryService.execute(id, queryId, params, mode, authUser.getId());
+            return ResponseEntity.ok(resp);
+
+        } catch (SqlValidationException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "SQL_VALIDATION");
+            body.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(body);
+
+        } catch (QueryExecutionException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "QUERY_EXECUTION");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
