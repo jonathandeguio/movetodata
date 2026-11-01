@@ -17,6 +17,7 @@ export interface StudioState {
   mode: 'edit' | 'preview';
   past: AppDefinition[];
   future: AppDefinition[];
+  appState: Record<string, unknown>;
 }
 
 // ---------------------------------------------------------------------------
@@ -29,6 +30,7 @@ const initialState: StudioState = {
   mode: 'edit',
   past: [],
   future: [],
+  appState: {},
 };
 
 // ---------------------------------------------------------------------------
@@ -116,6 +118,20 @@ const studioSlice = createSlice({
     setMode(state: StudioState, action: PayloadAction<'edit' | 'preview'>) {
       state.mode = action.payload;
     },
+
+    /**
+     * Définit une entrée dans l'état runtime de l'application (ex. selected_id).
+     */
+    setAppState(state: StudioState, action: PayloadAction<{ key: string; value: unknown }>) {
+      state.appState[action.payload.key] = action.payload.value;
+    },
+
+    /**
+     * Réinitialise l'état runtime (ex. à la publication ou au rechargement).
+     */
+    resetAppState(state: StudioState) {
+      state.appState = {};
+    },
   },
 });
 
@@ -126,6 +142,8 @@ export const {
   redo,
   selectNode,
   setMode,
+  setAppState,
+  resetAppState,
 } = studioSlice.actions;
 
 export default studioSlice.reducer;

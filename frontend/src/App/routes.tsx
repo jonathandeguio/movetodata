@@ -73,6 +73,7 @@ import Logout from "../pages/Auth/Logout";
 import Applications from "../pages/Portal/Applications";
 import AppBuilderView from 'Apps/AppBuilder/AppBuilderView';
 import AppRendererView from 'Apps/AppBuilder/AppRendererView';
+import StudioPage from 'Apps/Studio/editor/StudioPage';
 import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
 import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
@@ -127,8 +128,8 @@ const useRouter = () => {
                     <Route path="applications" element={<Applications />} />
                     <Route path="applications/:uuid/builder" element={<AppBuilderView />} />
                     <Route path="applications/:uuid" element={<AppRendererView />} />
-                    {/* Phase 4 — Studio éditeur (placeholder) */}
-                    <Route path="applications/:id/studio" element={<Applications />} />
+                    {/* Phase 4 — Studio éditeur */}
+                    <Route path="applications/:id/studio" element={<StudioPage />} />
                     {/* Phase 7 — Runtime publié (placeholder) */}
                     <Route path="apps/:id" element={<Applications />} />
 

@@ -112,6 +112,7 @@ import repositoryEditorReducer from "./repositoryEditorSlice";
 import sparkConfigSlice from "./sparkSlice";
 import IndexedUsersReducer from "./usersSlice";
 import { apiReducer } from "./reducers/userInfoReducer";
+import studioReducer from "../Apps/Studio/store/studioStore";
 
 const store = configureStore({
   reducer: {
@@ -219,6 +220,8 @@ const store = configureStore({
     license: licenseInfoSlice,
 
     cache: apiReducer,
+
+    studio: studioReducer,
   },
   middleware: (getDefaultMiddleware: any) =>
     getDefaultMiddleware({

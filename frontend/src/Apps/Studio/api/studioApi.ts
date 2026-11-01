@@ -44,5 +44,14 @@ export const getDraft = (id: string): Promise<DraftResponse> =>
 export const publishApp = (id: string): Promise<void> =>
   axios.post(`/api/studio/apps/${id}/publish`).then(() => undefined);
 
+export const saveDraft = (
+  id: string,
+  definition: string,
+  expectedVersion: number,
+): Promise<DraftResponse> =>
+  axios
+    .put<DraftResponse>(`/api/studio/apps/${id}/draft`, { definition, expectedVersion })
+    .then((r) => r.data);
+
 export const listSources = (): Promise<SourceItem[]> =>
   axios.get<SourceItem[]>('/connect/source/Getall').then((r) => r.data);
