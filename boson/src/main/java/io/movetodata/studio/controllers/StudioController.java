@@ -2,14 +2,18 @@ package io.movetodata.studio.controllers;
 
 import io.movetodata.passport.library.Auth;
 import io.movetodata.passport.security.AuthUser;
+import io.movetodata.studio.library.dto.AiChatRequest;
+import io.movetodata.studio.library.dto.AiChatResponse;
 import io.movetodata.studio.library.dto.AppListItem;
 import io.movetodata.studio.library.dto.CreateAppRequest;
 import io.movetodata.studio.library.dto.DraftResponse;
+import io.movetodata.studio.library.dto.GenerateAppRequest;
 import io.movetodata.studio.library.dto.QueryRunRequest;
 import io.movetodata.studio.library.dto.QueryRunResponse;
 import io.movetodata.studio.library.dto.SaveDraftRequest;
 import io.movetodata.studio.library.exceptions.QueryExecutionException;
 import io.movetodata.studio.library.exceptions.SqlValidationException;
+import io.movetodata.studio.library.services.StudioAiService;
 import io.movetodata.studio.library.services.StudioAppService;
 import io.movetodata.studio.library.services.StudioQueryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,6 +59,7 @@ public class StudioController {
 
     private final StudioAppService   studioAppService;
     private final StudioQueryService studioQueryService;
+    private final StudioAiService    studioAiService;
 
     // -------------------------------------------------------------------------
     // GET /api/studio/apps?q=
@@ -226,6 +231,86 @@ public class StudioController {
 
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/studio/apps/{id}/ai
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Chat avec l'assistant IA Studio — retourne un patch à appliquer.")
+    @PostMapping("/apps/{id}/ai")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<?> aiChat(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("id") UUID id,
+            @RequestBody AiChatRequest req) {
+
+        if (req.getPrompt() == null || req.getPrompt().isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(errorBody("INVALID_REQUEST", "Le prompt ne peut pas être vide.", null));
+        }
+
+        try {
+            AiChatResponse response = studioAiService.chat(id, req, authUser.getId());
+            return ResponseEntity.ok(response);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+
+        } catch (SqlValidationException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "SQL_VALIDATION");
+            body.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(body);
+
+        } catch (IllegalStateException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "AI_SERVICE_ERROR");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(body);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(errorBody("INVALID_REQUEST", e.getMessage(), null));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // POST /api/studio/apps/generate
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Générer une application Studio complète via l'IA.")
+    @PostMapping("/apps/generate")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<?> generateApp(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestBody GenerateAppRequest req) {
+
+        if (req.getName() == null || req.getName().isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(errorBody("INVALID_REQUEST", "Le nom est obligatoire.", null));
+        }
+
+        try {
+            DraftResponse draft = studioAiService.generate(req, authUser.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(draft);
+
+        } catch (SqlValidationException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "SQL_VALIDATION");
+            body.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(body);
+
+        } catch (IllegalStateException e) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "AI_SERVICE_ERROR");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(body);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(errorBody("INVALID_REQUEST", e.getMessage(), null));
         }
     }
 

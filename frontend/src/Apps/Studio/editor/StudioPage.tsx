@@ -1,6 +1,6 @@
 // src/Apps/Studio/editor/StudioPage.tsx
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, notification, Spin } from 'antd';
+import { Alert, notification, Spin, Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDefinition } from '../model/types';
@@ -14,6 +14,7 @@ import StudioHeader from './StudioHeader';
 import LibraryPanel from './LibraryPanel';
 import CanvasView from './CanvasView';
 import PropertiesPanel from './PropertiesPanel';
+import AiAssistant from './AiAssistant';
 
 type SaveStatus = 'saved' | 'saving' | 'dirty' | 'error';
 
@@ -32,10 +33,16 @@ const StudioPage: React.FC = () => {
   const isFirstRender = useRef(true);
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const definition = useSelector(
+  const { definition, selectedNodeId } = useSelector(
     (state: Record<string, unknown>) => {
-      const studio = state['studio'] as { definition: AppDefinition | null };
-      return studio?.definition ?? null;
+      const studio = state['studio'] as {
+        definition: AppDefinition | null;
+        selectedNodeId: string | null;
+      };
+      return {
+        definition: studio?.definition ?? null,
+        selectedNodeId: studio?.selectedNodeId ?? null,
+      };
     },
   );
 
@@ -212,17 +219,45 @@ const StudioPage: React.FC = () => {
           <CanvasView />
         </div>
 
-        {/* Panneau droit — Propriétés */}
+        {/* Panneau droit — Onglets Propriétés / Assistant IA */}
         <div
           style={{
             flex: '1 1 300px',
             maxWidth: 340,
             borderLeft: '1px solid var(--movetodata-border, #e8e8e8)',
-            overflowY: 'auto',
             background: 'var(--movetodata-surface, #fff)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
           }}
         >
-          <PropertiesPanel />
+          <Tabs
+            size="small"
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+            tabBarStyle={{ paddingLeft: 12, paddingRight: 12, marginBottom: 0, flexShrink: 0 }}
+            items={[
+              {
+                key: 'assistant',
+                label: 'Assistant IA',
+                children: (
+                  <div style={{ height: '100%', overflow: 'hidden' }}>
+                    {id ? (
+                      <AiAssistant appId={id} selectedNodeId={selectedNodeId} />
+                    ) : null}
+                  </div>
+                ),
+              },
+              {
+                key: 'props',
+                label: 'Propriétés',
+                children: (
+                  <div style={{ overflowY: 'auto', height: '100%' }}>
+                    <PropertiesPanel />
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
       </div>
     </div>

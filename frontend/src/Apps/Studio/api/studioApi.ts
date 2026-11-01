@@ -78,3 +78,35 @@ export const runQuery = (
       mode,
     })
     .then((r) => r.data);
+
+// ---------------------------------------------------------------------------
+// Assistant IA
+// ---------------------------------------------------------------------------
+
+export interface AiChatResponse {
+  explanation: string;
+  /** PatchOp[] sérialisés — à dispatcher via applyOps() */
+  patch: Record<string, unknown>[];
+}
+
+export const sendAiMessage = (
+  appId: string,
+  prompt: string,
+  selectedNodeId?: string | null,
+): Promise<AiChatResponse> =>
+  axios
+    .post<AiChatResponse>(`/api/studio/apps/${appId}/ai`, {
+      prompt,
+      selectedNodeId: selectedNodeId ?? undefined,
+    })
+    .then((r) => r.data);
+
+export interface GenerateAppRequest {
+  name: string;
+  description: string;
+  datasourceId: string;
+  tableName: string;
+}
+
+export const generateApp = (req: GenerateAppRequest): Promise<DraftResponse> =>
+  axios.post<DraftResponse>('/api/studio/apps/generate', req).then((r) => r.data);
