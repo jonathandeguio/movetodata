@@ -110,3 +110,10 @@ export interface GenerateAppRequest {
 
 export const generateApp = (req: GenerateAppRequest): Promise<DraftResponse> =>
   axios.post<DraftResponse>('/api/studio/apps/generate', req).then((r) => r.data);
+
+/**
+ * Récupère la version publiée d'une application (runtime).
+ * Renvoie la même structure que DraftResponse.
+ */
+export const getPublished = (id: string): Promise<DraftResponse> =>
+  axios.get<DraftResponse>(`/api/studio/apps/${id}/published`).then((r) => r.data);

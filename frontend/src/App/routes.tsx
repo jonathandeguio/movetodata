@@ -74,6 +74,7 @@ import Applications from "../pages/Portal/Applications";
 import AppBuilderView from 'Apps/AppBuilder/AppBuilderView';
 import AppRendererView from 'Apps/AppBuilder/AppRendererView';
 import StudioPage from 'Apps/Studio/editor/StudioPage';
+import AppRuntimePage from 'Apps/Studio/runtime/AppRuntimePage';
 import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
 import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
@@ -130,8 +131,8 @@ const useRouter = () => {
                     <Route path="applications/:uuid" element={<AppRendererView />} />
                     {/* Phase 4 — Studio éditeur */}
                     <Route path="applications/:id/studio" element={<StudioPage />} />
-                    {/* Phase 7 — Runtime publié (placeholder) */}
-                    <Route path="apps/:id" element={<Applications />} />
+                    {/* Phase 7 — Runtime publié */}
+                    <Route path="apps/:id" element={<AppRuntimePage />} />
 
                     <Route path="recentlyViewed" element={<RecentlyViewed />} />
                     <Route path="favourites" element={<Favs />} />

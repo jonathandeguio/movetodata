@@ -328,6 +328,9 @@ const AiAssistant: React.FC<Props> = ({ appId, selectedNodeId }) => {
 
       {/* Liste des messages */}
       <div
+        role="log"
+        aria-live="polite"
+        aria-label="Historique des messages de l'assistant IA"
         style={{
           flex: 1,
           overflowY: 'auto',

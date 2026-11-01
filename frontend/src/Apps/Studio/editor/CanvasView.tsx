@@ -28,11 +28,12 @@ import NodeRenderer from '../runtime/NodeRenderer';
 
 interface SortableNodeItemProps {
   nodeId: string;
+  nodeLabel?: string;
   children: React.ReactNode;
   mode: 'edit' | 'preview';
 }
 
-const SortableNodeItem: React.FC<SortableNodeItemProps> = ({ nodeId, children, mode }) => {
+const SortableNodeItem: React.FC<SortableNodeItemProps> = ({ nodeId, nodeLabel, children, mode }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: nodeId });
 
@@ -44,7 +45,12 @@ const SortableNodeItem: React.FC<SortableNodeItemProps> = ({ nodeId, children, m
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...(mode === 'edit' ? { ...attributes, ...listeners } : {})}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      aria-label={mode === 'edit' ? `Composant ${nodeLabel ?? nodeId} — déplaçable` : undefined}
+      {...(mode === 'edit' ? { ...attributes, ...listeners } : {})}
+    >
       {children}
     </div>
   );
@@ -141,7 +147,7 @@ const CanvasView: React.FC = () => {
                 </div>
               )}
               {children.map((child) => (
-                <SortableNodeItem key={child.id} nodeId={child.id} mode={mode}>
+                <SortableNodeItem key={child.id} nodeId={child.id} nodeLabel={String(child.props.title ?? child.type)} mode={mode}>
                   <NodeRenderer node={child} mode={mode} />
                 </SortableNodeItem>
               ))}
