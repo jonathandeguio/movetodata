@@ -127,6 +127,10 @@ const useRouter = () => {
                     <Route path="applications" element={<Applications />} />
                     <Route path="applications/:uuid/builder" element={<AppBuilderView />} />
                     <Route path="applications/:uuid" element={<AppRendererView />} />
+                    {/* Phase 4 — Studio éditeur (placeholder) */}
+                    <Route path="applications/:id/studio" element={<Applications />} />
+                    {/* Phase 7 — Runtime publié (placeholder) */}
+                    <Route path="apps/:id" element={<Applications />} />
 
                     <Route path="recentlyViewed" element={<RecentlyViewed />} />
                     <Route path="favourites" element={<Favs />} />
