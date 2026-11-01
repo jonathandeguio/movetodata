@@ -103,6 +103,7 @@ public class StudioAppService {
         appRepository.save(app);
 
         StudioAppVersion version = StudioAppVersion.builder()
+                .id(UUID.randomUUID())
                 .appId(appId)
                 .version(1)
                 .definition(definition)
@@ -162,6 +163,7 @@ public class StudioAppService {
         }
 
         StudioAppVersion newVersion = StudioAppVersion.builder()
+                .id(UUID.randomUUID())
                 .appId(appId)
                 .version(currentDraft.getVersion() + 1)
                 .definition(req.getDefinition())

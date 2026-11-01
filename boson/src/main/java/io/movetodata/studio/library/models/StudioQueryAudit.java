@@ -3,7 +3,10 @@ package io.movetodata.studio.library.models;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -21,7 +24,6 @@ import java.util.UUID;
 public class StudioQueryAudit {
 
     @Id
-    @GeneratedValue
     @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
