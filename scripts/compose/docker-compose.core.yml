@@ -124,6 +124,11 @@ services:
         -XX:+UseG1GC
         -XX:MaxGCPauseMillis=200
         -Djava.security.egd=file:/dev/./urandom
+        --add-exports=java.base/sun.nio.ch=ALL-UNNAMED
+        --add-opens=java.base/java.nio=ALL-UNNAMED
+        --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+        --add-opens=java.base/java.lang=ALL-UNNAMED
+        --add-opens=java.base/java.util=ALL-UNNAMED
     volumes:
       - ${MOVETODATA_MOUNT_PATH:-/movetodata}:${MOVETODATA_MOUNT_PATH:-/movetodata}
       - /etc/movetodata:/etc/movetodata:ro
