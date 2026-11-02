@@ -111,7 +111,7 @@ export function useAppQuery(
         })
         .finally(() => setLoading(false));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
     [appId, queryId, mode, definition],
   );
 
@@ -124,7 +124,7 @@ export function useAppQuery(
       execute(lastParamsRef.current);
     }
     // refreshToken est inclus pour déclencher le refetch quand requestRefetch est dispatché
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [appId, queryId, mode, refreshToken]);
 
   // ---------------------------------------------------------------------------
