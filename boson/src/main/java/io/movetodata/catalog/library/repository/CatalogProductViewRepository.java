@@ -17,8 +17,9 @@ public interface CatalogProductViewRepository extends JpaRepository<CatalogProdu
     long countRecentViews(@Param("dpId") String dataProductId, @Param("since") Instant since);
 
     /** Approximate platform median (average views per product across all products). */
-    @Query("SELECT COALESCE(AVG(sub.cnt), 1) FROM " +
-           "(SELECT COUNT(v) AS cnt FROM CatalogProductView v " +
-           " WHERE v.viewedAt >= :since GROUP BY v.dataProductId) sub")
+    @Query(value = "SELECT COALESCE(AVG(sub.cnt), 1) FROM " +
+                   "(SELECT COUNT(*) AS cnt FROM catalog_product_view " +
+                   " WHERE viewed_at >= :since GROUP BY data_product_id) sub",
+           nativeQuery = true)
     double avgViewsPerProduct(@Param("since") Instant since);
 }
