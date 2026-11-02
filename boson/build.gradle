@@ -152,7 +152,7 @@ dependencies {
     implementation 'org.tukaani:xz:1.9'
     implementation 'org.flywaydb:flyway-core:8.4.2'
     // SQL parser — validation des requêtes Studio (SPEC §6, non-négociable)
-    implementation 'com.github.jsqlparser:jsqlparser:4.7'
+    implementation 'com.github.jsqlparser:jsqlparser:4.3'
     implementation 'org.modelmapper:modelmapper:2.1.1'
     implementation 'net.snowflake:snowflake-jdbc:3.19.0'
     implementation 'net.snowflake:spark-snowflake_2.13:3.0.0'
