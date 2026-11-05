@@ -38,6 +38,10 @@ public class CatalogGlossaryTerm {
     @Column(name = "synonyms", columnDefinition = "TEXT")
     private String synonyms;
 
+    /** Nombre de consultations (incrémenté à chaque GET /:id). */
+    @Column(name = "view_count")
+    private Long viewCount;
+
     @Column(name = "created_by", nullable = false, columnDefinition = "uuid")
     private UUID createdBy;
 

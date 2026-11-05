@@ -90,14 +90,35 @@ class AnalyzeFileResponse(BaseModel):
 # F1 — Text-to-SQL schemas
 # ---------------------------------------------------------------------------
 
+class ColumnContext(BaseModel):
+    """Describes a single column in a schema_context."""
+    name: str
+    type: Optional[str] = Field(default="", description="Column type (e.g. VARCHAR, INTEGER).")
+    is_pii: Optional[bool] = Field(default=False, description="True if this column contains PII.")
+
+
+class SchemaContext(BaseModel):
+    """Structured schema context — alternative to schema_ddl for catalog-based queries."""
+    table_name: str
+    columns: List["ColumnContext"] = Field(default_factory=list)
+
+
 class TextToSqlRequest(BaseModel):
     """Payload sent by the Boson proxy when a Text-to-SQL query is requested."""
 
-    schema_ddl: str = Field(
-        ...,
+    schema_ddl: Optional[str] = Field(
+        default=None,
         description=(
             "Simplified DDL of the database schema "
-            "(TABLE name (col TYPE, …) format, one table per line)."
+            "(TABLE name (col TYPE, …) format, one table per line). "
+            "Required if schema_context is not provided."
+        ),
+    )
+    schema_context: Optional[SchemaContext] = Field(
+        default=None,
+        description=(
+            "Structured schema context (table_name + columns). "
+            "When provided, takes precedence over schema_ddl."
         ),
     )
     question: str = Field(
@@ -122,6 +143,10 @@ class TextToSqlResponse(BaseModel):
     tokens_used: int = Field(
         default=0,
         description="Approximate number of prompt tokens consumed.",
+    )
+    warning: Optional[str] = Field(
+        default=None,
+        description="Non-fatal warning (e.g. low confidence).",
     )
 
 

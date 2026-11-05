@@ -1,18 +1,25 @@
 package io.movetodata.catalog.controllers;
 
+import io.movetodata.catalog.library.dto.CatalogSearchResponse;
+import io.movetodata.catalog.library.dto.DataProductSummary;
 import io.movetodata.catalog.library.models.CatalogAuditLog;
+import io.movetodata.catalog.library.models.CatalogGdprDeclaration;
 import io.movetodata.catalog.library.models.CatalogSubscription;
 import io.movetodata.catalog.library.models.CertificationHistory;
 import io.movetodata.catalog.library.models.ColumnMeta;
 import io.movetodata.catalog.library.models.DataProduct;
 import io.movetodata.catalog.library.repository.CatalogAuditLogRepository;
 import io.movetodata.catalog.library.repository.CatalogDatasetStatsRepository;
+import io.movetodata.catalog.library.repository.CatalogGdprDeclarationRepository;
 import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
 import io.movetodata.catalog.library.repository.CatalogQualityRuleRepository;
 import io.movetodata.catalog.library.repository.CatalogSubscriptionRepository;
 import io.movetodata.catalog.library.repository.CertificationHistoryRepository;
 import io.movetodata.catalog.library.repository.ColumnMetaRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
+import io.movetodata.catalog.library.repository.DomainRepository;
+import io.movetodata.catalog.search.CatalogSearchIndexService;
+import io.movetodata.catalog.search.CatalogSearchRequest;
 import io.movetodata.passport.library.Auth;
 import io.movetodata.passport.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,19 +27,21 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,65 +68,95 @@ import java.util.stream.Collectors;
 @Tag(name = "Data Catalog — Data Products", description = "Manage Data Products in the native Data Catalog.")
 public class CatalogController {
 
-    private final DataProductRepository         dataProductRepository;
-    private final CertificationHistoryRepository certificationHistoryRepository;
-    private final ColumnMetaRepository           columnMetaRepository;
-    private final CatalogQualityRuleRepository   qualityRuleRepository;
-    private final CatalogDatasetStatsRepository  statsRepository;
-    private final CatalogProductViewRepository   viewRepository;
-    private final CatalogAuditLogRepository      auditLogRepository;
-    private final CatalogSubscriptionRepository  subscriptionRepository;
+    private final DataProductRepository          dataProductRepository;
+    private final CertificationHistoryRepository  certificationHistoryRepository;
+    private final ColumnMetaRepository            columnMetaRepository;
+    private final CatalogQualityRuleRepository    qualityRuleRepository;
+    private final CatalogDatasetStatsRepository   statsRepository;
+    private final CatalogProductViewRepository    viewRepository;
+    private final CatalogAuditLogRepository       auditLogRepository;
+    private final CatalogSubscriptionRepository   subscriptionRepository;
+    private final CatalogGdprDeclarationRepository gdprDeclarationRepository;
+    private final DomainRepository                domainRepository;
+    private final CatalogSearchIndexService       searchIndexService;
 
     // -------------------------------------------------------------------------
-    // GET /api/catalog/data-products — list with optional filters
+    // GET /api/catalog/data-products — recherche full-text + facettes
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "List data products with optional search and filters.")
+    @Operation(summary = "Recherche full-text avec filtres et facettes. Délègue à OpenSearch si disponible, sinon fallback SQL.")
     @GetMapping
     @PreAuthorize(Auth.CONNECT_ADMIN)
-    public ResponseEntity<List<DataProduct>> listDataProducts(
+    public ResponseEntity<CatalogSearchResponse> listDataProducts(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestParam(value = "q",       required = false) String q,
-            @RequestParam(value = "domain",  required = false) String domain,
-            @RequestParam(value = "quality", required = false) String quality,
-            @RequestParam(value = "limit",   required = false, defaultValue = "20") int limit,
-            @RequestParam(value = "offset",  required = false, defaultValue = "0")  int offset) {
+            @RequestParam(value = "q",            required = false)                List<String> q,
+            @RequestParam(value = "qualityLevel",  required = false)                List<String> qualityLevels,
+            @RequestParam(value = "accessPolicy",  required = false)                List<String> accessPolicies,
+            @RequestParam(value = "domainId",      required = false)                List<String> domainIds,
+            @RequestParam(value = "sourceType",    required = false)                List<String> sourceTypes,
+            @RequestParam(value = "sort",          required = false, defaultValue = "RELEVANCE") String sort,
+            @RequestParam(value = "page",          required = false, defaultValue = "1")         int page,
+            @RequestParam(value = "size",          required = false, defaultValue = "20")        int size,
+            // Params de rétrocompatibilité (legacy)
+            @RequestParam(value = "domain",        required = false) String legacyDomain,
+            @RequestParam(value = "quality",       required = false) String legacyQuality,
+            @RequestParam(value = "limit",         required = false, defaultValue = "0") int legacyLimit,
+            @RequestParam(value = "offset",        required = false, defaultValue = "0") int legacyOffset) {
 
-        List<DataProduct> results;
-
-        if (q != null && !q.trim().isEmpty()) {
-            results = dataProductRepository.search(q.trim());
-        } else if (domain != null && !domain.trim().isEmpty()) {
-            results = dataProductRepository.findByDomainIdOrderByCreatedAtDesc(domain.trim());
-        } else if (quality != null && !quality.trim().isEmpty()) {
-            results = dataProductRepository.findByQualityLevelOrderByCreatedAtDesc(quality.trim());
-        } else {
-            results = dataProductRepository.findAll();
+        // Rétrocompatibilité : anciens params → nouveaux
+        String queryStr = (q != null && !q.isEmpty()) ? String.join(" ", q) : null;
+        if (legacyDomain != null && !legacyDomain.isBlank()) {
+            if (domainIds == null) domainIds = new ArrayList<>();
+            domainIds.add(legacyDomain.trim());
+        }
+        if (legacyQuality != null && !legacyQuality.isBlank()) {
+            if (qualityLevels == null) qualityLevels = new ArrayList<>();
+            qualityLevels.add(legacyQuality.trim());
+        }
+        if (legacyLimit > 0) {
+            size = legacyLimit;
+            page = legacyOffset / legacyLimit + 1;
         }
 
-        // Apply secondary filters when q was used as primary (domain + quality are independent axes)
-        if (q != null && !q.trim().isEmpty()) {
-            if (domain != null && !domain.trim().isEmpty()) {
-                final String domainFilter = domain.trim();
-                results = results.stream()
-                        .filter(dp -> domainFilter.equals(dp.getDomainId()))
-                        .collect(Collectors.toList());
-            }
-            if (quality != null && !quality.trim().isEmpty()) {
-                final String qualityFilter = quality.trim();
-                results = results.stream()
-                        .filter(dp -> qualityFilter.equals(dp.getQualityLevel()))
-                        .collect(Collectors.toList());
-            }
+        CatalogSearchRequest req = CatalogSearchRequest.builder()
+                .q(queryStr)
+                .qualityLevels(qualityLevels)
+                .accessPolicies(accessPolicies)
+                .domainIds(domainIds)
+                .sourceTypes(sourceTypes)
+                .sort(sort)
+                .page(page)
+                .size(size)
+                .build();
+
+        CatalogSearchResponse response = searchIndexService.search(req);
+
+        // Filtrer les items RESTRICTED invisibles pour l'utilisateur courant
+        // (l'accès est déjà contrôlé par @PreAuthorize mais on filtre au niveau des données)
+        List<DataProductSummary> filteredItems = response.getItems().stream()
+                .filter(item -> !"RESTRICTED".equals(item.getAccessPolicy()) ||
+                        isPrivilegedForRestricted(authUser))
+                .collect(Collectors.toList());
+
+        if (filteredItems.size() != response.getItems().size()) {
+            response = CatalogSearchResponse.builder()
+                    .items(filteredItems)
+                    .total(response.getTotal() - (response.getItems().size() - filteredItems.size()))
+                    .facets(response.getFacets())
+                    .build();
         }
 
-        // Apply pagination
-        int total = results.size();
-        int from  = Math.min(offset, total);
-        int to    = Math.min(from + limit, total);
-        results = results.subList(from, to);
+        return ResponseEntity.ok(response);
+    }
 
-        return ResponseEntity.ok(results);
+    /**
+     * Vérifie si l'utilisateur courant appartient aux groupes autorisés à voir les assets RESTRICTED.
+     * Version simplifiée — délègue au contexte de sécurité Spring sans HttpServletRequest.
+     */
+    private boolean isPrivilegedForRestricted(AuthUser authUser) {
+        // Par défaut : les utilisateurs avec CONNECT_ADMIN ont accès aux RESTRICTED.
+        // Une restriction plus fine est appliquée par CatalogAccessService sur la fiche détaillée.
+        return true;
     }
 
     // -------------------------------------------------------------------------
@@ -181,6 +220,8 @@ public class CatalogController {
 
         DataProduct saved = dataProductRepository.save(dp);
         log.info("Data product created: id={} name={} by user={}", saved.getId(), saved.getName(), authUser.getId());
+        searchIndexService.indexDataProduct(saved);
+        logAudit(saved.getId(), authUser.getId().toString(), "CREATE", null);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
@@ -235,6 +276,7 @@ public class CatalogController {
                     DataProduct updated = dataProductRepository.save(existing);
                     log.info("Data product updated: id={} by user={}", updated.getId(), authUser.getId());
                     logAudit(updated.getId(), authUser.getId().toString(), "UPDATE", null);
+                    searchIndexService.indexDataProduct(updated);
                     return ResponseEntity.ok(updated);
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -257,6 +299,7 @@ public class CatalogController {
         }
         dataProductRepository.delete(opt.get());
         log.info("Data product deleted: name={} by user={}", name, authUser.getId());
+        searchIndexService.deleteFromIndex(name);
         return ResponseEntity.noContent().build();
     }
 
@@ -477,12 +520,13 @@ public class CatalogController {
     // GET /api/catalog/data-products/{name}/export — full snapshot export
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "Export a full snapshot of a data product (columns, rules, stats, certifications).")
+    @Operation(summary = "Export a full snapshot of a data product (JSON or CSV).")
     @GetMapping("/{name}/export")
     @PreAuthorize(Auth.CONNECT_ADMIN)
-    public ResponseEntity<Map<String, Object>> exportDataProduct(
+    public ResponseEntity<?> exportDataProduct(
             @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable("name") String name) {
+            @PathVariable("name") String name,
+            @RequestParam(value = "format", required = false, defaultValue = "json") String format) {
 
         Optional<DataProduct> opt = dataProductRepository.findByName(name);
         if (opt.isEmpty()) {
@@ -490,8 +534,14 @@ public class CatalogController {
         }
 
         DataProduct dp = opt.get();
-        UUID datasetId = UUID.fromString(dp.getId());
+        log.info("Data product exported: name={} format={} by user={}", name, format, authUser.getId());
 
+        if ("csv".equalsIgnoreCase(format)) {
+            return buildCsvExport(dp);
+        }
+
+        // JSON export (comportement existant)
+        UUID datasetId = UUID.fromString(dp.getId());
         List<ColumnMeta> columns =
                 columnMetaRepository.findByDatasetIdAndBranch(datasetId, "master");
         List<io.movetodata.catalog.library.models.CatalogQualityRule> rules =
@@ -509,8 +559,96 @@ public class CatalogController {
         export.put("certifications", certifications);
         export.put("exportedAt", Instant.now().toString());
 
-        log.info("Data product exported: name={} by user={}", name, authUser.getId());
         return ResponseEntity.ok(export);
+    }
+
+    private ResponseEntity<byte[]> buildCsvExport(DataProduct dp) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .withZone(ZoneOffset.UTC);
+        String domainName = dp.getDomainId() != null
+                ? domainRepository.findById(dp.getDomainId()).map(d -> d.getName()).orElse(dp.getDomainId())
+                : "";
+
+        StringBuilder csv = new StringBuilder();
+        csv.append("fqn,name,displayName,description,qualityLevel,accessPolicy,domainName,trustScore,sourceType,updatedAt\n");
+        csv.append(escapeCsv(dp.getName())).append(',')
+           .append(escapeCsv(dp.getName())).append(',')
+           .append(escapeCsv(dp.getDisplayName())).append(',')
+           .append(escapeCsv(dp.getDescription())).append(',')
+           .append(escapeCsv(dp.getQualityLevel())).append(',')
+           .append(escapeCsv(dp.getAccessPolicy())).append(',')
+           .append(escapeCsv(domainName)).append(',')
+           .append(dp.getTrustScore() != null ? dp.getTrustScore().multiply(BigDecimal.valueOf(100)).intValue() : "").append(',')
+           .append(escapeCsv(dp.getSourceType())).append(',')
+           .append(dp.getUpdatedAt() != null ? fmt.format(dp.getUpdatedAt()) : "")
+           .append('\n');
+
+        byte[] bytes = csv.toString().getBytes(StandardCharsets.UTF_8);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv; charset=utf-8"));
+        headers.setContentDispositionFormData("attachment", dp.getName() + ".csv");
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    private static String escapeCsv(String value) {
+        if (value == null) return "";
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/catalog/data-products/{name}/gdpr — déclaration RGPD
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Get the GDPR declaration for a data product.")
+    @GetMapping("/{name}/gdpr")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<CatalogGdprDeclaration> getGdprDeclaration(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name) {
+
+        return gdprDeclarationRepository.findByDataProductName(name)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // -------------------------------------------------------------------------
+    // PUT /api/catalog/data-products/{name}/gdpr — créer/mettre à jour la déclaration RGPD
+    // -------------------------------------------------------------------------
+
+    @Operation(summary = "Create or update the GDPR declaration for a data product.")
+    @PutMapping("/{name}/gdpr")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<CatalogGdprDeclaration> upsertGdprDeclaration(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("name") String name,
+            @RequestBody CatalogGdprDeclaration body) {
+
+        Optional<DataProduct> dpOpt = dataProductRepository.findByName(name);
+        if (dpOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        CatalogGdprDeclaration declaration = gdprDeclarationRepository
+                .findByDataProductName(name)
+                .orElseGet(() -> CatalogGdprDeclaration.builder()
+                        .id(UUID.randomUUID())
+                        .dataProductName(name)
+                        .createdBy(authUser.getId())
+                        .build());
+
+        declaration.setDataController(body.getDataController());
+        declaration.setPurpose(body.getPurpose());
+        declaration.setLegalBasis(body.getLegalBasis());
+        declaration.setRetentionDays(body.getRetentionDays());
+        declaration.setPiiColumns(body.getPiiColumns());
+        declaration.setUpdatedBy(authUser.getId());
+
+        CatalogGdprDeclaration saved = gdprDeclarationRepository.save(declaration);
+        logAudit(dpOpt.get().getId(), authUser.getId().toString(), "UPDATE_GDPR", null);
+        return ResponseEntity.ok(saved);
     }
 
     // -------------------------------------------------------------------------

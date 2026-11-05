@@ -471,6 +471,10 @@ export interface CatalogQueryResponse {
   sql: string;
   confidence: number;
   model: string;
+  /** Alerte non-bloquante (ex. faible confiance) */
+  warning?: string;
+  /** True si des colonnes PII ont été masquées selon le rôle */
+  piiMasked?: boolean;
 }
 
 export const catalogQueryAPI = (

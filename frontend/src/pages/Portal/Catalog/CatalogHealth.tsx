@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Breadcrumb,
+  Button,
   Card,
   Col,
   Descriptions,
@@ -11,17 +12,27 @@ import {
   Spin,
   Statistic,
   Tag,
+  Tooltip,
   Typography,
 } from "antd";
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
+  ReloadOutlined,
   RobotOutlined,
   SafetyOutlined,
   ThunderboltOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { getCatalogHealth, CatalogHealthMetrics } from "../../../services/catalogService";
+import {
+  getCatalogHealth,
+  type CatalogHealthMetrics,
+  type DependencyStatus,
+  type JobStatusInfo,
+} from "../../../services/catalogService";
+import StatusPill from "./components/StatusPill";
+import { boslerColors } from "./theme/boslerTokens";
 
 const { Title, Text } = Typography;
 
@@ -34,23 +45,142 @@ const QUALITY_COLORS: Record<string, string> = {
 
 const pct = (v: number): number => Math.round(v * 100);
 
+// ---------------------------------------------------------------------------
+// Helpers statut
+// ---------------------------------------------------------------------------
+
+function depStatusVariant(s: DependencyStatus | 'OK' | 'UNKNOWN'): 'success' | 'warning' | 'error' | 'neutral' {
+  if (s === 'UP' || s === 'OK') return 'success';
+  if (s === 'DEGRADED' || s === 'UNKNOWN') return 'warning';
+  return 'error';
+}
+
+function depStatusLabel(s: string): string {
+  if (s === 'UP' || s === 'OK') return 'UP';
+  return s;
+}
+
+// ---------------------------------------------------------------------------
+// Tuile dépendance
+// ---------------------------------------------------------------------------
+
+interface DepTileProps {
+  title: string;
+  status: string;
+  responseTimeMs?: number;
+  extra?: React.ReactNode;
+}
+
+const DepTile: React.FC<DepTileProps> = ({ title, status, responseTimeMs, extra }) => {
+  const variant = depStatusVariant(status as DependencyStatus);
+  return (
+    <div
+      style={{
+        background: boslerColors.card,
+        border: `1px solid ${boslerColors.cardBorder}`,
+        borderRadius: 5,
+        padding: '14px 18px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        minWidth: 160,
+      }}
+    >
+      <Text style={{ fontSize: 11, fontWeight: 600, color: boslerColors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        {title}
+      </Text>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <StatusPill status={depStatusLabel(status)} variant={variant} />
+      </div>
+      {responseTimeMs != null && (
+        <Text style={{ fontSize: 12, color: boslerColors.textSecondary }}>
+          {responseTimeMs} ms
+        </Text>
+      )}
+      {extra && <div style={{ fontSize: 12, color: boslerColors.textSecondary }}>{extra}</div>}
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Tuile TrustScoreJob
+// ---------------------------------------------------------------------------
+
+const JobTile: React.FC<{ job: JobStatusInfo }> = ({ job }) => {
+  const variant = depStatusVariant(job.status);
+  const lastRunLabel = job.lastRun
+    ? new Date(job.lastRun).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    : 'jamais';
+
+  return (
+    <div
+      style={{
+        background: boslerColors.card,
+        border: `1px solid ${boslerColors.cardBorder}`,
+        borderRadius: 5,
+        padding: '14px 18px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        minWidth: 160,
+      }}
+    >
+      <Text style={{ fontSize: 11, fontWeight: 600, color: boslerColors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        TrustScore Job
+      </Text>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <StatusPill status={job.status === 'OK' ? 'OK' : job.status} variant={variant} />
+      </div>
+      <Text style={{ fontSize: 12, color: boslerColors.textSecondary }}>
+        {job.alertCount} alerte{job.alertCount !== 1 ? 's' : ''}
+      </Text>
+      <Text style={{ fontSize: 12, color: boslerColors.textMuted }}>
+        Dernier run : {lastRunLabel}
+      </Text>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
+const POLL_INTERVAL_MS = 30_000;
+
 const CatalogHealth: React.FC = () => {
   const navigate = useNavigate();
 
   const [metrics, setMetrics] = useState<CatalogHealthMetrics | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError]     = useState<string | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const fetchMetrics = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setRefreshing(true);
+    setError(null);
+    try {
+      const data = await getCatalogHealth();
+      setMetrics(data);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erreur inconnue");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    getCatalogHealth()
-      .then((data) => { if (!cancelled) setMetrics(data); })
-      .catch((err: unknown) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Erreur inconnue");
-      })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
-  }, []);
+    void fetchMetrics(false);
+    intervalRef.current = setInterval(() => { void fetchMetrics(true); }, POLL_INTERVAL_MS);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fetchMetrics]);
+
+  const overallStatus = metrics?.status ?? 'UNKNOWN';
+  const overallVariant: 'success' | 'warning' | 'error' | 'neutral' = depStatusVariant(overallStatus as DependencyStatus);
 
   return (
     <div style={{ margin: "5px 0", padding: "0 16px" }}>
@@ -73,6 +203,28 @@ const CatalogHealth: React.FC = () => {
         <Tag icon={<RobotOutlined />} color="#24527a" style={{ borderRadius: 2 }}>
           Métriques plateforme
         </Tag>
+        {metrics && (
+          <StatusPill
+            status={overallStatus}
+            variant={overallVariant}
+          />
+        )}
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Text style={{ fontSize: 12, color: boslerColors.textMuted }}>
+            Mise à jour toutes les 30 s
+          </Text>
+          <Tooltip title="Rafraîchir">
+            <Button
+              size="small"
+              icon={<ReloadOutlined spin={refreshing} />}
+              onClick={() => void fetchMetrics(true)}
+              style={{ borderRadius: 2 }}
+              aria-label="Rafraîchir les métriques"
+            >
+              Rafraîchir
+            </Button>
+          </Tooltip>
+        </div>
       </div>
 
       {error && (
@@ -84,6 +236,44 @@ const CatalogHealth: React.FC = () => {
 
         {metrics && (
           <>
+            {/* ------------------------------------------------------------------ */}
+            {/* Tuiles dépendances système */}
+            {/* ------------------------------------------------------------------ */}
+            <div style={{ marginBottom: 24 }}>
+              <Text strong style={{ display: 'block', fontSize: 13, color: boslerColors.textTitle, marginBottom: 10 }}>
+                Dépendances système
+              </Text>
+              <div
+                style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}
+                aria-live="polite"
+                aria-label="Statut des dépendances système"
+              >
+                {metrics.dependencies && (
+                  <>
+                    <DepTile
+                      title="Database"
+                      status={metrics.dependencies.database?.status ?? 'UNKNOWN'}
+                      responseTimeMs={metrics.dependencies.database?.responseTimeMs}
+                    />
+                    <DepTile
+                      title="OpenSearch"
+                      status={metrics.dependencies.opensearch?.status ?? 'UNKNOWN'}
+                      responseTimeMs={metrics.dependencies.opensearch?.responseTimeMs}
+                    />
+                    <JobTile job={metrics.dependencies.trustScoreJob ?? { status: 'UNKNOWN', lastRun: null, alertCount: 0 }} />
+                    <DepTile
+                      title="LLM"
+                      status={metrics.dependencies.llm?.status ?? 'UNKNOWN'}
+                      responseTimeMs={metrics.dependencies.llm?.responseTimeMs}
+                      extra={metrics.dependencies.llm?.model
+                        ? <span>{metrics.dependencies.llm.model}</span>
+                        : undefined}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+
             {/* Alertes actives */}
             {(metrics.productsInDrift > 0 || metrics.productsWithLowTrust > 0) && (
               <Alert
@@ -140,6 +330,7 @@ const CatalogHealth: React.FC = () => {
                     title="En drift"
                     value={metrics.productsInDrift}
                     valueStyle={{ color: metrics.productsInDrift > 0 ? "#faad14" : "#52c41a" }}
+                    prefix={metrics.productsInDrift > 0 ? <WarningOutlined /> : <CheckCircleOutlined />}
                   />
                 </Card>
               </Col>

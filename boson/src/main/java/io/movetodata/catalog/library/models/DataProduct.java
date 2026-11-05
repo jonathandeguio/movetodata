@@ -61,6 +61,32 @@ public class DataProduct {
     @Column(name = "use_cases", columnDefinition = "TEXT")
     private String useCases;
 
+    @Column(name = "steward_id", columnDefinition = "uuid")
+    private UUID stewardId;
+
+    /** Source of the description: 'manual' | 'ai' | 'imported'. */
+    @Column(name = "description_source", length = 50)
+    private String descriptionSource;
+
+    /** Whether the access policy is inherited from the parent domain. */
+    @Column(name = "policy_inherited")
+    private Boolean policyInherited;
+
+    /** Cumulative number of views (incremented on each data-product page load). */
+    @Column(name = "view_count")
+    private Long viewCount;
+
+    /** Type de source de données : ex. "PostgreSQL", "Kafka", "S3", "dbt", etc. */
+    @Column(name = "source_type", length = 100)
+    private String sourceType;
+
+    /**
+     * Score de confiance minimum pour l'obtention de la certification Gold (défaut : 80).
+     * Utilisé par {@link io.movetodata.catalog.library.services.CatalogCertificationService}.
+     */
+    @Column(name = "gold_threshold")
+    private Integer goldThreshold;
+
     @Column(name = "created_by", nullable = false, columnDefinition = "uuid")
     private UUID createdBy;
 

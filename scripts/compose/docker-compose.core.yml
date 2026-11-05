@@ -90,6 +90,8 @@ services:
         condition: service_healthy
       movetodata-redis:
         condition: service_healthy
+      movetodata-opensearch:
+        condition: service_healthy
     environment:
       DB_USERNAME: ${BOSON_DB_USERNAME:-movetodata}
       DB_PASSWORD: ${BOSON_DB_PASSWORD}
@@ -108,6 +110,10 @@ services:
       SWAGGER_UI: ${SWAGGER_UI:-false}
       # F5 — AI service URL (internal Docker network)
       MOVETODATA_AI_URL: ${MOVETODATA_AI_URL:-http://movetodata-ai:8090}
+      # OpenSearch — Catalog full-text search (Lot 2)
+      OPENSEARCH_URL: ${OPENSEARCH_URL:-http://movetodata-opensearch:9200}
+      # Lot 6 — Webhook ingestion secret (HMAC-SHA256)
+      CATALOG_WEBHOOK_SECRET: ${CATALOG_WEBHOOK_SECRET:-}
       # --- DEBUG MODE — Spring Boot logging (lire depuis .env.movetodata) ---
       # Activer : LOGGING_LEVEL_ROOT=DEBUG dans .env.movetodata + docker compose up -d --no-deps boson
       LOGGING_LEVEL_ROOT: ${LOGGING_LEVEL_ROOT:-INFO}
@@ -232,6 +238,10 @@ services:
       # F15 — RAG Documentation plateforme
       DOCS_PATH: /movetodata-docs/docs
       DOCS_RAG_PERSIST_DIR: /app/rag/docs
+      # Lot 6 — Abstraction provider LLM (ollama | mistral)
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY:-}
+      MISTRAL_API_URL: ${MISTRAL_API_URL:-https://api.mistral.ai/v1}
     volumes:
       # Named volumes pour ChromaDB — Docker gère les droits (appuser UID 1001).
       - movetodata-rag-catalog:/app/rag/catalog
@@ -247,6 +257,32 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 60s
+    networks:
+      - movetodata-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  movetodata-opensearch:
+    image: opensearchproject/opensearch:2.13.0
+    container_name: movetodata-opensearch
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "127.0.0.1:9200:9200"
+    volumes:
+      - ${MOVETODATA_MOUNT_PATH:-/movetodata}/opensearch:/usr/share/opensearch/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
       start_period: 60s
     networks:
       - movetodata-net

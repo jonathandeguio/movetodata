@@ -11,7 +11,14 @@ import {
   HomeIcon,
   ScheduledRunIcon
 } from "assets/icons/mtdInterfaceIcons";
-import { LibraryIcon, StarIcon } from "assets/icons/mtdMiscellaneousIcons";
+import {
+  BankIcon,
+  LibraryIcon,
+  PulseIcon,
+  StarIcon,
+  TagIcon,
+  VersionHistoryIcon,
+} from "assets/icons/mtdMiscellaneousIcons";
 import { getIsConnectAdmin } from "common/common.api";
 import { AiAssistantButton } from "components/AiAssistant";
 import MtdCommandPalette from "components/CommandPalette/CommandPalette.view";
@@ -323,27 +330,91 @@ const Sidebar = () => {
             }}
             selected={selectedSideBarTab == "accessManager"}
           />
+          {/* ── Data Catalog — 5 entrées ── */}
           <SBElement
             icon={
               <LibraryIcon
                 size={sidebarAttributes.iconSize + 6}
               />
             }
-            tooltip={getLanguageLabel("dataCatalog")}
-            text={"dataCatalog"}
+            tooltip="Catalogue"
+            text={"catalogSearch"}
             showText={sidebarAttributes.showText}
             onClick={() => {
-              if (
-                preventFilterLossOnReNavigate(
-                  location.pathname,
-                  "/portal/catalog/search"
-                )
-              )
+              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/search"))
                 return;
               navigate("/portal/catalog/search");
-              setSelectedSideBarTab("dataCatalog");
+              setSelectedSideBarTab("catalogSearch");
             }}
-            selected={selectedSideBarTab == "dataCatalog"}
+            selected={selectedSideBarTab === "catalogSearch"}
+          />
+          <SBElement
+            icon={
+              <PulseIcon
+                size={sidebarAttributes.iconSize + 6}
+              />
+            }
+            tooltip="Lignage"
+            text={"catalogLineage"}
+            showText={sidebarAttributes.showText}
+            onClick={() => {
+              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/lineage"))
+                return;
+              navigate("/portal/catalog/lineage");
+              setSelectedSideBarTab("catalogLineage");
+            }}
+            selected={selectedSideBarTab === "catalogLineage"}
+          />
+          <SBElement
+            icon={
+              <TagIcon
+                size={sidebarAttributes.iconSize + 6}
+              />
+            }
+            tooltip="Certification"
+            text={"catalogCertify"}
+            showText={sidebarAttributes.showText}
+            onClick={() => {
+              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/certify"))
+                return;
+              navigate("/portal/catalog/certify");
+              setSelectedSideBarTab("catalogCertify");
+            }}
+            selected={selectedSideBarTab === "catalogCertify"}
+          />
+          <SBElement
+            icon={
+              <BankIcon
+                size={sidebarAttributes.iconSize + 6}
+              />
+            }
+            tooltip="Gouvernance"
+            text={"catalogGovernance"}
+            showText={sidebarAttributes.showText}
+            onClick={() => {
+              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/governance"))
+                return;
+              navigate("/portal/catalog/governance");
+              setSelectedSideBarTab("catalogGovernance");
+            }}
+            selected={selectedSideBarTab === "catalogGovernance"}
+          />
+          <SBElement
+            icon={
+              <VersionHistoryIcon
+                size={sidebarAttributes.iconSize + 6}
+              />
+            }
+            tooltip="Ingestion &amp; audit"
+            text={"catalogAdmin"}
+            showText={sidebarAttributes.showText}
+            onClick={() => {
+              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/admin"))
+                return;
+              navigate("/portal/catalog/admin");
+              setSelectedSideBarTab("catalogAdmin");
+            }}
+            selected={selectedSideBarTab === "catalogAdmin"}
           />
           <SBElement
             icon={

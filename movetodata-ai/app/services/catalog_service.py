@@ -32,6 +32,8 @@ from tenacity import (
 )
 
 from app.services.llm_service import OLLAMA_URL, CHAT_MODEL, TIMEOUT
+from app.providers.provider_factory import get_llm_provider
+from pydantic import BaseModel, ValidationError as PydanticValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -132,23 +134,88 @@ class _LLMError(Exception):
     """Raised when the LLM call returns an empty or unparseable response."""
 
 
-@retry(
-    retry=retry_if_exception_type(_LLMError),
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=2, max=8),
-    before=before_log(logger, logging.DEBUG),
-    after=after_log(logger, logging.DEBUG),
-    reraise=False,
-)
-async def _call_llm_with_retry(prompt: str) -> DataProductMetadata:
-    """Call the local Ollama LLM and parse its JSON response. Retried up to 3 times."""
-    from app.services.llm_service import _call_ollama  # local import avoids circularity
+class _ValidationError(Exception):
+    """Raised when Pydantic validation of the LLM output fails."""
 
-    raw = await _call_ollama(prompt)
-    parsed = _parse_data_product_json(raw)
+    def __init__(self, message: str, raw: Optional[DataProductMetadata] = None) -> None:
+        super().__init__(message)
+        self.raw = raw
+
+
+# ---------------------------------------------------------------------------
+# Schéma de sortie structurée (F13.2 — validation obligatoire)
+# ---------------------------------------------------------------------------
+
+class GeneratedDataProductMetadata(BaseModel):
+    """Schéma Pydantic validant la sortie LLM pour un Data Product généré."""
+
+    name: str
+    description: str
+    tags: List[str] = []
+    quality_level: str = "BRONZE"
+    use_cases: List[str] = []
+    access_policy: str = "INTERNAL"
+
+
+async def _call_llm_once(prompt: str) -> DataProductMetadata:
+    """
+    Appelle le LLM via le provider injecté, parse le JSON et valide avec Pydantic.
+    Lève _LLMError ou _ValidationError selon le type d'échec.
+    """
+    llm = get_llm_provider()
+    response = await llm.chat([{"role": "user", "content": prompt}])
+    raw_text: str = response.get("content", "")
+
+    parsed = _parse_data_product_json(raw_text)
     if parsed is None:
-        raise _LLMError(f"LLM returned unparseable response (len={len(raw)})")
-    return parsed
+        raise _LLMError(f"LLM returned unparseable response (len={len(raw_text)})")
+
+    try:
+        validated = GeneratedDataProductMetadata.model_validate(parsed)
+    except PydanticValidationError as exc:
+        raise _ValidationError(str(exc), raw=parsed) from exc
+
+    # Renommer les champs Pydantic (snake_case) vers le format camelCase attendu
+    result: DataProductMetadata = dict(parsed)
+    result["qualityLevel"] = validated.quality_level
+    result["accessPolicy"] = validated.access_policy
+    result["useCases"] = validated.use_cases
+    result["tags"] = validated.tags
+    return result
+
+
+async def _call_llm_with_retry(prompt: str) -> tuple[DataProductMetadata, str]:
+    """
+    Appelle le LLM avec 1 retry en cas d'échec de validation Pydantic.
+    Retourne (metadata, status) où status est "generated" | "manual_review".
+    """
+    try:
+        result = await _call_llm_once(prompt)
+        return result, "generated"
+    except _ValidationError as first_exc:
+        logger.warning(
+            "catalog_service: validation Pydantic échouée (tentative 1) — %s — retry avec erreur",
+            first_exc,
+        )
+        retry_prompt = (
+            prompt
+            + f"\n\nATTENTION : ta réponse précédente n'est pas valide. Erreur : {first_exc}\n"
+            "Corrige et renvoie un JSON strictement valide."
+        )
+        try:
+            result = await _call_llm_once(retry_prompt)
+            return result, "generated"
+        except (_ValidationError, _LLMError) as retry_exc:
+            logger.error(
+                "catalog_service: validation Pydantic échouée après retry — %s — statut manual_review",
+                retry_exc,
+            )
+            # Retourner les données brutes du premier essai avec statut manual_review
+            raw_fallback = first_exc.raw or {}
+            return raw_fallback, "manual_review"
+    except _LLMError as exc:
+        logger.warning("catalog_service: LLM non joignable — %s — statut manual_review", exc)
+        return {}, "manual_review"
 
 
 async def generate_data_product_metadata(
@@ -164,7 +231,7 @@ async def generate_data_product_metadata(
 
     Only column names and types are forwarded to the LLM — never cell values.
     Falls back to a default BRONZE/INTERNAL descriptor if the LLM fails after
-    3 attempts.
+    1 retry. Adds a "generationStatus" field: "generated" | "manual_review".
     """
     snake_name = re.sub(r"[^a-z0-9]+", "_", dataset_name.lower()).strip("_")
     prompt = _build_data_product_prompt(
@@ -186,7 +253,7 @@ async def generate_data_product_metadata(
     )
 
     try:
-        metadata = await _call_llm_with_retry(prompt)
+        metadata, status = await _call_llm_with_retry(prompt)
     except Exception as exc:
         logger.warning(
             json.dumps({
@@ -197,10 +264,16 @@ async def generate_data_product_metadata(
             })
         )
         metadata = _default_data_product(snake_name, dataset_name)
+        status = "manual_review"
+
+    if not metadata:
+        metadata = _default_data_product(snake_name, dataset_name)
+        status = "manual_review"
 
     # Ensure the "name" field is always snake_case of the original name
     metadata.setdefault("name", snake_name)
     metadata["fqn"] = metadata["name"]
+    metadata["generationStatus"] = status
     return metadata
 
 
@@ -809,64 +882,99 @@ async def publish_data_product(metadata: DataProductMetadata) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# F16.3 — Text-to-SQL depuis le Catalog (Phase 8)
+# F16.3 — Text-to-SQL depuis le Catalog (Phase 8 / Lot 7 enrichi)
 # ---------------------------------------------------------------------------
 
-def _build_catalog_sql_prompt(name: str, columns: List[Dict[str, Any]], question: str) -> str:
+import re as _re
+
+_NON_SELECT_RE = _re.compile(
+    r"^\s*(INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|TRUNCATE|GRANT|REVOKE|EXEC|EXECUTE|MERGE|CALL)\b",
+    _re.IGNORECASE,
+)
+
+
+def _build_catalog_sql_prompt(
+    name: str,
+    columns: List[Dict[str, Any]],
+    question: str,
+) -> str:
     """Prompt asking the LLM to generate SQL using DataProduct columns as schema context."""
     col_lines = "\n".join(
-        f"  - {c.get('columnName', '?')} (pii={c.get('piiType') or 'none'})"
+        f"  - {c.get('columnName', c.get('name', '?'))} "
+        f"(type={c.get('columnType', c.get('type', 'UNKNOWN'))}, "
+        f"pii={c.get('piiType', c.get('is_pii') or 'none')})"
         for c in columns
     )
     return (
-        "Tu es un expert SQL. Génère une requête SQL SELECT à partir de la question posée.\n\n"
+        "Tu es un assistant SQL souverain. "
+        f"La table `{name}` contient les colonnes suivantes :\n{col_lines}\n\n"
+        "Génère UNIQUEMENT un SELECT à partir de la question posée. "
+        "Ne retourne jamais INSERT, UPDATE, DELETE, DROP ni aucune autre instruction.\n\n"
         "IMPÉRATIF : réponds UNIQUEMENT avec un JSON valide entre ```json et ```. "
         "Ne fournis jamais de valeurs de cellules ni de données réelles.\n\n"
         "Format attendu :\n"
         '```json\n{"sql": "SELECT ...", "confidence": 0.85}\n```\n\n'
-        f"Data Product : {name}\n"
-        f"Schéma des colonnes :\n{col_lines}\n\n"
         f"Question : {question}\n\n"
         "JSON :"
     )
 
 
-async def catalog_text_to_sql(name: str, question: str) -> Dict[str, Any]:
+async def catalog_text_to_sql(
+    name: str,
+    question: str,
+    schema_context: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Generate a SQL SELECT query from a natural-language question using the
     DataProduct's column schema as context.
 
+    Lot 7 : si schema_context est fourni (pré-construit par Boson avec accès
+    contrôlé et PII masqués), on l'utilise directement sans faire d'appel Boson.
+
     Returns {"sql": "...", "confidence": float, "model": str}.
     Only column names and PII flags are sent to the LLM — never cell values.
     """
-    headers = _boson_headers()
-
-    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-        dp_resp = await client.get(
-            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
-            headers=headers,
+    if schema_context is not None:
+        # Schéma pré-construit fourni par Boson — pas d'appel Boson nécessaire
+        columns: List[Dict[str, Any]] = schema_context.get("columns", [])
+        logger.info(
+            json.dumps({
+                "event": "catalog_text_to_sql_with_context",
+                "name": name,
+                "columns_count": len(columns),
+                "question_len": len(question),
+                "model": CHAT_MODEL,
+            })
         )
-        if dp_resp.status_code == 404:
-            raise ValueError(f"DataProduct '{name}' not found in catalog")
-        dp_resp.raise_for_status()
+    else:
+        # Chemin hérité : récupérer les colonnes depuis Boson
+        headers = _boson_headers()
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            dp_resp = await client.get(
+                f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}",
+                headers=headers,
+            )
+            if dp_resp.status_code == 404:
+                raise ValueError(f"DataProduct '{name}' not found in catalog")
+            dp_resp.raise_for_status()
 
-        col_resp = await client.get(
-            f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
-            headers=headers,
+            col_resp = await client.get(
+                f"{BOSON_CATALOG_URL}/api/catalog/data-products/{name}/columns",
+                headers=headers,
+            )
+            columns = col_resp.json() if col_resp.status_code == 200 else []
+
+        logger.info(
+            json.dumps({
+                "event": "catalog_text_to_sql",
+                "name": name,
+                "columns_count": len(columns),
+                "question_len": len(question),
+                "model": CHAT_MODEL,
+            })
         )
-        columns: List[Dict[str, Any]] = col_resp.json() if col_resp.status_code == 200 else []
 
     prompt = _build_catalog_sql_prompt(name, columns, question)
-
-    logger.info(
-        json.dumps({
-            "event": "catalog_text_to_sql",
-            "name": name,
-            "columns_count": len(columns),
-            "question_len": len(question),
-            "model": CHAT_MODEL,
-        })
-    )
 
     try:
         parsed = await _call_llm_with_retry(prompt)
@@ -875,8 +983,24 @@ async def catalog_text_to_sql(name: str, question: str) -> Dict[str, Any]:
         raise
 
     sql: str = parsed.get("sql", "") if isinstance(parsed, dict) else ""
+
+    # Garde-fou SELECT-only (Lot 7)
+    if sql and _NON_SELECT_RE.match(sql):
+        first_kw = sql.strip().split()[0].upper() if sql.strip() else "?"
+        raise ValueError(
+            f"Le LLM a généré une instruction non-SELECT ({first_kw}). "
+            "La requête a été bloquée."
+        )
+
     confidence: float = float(parsed.get("confidence", 0.7)) if isinstance(parsed, dict) else 0.7
     confidence = max(0.0, min(1.0, confidence))
+
+    # Ajuster la confiance si schema_context fourni
+    if schema_context is not None and sql:
+        sql_lower = sql.lower()
+        known = [c.get("name", "").lower() for c in columns if c.get("name")]
+        recognized = any(col in sql_lower for col in known)
+        confidence = 1.0 if recognized else 0.7
 
     return {
         "sql": sql,

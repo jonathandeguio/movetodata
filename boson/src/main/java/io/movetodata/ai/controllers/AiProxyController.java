@@ -10,6 +10,12 @@ import io.movetodata.ai.library.services.AiChatService;
 import io.movetodata.ai.library.services.AiInsightsService;
 import io.movetodata.ai.library.services.SmartConnectorService;
 import io.movetodata.ai.library.services.TextToSqlService;
+import io.movetodata.catalog.library.models.ColumnMeta;
+import io.movetodata.catalog.library.models.DataProduct;
+import io.movetodata.catalog.library.repository.ColumnMetaRepository;
+import io.movetodata.catalog.library.repository.DataProductRepository;
+import io.movetodata.catalog.security.CatalogAccessService;
+import io.movetodata.catalog.security.CatalogAccessService.AccessDecision;
 import io.movetodata.connect.library.models.DatabaseSourceConfig;
 import io.movetodata.passport.library.Auth;
 import io.movetodata.passport.security.AuthUser;
@@ -38,6 +44,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 /**
  * Thin proxy from Boson → movetodata-ai Python service (port 8090).
@@ -69,6 +76,9 @@ public class AiProxyController {
     private final SmartConnectorService smartConnectorService;
     private final Executor aiChatExecutor;
     private final ObjectMapper objectMapper;
+    private final DataProductRepository dataProductRepository;
+    private final ColumnMetaRepository columnMetaRepository;
+    private final CatalogAccessService catalogAccessService;
 
     public AiProxyController(
             UploadedFileRepository uploadedFileRepository,
@@ -78,7 +88,10 @@ public class AiProxyController {
             AiChatService aiChatService,
             SmartConnectorService smartConnectorService,
             @Qualifier("aiChatExecutor") Executor aiChatExecutor,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            DataProductRepository dataProductRepository,
+            ColumnMetaRepository columnMetaRepository,
+            CatalogAccessService catalogAccessService) {
         this.uploadedFileRepository = uploadedFileRepository;
         this.restTemplate = restTemplate;
         this.textToSqlService = textToSqlService;
@@ -87,6 +100,9 @@ public class AiProxyController {
         this.smartConnectorService = smartConnectorService;
         this.aiChatExecutor = aiChatExecutor;
         this.objectMapper = objectMapper;
+        this.dataProductRepository = dataProductRepository;
+        this.columnMetaRepository = columnMetaRepository;
+        this.catalogAccessService = catalogAccessService;
     }
 
     /**
@@ -713,6 +729,112 @@ public class AiProxyController {
 
         List<AiSourceQuality> results = smartConnectorService.getQualityScores(uuids);
         return ResponseEntity.ok(results);
+    }
+
+    // =========================================================================
+    // Catalog Text-to-SQL contextuel (Lot 7 — F16.3 enrichi)
+    // =========================================================================
+
+    /**
+     * POST /api/ai/catalog/query/{dataProductName}
+     *
+     * Surcharge spécifique du proxy générique pour ajouter :
+     *  1. Chargement du DataProduct et de ses colonnes depuis la DB.
+     *  2. Contrôle d'accès via CatalogAccessService.
+     *  3. Masquage des colonnes PII si l'utilisateur n'est pas DPO/STEWARD.
+     *  4. Construction d'un schema_context structuré.
+     *  5. Transmission à movetodata-ai /catalog/query/{name} avec le contexte.
+     *
+     * Cette méthode est choisie par Spring MVC en priorité sur le handler générique
+     * @RequestMapping("/**") car le pattern est plus spécifique.
+     *
+     * Body: { "question": "..." }
+     * Réponse: { "sql": "...", "confidence": float, "model": "...",
+     *            "warning": "..." (optionnel), "piiMasked": boolean }
+     */
+    @Operation(summary = "Text-to-SQL contextuel depuis le Catalog (accès contrôlé, colonnes PII masquées).")
+    @PostMapping("/catalog/query/{dataProductName}")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Object> catalogQuery(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("dataProductName") String dataProductName,
+            @RequestBody Map<String, Object> body,
+            HttpServletRequest request) {
+
+        String question = (String) body.get("question");
+        if (question == null || question.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "question is required"));
+        }
+
+        // 1. Charger le DataProduct
+        DataProduct dp = dataProductRepository.findByName(dataProductName).orElse(null);
+        if (dp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "DATA_PRODUCT_NOT_FOUND", "name", dataProductName));
+        }
+
+        // 2. Contrôle d'accès
+        AccessDecision decision = catalogAccessService.canRead(dp.getName(), dp.getAccessPolicy(), request);
+        if (decision == AccessDecision.DENIED) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "ACCESS_DENIED",
+                            "detail", "Vous n'êtes pas autorisé à interroger ce Data Product."));
+        }
+
+        boolean piiMasked = (decision == AccessDecision.ALLOWED_PII_MASKED);
+
+        // 3. Charger les colonnes (par datasetId = dp.id, branche master)
+        List<ColumnMeta> allColumns = columnMetaRepository
+                .findByDatasetIdAndBranch(java.util.UUID.fromString(dp.getId()), "master");
+
+        // 4. Masquer les colonnes PII si nécessaire
+        List<Map<String, Object>> schemaColumns = allColumns.stream()
+                .filter(col -> !piiMasked || col.getPiiType() == null || col.getPiiType().isBlank())
+                .map(col -> {
+                    Map<String, Object> c = new LinkedHashMap<>();
+                    c.put("name", col.getColumnName());
+                    c.put("type", col.getPiiType() != null && !col.getPiiType().isBlank() ? "PII" : "");
+                    c.put("is_pii", col.getPiiType() != null && !col.getPiiType().isBlank());
+                    return c;
+                })
+                .collect(Collectors.toList());
+
+        // 5. Construire le payload schema_context
+        Map<String, Object> schemaContext = new LinkedHashMap<>();
+        schemaContext.put("table_name", dp.getName());
+        schemaContext.put("columns", schemaColumns);
+
+        Map<String, Object> aiPayload = new LinkedHashMap<>();
+        aiPayload.put("question", question);
+        aiPayload.put("schema_context", schemaContext);
+
+        // 6. Appeler movetodata-ai /catalog/query/{name}
+        ResponseEntity<Object> aiResponse =
+                forwardToAiService("/catalog/query/" + dataProductName, HttpMethod.POST, aiPayload);
+
+        if (!aiResponse.getStatusCode().is2xxSuccessful()) {
+            return aiResponse;
+        }
+
+        // 7. Enrichir la réponse avec piiMasked
+        @SuppressWarnings("unchecked")
+        Map<String, Object> aiBody = (Map<String, Object>) aiResponse.getBody();
+        if (aiBody == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "EMPTY_AI_RESPONSE"));
+        }
+
+        Map<String, Object> enriched = new LinkedHashMap<>(aiBody);
+        enriched.put("piiMasked", piiMasked);
+        if (piiMasked) {
+            enriched.putIfAbsent("warning",
+                    "Certaines colonnes PII ont été masquées selon votre rôle.");
+        }
+
+        log.info("catalog-query: dp={} piiMasked={} confidence={}",
+                dataProductName, piiMasked, enriched.get("confidence"));
+
+        return ResponseEntity.ok(enriched);
     }
 
     /**

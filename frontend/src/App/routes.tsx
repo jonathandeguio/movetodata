@@ -78,9 +78,13 @@ import AppRuntimePage from 'Apps/Studio/runtime/AppRuntimePage';
 import CatalogSearch from "../pages/Portal/Catalog/CatalogSearch";
 import CatalogDataProduct from "../pages/Portal/Catalog/CatalogDataProduct";
 import CatalogLineage from "../pages/Portal/Catalog/CatalogLineage";
+import CatalogLineageIndexPage from "../pages/Portal/Catalog/CatalogLineageIndexPage";
 import CatalogCertify from "../pages/Portal/Catalog/CatalogCertify";
+import CatalogCertifyIndexPage from "../pages/Portal/Catalog/CatalogCertifyIndexPage";
 import CatalogRagSearch from "../pages/Portal/Catalog/CatalogRagSearch";
 import CatalogHealth from "../pages/Portal/Catalog/CatalogHealth";
+import CatalogGovernancePage from "../pages/Portal/Catalog/CatalogGovernancePage";
+import CatalogAdminPage from "../pages/Portal/Catalog/CatalogAdminPage";
 
 import FileExplorer from "../Apps/explorer/";
 
@@ -239,9 +243,19 @@ const useRouter = () => {
                     path="/portal/catalog/data-product/:fqn"
                     element={<CatalogDataProduct />}
                   />
+                  {/* Route index lignage (sans ID) — affiche la page d'accueil lignage */}
+                  <Route
+                    path="/portal/catalog/lineage"
+                    element={<CatalogLineageIndexPage />}
+                  />
                   <Route
                     path="/portal/catalog/lineage/:id"
                     element={<CatalogLineage />}
+                  />
+                  {/* Route index certification (sans fqn) */}
+                  <Route
+                    path="/portal/catalog/certify"
+                    element={<CatalogCertifyIndexPage />}
                   />
                   <Route
                     path="/portal/catalog/certify/:fqn"
@@ -254,6 +268,15 @@ const useRouter = () => {
                   <Route
                     path="/portal/catalog/health"
                     element={<CatalogHealth />}
+                  />
+                  {/* Lot 1 — nouvelles sections Gouvernance & Admin */}
+                  <Route
+                    path="/portal/catalog/governance"
+                    element={<CatalogGovernancePage />}
+                  />
+                  <Route
+                    path="/portal/catalog/admin"
+                    element={<CatalogAdminPage />}
                   />
 
                   <Route

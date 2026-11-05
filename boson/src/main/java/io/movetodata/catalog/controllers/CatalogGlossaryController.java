@@ -1,8 +1,10 @@
 package io.movetodata.catalog.controllers;
 
+import io.movetodata.catalog.library.models.CatalogGlossaryDataProduct;
 import io.movetodata.catalog.library.models.CatalogGlossaryTerm;
 import io.movetodata.catalog.library.models.CatalogProductView;
 import io.movetodata.catalog.library.models.DataProduct;
+import io.movetodata.catalog.library.repository.CatalogGlossaryDataProductRepository;
 import io.movetodata.catalog.library.repository.CatalogGlossaryTermRepository;
 import io.movetodata.catalog.library.repository.CatalogProductViewRepository;
 import io.movetodata.catalog.library.repository.DataProductRepository;
@@ -17,22 +19,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Glossaire métier + tracking des consultations de DataProducts.
  *
- *   GET    /api/catalog/glossary               — list all terms
+ *   GET    /api/catalog/glossary               — list all terms (avec viewCount + Data Products liés)
  *   GET    /api/catalog/glossary?domain=X      — filter by domain
+ *   GET    /api/catalog/glossary/{id}          — get one term (incrémente viewCount)
  *   POST   /api/catalog/glossary               — create term
  *   PUT    /api/catalog/glossary/{id}          — update term
  *   DELETE /api/catalog/glossary/{id}          — delete term
+ *
+ *   POST   /api/catalog/glossary/{id}/link-data-product      — lier un Data Product
+ *   DELETE /api/catalog/glossary/{id}/link-data-product/{dp} — délier un Data Product
  *
  *   POST   /api/catalog/data-products/{name}/view  — record a page view
  */
@@ -44,24 +49,48 @@ import java.util.UUID;
 @Tag(name = "Data Catalog — Glossaire", description = "Business glossary and view tracking.")
 public class CatalogGlossaryController {
 
-    private final CatalogGlossaryTermRepository glossaryRepository;
-    private final CatalogProductViewRepository  viewRepository;
-    private final DataProductRepository         dataProductRepository;
+    private final CatalogGlossaryTermRepository       glossaryRepository;
+    private final CatalogGlossaryDataProductRepository glossaryDpRepository;
+    private final CatalogProductViewRepository         viewRepository;
+    private final DataProductRepository                dataProductRepository;
 
     // =========================================================================
-    // Glossaire
+    // Glossaire — CRUD
     // =========================================================================
 
-    @Operation(summary = "List all glossary terms (optionally filtered by domain).")
+    @Operation(summary = "List all glossary terms (optionally filtered by domain), with linked Data Products.")
     @GetMapping("/api/catalog/glossary")
     @PreAuthorize(Auth.CONNECT_ADMIN)
-    public ResponseEntity<List<CatalogGlossaryTerm>> listTerms(
+    public ResponseEntity<List<Map<String, Object>>> listTerms(
             @RequestParam(value = "domain", required = false) String domain) {
 
-        if (domain != null && !domain.isBlank()) {
-            return ResponseEntity.ok(glossaryRepository.findByDomainOrderByTermAsc(domain));
-        }
-        return ResponseEntity.ok(glossaryRepository.findAllByOrderByTermAsc());
+        List<CatalogGlossaryTerm> terms = (domain != null && !domain.isBlank())
+                ? glossaryRepository.findByDomainOrderByTermAsc(domain)
+                : glossaryRepository.findAllByOrderByTermAsc();
+
+        List<Map<String, Object>> result = terms.stream()
+                .map(this::buildTermDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "Get a glossary term by ID and increment its view count.")
+    @GetMapping("/api/catalog/glossary/{id}")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    @Transactional
+    public ResponseEntity<Map<String, Object>> getTerm(@PathVariable("id") String id) {
+        Optional<CatalogGlossaryTerm> opt = glossaryRepository.findById(id);
+        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+        CatalogGlossaryTerm gt = opt.get();
+
+        // Incrémenter viewCount
+        long current = gt.getViewCount() != null ? gt.getViewCount() : 0L;
+        gt.setViewCount(current + 1L);
+        glossaryRepository.save(gt);
+
+        return ResponseEntity.ok(buildTermDto(gt));
     }
 
     @Operation(summary = "Create a glossary term.")
@@ -85,6 +114,7 @@ public class CatalogGlossaryController {
                         ? body.get("domain").toString() : null)
                 .synonyms(body.containsKey("synonyms") && body.get("synonyms") != null
                         ? body.get("synonyms").toString() : null)
+                .viewCount(0L)
                 .createdBy(authUser.getId())
                 .build();
 
@@ -119,10 +149,72 @@ public class CatalogGlossaryController {
     @Operation(summary = "Delete a glossary term.")
     @DeleteMapping("/api/catalog/glossary/{id}")
     @PreAuthorize(Auth.CONNECT_ADMIN)
+    @Transactional
     public ResponseEntity<Void> deleteTerm(@PathVariable("id") String id) {
         Optional<CatalogGlossaryTerm> opt = glossaryRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+        // Supprimer les liens Data Products
+        List<CatalogGlossaryDataProduct> links =
+                glossaryDpRepository.findByGlossaryTermId(UUID.fromString(id));
+        glossaryDpRepository.deleteAll(links);
+
         glossaryRepository.delete(opt.get());
+        return ResponseEntity.noContent().build();
+    }
+
+    // =========================================================================
+    // Liens Glossaire ↔ Data Products
+    // =========================================================================
+
+    @Operation(summary = "Link a glossary term to a Data Product.")
+    @PostMapping("/api/catalog/glossary/{id}/link-data-product")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    public ResponseEntity<Void> linkDataProduct(
+            @PathVariable("id") String id,
+            @RequestBody Map<String, Object> body) {
+
+        String dataProductName = body.containsKey("dataProductName") && body.get("dataProductName") != null
+                ? body.get("dataProductName").toString().trim() : "";
+
+        if (dataProductName.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (glossaryRepository.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        if (dataProductRepository.findByName(dataProductName).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UUID termId = UUID.fromString(id);
+        if (!glossaryDpRepository.existsByGlossaryTermIdAndDataProductName(termId, dataProductName)) {
+            CatalogGlossaryDataProduct link = CatalogGlossaryDataProduct.builder()
+                    .glossaryTermId(termId)
+                    .dataProductName(dataProductName)
+                    .build();
+            glossaryDpRepository.save(link);
+            log.info("glossary-dp link created: termId={} dp={}", id, dataProductName);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Unlink a glossary term from a Data Product.")
+    @DeleteMapping("/api/catalog/glossary/{id}/link-data-product/{dataProductName}")
+    @PreAuthorize(Auth.CONNECT_ADMIN)
+    @Transactional
+    public ResponseEntity<Void> unlinkDataProduct(
+            @PathVariable("id") String id,
+            @PathVariable("dataProductName") String dataProductName) {
+
+        if (glossaryRepository.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UUID termId = UUID.fromString(id);
+        glossaryDpRepository.deleteByGlossaryTermIdAndDataProductName(termId, dataProductName);
+        log.info("glossary-dp link removed: termId={} dp={}", id, dataProductName);
         return ResponseEntity.noContent().build();
     }
 
@@ -148,5 +240,31 @@ public class CatalogGlossaryController {
                 .build();
         viewRepository.save(view);
         return ResponseEntity.ok().build();
+    }
+
+    // =========================================================================
+    // Helper
+    // =========================================================================
+
+    private Map<String, Object> buildTermDto(CatalogGlossaryTerm gt) {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("id", gt.getId());
+        dto.put("term", gt.getTerm());
+        dto.put("definition", gt.getDefinition());
+        dto.put("domain", gt.getDomain());
+        dto.put("synonyms", gt.getSynonyms());
+        dto.put("viewCount", gt.getViewCount() != null ? gt.getViewCount() : 0L);
+        dto.put("createdAt", gt.getCreatedAt());
+        dto.put("updatedAt", gt.getUpdatedAt());
+
+        // Data Products liés
+        List<String> linkedDps = glossaryDpRepository
+                .findByGlossaryTermId(UUID.fromString(gt.getId()))
+                .stream()
+                .map(CatalogGlossaryDataProduct::getDataProductName)
+                .collect(Collectors.toList());
+        dto.put("linkedDataProducts", linkedDps);
+
+        return dto;
     }
 }

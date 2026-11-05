@@ -121,6 +121,18 @@ management:
       server:
         auto-time-requests: false
 
+# ---------------------------------------------------------------------------
+# Data Catalog — Poids TrustScore (somme = 100)
+# ---------------------------------------------------------------------------
+catalog:
+  trust:
+    weight:
+      completeness: 20
+      certification: 10
+      quality: 30
+      freshness: 25
+      usage: 15
+
 logging:
   config: classpath:log4j2.xml
   level:

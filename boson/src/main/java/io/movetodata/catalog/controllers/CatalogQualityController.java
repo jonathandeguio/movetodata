@@ -132,8 +132,9 @@ public class CatalogQualityController {
         if (dp.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        // Retourne les 30 derniers snapshots pour l'histogramme frontend (Lot 3)
         return ResponseEntity.ok(
-                statsRepository.findTop10ByDataProductIdOrderByMeasuredAtDesc(dp.get().getId()));
+                statsRepository.findTop30ByDataProductIdOrderByMeasuredAtDesc(dp.get().getId()));
     }
 
     @Operation(summary = "Record a new stats snapshot and compute drift score.")

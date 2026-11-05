@@ -1,25 +1,29 @@
 """
 text_to_sql.py — POST /text-to-sql router (F1 — Text-to-SQL).
 
-Receives a database schema DDL and a natural-language question from the Boson
-proxy, calls qwen2.5-coder:7b via Ollama, and returns a validated SQL SELECT
-query with a confidence score.
+Receives a database schema DDL (or structured schema_context) and a natural-language
+question from the Boson proxy, calls the configured LLM, and returns a validated
+SQL SELECT query with a confidence score.
 
 Sovereignty contract:
   - Only schema DDL (table/column names + types) and the question are sent to
     the LLM — never actual data cell values.
-  - Ollama runs within the MoveToData infrastructure; no external network call
+  - The LLM runs within the MoveToData infrastructure; no external network call
     is ever made at runtime.
+
+Garde-fou SELECT-only (Lot 7):
+  - The generated SQL is parsed to ensure it starts with SELECT.
+  - Non-SELECT statements (INSERT, UPDATE, DELETE, DDL, etc.) return HTTP 400.
 """
 from __future__ import annotations
 
 import logging
 import re
-from typing import Set
+from typing import Optional, Set
 
 from fastapi import APIRouter, HTTPException
 
-from app.models.schemas import TextToSqlRequest, TextToSqlResponse
+from app.models.schemas import SchemaContext, TextToSqlRequest, TextToSqlResponse
 from app.services import llm_service
 
 logger = logging.getLogger(__name__)
@@ -31,13 +35,19 @@ _STOP_WORDS: Set[str] = {
     # French
     "quel", "quelle", "quels", "quelles", "est", "les", "des", "par",
     "dans", "sur", "avec", "pour", "que", "qui", "quoi", "dont", "où",
-    "quel", "quand", "comment", "combien", "quel", "une", "un",
+    "quand", "comment", "combien", "une", "un",
     "montrer", "afficher", "donner", "lister", "calculer",
     # English
     "what", "which", "where", "when", "how", "show", "list", "give",
     "find", "get", "the", "for", "and", "with", "from", "that", "are",
     "top", "all", "each", "every", "total", "sum", "count",
 }
+
+# Non-SELECT statement patterns — garde-fou Lot 7
+_NON_SELECT_PATTERN = re.compile(
+    r"^\s*(INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|TRUNCATE|GRANT|REVOKE|EXEC|EXECUTE|MERGE|CALL)\b",
+    re.IGNORECASE,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -51,28 +61,40 @@ _STOP_WORDS: Set[str] = {
 )
 async def text_to_sql(request: TextToSqlRequest) -> TextToSqlResponse:
     """
-    1. Build a system prompt embedding the schema DDL and user question.
-    2. Call qwen2.5-coder:7b via Ollama (self-hosted, sovereign).
+    1. Build a system prompt embedding the schema (DDL or schema_context) and question.
+    2. Call the LLM via the configured provider (Ollama self-hosted, sovereign).
     3. Extract the SQL query from the response (handles markdown code fences).
-    4. Compute a keyword-overlap confidence score.
-    5. Return the structured result.
+    4. Validate SELECT-only (garde-fou Lot 7) — returns HTTP 400 for non-SELECT.
+    5. Compute a keyword-overlap confidence score.
+    6. Return the structured result.
 
-    Returns HTTP 503 if Ollama is unreachable.
+    Returns HTTP 503 if the LLM is unreachable.
+    Returns HTTP 400 if the generated SQL is not a valid SELECT statement.
     """
+    # Resolve effective schema DDL
+    effective_ddl = _resolve_schema_ddl(request)
+
+    if not effective_ddl:
+        raise HTTPException(
+            status_code=422,
+            detail={"error": "SCHEMA_REQUIRED",
+                    "detail": "Either schema_ddl or schema_context must be provided."},
+        )
+
     logger.info(
-        "text-to-sql: source_type=%s question_len=%d schema_len=%d",
+        "text-to-sql: source_type=%s question_len=%d schema_len=%d has_context=%s",
         request.source_type,
         len(request.question),
-        len(request.schema_ddl),
+        len(effective_ddl),
+        request.schema_context is not None,
     )
 
     raw_response, tokens_used = await llm_service.generate_sql(
-        schema_ddl=request.schema_ddl,
+        schema_ddl=effective_ddl,
         question=request.question,
         source_type=request.source_type,
     )
 
-    # Ollama unreachable: generate_sql returns ("", tokens_used)
     if not raw_response:
         raise HTTPException(
             status_code=503,
@@ -87,19 +109,58 @@ async def text_to_sql(request: TextToSqlRequest) -> TextToSqlResponse:
             detail={"error": "CANNOT_ANSWER", "raw": raw_response[:500]},
         )
 
-    confidence = _compute_confidence(request.question, sql)
+    # Garde-fou SELECT-only
+    if _NON_SELECT_PATTERN.match(sql):
+        first_keyword = sql.strip().split()[0].upper() if sql.strip() else "?"
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "NON_SELECT_STATEMENT",
+                "detail": f"Seules les requêtes SELECT sont autorisées. Reçu : {first_keyword}.",
+            },
+        )
+
+    # Confidence score
+    known_columns: Optional[list[str]] = None
+    if request.schema_context is not None:
+        known_columns = [c.name for c in request.schema_context.columns]
+
+    confidence = _compute_confidence(request.question, sql, known_columns=known_columns)
+
+    warning: Optional[str] = None
+    if confidence < 0.4:
+        warning = "Confiance faible — vérifiez le SQL généré avant utilisation."
 
     return TextToSqlResponse(
         sql=sql,
         confidence=confidence,
         model=llm_service.TEXT_TO_SQL_MODEL,
         tokens_used=tokens_used,
+        warning=warning,
     )
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _resolve_schema_ddl(request: TextToSqlRequest) -> str:
+    """
+    Derive an effective DDL string from either schema_context or schema_ddl.
+
+    schema_context takes precedence: it is converted to a simplified DDL line.
+    If neither is provided, returns an empty string.
+    """
+    if request.schema_context is not None:
+        ctx: SchemaContext = request.schema_context
+        col_parts = ", ".join(
+            f"{c.name} {'[PII]' if c.is_pii else (c.type or 'UNKNOWN')}"
+            for c in ctx.columns
+        )
+        return f"TABLE {ctx.table_name} ({col_parts})"
+
+    return request.schema_ddl or ""
+
 
 def _extract_sql(text: str) -> str:
     """
@@ -123,20 +184,34 @@ def _extract_sql(text: str) -> str:
     return text.strip()
 
 
-def _compute_confidence(question: str, sql: str) -> float:
+def _compute_confidence(
+    question: str,
+    sql: str,
+    known_columns: Optional[list[str]] = None,
+) -> float:
     """
-    Heuristic confidence score based on how many meaningful words from the
-    question appear in the generated SQL.
+    Heuristic confidence score (Lot 7 enriched).
 
-    Score ranges from 0.0 to 1.0:
-      >= 0.8  → high confidence (green badge)
-      >= 0.6  → medium confidence (orange badge)
-       < 0.6  → low confidence (red badge, warning shown)
+    When known_columns is provided (schema_context path):
+      - 1.0 if SQL is valid SELECT AND at least one known column appears in SQL
+      - 0.7 if SQL is valid SELECT but no column recognised
+      - 0.3 if parsing/extraction failed
 
-    This is a lightweight proxy for model confidence — the LLM does not
-    return a log-probability in the /api/generate endpoint.
+    Without known_columns (legacy schema_ddl path):
+      Keyword-overlap score as before, floored at 0.30.
+
+    Score ranges:
+      >= 0.7  → high confidence (green badge)
+      >= 0.4  → medium confidence (orange badge)
+       < 0.4  → low confidence (red badge, warning shown)
     """
-    # Tokenise question: keep words longer than 3 chars, lower-cased
+    if known_columns is not None:
+        sql_lower = sql.lower()
+        columns_lower = [c.lower() for c in known_columns]
+        recognized = any(c in sql_lower for c in columns_lower)
+        return 1.0 if recognized else 0.7
+
+    # Legacy keyword-overlap path
     question_words = {
         w.lower()
         for w in re.findall(r"[a-zA-ZÀ-öÙ-ÿ]{3,}", question)
@@ -144,15 +219,11 @@ def _compute_confidence(question: str, sql: str) -> float:
     }
 
     if not question_words:
-        # Fallback: if no meaningful words, assume medium confidence
         return 0.75
 
     sql_lower = sql.lower()
     matched = sum(1 for w in question_words if w in sql_lower)
     raw_score = matched / len(question_words)
 
-    # Apply a mild dampening so perfect overlap still caps below 1.0
-    # (some question words are legitimately absent from SQL keywords).
-    # Floor at 0.30 to avoid extreme low scores for short questions.
     score = min(0.30 + raw_score * 0.70, 1.0)
     return round(score, 3)

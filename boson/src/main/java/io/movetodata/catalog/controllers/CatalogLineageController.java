@@ -1,9 +1,7 @@
 package io.movetodata.catalog.controllers;
 
-import io.movetodata.catalog.library.models.DataProduct;
-import io.movetodata.catalog.library.models.LineageResult;
-import io.movetodata.catalog.library.repository.DataProductRepository;
-import io.movetodata.catalog.library.services.CatalogLineageService;
+import io.movetodata.catalog.library.dto.LineageGraph;
+import io.movetodata.catalog.library.services.CatalogLineageGraphService;
 import io.movetodata.passport.library.Auth;
 import io.movetodata.passport.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,19 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Lineage endpoint for the native Data Catalog (Phase 2).
+ * Lineage endpoint for the native Data Catalog (Lot 5).
  *
- * Endpoints:
- *   GET /api/catalog/lineage/{dataProductName} — compute and return lineage for a DataProduct
- *
- * Phase 2 approximation: the DataProduct's own {@code id} is used as the dataset pivot.
- * Phase 3 will resolve the real linked dataset UUID from {@code catalog_data_product_dataset}.
+ * <pre>
+ *   GET /api/catalog/lineage/{dataProductName}
+ *       ?depthUpstream=2&amp;depthDownstream=2
+ *       → LineageGraph
+ * </pre>
  */
 @Slf4j
 @CrossOrigin
@@ -35,65 +30,35 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/catalog/lineage")
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Data Catalog — Lineage", description = "Compute data lineage for Data Products.")
+@Tag(name = "Data Catalog — Lineage", description = "Compute enriched data lineage graphs for Data Products.")
 public class CatalogLineageController {
 
-    private final DataProductRepository dataProductRepository;
-    private final CatalogLineageService catalogLineageService;
+    private final CatalogLineageGraphService catalogLineageGraphService;
 
     // -------------------------------------------------------------------------
     // GET /api/catalog/lineage/{dataProductName}
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "Get lineage graph for a data product.")
+    @Operation(summary = "Get enriched lineage graph for a Data Product.")
     @GetMapping("/{dataProductName}")
     @PreAuthorize(Auth.CONNECT_ADMIN)
-    public ResponseEntity<LineageResult> getLineage(
+    public ResponseEntity<LineageGraph> getLineage(
             @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable("dataProductName") String dataProductName) {
+            @PathVariable("dataProductName") String dataProductName,
+            @RequestParam(name = "depthUpstream",   defaultValue = "2") int depthUpstream,
+            @RequestParam(name = "depthDownstream", defaultValue = "2") int depthDownstream) {
 
-        Optional<DataProduct> opt = dataProductRepository.findByName(dataProductName);
-        if (opt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            LineageGraph graph = catalogLineageGraphService.buildLineageGraph(
+                    dataProductName, depthUpstream, depthDownstream);
+            log.debug("Lineage graph for '{}' requested by user={}: {} nodes, {} edges",
+                    dataProductName, authUser.getId(), graph.getNodes().size(), graph.getEdges().size());
+            return ResponseEntity.ok(graph);
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error building lineage graph for '{}'", dataProductName, e);
+            throw e;
         }
-
-        DataProduct dp = opt.get();
-
-        // If the DataProduct has no id (should not happen in practice), return an empty result.
-        if (dp.getId() == null || dp.getId().isBlank()) {
-            LineageResult empty = LineageResult.builder()
-                    .entity(LineageResult.EntityRef.builder()
-                            .id(null)
-                            .name(dp.getName())
-                            .type("dataProduct")
-                            .build())
-                    .upstreamEdges(Collections.emptyList())
-                    .downstreamEdges(Collections.emptyList())
-                    .build();
-            return ResponseEntity.ok(empty);
-        }
-
-        UUID pivotId = UUID.fromString(dp.getId());
-
-        // Phase 2: use the DataProduct id as the dataset pivot.
-        // The service returns an EntityRef typed "dataset" for the pivot; we override the central
-        // entity here to reflect the DataProduct semantic.
-        LineageResult result = catalogLineageService.getLineageForDataset(pivotId, "master", 3);
-
-        // Replace the central entity with DataProduct-typed ref for clarity in the response.
-        LineageResult.EntityRef central = LineageResult.EntityRef.builder()
-                .id(dp.getId())
-                .name(dp.getName())
-                .type("dataProduct")
-                .build();
-
-        LineageResult response = LineageResult.builder()
-                .entity(central)
-                .upstreamEdges(result.getUpstreamEdges())
-                .downstreamEdges(result.getDownstreamEdges())
-                .build();
-
-        log.debug("Lineage requested for dataProduct={} by user={}", dataProductName, authUser.getId());
-        return ResponseEntity.ok(response);
     }
 }

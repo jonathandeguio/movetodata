@@ -34,6 +34,16 @@ public class Domain {
     @Column(name = "color", length = 32)
     private String color;
 
+    @Column(name = "owner_id", columnDefinition = "uuid")
+    private UUID ownerId;
+
+    @Column(name = "steward_id", columnDefinition = "uuid")
+    private UUID stewardId;
+
+    /** Default access policy applied to data products in this domain: PUBLIC | INTERNAL | RESTRICTED. */
+    @Column(name = "default_access_policy", length = 50)
+    private String defaultAccessPolicy;
+
     @Column(name = "created_by", nullable = false, columnDefinition = "uuid")
     private UUID createdBy;
 

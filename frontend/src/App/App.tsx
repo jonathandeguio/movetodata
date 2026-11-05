@@ -5,6 +5,10 @@ import { RootState } from "../redux/types/store";
 
 import "@fontsource/ibm-plex-mono";
 import "@fontsource/ibm-plex-sans";
+// Poppins auto-hébergée via @fontsource (pas de CDN US)
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
 import { ConfigProvider, theme } from "antd";
 import { useOnlyOnce } from "hooks/useEffectOnlyOnce";
 import { useThemeDetector } from "hooks/useThemeDetector";

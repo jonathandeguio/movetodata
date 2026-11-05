@@ -336,11 +336,24 @@ async def map_glossary_to_columns(
 
 
 # ---------------------------------------------------------------------------
-# F16.3 — Text-to-SQL depuis le Catalog (Phase 8)
+# F16.3 — Text-to-SQL depuis le Catalog (Phase 8 / Lot 7 enrichi)
 # ---------------------------------------------------------------------------
+
+class ColumnContextItem(BaseModel):
+    name: str
+    type: Optional[str] = ""
+    is_pii: Optional[bool] = False
+
+
+class SchemaContextPayload(BaseModel):
+    table_name: str
+    columns: List[ColumnContextItem] = []
+
 
 class CatalogQueryRequest(BaseModel):
     question: str
+    # Lot 7 : contexte schéma pré-construit par Boson (accès contrôlé, PII masqués)
+    schema_context: Optional[SchemaContextPayload] = None
 
 
 @router.post("/query/{name}", tags=["Catalog"])
@@ -352,16 +365,37 @@ async def catalog_query(
     Generate a SQL SELECT query from a natural-language question using the
     named DataProduct's column schema as context (F16.3 — Pilier 2 completion).
 
+    Lot 7 : si schema_context est fourni par Boson (après contrôle d'accès et
+    masquage PII), le service l'utilise directement sans refaire un appel Boson.
+
     Returns {"sql": "...", "confidence": float, "model": str}.
     Only column names and PII flags are sent to the LLM — never cell values.
     """
     if not payload.question.strip():
         raise HTTPException(status_code=400, detail="question must not be empty")
 
-    logger.info(json.dumps({"event": "catalog_query_request", "name": name, "question_len": len(payload.question)}))
+    logger.info(json.dumps({
+        "event": "catalog_query_request",
+        "name": name,
+        "question_len": len(payload.question),
+        "has_schema_context": payload.schema_context is not None,
+    }))
+
+    # Convertir le schema_context en dict pour catalog_service
+    schema_context_dict: Optional[Dict[str, Any]] = None
+    if payload.schema_context is not None:
+        schema_context_dict = {
+            "table_name": payload.schema_context.table_name,
+            "columns": [
+                {"name": c.name, "type": c.type or "", "is_pii": c.is_pii or False}
+                for c in payload.schema_context.columns
+            ],
+        }
 
     try:
-        result = await catalog_service.catalog_text_to_sql(name, payload.question)
+        result = await catalog_service.catalog_text_to_sql(
+            name, payload.question, schema_context=schema_context_dict
+        )
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:

@@ -26,7 +26,12 @@ import java.util.List;
 public class DataDriftService {
 
     private static final double DRIFT_THRESHOLD = 2.0;
-    private static final int    MIN_SNAPSHOTS   = 3;
+    /**
+     * Nombre minimal de snapshots requis avant de calculer le z-score de drift.
+     * En dessous de ce seuil, le service retourne driftScore=null et driftAlert=false.
+     * Lot 3 : porté de 3 à 10 pour améliorer la fiabilité statistique.
+     */
+    private static final int    MIN_SNAPSHOTS   = 10;
 
     private final CatalogDatasetStatsRepository statsRepository;
 

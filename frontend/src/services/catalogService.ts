@@ -29,6 +29,8 @@ export interface CatalogDataProduct {
   trustScore?: number;
   domainId?: string;
   ownerId?: string;
+  /** Nombre de consultations cumulées (catalog_data_product.view_count). */
+  viewCount?: number;
   /** JSON-encoded string of use-case descriptions */
   useCases?: string;
   createdBy?: string;
@@ -41,6 +43,20 @@ export interface CatalogDomain {
   name: string;
   description?: string;
   color?: string;
+  /** UUID du Data Owner */
+  ownerId?: string;
+  /** Nom résolu du Data Owner */
+  ownerName?: string;
+  /** UUID du Data Steward */
+  stewardId?: string;
+  /** Nom résolu du Data Steward */
+  stewardName?: string;
+  /** PUBLIC | INTERNAL | RESTRICTED */
+  defaultAccessPolicy?: string;
+  /** Nombre de Data Products associés */
+  dataProductCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CatalogDataProductPage {
@@ -57,7 +73,7 @@ export interface CatalogCertifyRequest {
 }
 
 // ---------------------------------------------------------------------------
-// Lineage types
+// Lineage types (legacy — kept for backward compat)
 // ---------------------------------------------------------------------------
 
 export interface LineageEntityRef {
@@ -75,6 +91,41 @@ export interface LineageData {
   entity: LineageEntityRef;
   upstreamEdges: LineageEdge[];
   downstreamEdges: LineageEdge[];
+}
+
+// ---------------------------------------------------------------------------
+// Lineage types — Lot 5 (enriched graph)
+// ---------------------------------------------------------------------------
+
+export interface LineageGraphNode {
+  id: string;
+  name: string;
+  /** DATASET | TRANSFORMATION | DATA_PRODUCT | DASHBOARD */
+  type: string;
+  qualityLevel?: string;
+  isFocus: boolean;
+  engine?: string;
+  lastRunAt?: string;
+  durationMs?: number;
+  inputRows?: number;
+  outputRows?: number;
+  inputIds: string[];
+  outputIds: string[];
+}
+
+export interface LineageGraphEdge {
+  id: string;
+  sourceId: string;
+  targetId: string;
+  /** true when this edge is directly connected to the focus DataProduct node */
+  isOnFocusPath: boolean;
+}
+
+export interface LineageGraph {
+  nodes: LineageGraphNode[];
+  edges: LineageGraphEdge[];
+  /** ID of the focus DataProduct node */
+  focusNodeId: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,6 +156,10 @@ interface LegacyColumn {
 export type DataProduct = CatalogDataProduct & {
   /** Alias for `name` — some page components still reference fqn. */
   fqn?: string;
+  /** Source de la description : 'manual' | 'ai' | 'imported'. */
+  descriptionSource?: 'manual' | 'ai' | 'imported';
+  /** Si la politique d'accès est héritée du domaine parent. */
+  policyInherited?: boolean;
   /** Legacy OpenMetadata optional fields — may be absent from Boson responses. */
   columns?: LegacyColumn[];
   domain?: { name: string };
@@ -186,6 +241,21 @@ export async function createDataProduct(
 }
 
 /**
+ * Update an existing Data Product.
+ * PUT /api/catalog/data-products/{name}
+ */
+export async function updateDataProduct(
+  name: string,
+  payload: Partial<Omit<CatalogDataProduct, "id" | "createdAt" | "updatedAt">>
+): Promise<CatalogDataProduct> {
+  const response = await axios.put<CatalogDataProduct>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}`,
+    payload
+  );
+  return response.data;
+}
+
+/**
  * Promote the certification (quality) level of a Data Product.
  * POST /api/catalog/data-products/{name}/certify
  */
@@ -206,7 +276,7 @@ export async function certifyDataProduct(
 }
 
 /**
- * Fetch all catalog domains.
+ * Fetch all catalog domains (enriched: ownerName, stewardName, dataProductCount).
  * GET /api/catalog/domains
  */
 export async function listDomains(): Promise<CatalogDomain[]> {
@@ -214,11 +284,50 @@ export async function listDomains(): Promise<CatalogDomain[]> {
   return response.data;
 }
 
+export async function createDomain(
+  payload: Pick<CatalogDomain, "name" | "description" | "color" | "ownerId" | "stewardId" | "defaultAccessPolicy">
+): Promise<CatalogDomain> {
+  const response = await axios.post<CatalogDomain>("/api/catalog/domains", payload);
+  return response.data;
+}
+
+export async function updateDomain(
+  name: string,
+  payload: Partial<CatalogDomain>
+): Promise<CatalogDomain> {
+  const response = await axios.put<CatalogDomain>(
+    `/api/catalog/domains/${encodeURIComponent(name)}`,
+    payload
+  );
+  return response.data;
+}
+
+export async function deleteDomain(name: string): Promise<void> {
+  await axios.delete(`/api/catalog/domains/${encodeURIComponent(name)}`);
+}
+
 /**
  * GET /api/catalog/lineage/{id}
+ * @deprecated Use getLineageGraph instead.
  */
 export async function getLineage(id: string): Promise<LineageData> {
   const response = await axios.get<LineageData>(`/api/catalog/lineage/${encodeURIComponent(id)}`);
+  return response.data;
+}
+
+/**
+ * GET /api/catalog/lineage/{name}?depthUpstream=N&depthDownstream=N
+ * Returns the enriched lineage graph (Lot 5).
+ */
+export async function getLineageGraph(
+  name: string,
+  depthUpstream = 2,
+  depthDownstream = 2
+): Promise<LineageGraph> {
+  const response = await axios.get<LineageGraph>(
+    `/api/catalog/lineage/${encodeURIComponent(name)}`,
+    { params: { depthUpstream, depthDownstream } }
+  );
   return response.data;
 }
 
@@ -355,7 +464,10 @@ export interface CatalogGlossaryTerm {
   definition: string;
   domain?: string;
   synonyms?: string;
+  viewCount?: number;
+  linkedDataProducts?: string[];
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export async function listGlossaryTerms(domain?: string): Promise<CatalogGlossaryTerm[]> {
@@ -387,6 +499,24 @@ export async function deleteGlossaryTerm(id: string): Promise<void> {
   await axios.delete(`/api/catalog/glossary/${encodeURIComponent(id)}`);
 }
 
+export async function linkGlossaryToDataProduct(
+  termId: string,
+  dataProductName: string
+): Promise<void> {
+  await axios.post(`/api/catalog/glossary/${encodeURIComponent(termId)}/link-data-product`, {
+    dataProductName,
+  });
+}
+
+export async function unlinkGlossaryFromDataProduct(
+  termId: string,
+  dataProductName: string
+): Promise<void> {
+  await axios.delete(
+    `/api/catalog/glossary/${encodeURIComponent(termId)}/link-data-product/${encodeURIComponent(dataProductName)}`
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Export DataProduct (Phase 6)
 // ---------------------------------------------------------------------------
@@ -411,7 +541,34 @@ export async function exportDataProduct(name: string): Promise<DataProductExport
 // Catalog Health Metrics (Phase 7)
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Catalog Health — dépendances système (Lot 3)
+// ---------------------------------------------------------------------------
+
+export type DependencyStatus = 'UP' | 'DOWN' | 'DEGRADED' | 'UNKNOWN';
+
+export interface DependencyInfo {
+  status: DependencyStatus;
+  responseTimeMs?: number;
+  model?: string;
+}
+
+export interface JobStatusInfo {
+  status: 'OK' | 'DOWN' | 'DEGRADED' | 'UNKNOWN';
+  lastRun: string | null;
+  alertCount: number;
+}
+
+export interface CatalogHealthDependencies {
+  database: DependencyInfo;
+  opensearch: DependencyInfo;
+  llm: DependencyInfo;
+  trustScoreJob: JobStatusInfo;
+}
+
 export interface CatalogHealthMetrics {
+  status: 'UP' | 'DEGRADED' | 'DOWN';
+  dependencies: CatalogHealthDependencies;
   totalProducts: number;
   withDescription: number;
   descriptionCoverage: number;
@@ -470,4 +627,306 @@ export async function isSubscribedToProduct(name: string): Promise<boolean> {
     `/api/catalog/data-products/${encodeURIComponent(name)}/subscribed`
   );
   return response.data.subscribed;
+}
+
+// ---------------------------------------------------------------------------
+// Lot 2 — Search avec facettes
+// ---------------------------------------------------------------------------
+
+import type {
+  CatalogSearchResult,
+  CatalogSearchParams,
+  CatalogGdprDeclaration as GdprDeclaration,
+} from '../pages/Portal/Catalog/types/catalogTypes';
+
+export type { CatalogSearchResult, CatalogSearchParams };
+
+/**
+ * Recherche full-text avec facettes (nouveau endpoint Lot 2).
+ * GET /api/catalog/data-products?q=...&qualityLevel=...&accessPolicy=...&domainId=...&sourceType=...&sort=...&page=...&size=...
+ */
+export async function searchDataProductsFaceted(
+  params: CatalogSearchParams
+): Promise<CatalogSearchResult> {
+  const urlParams: Record<string, string | string[]> = {};
+  if (params.q)              urlParams['q']            = params.q;
+  if (params.qualityLevel?.length) urlParams['qualityLevel'] = params.qualityLevel;
+  if (params.accessPolicy?.length) urlParams['accessPolicy'] = params.accessPolicy;
+  if (params.domainId?.length)     urlParams['domainId']     = params.domainId;
+  if (params.sourceType?.length)   urlParams['sourceType']   = params.sourceType;
+  if (params.sort)           urlParams['sort']          = params.sort;
+  if (params.page != null)   urlParams['page']          = String(params.page);
+  if (params.size != null)   urlParams['size']          = String(params.size);
+
+  const response = await axios.get<CatalogSearchResult>('/api/catalog/data-products', {
+    params: urlParams,
+    paramsSerializer: (p) => {
+      const parts: string[] = [];
+      for (const [key, value] of Object.entries(p)) {
+        if (Array.isArray(value)) {
+          value.forEach((v) => parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(v)}`));
+        } else {
+          parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`);
+        }
+      }
+      return parts.join('&');
+    },
+  });
+  return response.data;
+}
+
+/**
+ * Export CSV d'un Data Product.
+ * GET /api/catalog/data-products/{name}/export?format=csv
+ */
+export async function exportDataProductCsv(name: string): Promise<void> {
+  const response = await axios.get(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/export`,
+    { params: { format: 'csv' }, responseType: 'blob' }
+  );
+  const url = URL.createObjectURL(response.data as Blob);
+  const a   = document.createElement('a');
+  a.href    = url;
+  a.download = `${name}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Récupère la déclaration RGPD d'un Data Product.
+ * GET /api/catalog/data-products/{name}/gdpr
+ */
+export async function getGdprDeclaration(name: string): Promise<GdprDeclaration | null> {
+  try {
+    const response = await axios.get<GdprDeclaration>(
+      `/api/catalog/data-products/${encodeURIComponent(name)}/gdpr`
+    );
+    return response.data;
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Met à jour la déclaration RGPD d'un Data Product.
+ * PUT /api/catalog/data-products/{name}/gdpr
+ */
+export async function upsertGdprDeclaration(
+  name: string,
+  payload: Omit<GdprDeclaration, 'id' | 'dataProductName' | 'createdAt' | 'updatedAt'>
+): Promise<GdprDeclaration> {
+  const response = await axios.put<GdprDeclaration>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/gdpr`,
+    { dataProductName: name, ...payload }
+  );
+  return response.data;
+}
+
+// ---------------------------------------------------------------------------
+// Lot 4 — Workflow de certification Gold
+// ---------------------------------------------------------------------------
+
+export interface CriterionCheck {
+  key: string;
+  label: string;
+  passed: boolean;
+  explanation: string;
+  link?: string;
+}
+
+export interface GoldCriteriaSummary {
+  criteria: CriterionCheck[];
+  passedCount: number;
+  totalCount: number;
+  allPassed: boolean;
+  /** Vrai si l'utilisateur authentifié est CATALOG_STEWARD. */
+  canReview: boolean;
+}
+
+export type CertificationLevel = 'BRONZE' | 'SILVER' | 'GOLD';
+export type CertificationStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CORRECTION_REQUESTED';
+
+export interface CertificationSlaData {
+  freshnessHours?: number;
+  availabilityPercent?: number;
+  support?: string;
+}
+
+export interface CertificationRequest {
+  id: string;
+  dataProductName: string;
+  targetLevel: CertificationLevel;
+  status: CertificationStatus;
+  submittedBy: string;
+  reviewedBy?: string;
+  comment?: string;
+  slaFreshnessHours?: number;
+  slaAvailabilityPercent?: number;
+  slaSupport?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Évalue les critères Gold d'un Data Product.
+ * GET /api/catalog/data-products/{name}/certification/criteria
+ */
+export async function getGoldCriteria(name: string): Promise<GoldCriteriaSummary> {
+  const response = await axios.get<GoldCriteriaSummary>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/certification/criteria`
+  );
+  return response.data;
+}
+
+/**
+ * Soumet une demande de certification.
+ * POST /api/catalog/data-products/{name}/certification/submit
+ */
+export async function submitCertificationRequest(
+  name: string,
+  targetLevel: CertificationLevel,
+  slaData?: CertificationSlaData
+): Promise<CertificationRequest> {
+  const response = await axios.post<CertificationRequest>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/certification/submit`,
+    { targetLevel, slaData }
+  );
+  return response.data;
+}
+
+/**
+ * Historique des demandes de certification d'un Data Product.
+ * GET /api/catalog/data-products/{name}/certification/history
+ */
+export async function getCertificationHistory(name: string): Promise<CertificationRequest[]> {
+  const response = await axios.get<CertificationRequest[]>(
+    `/api/catalog/data-products/${encodeURIComponent(name)}/certification/history`
+  );
+  return response.data;
+}
+
+/**
+ * Revue d'une demande de certification (approve / reject / correction_requested).
+ * POST /api/catalog/certification-requests/{id}/review
+ */
+export async function reviewCertificationRequest(
+  requestId: string,
+  decision: Exclude<CertificationStatus, 'PENDING'>,
+  comment?: string
+): Promise<CertificationRequest> {
+  const response = await axios.post<CertificationRequest>(
+    `/api/catalog/certification-requests/${encodeURIComponent(requestId)}/review`,
+    { decision, comment }
+  );
+  return response.data;
+}
+
+// ---------------------------------------------------------------------------
+// Lot 6 — Administration : webhook events, brouillons IA, journaux accès
+// ---------------------------------------------------------------------------
+
+export interface WebhookEventDto {
+  id: string;
+  datasetId: string | null;
+  version: string | null;
+  /** RECEIVED | PROCESSING | DONE | FAILED */
+  state: string;
+  attempts: number;
+  receivedAt: string | null;
+  processedAt: string | null;
+  lastError: string | null;
+  delayMs: number | null;
+}
+
+export interface WebhookEventsPage {
+  items: WebhookEventDto[];
+  total: number;
+  medianDelayMs: number | null;
+  percentInDelay: number | null;
+}
+
+export interface AiDraftDto {
+  name: string;
+  displayName: string | null;
+  fqn: string;
+  description: string | null;
+  qualityLevel: string | null;
+  descriptionSource: string | null;
+  accessPolicy: string | null;
+  dataProductType: string | null;
+  useCases: string | null;
+  updatedAt: string | null;
+}
+
+export interface RestrictedAccessLog {
+  id: string;
+  assetId: string;
+  userId: string | null;
+  userEmail: string | null;
+  userRole: string | null;
+  ipAddress: string | null;
+  /** ALLOWED | DENIED | ALLOWED_PII_MASKED */
+  result: string;
+  createdAt: string;
+}
+
+/** GET /api/catalog/admin/webhook-events */
+export async function listWebhookEvents(
+  page = 0,
+  size = 20
+): Promise<WebhookEventsPage> {
+  const response = await axios.get<WebhookEventsPage>(
+    '/api/catalog/admin/webhook-events',
+    { params: { page, size } }
+  );
+  return response.data;
+}
+
+/** GET /api/catalog/admin/ai-drafts */
+export async function listAiDrafts(): Promise<AiDraftDto[]> {
+  const response = await axios.get<AiDraftDto[]>('/api/catalog/admin/ai-drafts');
+  return response.data;
+}
+
+/** PUT /api/catalog/admin/ai-drafts/{name}/validate */
+export async function validateAiDraft(name: string): Promise<CatalogDataProduct> {
+  const response = await axios.put<CatalogDataProduct>(
+    `/api/catalog/admin/ai-drafts/${encodeURIComponent(name)}/validate`
+  );
+  return response.data;
+}
+
+/** POST /api/catalog/admin/ai-drafts/{name}/regenerate */
+export async function regenerateAiDraft(name: string): Promise<{ status: string; name: string }> {
+  const response = await axios.post<{ status: string; name: string }>(
+    `/api/catalog/admin/ai-drafts/${encodeURIComponent(name)}/regenerate`
+  );
+  return response.data;
+}
+
+/** GET /api/catalog/admin/restricted-access-logs */
+export async function listRestrictedAccessLogs(
+  startDate?: string,
+  endDate?: string
+): Promise<RestrictedAccessLog[]> {
+  const response = await axios.get<RestrictedAccessLog[]>(
+    '/api/catalog/admin/restricted-access-logs',
+    { params: { startDate, endDate } }
+  );
+  return response.data;
+}
+
+/** GET /api/catalog/admin/restricted-access-logs/export — déclenche le téléchargement */
+export function buildRestrictedAccessLogsExportUrl(
+  startDate?: string,
+  endDate?: string
+): string {
+  const params = new URLSearchParams();
+  if (startDate) params.set('startDate', startDate);
+  if (endDate)   params.set('endDate',   endDate);
+  const qs = params.toString();
+  return `/api/catalog/admin/restricted-access-logs/export${qs ? `?${qs}` : ''}`;
 }
