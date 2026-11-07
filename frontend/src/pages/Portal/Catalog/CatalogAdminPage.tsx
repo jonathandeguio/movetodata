@@ -632,8 +632,8 @@ const CatalogAdminPage: React.FC = () => {
           </Title>
           <Space wrap>
             <RangePicker
-              value={logsDates}
-              onChange={(dates) => setLogsDates(dates ?? [null, null])}
+              value={logsDates as any}
+              onChange={(dates) => setLogsDates((dates as [Dayjs | null, Dayjs | null]) ?? [null, null])}
               format="DD/MM/YYYY"
               size="small"
               aria-label="Période du journal d'accès"
