@@ -157,8 +157,7 @@ const CatalogAdminPage: React.FC = () => {
   const [logs, setLogs] = useState<RestrictedAccessLog[]>([]);
   const [logsLoading, setLogsLoading] = useState(true);
   const [logsError, setLogsError] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [logsDates, setLogsDates] = useState<any>([
+  const [logsDates, setLogsDates] = useState<[Date | null, Date | null]>([
     dayjs().subtract(7, 'day'),
     dayjs(),
   ]);

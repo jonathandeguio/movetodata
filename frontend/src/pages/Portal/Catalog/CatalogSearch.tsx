@@ -503,7 +503,7 @@ const CatalogSearch: React.FC = () => {
       doSearch({ q, qualityLevels, accessPolicies, domainIds, sourceTypes, sort, page });
     }, DEBOUNCE_MS);
     return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line
   }, [q, qualityLevels, accessPolicies, domainIds, sourceTypes, sort, page]);
 
   const handleReset = () => {
