@@ -34,7 +34,7 @@ import {
   RobotOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import {
   getCatalogHealth,
   listWebhookEvents,
@@ -157,7 +157,7 @@ const CatalogAdminPage: React.FC = () => {
   const [logs, setLogs] = useState<RestrictedAccessLog[]>([]);
   const [logsLoading, setLogsLoading] = useState(true);
   const [logsError, setLogsError] = useState<string | null>(null);
-  const [logsDates, setLogsDates] = useState<[Date | null, Date | null]>([
+  const [logsDates, setLogsDates] = useState<[Dayjs | null, Dayjs | null]>([
     dayjs().subtract(7, 'day'),
     dayjs(),
   ]);
