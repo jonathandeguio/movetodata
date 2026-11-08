@@ -370,7 +370,7 @@ case "${STACK}" in
     start_core
     start_snap
     start_tycho
-    start_catalog
+    # OpenMetadata supprimé (Phase 0) — remplacé par le Data Catalog natif
     ;;
   *)
     error "Stack inconnue : '${STACK}'\nUsage : bash 03-start.sh [--stack core|snap|tycho|catalog|all]"
@@ -394,7 +394,7 @@ echo "  Swagger    : http://${SERVER_IP}:8080/swagger-ui/index.html"
 echo "  Health     : http://${SERVER_IP}:8080/endpoints/health"
 [[ "${STACK}" == "snap"    || "${STACK}" == "all" ]] && echo "  Snap       : http://${SERVER_IP}:8082"
 [[ "${STACK}" == "tycho"   || "${STACK}" == "all" ]] && echo "  Tycho      : http://${SERVER_IP}:8088"
-[[ "${STACK}" == "catalog" || "${STACK}" == "all" ]] && echo "  Catalog    : http://127.0.0.1:8585"
+# OpenMetadata supprimé — Data Catalog natif accessible via le frontend
 
 echo ""
 info "État des containers :"
