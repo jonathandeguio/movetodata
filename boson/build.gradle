@@ -12,6 +12,12 @@ version = '0.0.1-SNAPSHOT'
 configurations {
     all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'com.fasterxml.jackson.core') {
+                details.useVersion '2.15.4'
+                details.because 'opensearch-java:2.x requires StreamWriteConstraints (jackson-core 2.15+)'
+            }
+        }
     }
 }
 
@@ -163,6 +169,10 @@ dependencies {
     // OpenSearch — full-text search pour le Data Catalog (Lot 2)
     implementation 'org.opensearch.client:opensearch-java:2.10.4'
     implementation 'org.opensearch.client:opensearch-rest-high-level-client:2.13.0'
+    // opensearch-java:2.x requiert jackson-core 2.15+ (StreamWriteConstraints)
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.4'
 }
 
 
