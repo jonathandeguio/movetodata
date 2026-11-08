@@ -161,9 +161,12 @@ dependencies {
     runtimeOnly group: 'com.nimbusds', name: 'oauth2-oidc-sdk', version: '11.19.1'
     implementation group: 'org.springframework.security', name: 'spring-security-saml2-service-provider', version: '5.7.0'
     // OpenSearch — full-text search pour le Data Catalog (Lot 2)
-    // Utilise uniquement le REST High Level Client (compatible jackson 2.13.x du classpath)
-    // opensearch-java:2.x n'est pas nécessaire et incompatible avec jackson-module-scala 2.13.3
-    implementation 'org.opensearch.client:opensearch-rest-high-level-client:2.13.0'
+    // Version 1.3.x : compatible jackson 2.13.x (Spring Boot 2.7.2 / Spark jackson-module-scala 2.13.3).
+    // opensearch-rest-high-level-client:2.x tire opensearch:2.x qui requiert jackson-core 2.15+
+    // (StreamWriteConstraints), incompatible avec jackson-module-scala < 2.14.
+    // Les 1.x et 2.x partagent les mêmes noms de packages et de classes ; le client 1.x
+    // fonctionne contre un serveur OpenSearch 2.x (compatibilité descendante garantie).
+    implementation 'org.opensearch.client:opensearch-rest-high-level-client:1.3.14'
 }
 
 
