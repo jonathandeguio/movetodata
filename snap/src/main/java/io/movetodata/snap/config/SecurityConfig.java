@@ -111,6 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/passport/recovery/**",
                         "/api/passport/login/**", "/api/passport/token/refresh",
                         "/api/passport/sso/available",
+                        "/api/ping",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
