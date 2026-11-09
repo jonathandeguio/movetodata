@@ -12,9 +12,10 @@ export const addInterceptors = () => {
         config.headers["Content-Type"] = "application/json";
       }
 
-      config.headers["Authorization"] = `Bearer ${localStorage.getItem(
-        MOVETODATA_TOKEN
-      )}`;
+      const token = localStorage.getItem(MOVETODATA_TOKEN);
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
 
       config.baseURL = process.env.REACT_APP_BASE_URL_API;
 
