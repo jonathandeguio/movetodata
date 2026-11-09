@@ -12,12 +12,8 @@ import {
   ScheduledRunIcon
 } from "assets/icons/mtdInterfaceIcons";
 import {
-  BankIcon,
   LibraryIcon,
-  PulseIcon,
   StarIcon,
-  TagIcon,
-  VersionHistoryIcon,
 } from "assets/icons/mtdMiscellaneousIcons";
 import { getIsConnectAdmin } from "common/common.api";
 import { AiAssistantButton } from "components/AiAssistant";
@@ -330,91 +326,25 @@ const Sidebar = () => {
             }}
             selected={selectedSideBarTab == "accessManager"}
           />
-          {/* ── Data Catalog — 5 entrées ── */}
+          {/* ── Data Catalog — entrée unique ── */}
           <SBElement
             icon={
               <LibraryIcon
                 size={sidebarAttributes.iconSize + 6}
               />
             }
-            tooltip="Catalogue"
-            text={"catalogSearch"}
+            tooltip="Data Catalog"
+            text={"catalog"}
             showText={sidebarAttributes.showText}
             onClick={() => {
-              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/search"))
-                return;
-              navigate("/portal/catalog/search");
-              setSelectedSideBarTab("catalogSearch");
+              if (location.pathname === "/portal/catalog") return;
+              navigate("/portal/catalog");
+              setSelectedSideBarTab("catalog");
             }}
-            selected={selectedSideBarTab === "catalogSearch"}
-          />
-          <SBElement
-            icon={
-              <PulseIcon
-                size={sidebarAttributes.iconSize + 6}
-              />
+            selected={
+              selectedSideBarTab === "catalog" ||
+              location.pathname.startsWith("/portal/catalog")
             }
-            tooltip="Lignage"
-            text={"catalogLineage"}
-            showText={sidebarAttributes.showText}
-            onClick={() => {
-              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/lineage"))
-                return;
-              navigate("/portal/catalog/lineage");
-              setSelectedSideBarTab("catalogLineage");
-            }}
-            selected={selectedSideBarTab === "catalogLineage"}
-          />
-          <SBElement
-            icon={
-              <TagIcon
-                size={sidebarAttributes.iconSize + 6}
-              />
-            }
-            tooltip="Certification"
-            text={"catalogCertify"}
-            showText={sidebarAttributes.showText}
-            onClick={() => {
-              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/certify"))
-                return;
-              navigate("/portal/catalog/certify");
-              setSelectedSideBarTab("catalogCertify");
-            }}
-            selected={selectedSideBarTab === "catalogCertify"}
-          />
-          <SBElement
-            icon={
-              <BankIcon
-                size={sidebarAttributes.iconSize + 6}
-              />
-            }
-            tooltip="Gouvernance"
-            text={"catalogGovernance"}
-            showText={sidebarAttributes.showText}
-            onClick={() => {
-              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/governance"))
-                return;
-              navigate("/portal/catalog/governance");
-              setSelectedSideBarTab("catalogGovernance");
-            }}
-            selected={selectedSideBarTab === "catalogGovernance"}
-          />
-          <SBElement
-            icon={
-              <VersionHistoryIcon
-                size={sidebarAttributes.iconSize + 6}
-              />
-            }
-            tooltip="Ingestion &amp; audit"
-            text={"catalogAdmin"}
-            showText={sidebarAttributes.showText}
-            onClick={() => {
-              if (preventFilterLossOnReNavigate(location.pathname, "/portal/catalog/admin"))
-                return;
-              navigate("/portal/catalog/admin");
-              setSelectedSideBarTab("catalogAdmin");
-            }}
-            selected={selectedSideBarTab === "catalogAdmin"}
           />
           <SBElement
             icon={
