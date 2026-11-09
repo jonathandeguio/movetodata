@@ -52,33 +52,30 @@ public class indexController {
     @Hidden
     @PostMapping("/api/ping")
     public ResponseEntity<Object> ping(Principal principal, HttpServletRequest request, @RequestBody HashMap<String, String> pingRequest) {
-        UUID userId = userService.getUser(principal.getName()).getId();
         String jwt = AuthUtils.getJwtFromRequest(request);
 
-        String path = pingRequest.get("path");
-        String regex = "\\b[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\\b";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(path);
-        if (matcher.find()) {
-            String firstUUID = matcher.group();
-
-            // Sending to socket to tell that someone opened chart
-            SocketMessage textMessage = new SocketMessage();
-            textMessage.setMessage(userId.toString());
-
-            template.convertAndSend("/topic/" + firstUUID, textMessage);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            if (principal != null) {
+                UUID userId = userService.getUser(principal.getName()).getId();
+                String path = pingRequest.get("path");
+                if (path != null) {
+                    String regex = "\\b[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\\b";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(path);
+                    if (matcher.find()) {
+                        String firstUUID = matcher.group();
+                        SocketMessage textMessage = new SocketMessage();
+                        textMessage.setMessage(userId.toString());
+                        template.convertAndSend("/topic/" + firstUUID, textMessage);
+                    }
+                }
+            }
 
+            Map<String, Object> response = new HashMap<>();
             response.put("versions", new Versions());
-
             if (System.getenv("LAST_UPDATED_ON") != null) {
                 response.put("lastUpdatedOn", System.getenv("LAST_UPDATED_ON"));
             }
-
             Date ttl = AuthUtils.getTTLFromJwt(jwt);
             response.put("message", "pong");
             response.put("ttl", (ttl.getTime() - (new Date()).getTime()) / 1000);
@@ -86,7 +83,6 @@ public class indexController {
         } else {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-
     }
 
 
