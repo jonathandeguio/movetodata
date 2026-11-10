@@ -26,7 +26,8 @@ public class CorsFix {
         for(String origin : allowedOrigins) {
             configuration.addAllowedOriginPattern(origin);
         }
-        configuration.setAllowCredentials(true);
+        // allowCredentials intentionnellement absent : snap utilise JWT (localStorage),
+        // pas de cookies — allowedOrigins="*" est incompatible avec allowCredentials=true.
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
