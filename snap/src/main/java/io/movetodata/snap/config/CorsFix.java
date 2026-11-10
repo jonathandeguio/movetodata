@@ -27,7 +27,6 @@ public class CorsFix {
             configuration.addAllowedOriginPattern(origin);
         }
         configuration.setAllowCredentials(true);
-        configuration.applyPermitDefaultValues();
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
