@@ -23,7 +23,6 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/passport/groups")
 @RequiredArgsConstructor

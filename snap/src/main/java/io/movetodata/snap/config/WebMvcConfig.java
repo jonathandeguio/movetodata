@@ -16,10 +16,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         long MAX_AGE_SECS = 3600;
         registry.addMapping("/**")
                 .allowedOriginPatterns(allowedOrigins)
-
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);
     }
 }

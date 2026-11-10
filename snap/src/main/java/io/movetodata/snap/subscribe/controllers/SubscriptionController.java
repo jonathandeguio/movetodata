@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
 @EnableWebMvc
 @RestController
 @RequestMapping("/api/subscribe")
