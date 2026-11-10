@@ -96,7 +96,7 @@ function AppContainer() {
           if (networkError === false) {
             setNetworkError(true);
           }
-        } else if (error.response?.data?.error === "Unauthorized") {
+        } else if (error.response?.status === 401) {
           if (tokenStatusLoading || isTokenValid) {
             dispatch(setTokenInvalid());
           }
