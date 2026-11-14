@@ -4,6 +4,9 @@ import {
   Button,
   Checkbox,
   Empty,
+  Form,
+  Input,
+  Modal,
   Pagination,
   Select,
   Spin,
@@ -15,7 +18,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { searchDataProductsFaceted } from '../../../services/catalogService';
+import { createDataProduct, searchDataProductsFaceted } from '../../../services/catalogService';
 import type { CatalogSearchResult, DataProductSummary } from './types/catalogTypes';
 import QualityBadge from './components/QualityBadge';
 import AccessBadge from './components/AccessBadge';
@@ -450,6 +453,11 @@ const CatalogSearch: React.FC = () => {
   const [error,          setError]          = useState<string | null>(null);
   const [domains,        setDomains]        = useState<CatalogDomain[]>([]);
 
+  const [createModalOpen,  setCreateModalOpen]  = useState(false);
+  const [createLoading,    setCreateLoading]    = useState(false);
+  const [createError,      setCreateError]      = useState<string | null>(null);
+  const [createForm]       = Form.useForm();
+
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Charger les domaines une seule fois
@@ -530,6 +538,30 @@ const CatalogSearch: React.FC = () => {
     return [];
   }, [result]);
 
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      setCreateLoading(true);
+      setCreateError(null);
+      const created = await createDataProduct({
+        name:            values.name,
+        displayName:     values.displayName || undefined,
+        description:     values.description || undefined,
+        domainId:        values.domainId    || undefined,
+        accessPolicy:    values.accessPolicy || undefined,
+        dataProductType: values.dataProductType || undefined,
+      });
+      setCreateModalOpen(false);
+      navigate(`/portal/catalog/data-product/${encodeURIComponent(created.name)}`);
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'errorFields' in err) return;
+      const msg = err instanceof Error ? err.message : 'Erreur lors de la création';
+      setCreateError(msg);
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -576,7 +608,7 @@ const CatalogSearch: React.FC = () => {
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => navigate('/portal/catalog/certify')}
+            onClick={() => { setCreateError(null); createForm.resetFields(); setCreateModalOpen(true); }}
             style={{
               backgroundColor: boslerColors.primary,
               borderColor: boslerColors.primary,
@@ -740,6 +772,122 @@ const CatalogSearch: React.FC = () => {
           )}
         </div>
       </div>
+      {/* Modale création Data Product */}
+      <Modal
+        open={createModalOpen}
+        title={<span style={{ color: boslerColors.textTitle, fontFamily: '"Poppins", system-ui, sans-serif' }}>Nouveau Data Product</span>}
+        okText="Créer"
+        cancelText="Annuler"
+        confirmLoading={createLoading}
+        onOk={handleCreateSubmit}
+        onCancel={() => setCreateModalOpen(false)}
+        styles={{
+          content: { background: boslerColors.card, borderRadius: 5 },
+          header: { background: boslerColors.card, borderBottom: `1px solid ${boslerColors.separator}` },
+          footer: { background: boslerColors.card, borderTop: `1px solid ${boslerColors.separator}` },
+          mask:   { backgroundColor: 'rgba(0,0,0,0.6)' },
+        }}
+        width={520}
+      >
+        {createError && (
+          <Alert
+            type="error"
+            message={createError}
+            showIcon
+            style={{ marginBottom: 16, borderRadius: 5 }}
+          />
+        )}
+        <Form
+          form={createForm}
+          layout="vertical"
+          requiredMark={false}
+          style={{ fontFamily: '"Poppins", system-ui, sans-serif' }}
+        >
+          <Form.Item
+            name="name"
+            label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Nom technique *</span>}
+            rules={[
+              { required: true, message: 'Le nom technique est obligatoire' },
+              { pattern: /^[a-z0-9_-]+$/, message: 'Minuscules, chiffres, tirets et underscores uniquement' },
+            ]}
+          >
+            <Input
+              placeholder="ex. ventes_emea_2024"
+              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="displayName"
+            label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Nom d'affichage</span>}
+          >
+            <Input
+              placeholder="ex. Ventes EMEA 2024"
+              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Description</span>}
+          >
+            <Input.TextArea
+              rows={3}
+              placeholder="Décrivez ce Data Product…"
+              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="domainId"
+            label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Domaine métier</span>}
+          >
+            <Select
+              placeholder="Sélectionner un domaine"
+              allowClear
+              style={{ width: '100%' }}
+              options={domains.map((d) => ({ value: d.id, label: d.name }))}
+              dropdownStyle={{ background: boslerColors.card }}
+            />
+          </Form.Item>
+
+          <div style={{ display: 'flex', gap: 12 }}>
+            <Form.Item
+              name="accessPolicy"
+              label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Politique d'accès</span>}
+              style={{ flex: 1 }}
+            >
+              <Select
+                placeholder="Sélectionner"
+                allowClear
+                dropdownStyle={{ background: boslerColors.card }}
+                options={[
+                  { value: 'PUBLIC',     label: 'Public' },
+                  { value: 'INTERNAL',   label: 'Interne' },
+                  { value: 'RESTRICTED', label: 'Restreint' },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="dataProductType"
+              label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Type</span>}
+              style={{ flex: 1 }}
+            >
+              <Select
+                placeholder="Sélectionner"
+                allowClear
+                dropdownStyle={{ background: boslerColors.card }}
+                options={[
+                  { value: 'SOURCE_ALIGNED',     label: 'Source alignée' },
+                  { value: 'AGGREGATE',           label: 'Agrégat' },
+                  { value: 'CONSUMER_ALIGNED',    label: 'Consommateur aligné' },
+                ]}
+              />
+            </Form.Item>
+          </div>
+        </Form>
+      </Modal>
     </div>
   );
 };
