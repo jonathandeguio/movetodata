@@ -44,6 +44,8 @@ class ChatContext(BaseModel):
     catalog_domain: Optional[str] = None
     catalog_quality_level: Optional[str] = None
     catalog_columns: Optional[str] = None  # JSON string of column list
+    # Platform-wide catalog summary injected by Boson
+    platform_catalog_summary: Optional[str] = None
 
 
 class HistoryMessage(BaseModel):
@@ -70,15 +72,21 @@ transformer, gouverner et visualiser des données via des pipelines et des datas
 Quand un utilisateur pose une question sur ses données sans avoir ouvert de dataset, \
 guide-le vers les fonctionnalités de la plateforme : \
 ouvrir un dataset dans le Catalogue, utiliser les graphiques et tableaux de bord, \
-ou lancer un pipeline. Ne demande pas de noms de tables ou de colonnes en dehors \
-du contexte MoveToData.
+ou lancer un pipeline.
 
 Règles :
 - Réponds en français par défaut, en anglais si l'utilisateur écrit en anglais
 - Sois concis et orienté action (dis ce qu'il faut faire dans la plateforme)
 - Si aucun dataset n'est ouvert, propose d'en ouvrir un dans le Catalogue
-- Ne jamais inventer des noms de tables ou colonnes qui ne sont pas fournis\
-"""
+- Ne jamais inventer des noms de tables ou colonnes qui ne sont pas fournis dans le contexte\
+{catalog_section}"""
+
+_CATALOG_SECTION_TEMPLATE = """
+
+Data Products disponibles sur la plateforme ({count} au total) :
+{summary}
+Tu peux répondre à des questions comme "liste les datasets", "quels projets sont disponibles", \
+"y a-t-il des données sur X" en te basant sur cette liste."""
 
 _SYSTEM_PROMPT_WITH_SCHEMA = """\
 Tu es un assistant data analyst pour la plateforme MoveToData. \
@@ -147,7 +155,14 @@ def _build_system_prompt(
     elif context and context.schema_info:
         base = _SYSTEM_PROMPT_WITH_SCHEMA.format(schema_info=context.schema_info)
     else:
-        base = _SYSTEM_PROMPT_BASE
+        # Build catalog section if platform summary is available
+        catalog_section = ""
+        if context and context.platform_catalog_summary:
+            lines = context.platform_catalog_summary.strip().splitlines()
+            count = len(lines)
+            summary = context.platform_catalog_summary.strip()
+            catalog_section = _CATALOG_SECTION_TEMPLATE.format(count=count, summary=summary)
+        base = _SYSTEM_PROMPT_BASE.format(catalog_section=catalog_section)
     return base + rag_context
 
 

@@ -194,27 +194,13 @@ public class CatalogController {
         DataProduct dp = DataProduct.builder()
                 .id(UUID.randomUUID().toString())
                 .name(name)
-                .displayName(body.containsKey("displayName")
-                        ? body.get("displayName") != null ? body.get("displayName").toString() : null
-                        : null)
-                .description(body.containsKey("description")
-                        ? body.get("description") != null ? body.get("description").toString() : null
-                        : null)
-                .dataProductType(body.containsKey("dataProductType")
-                        ? body.get("dataProductType") != null ? body.get("dataProductType").toString() : null
-                        : null)
-                .accessPolicy(body.containsKey("accessPolicy")
-                        ? body.get("accessPolicy") != null ? body.get("accessPolicy").toString() : null
-                        : null)
-                .qualityLevel(body.containsKey("qualityLevel")
-                        ? body.get("qualityLevel") != null ? body.get("qualityLevel").toString() : null
-                        : null)
-                .domainId(body.containsKey("domainId")
-                        ? body.get("domainId") != null ? body.get("domainId").toString() : null
-                        : null)
-                .useCases(body.containsKey("useCases")
-                        ? body.get("useCases") != null ? body.get("useCases").toString() : null
-                        : null)
+                .displayName(stringOrNull(body, "displayName"))
+                .description(stringOrNull(body, "description"))
+                .dataProductType(stringOrNull(body, "dataProductType"))
+                .accessPolicy(stringOrNull(body, "accessPolicy"))
+                .qualityLevel(stringOrNull(body, "qualityLevel"))
+                .domainId(stringOrNull(body, "domainId"))
+                .useCases(stringOrNull(body, "useCases"))
                 .createdBy(authUser.getId())
                 .build();
 
@@ -266,8 +252,7 @@ public class CatalogController {
                                 body.get("qualityLevel") != null ? body.get("qualityLevel").toString() : null);
                     }
                     if (body.containsKey("domainId")) {
-                        existing.setDomainId(
-                                body.get("domainId") != null ? body.get("domainId").toString() : null);
+                        existing.setDomainId(stringOrNull(body, "domainId"));
                     }
                     if (body.containsKey("useCases")) {
                         existing.setUseCases(
@@ -760,6 +745,12 @@ public class CatalogController {
     // -------------------------------------------------------------------------
     // Private helper — write an audit log entry
     // -------------------------------------------------------------------------
+
+    private static String stringOrNull(Map<String, Object> body, String key) {
+        if (!body.containsKey(key)) return null;
+        Object v = body.get(key);
+        return v != null ? v.toString() : null;
+    }
 
     private void logAudit(String dataProductId, String actorId, String action, String detail) {
         try {

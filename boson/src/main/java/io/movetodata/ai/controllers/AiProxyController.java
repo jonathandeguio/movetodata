@@ -449,6 +449,29 @@ public class AiProxyController {
         if (catalogQualityLevel != null) contextForPython.put("catalog_quality_level", catalogQualityLevel);
         if (catalogColumns != null) contextForPython.put("catalog_columns", catalogColumns);
 
+        // Inject platform catalog summary so the AI can answer "list datasets/projects"
+        try {
+            org.springframework.data.domain.PageRequest pg =
+                    org.springframework.data.domain.PageRequest.of(0, 60);
+            List<io.movetodata.catalog.library.models.DataProduct> allDps =
+                    dataProductRepository.findAll(pg).getContent();
+            if (!allDps.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (io.movetodata.catalog.library.models.DataProduct dp : allDps) {
+                    sb.append("- ").append(dp.getName());
+                    if (dp.getDisplayName() != null) sb.append(" (").append(dp.getDisplayName()).append(")");
+                    if (dp.getDomainId() != null) sb.append(" | domaine: ").append(dp.getDomainId());
+                    if (dp.getQualityLevel() != null) sb.append(" | qualité: ").append(dp.getQualityLevel());
+                    if (dp.getDescription() != null && !dp.getDescription().isBlank())
+                        sb.append(" — ").append(dp.getDescription(), 0, Math.min(120, dp.getDescription().length()));
+                    sb.append("\n");
+                }
+                contextForPython.put("platform_catalog_summary", sb.toString());
+            }
+        } catch (Exception e) {
+            log.warn("chat: could not build catalog summary — {}", e.getMessage());
+        }
+
         // Convert history to [{role, content}] — last 10 messages
         List<AiChatMessage> historyMsgs = aiChatService.getHistory(sessionUuid, 10);
         List<Map<String, String>> history = new ArrayList<>();
