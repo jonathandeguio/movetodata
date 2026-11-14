@@ -782,10 +782,7 @@ const CatalogSearch: React.FC = () => {
         onOk={handleCreateSubmit}
         onCancel={() => setCreateModalOpen(false)}
         styles={{
-          content: { background: boslerColors.card, borderRadius: 5 },
-          header: { background: boslerColors.card, borderBottom: `1px solid ${boslerColors.separator}` },
-          footer: { background: boslerColors.card, borderTop: `1px solid ${boslerColors.separator}` },
-          mask:   { backgroundColor: 'rgba(0,0,0,0.6)' },
+          mask: { backgroundColor: 'rgba(0,0,0,0.4)' },
         }}
         width={520}
       >
@@ -811,31 +808,21 @@ const CatalogSearch: React.FC = () => {
               { pattern: /^[a-z0-9_-]+$/, message: 'Minuscules, chiffres, tirets et underscores uniquement' },
             ]}
           >
-            <Input
-              placeholder="ex. ventes_emea_2024"
-              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
-            />
+            <Input placeholder="ex. ventes_emea_2024" />
           </Form.Item>
 
           <Form.Item
             name="displayName"
             label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Nom d'affichage</span>}
           >
-            <Input
-              placeholder="ex. Ventes EMEA 2024"
-              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
-            />
+            <Input placeholder="ex. Ventes EMEA 2024" />
           </Form.Item>
 
           <Form.Item
             name="description"
             label={<span style={{ color: boslerColors.textSecondary, fontSize: 13 }}>Description</span>}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder="Décrivez ce Data Product…"
-              style={{ background: boslerColors.pageBg, borderColor: boslerColors.fieldBorder, color: boslerColors.text, borderRadius: 3 }}
-            />
+            <Input.TextArea rows={3} placeholder="Décrivez ce Data Product…" />
           </Form.Item>
 
           <Form.Item
@@ -847,7 +834,6 @@ const CatalogSearch: React.FC = () => {
               allowClear
               style={{ width: '100%' }}
               options={domains.map((d) => ({ value: d.id, label: d.name }))}
-              dropdownStyle={{ background: boslerColors.card }}
             />
           </Form.Item>
 
@@ -860,7 +846,6 @@ const CatalogSearch: React.FC = () => {
               <Select
                 placeholder="Sélectionner"
                 allowClear
-                dropdownStyle={{ background: boslerColors.card }}
                 options={[
                   { value: 'PUBLIC',     label: 'Public' },
                   { value: 'INTERNAL',   label: 'Interne' },
@@ -877,7 +862,6 @@ const CatalogSearch: React.FC = () => {
               <Select
                 placeholder="Sélectionner"
                 allowClear
-                dropdownStyle={{ background: boslerColors.card }}
                 options={[
                   { value: 'SOURCE_ALIGNED',     label: 'Source alignée' },
                   { value: 'AGGREGATE',           label: 'Agrégat' },

@@ -1,5 +1,5 @@
 import { BankOutlined, AuditOutlined, ExperimentOutlined, FileProtectOutlined, NodeIndexOutlined, SearchOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
-import { Tabs } from "antd";
+import { ConfigProvider, Tabs } from "antd";
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CatalogAdminPage from "./CatalogAdminPage";
@@ -9,6 +9,7 @@ import CatalogHealth from "./CatalogHealth";
 import CatalogLineageIndexPage from "./CatalogLineageIndexPage";
 import CatalogRagSearch from "./CatalogRagSearch";
 import CatalogSearch from "./CatalogSearch";
+import { catalogAntdTheme } from "./theme/boslerTokens";
 
 const TAB_ITEMS = [
   {
@@ -85,14 +86,16 @@ const CatalogPage: React.FC = () => {
   };
 
   return (
-    <Tabs
-      activeKey={activeTab}
-      onChange={handleTabChange}
-      items={TAB_ITEMS}
-      destroyInactiveTabPane
-      style={{ padding: "0 16px" }}
-      tabBarStyle={{ marginBottom: 0, paddingTop: 8 }}
-    />
+    <ConfigProvider theme={catalogAntdTheme}>
+      <Tabs
+        activeKey={activeTab}
+        onChange={handleTabChange}
+        items={TAB_ITEMS}
+        destroyInactiveTabPane
+        style={{ padding: "0 16px" }}
+        tabBarStyle={{ marginBottom: 0, paddingTop: 8 }}
+      />
+    </ConfigProvider>
   );
 };
 
